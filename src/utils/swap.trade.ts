@@ -1,6 +1,6 @@
 import { BigNumberish } from '@ethersproject/bignumber'
-import { BytesLike } from '@ethersproject/bytes'
-import { Pair, Percent, Price, Route, Token, TokenAmount, Trade, TradeType, ROUTER_ADDRESS,  ChainId } from '@monadex/sdk'
+import { BytesLike } from '@ethersproject/bytes' 
+import { Pair, Percent, Price, Route, Token, TokenAmount, Trade, TradeType, ROUTER_ADDRESS, ChainId } from '@monadex/sdk'
 
 export interface TradeRouter {
   routerAddress?: string
@@ -11,12 +11,11 @@ export const defaultRouter: TradeRouter = {
 }
 
 export interface PurchaseTickets {
-  purchaseTickets : boolean
-  multiplier? : number
+  purchaseTickets: boolean
+  multiplier?: number
 }
 
 export class MonadexTrade extends Trade {
-  
   hidePairAnalytics = false
   router: TradeRouter
   readonly path: readonly Token[]
@@ -27,10 +26,10 @@ export class MonadexTrade extends Trade {
     this.path = path
   }
 
-  static fromInnerTrade (innerTrade: Trade, router: TradeRouter, path: readonly Token[]) {
-    const amount = innerTrade.tradeType === TradeType.EXACT_INPUT 
-      ? innerTrade.inputAmount as TokenAmount 
-      : innerTrade.outputAmount as TokenAmount;
+  static fromInnerTrade (innerTrade: Trade, router: TradeRouter, path: readonly Token[]): MonadexTrade {
+    const amount = innerTrade.tradeType === TradeType.EXACT_INPUT
+      ? innerTrade.inputAmount as TokenAmount
+      : innerTrade.outputAmount as TokenAmount
 
     return new MonadexTrade(
       innerTrade.route,
@@ -57,7 +56,7 @@ export interface SwapPayload {
   deadline: BigNumberish
   partner: BigNumberish
   sig: BytesLike
-  raffle : PurchaseTickets
+  raffle: PurchaseTickets
 }
 
 export interface MinimaPayloadDetails {
@@ -117,8 +116,7 @@ export class MinimaRouterTrade extends MonadexTrade {
   /*
    * Purchase ticket on every Trade execution
   */
-  raffle : PurchaseTickets
-
+  raffle: PurchaseTickets
 
   constructor (
     route: Route,
@@ -128,7 +126,7 @@ export class MinimaRouterTrade extends MonadexTrade {
     priceImpact: Percent,
     path: readonly Token[],
     details: SwapPayload,
-    raffle : PurchaseTickets,
+    raffle: PurchaseTickets,
     public txn?: { data: string, to: string }
   ) {
     super(route, inputAmount, 0, router, path)
@@ -151,8 +149,8 @@ export class MinimaRouterTrade extends MonadexTrade {
     priceImpact: Percent,
     path: readonly Token[],
     details: SwapPayload,
-    raffle : PurchaseTickets
-  ) {
+    raffle: PurchaseTickets
+  ): MinimaRouterTrade {
     return new MinimaRouterTrade(
       new Route(pairs, inputAmount.currency),
       inputAmount,
@@ -162,7 +160,7 @@ export class MinimaRouterTrade extends MonadexTrade {
       path,
       details,
       raffle
-  
+
     )
   }
 }
