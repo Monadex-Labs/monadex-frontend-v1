@@ -21,3 +21,12 @@ started integrating main hooks (useTradeCallback + use Swap Callback + useTrade)
 added button folder index.ts for buttons 
 added folders application , burn , mint, raffle, swap, transaction , users 
 added bg-img + color = first iteration we can improve it later
+---
+added actions, reducer, and currently pending on hooks for swap
+added actions, reducer for user and working on hooks for user
+added new constants on index.ts = constants folder
+added tools + index on utils folder  
+
+todo : finish wallet state folder hooks, then use this folder for swap hooks and user 
+
+estimated time to finish everything clean: 1 week
