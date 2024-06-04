@@ -1,5 +1,5 @@
 import { BigNumberish } from '@ethersproject/bignumber'
-import { BytesLike } from '@ethersproject/bytes' 
+import { BytesLike } from '@ethersproject/bytes'
 import { Pair, Percent, Price, Route, Token, TokenAmount, Trade, TradeType, ROUTER_ADDRESS, ChainId } from '@monadex/sdk'
 
 export interface TradeRouter {

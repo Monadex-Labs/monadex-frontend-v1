@@ -43,7 +43,7 @@ type EstimatedSwapCall = SuccessfulCall | FailedCall
  * @param allowedSlippage user allowed slippage
  * @param recipientAddressOrName
  */
-function useSwapCallArguments(
+function useSwapCallArguments (
   trade: Trade | undefined, // trade to execute, required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
   recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
@@ -57,7 +57,7 @@ function useSwapCallArguments(
   const deadline = useTransactionDeadline()
 
   return useMemo(() => {
-    if (!trade || !recipient || !library || !account || !chainId || !deadline) return []
+    if ((trade == null) || !recipient || !library || !account || !chainId || (deadline == null)) return []
 
     const contract =
       trade instanceof MoolaRouterTrade
@@ -68,7 +68,7 @@ function useSwapCallArguments(
       feeOnTransfer: !(trade instanceof MoolaRouterTrade),
       allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
       recipient,
-      deadline: deadline.toNumber(),
+      deadline: deadline.toNumber()
     })
     invariant(Array.isArray(swapCallParameters.args[2]), 'arg 2 not path')
     if (trade instanceof MoolaRouterTrade) {
@@ -95,11 +95,11 @@ function useSwapCallArguments(
 
 // returns a function that will execute a swap, if the parameters are all valid
 // and the user has approved the slippage adjusted input amount for the trade
-export function useSwapCallback(
+export function useSwapCallback (
   trade: Trade | undefined, // trade to execute, required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
   recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
-): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: string | null } {
+): { state: SwapCallbackState, callback: null | (() => Promise<string>), error: string | null } {
   const { network, address: account } = useCelo()
   const chainId = network.chainId
 
@@ -113,7 +113,7 @@ export function useSwapCallback(
   const signer = useConnectedSigner() as JsonRpcSigner
 
   return useMemo(() => {
-    if (!trade || !account || !chainId) {
+    if ((trade == null) || !account || !chainId) {
       return { state: SwapCallbackState.INVALID, callback: null, error: 'Missing dependencies' }
     }
     if (!recipient) {
@@ -126,26 +126,26 @@ export function useSwapCallback(
 
     return {
       state: SwapCallbackState.VALID,
-      callback: async function onSwap(): Promise<string> {
+      callback: async function onSwap (): Promise<string> {
         const estimatedCalls: EstimatedSwapCall[] = await Promise.all(
-          swapCalls.map((call) => {
+          swapCalls.map(async (call) => {
             const {
               parameters: { methodName, args, value },
-              contract,
+              contract
             } = call
             const options = !value || isZero(value) ? {} : { value }
 
-            return contract.estimateGas[methodName](...args, options)
+            return await contract.estimateGas[methodName](...args, options)
               .then((gasEstimate) => {
                 return {
                   call,
-                  gasEstimate,
+                  gasEstimate
                 }
               })
-              .catch((gasError) => {
+              .catch(async (gasError) => {
                 console.debug('Gas estimate failed, trying eth_call to extract error', call)
 
-                return contract.callStatic[methodName](...args, options)
+                return await contract.callStatic[methodName](...args, options)
                   .then((result) => {
                     console.debug('Unexpected successful call after failed estimate gas', call, gasError, result)
                     return { call, error: new Error('Unexpected issue with estimating the gas. Please try again.') }
@@ -174,7 +174,7 @@ export function useSwapCallback(
             'gasEstimate' in el && (ix === list.length - 1 || 'gasEstimate' in list[ix + 1])
         )
 
-        if (!successfulEstimation) {
+        if (successfulEstimation == null) {
           const errorCalls = estimatedCalls.filter((call): call is FailedCall => 'error' in call)
           if (errorCalls.length > 0) throw errorCalls[errorCalls.length - 1].error
           throw new Error('Unexpected error. Please contact support: none of the calls threw an error')
@@ -183,14 +183,14 @@ export function useSwapCallback(
         const {
           call: {
             contract: disconnectedContract,
-            parameters: { methodName, args, value },
+            parameters: { methodName, args, value }
           },
-          gasEstimate,
+          gasEstimate
         } = successfulEstimation
 
         const contract = disconnectedContract.connect(signer)
         return contract[methodName](...args, {
-          gasLimit: calculateGasMargin(gasEstimate),
+          gasLimit: calculateGasMargin(gasEstimate)
         })
           .then((response: ContractTransaction) => {
             const inputSymbol =
@@ -213,7 +213,7 @@ export function useSwapCallback(
                   }`
 
             addTransaction(response, {
-              summary: withRecipient,
+              summary: withRecipient
             })
 
             return response.hash
@@ -224,12 +224,12 @@ export function useSwapCallback(
               throw new Error('Transaction rejected.')
             } else {
               // otherwise, the error was unexpected and we need to convey that
-              console.error(`Swap failed`, error, methodName, args, value)
+              console.error('Swap failed', error, methodName, args, value)
               throw new Error(`Swap failed: ${error.message}`)
             }
           })
       },
-      error: null,
+      error: null
     }
   }, [trade, account, chainId, recipient, recipientAddressOrName, swapCalls, signer, addTransaction])
 }

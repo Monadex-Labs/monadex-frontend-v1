@@ -12,7 +12,7 @@ import {
   ListenerOptions,
   parseCallKey,
   removeMulticallListeners,
-  toCallKey,
+  toCallKey
 } from './actions'
 
 export interface Result extends ReadonlyArray<any> {
@@ -24,11 +24,11 @@ type MethodArgs = Array<MethodArg | MethodArg[]>
 
 type OptionalMethodInputs = Array<MethodArg | MethodArg[] | undefined> | undefined
 
-function isMethodArg(x: unknown): x is MethodArg {
-  return ['string', 'number'].indexOf(typeof x) !== -1
+function isMethodArg (x: unknown): x is MethodArg {
+  return ['string', 'number'].includes(typeof x)
 }
 
-function isValidMethodArgs(x: unknown): x is MethodArgs | undefined {
+function isValidMethodArgs (x: unknown): x is MethodArgs | undefined {
   return (
     x === undefined ||
     (Array.isArray(x) && x.every((xi) => isMethodArg(xi) || (Array.isArray(xi) && xi.every(isMethodArg))))
@@ -45,11 +45,11 @@ const INVALID_RESULT: CallResult = { valid: false, blockNumber: undefined, data:
 
 // use this options object
 export const NEVER_RELOAD: ListenerOptions = {
-  blocksPerFetch: Infinity,
+  blocksPerFetch: Infinity
 }
 
 // the lowest level call for subscribing to contract data
-function useCallsData(calls: (Call | undefined)[], options?: ListenerOptions): CallResult[] {
+function useCallsData (calls: Array<Call | undefined>, options?: ListenerOptions): CallResult[] {
   const { network } = useCelo()
   const chainId = network.chainId
   const callResults = useSelector<AppState, AppState['multicall']['callResults']>(
@@ -77,7 +77,7 @@ function useCallsData(calls: (Call | undefined)[], options?: ListenerOptions): C
       addMulticallListeners({
         chainId,
         calls,
-        options,
+        options
       })
     )
 
@@ -86,7 +86,7 @@ function useCallsData(calls: (Call | undefined)[], options?: ListenerOptions): C
         removeMulticallListeners({
           chainId,
           calls,
-          options,
+          options
         })
       )
     }
@@ -124,20 +124,20 @@ interface CallState {
 const INVALID_CALL_STATE: CallState = { valid: false, result: undefined, loading: false, syncing: false, error: false }
 const LOADING_CALL_STATE: CallState = { valid: true, result: undefined, loading: true, syncing: true, error: false }
 
-function toCallState(
+function toCallState (
   callResult: CallResult | undefined,
   contractInterface: Interface | undefined,
   fragment: FunctionFragment | undefined,
   latestBlockNumber: number | undefined
 ): CallState {
-  if (!callResult) return INVALID_CALL_STATE
+  if (callResult == null) return INVALID_CALL_STATE
   const { valid, data, blockNumber } = callResult
   if (!valid) return INVALID_CALL_STATE
   if (valid && !blockNumber) return LOADING_CALL_STATE
-  if (!contractInterface || !fragment || !latestBlockNumber) return LOADING_CALL_STATE
+  if ((contractInterface == null) || (fragment == null) || !latestBlockNumber) return LOADING_CALL_STATE
   const success = data && data.length > 2
   const syncing = (blockNumber ?? 0) < latestBlockNumber
-  let result: Result | undefined = undefined
+  let result: Result | undefined
   if (success && data) {
     try {
       result = contractInterface.decodeFunctionResult(fragment, data)
@@ -148,7 +148,7 @@ function toCallState(
         loading: false,
         error: true,
         syncing,
-        result,
+        result
       }
     }
   }
@@ -156,12 +156,12 @@ function toCallState(
     valid: true,
     loading: false,
     syncing,
-    result: result,
-    error: !success,
+    result,
+    error: !success
   }
 }
 
-export function useSingleContractMultipleData<T extends Contract = Contract>(
+export function useSingleContractMultipleData<T extends Contract = Contract> (
   contract: T | null | undefined,
   methodName: keyof T['estimateGas'] & string,
   callInputs: OptionalMethodInputs[],
@@ -171,13 +171,13 @@ export function useSingleContractMultipleData<T extends Contract = Contract>(
 
   const calls = useMemo(
     () =>
-      contract && fragment && callInputs && callInputs.length > 0
+      (contract != null) && (fragment != null) && callInputs && callInputs.length > 0
         ? callInputs.map<Call>((inputs) => {
-            return {
-              address: contract.address,
-              callData: contract.interface.encodeFunctionData(fragment, inputs),
-            }
-          })
+          return {
+            address: contract.address,
+            callData: contract.interface.encodeFunctionData(fragment, inputs)
+          }
+        })
         : [],
     [callInputs, contract, fragment]
   )
@@ -191,8 +191,8 @@ export function useSingleContractMultipleData<T extends Contract = Contract>(
   }, [fragment, contract, results, latestBlockNumber])
 }
 
-export function useMultipleContractSingleData(
-  addresses: readonly (string | undefined)[],
+export function useMultipleContractSingleData (
+  addresses: ReadonlyArray<string | undefined>,
   contractInterface: Interface,
   methodName: string,
   callInputs?: OptionalMethodInputs,
@@ -211,13 +211,13 @@ export function useMultipleContractSingleData(
     () =>
       fragment && addresses && addresses.length > 0 && callData
         ? addresses.map<Call | undefined>((address) => {
-            return address && callData
-              ? {
-                  address,
-                  callData,
-                }
-              : undefined
-          })
+          return address && callData
+            ? {
+                address,
+                callData
+              }
+            : undefined
+        })
         : [],
     [addresses, callData, fragment]
   )
@@ -231,7 +231,7 @@ export function useMultipleContractSingleData(
   }, [fragment, results, contractInterface, latestBlockNumber])
 }
 
-export function useSingleCallResult(
+export function useSingleCallResult (
   contract: Contract | null | undefined,
   methodName: string,
   inputs?: OptionalMethodInputs,
@@ -240,12 +240,12 @@ export function useSingleCallResult(
   const fragment = useMemo(() => contract?.interface?.getFunction(methodName), [contract, methodName])
 
   const calls = useMemo<Call[]>(() => {
-    return contract && fragment && isValidMethodArgs(inputs)
+    return (contract != null) && (fragment != null) && isValidMethodArgs(inputs)
       ? [
           {
             address: contract.address,
-            callData: contract.interface.encodeFunctionData(fragment, inputs),
-          },
+            callData: contract.interface.encodeFunctionData(fragment, inputs)
+          }
         ]
       : []
   }, [contract, fragment, inputs])
