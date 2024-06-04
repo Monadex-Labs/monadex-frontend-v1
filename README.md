@@ -20,3 +20,4 @@ setup web3-onboard config file
 started integrating main hooks (useTradeCallback + use Swap Callback + useTrade) : Pending : reason : we need to work on state before starting hooks 
 added button folder index.ts for buttons 
 added folders application , burn , mint, raffle, swap, transaction , users 
+added bg-img + color = first iteration we can improve it later
