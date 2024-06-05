@@ -33,3 +33,12 @@ export const ALLOWED_PRICE_IMPACT_MEDIUM: Percent = new Percent(JSBI.BigInt(300)
 export const ALLOWED_PRICE_IMPACT_HIGH: Percent = new Percent(JSBI.BigInt(500), BIPS_BASE) // 5%
 // for non expert mode disable swaps above this
 export const BLOCKED_PRICE_IMPACT_NON_EXPERT: Percent = new Percent(JSBI.BigInt(1500), BIPS_BASE) // 15%
+
+export interface TokenData {
+  name: string
+  symbol: string
+  address: string
+  decimals: number
+}
+// fake data just for test please change it
+export const DEFAULT_TOKEN_LIST: string[] = []
