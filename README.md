@@ -43,5 +43,7 @@ estimated time to finish everything clean: 1 week
 - added new constants to constant file 
 # todo 
 - finish swap hooks on the state and start the raffle state 
+- before swap state I need to finish the user and token list state
+- update useContracts but
 estimated time : 1 day
 

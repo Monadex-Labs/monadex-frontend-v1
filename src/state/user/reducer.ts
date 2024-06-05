@@ -10,7 +10,8 @@ import {
   SerializedToken,
   updateUserSlippageTolerance,
   updateUserDeadline,
-  toggleURLWarning
+  toggleURLWarning,
+  updateSlippageManuallySet
 } from './actions'
 
 const currentTimestamp = (): number => new Date().getTime()
@@ -30,7 +31,8 @@ export interface UserState {
       [address: string]: SerializedToken
     }
   }
-
+  // by default the the slippage is set automatically, if user update slippage the value will be set to true
+  slippageManuallySet: boolean
   pairs: {
     [chainId: number]: {
       // keyed by token0Address:token1Address
@@ -50,6 +52,7 @@ export const initialState: UserState = {
   userSlippageTolerance: INITIAL_ALLOWED_SLIPPAGE,
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
   tokens: {},
+  slippageManuallySet: false,
   pairs: {},
   timestamp: currentTimestamp(),
   URLWarningVisible: true
@@ -76,18 +79,21 @@ export default createReducer(initialState, builder =>
       state.userSlippageTolerance = action.payload.userSlippageTolerance
       state.timestamp = currentTimestamp()
     })
+    .addCase(updateSlippageManuallySet, (state, action) => {
+      state.slippageManuallySet = action.payload.slippageManuallySet
+    })
     .addCase(updateUserDeadline, (state, action) => {
       state.userDeadline = action.payload.userDeadline
       state.timestamp = currentTimestamp()
     })
     .addCase(addSerializedToken, (state, { payload: { serializedToken } }) => {
-      state.tokens[serializedToken.chainId] = state.tokens[serializedToken.chainId] || {}
+      state.tokens[serializedToken.chainId] = state.tokens[serializedToken.chainId] ?? {}
       state.tokens[serializedToken.chainId][serializedToken.address] = serializedToken
       state.timestamp = currentTimestamp()
     })
     .addCase(removeSerializedToken, (state, { payload: { address, chainId } }) => {
-      state.tokens[chainId] = state.tokens[chainId] || {}
-      delete state.tokens[chainId][address]
+      state.tokens[chainId] = state.tokens[chainId] ?? {}
+      delete state.tokens[chainId][address] // eslint-disable-line @typescript-eslint/no-dynamic-delete
       state.timestamp = currentTimestamp()
     })
     .addCase(addSerializedPair, (state, { payload: { serializedPair } }) => {
@@ -96,16 +102,16 @@ export default createReducer(initialState, builder =>
         serializedPair.token0.address !== serializedPair.token1.address
       ) {
         const chainId = serializedPair.token0.chainId
-        state.pairs[chainId] = state.pairs[chainId] || {}
+        state.pairs[chainId] = state.pairs[chainId] ?? {}
         state.pairs[chainId][pairKey(serializedPair.token0.address, serializedPair.token1.address)] = serializedPair
       }
       state.timestamp = currentTimestamp()
     })
     .addCase(removeSerializedPair, (state, { payload: { chainId, tokenAAddress, tokenBAddress } }) => {
-      if (state.pairs[chainId]) {
+      if (state.pairs[chainId] !== undefined) {
         // just delete both keys if either exists
-        delete state.pairs[chainId][pairKey(tokenAAddress, tokenBAddress)]
-        delete state.pairs[chainId][pairKey(tokenBAddress, tokenAAddress)]
+        delete state.pairs[chainId][pairKey(tokenAAddress, tokenBAddress)] // eslint-disable-line @typescript-eslint/no-dynamic-delete
+        delete state.pairs[chainId][pairKey(tokenBAddress, tokenAAddress)] // eslint-disable-line @typescript-eslint/no-dynamic-delete
       }
       state.timestamp = currentTimestamp()
     })

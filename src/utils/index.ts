@@ -3,7 +3,6 @@ import { AddressZero } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { JSBI, Percent, TokenAmount } from '@monadex/sdk'
-import { ROUTER_ADDRESS } from '../constants/index'
 import { isAddress } from 'viem'
 import truncateEthAddress from 'truncate-eth-address'
 // import { TokenAddressMap } from '../state/lists/hooks'
@@ -58,11 +57,6 @@ export function getContract (address: string, ABI: any, library: Web3Provider, a
   }
 
   return new Contract(address, ABI, getProviderOrSigner(library, account) as any)
-}
-
-// account is optional
-export function getRouterContract (library: Web3Provider, account?: string): Contract {
-  return getContract(ROUTER_ADDRESS, MonadexV1RouterABI, library, account)
 }
 
 // export function isTokenOnList (defaultTokens: TokenAddressMap, currency?: Token): boolean {

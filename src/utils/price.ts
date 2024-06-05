@@ -1,5 +1,5 @@
 import { Fraction, JSBI, Percent, TokenAmount, Trade, CurrencyAmount } from '@monadex/sdk'
-import { MinimaRouterTrade } from '../components/swap/swap.trade'
+import { MinimaRouterTrade } from '../components/swap/trade'
 
 import {
   ALLOWED_PRICE_IMPACT_HIGH,
