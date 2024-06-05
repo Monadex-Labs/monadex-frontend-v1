@@ -30,3 +30,18 @@ added tools + index on utils folder
 todo : finish wallet state folder hooks, then use this folder for swap hooks and user 
 
 estimated time to finish everything clean: 1 week
+
+# 07/04
+- finished wallet state + multicall 
+- imported Multicall abi from the standard abi = more info here https://github.com/makerdao/multicall/blob/master/src/Multicall.sol
+- todo : the multicall contract need to be make by the smart contrats devs
+
+- formatted every generic function in index.ts on outils
+- created useContracts on hooks with use multicallContract + useRouterContract where we can create on contracts instanciations 
+- create the store.ts == not finished yet, we need to finish all the states before 
+- added new folder swap on components with some swap internal functions = used on the UI 
+- added new constants to constant file 
+# todo 
+- finish swap hooks on the state and start the raffle state 
+estimated time : 1 day
+
