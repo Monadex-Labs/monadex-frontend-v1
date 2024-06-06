@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { AppState } from '../store'
 import { ChainId } from '@monadex/sdk'
 export function useBlockNumber (): number | undefined {

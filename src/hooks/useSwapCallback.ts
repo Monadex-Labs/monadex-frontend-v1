@@ -135,7 +135,7 @@ export function useSwapCallback (
             } = call
             const options = !value || isZero(value) ? {} : { value }
 
-            return contract.estimateGas[methodName](...args, options)
+            return await contract.estimateGas[methodName](...args, options)
               .then((gasEstimate) => {
                 return {
                   call,
@@ -145,7 +145,7 @@ export function useSwapCallback (
               .catch(async (gasError) => {
                 console.debug('Gas estimate failed, trying eth_call to extract error', call)
 
-                return contract.callStatic[methodName](...args, options)
+                return await contract.callStatic[methodName](...args, options)
                   .then((result) => {
                     console.debug('Unexpected successful call after failed estimate gas', call, gasError, result)
                     return { call, error: new Error('Unexpected issue with estimating the gas. Please try again.') }

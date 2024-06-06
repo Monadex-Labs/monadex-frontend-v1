@@ -59,6 +59,10 @@ export function getContract (address: string, ABI: any, library: Web3Provider, a
   return new Contract(address, ABI, getProviderOrSigner(library, account) as any)
 }
 
+export function escapeRegExp (string: string): string {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
+}
+
 // export function isTokenOnList (defaultTokens: TokenAddressMap, currency?: Token): boolean {
 //   return Boolean(currency instanceof Token && defaultTokens[currency.chainId]?.[currency.address])
 // }

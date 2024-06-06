@@ -59,6 +59,12 @@ export function useCurrencyBalances (account?: string, currencies?: Token[] | un
     [account, currencies, tokenBalances]
   ) as TokenAmount []
 }
+export function useCurrencyBalance (
+  account?: string,
+  currency?: Token
+): TokenAmount | undefined {
+  return useCurrencyBalances(account, (currency !== undefined) ? [currency] : [])?.[0]
+}
 
 export function useTokenBalance (account?: string, token?: Token): TokenAmount | undefined {
   const tokenBalances = useTokenBalances(account, [token as Token])
@@ -66,14 +72,6 @@ export function useTokenBalance (account?: string, token?: Token): TokenAmount |
   return tokenBalances[token.address]
 }
 
-export function useCurrencyBalance(account?: string, currency?: Token): TokenAmount | undefined {
- if (!currency) return undefined;
- 
- const balances = useCurrencyBalances(account, [currency as Token]);
- const tokenBalances: TokenAmount | undefined = balances ? balances[0] : undefined;
- 
- return tokenBalances;
-}
 
 // mimics useAllBalances
 // export function useAllTokenBalances(): { [tokenAddress: string]: TokenAmount | undefined } {
@@ -83,3 +81,4 @@ export function useCurrencyBalance(account?: string, currency?: Token): TokenAmo
 //   const balances = useTokenBalances(account ?? undefined, allTokensArray)
 //   return balances ?? {}
 // }
+

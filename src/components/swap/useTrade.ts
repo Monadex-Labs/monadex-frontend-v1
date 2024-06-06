@@ -7,7 +7,7 @@ import {
   DEXES_TO_EXCLUDE,
   FETCH_MINIMA_ROUTER_TIMER,
   MINIMA_API_URL,
-  UBESWAP_MOOLA_ROUTER_ADDRESS,
+  UBESWAP_MOOLA_ROUTER_ADDRESS
 } from 'constants/index'
 import { PairState, usePairs } from 'data/Reserves'
 import { BigNumber, ContractInterface, ethers } from 'ethers'
@@ -34,15 +34,15 @@ import { useDirectTradeExactIn, useDirectTradeExactOut } from './directTrades'
  * @param tokenB
  * @returns
  */
-export function useAllCommonPairsWithMoolaDuals(tokenA?: Token, tokenB?: Token): readonly Pair[] {
+export function useAllCommonPairsWithMoolaDuals (tokenA?: Token, tokenB?: Token): readonly Pair[] {
   const { network } = useCelo()
   const chainId = network.chainId
 
   const bases: readonly Token[] = useMemo(() => (chainId ? BASES_TO_CHECK_TRADES_AGAINST[chainId] : []), [chainId])
 
-  const basePairs: readonly (readonly [Token, Token])[] = useMemo(
+  const basePairs: ReadonlyArray<readonly [Token, Token]> = useMemo(
     () =>
-      flatMap(bases, (base): [Token, Token][] => bases.map((otherBase) => [base, otherBase])).filter(
+      flatMap(bases, (base): Array<[Token, Token]> => bases.map((otherBase) => [base, otherBase])).filter(
         ([t0, t1]) =>
           t0.address !== t1.address &&
           // ensure we don't fetch duals
@@ -55,7 +55,7 @@ export function useAllCommonPairsWithMoolaDuals(tokenA?: Token, tokenB?: Token):
   const tokenADual = tokenA && getMoolaDual(tokenA)
   const tokenBDual = tokenB && getMoolaDual(tokenB)
 
-  const allPairCombinations: [Token, Token][] = useMemo(
+  const allPairCombinations: Array<[Token, Token]> = useMemo(
     () =>
       tokenA && tokenB
         ? [
@@ -77,7 +77,7 @@ export function useAllCommonPairsWithMoolaDuals(tokenA?: Token, tokenB?: Token):
             ...(tokenADual ? bases.map((base): [Token, Token] => [tokenADual, base]) : []),
             // token B against all bases
             ...bases.map((base): [Token, Token] => [tokenB, base]),
-            ...(tokenBDual ? bases.map((base): [Token, Token] => [tokenBDual, base]) : []),
+            ...(tokenBDual ? bases.map((base): [Token, Token] => [tokenBDual, base]) : [])
           ]
             .filter((tokens): tokens is [Token, Token] => Boolean(tokens[0] && tokens[1]))
             .filter(([t0, t1]) => t0.address !== t1.address)
@@ -96,9 +96,9 @@ export function useAllCommonPairsWithMoolaDuals(tokenA?: Token, tokenB?: Token):
           .filter((result): result is [PairState.EXISTS, Pair] => Boolean(result[0] === PairState.EXISTS && result[1]))
           // filter out duplicated pairs
           .reduce<{ [pairAddress: string]: Pair }>((memo, [, curr]) => {
-            memo[curr.liquidityToken.address] = memo[curr.liquidityToken.address] ?? curr
-            return memo
-          }, {})
+          memo[curr.liquidityToken.address] = memo[curr.liquidityToken.address] ?? curr
+          return memo
+        }, {})
       ),
     [allPairs]
   )
@@ -107,7 +107,7 @@ export function useAllCommonPairsWithMoolaDuals(tokenA?: Token, tokenB?: Token):
 const MAX_HOPS = 3
 
 const moolaRouter: TradeRouter = {
-  routerAddress: UBESWAP_MOOLA_ROUTER_ADDRESS,
+  routerAddress: UBESWAP_MOOLA_ROUTER_ADDRESS
 }
 
 export class MoolaRouterTrade extends UbeswapTrade {
@@ -120,7 +120,7 @@ export class MoolaRouterTrade extends UbeswapTrade {
    * @param originalTokenOut If null, the original token is the path token
    * @param innerTrade
    */
-  constructor(
+  constructor (
     public readonly originalTokenIn: Token | null,
     public readonly originalTokenOut: Token | null,
     public readonly innerTrade: Trade
@@ -133,7 +133,7 @@ export class MoolaRouterTrade extends UbeswapTrade {
       [
         ...(originalTokenIn ? [originalTokenIn] : []),
         ...innerTrade.route.path,
-        ...(originalTokenOut ? [originalTokenOut] : []),
+        ...(originalTokenOut ? [originalTokenOut] : [])
       ]
     )
     this.inputAmount = new TokenAmount(originalTokenIn ?? innerTrade.inputAmount.token, innerTrade.inputAmount.raw)
@@ -151,15 +151,16 @@ export class MoolaRouterTrade extends UbeswapTrade {
    * Get the minimum amount that must be received from this trade for the given slippage tolerance
    * @param slippageTolerance tolerance of unfavorable slippage from the execution price of this trade
    */
-  minimumAmountOut(slippageTolerance: Percent): TokenAmount {
+  minimumAmountOut (slippageTolerance: Percent): TokenAmount {
     const amt = this.innerTrade.minimumAmountOut(slippageTolerance)
     return new TokenAmount(this.originalTokenOut ?? amt.token, amt.raw)
   }
+
   /**
    * Get the maximum amount in that can be spent via this trade for the given slippage tolerance
    * @param slippageTolerance tolerance of unfavorable slippage from the execution price of this trade
    */
-  maximumAmountIn(slippageTolerance: Percent): TokenAmount {
+  maximumAmountIn (slippageTolerance: Percent): TokenAmount {
     const amt = this.innerTrade.maximumAmountIn(slippageTolerance)
     return new TokenAmount(this.originalTokenIn ?? amt.token, amt.raw)
   }
@@ -188,7 +189,7 @@ const convertToMoolaRouterTradeIfApplicable = (
 /**
  * Returns the best trade for the exact amount of tokens in to the given token out
  */
-export function useUbeswapTradeExactIn(tokenAmountIn?: TokenAmount, tokenOut?: Token): UbeswapTrade | null {
+export function useUbeswapTradeExactIn (tokenAmountIn?: TokenAmount, tokenOut?: Token): UbeswapTrade | null {
   const [disableSmartRouting] = useUserDisableSmartRouting()
   const directTrade = useDirectTradeExactIn(tokenAmountIn, tokenOut)
   const allowedPairs = useAllCommonPairsWithMoolaDuals(tokenAmountIn?.token, tokenOut)
@@ -206,7 +207,7 @@ export function useUbeswapTradeExactIn(tokenAmountIn?: TokenAmount, tokenOut?: T
           const singleHopTrade = bestTradeExactIn(allowedPairs.slice(), tokenAmountIn, tokenOut, directTrade, {
             maxHops: 1,
             maxNumResults: 1,
-            minimumDelta: BETTER_TRADE_LESS_HOPS_THRESHOLD,
+            minimumDelta: BETTER_TRADE_LESS_HOPS_THRESHOLD
           })
           return singleHopTrade
             ? convertToMoolaRouterTradeIfApplicable(tokenAmountIn.token, tokenOut, singleHopTrade)
@@ -223,7 +224,7 @@ export function useUbeswapTradeExactIn(tokenAmountIn?: TokenAmount, tokenOut?: T
             {
               maxHops: i,
               maxNumResults: 1,
-              minimumDelta: BETTER_TRADE_LESS_HOPS_THRESHOLD,
+              minimumDelta: BETTER_TRADE_LESS_HOPS_THRESHOLD
             }
           )
           // if current trade is best yet, save it
@@ -254,7 +255,7 @@ export function useUbeswapTradeExactIn(tokenAmountIn?: TokenAmount, tokenOut?: T
 /**
  * Returns the best trade for the token in to the exact amount of token out
  */
-export function useUbeswapTradeExactOut(tokenIn?: Token, tokenAmountOut?: TokenAmount): UbeswapTrade | null {
+export function useUbeswapTradeExactOut (tokenIn?: Token, tokenAmountOut?: TokenAmount): UbeswapTrade | null {
   const [disableSmartRouting] = useUserDisableSmartRouting()
   const directTrade = useDirectTradeExactOut(tokenIn, tokenAmountOut)
   const allowedPairs = useAllCommonPairsWithMoolaDuals(tokenIn, tokenAmountOut?.token)
@@ -271,7 +272,7 @@ export function useUbeswapTradeExactOut(tokenIn?: Token, tokenAmountOut?: TokenA
         if (singleHopOnly) {
           const singleHopTrade = bestTradeExactOut(allowedPairs.slice(), tokenIn, tokenAmountOut, directTrade, {
             maxHops: 1,
-            maxNumResults: 1,
+            maxNumResults: 1
           })
           return singleHopTrade
             ? convertToMoolaRouterTradeIfApplicable(tokenIn, tokenAmountOut.token, singleHopTrade)
@@ -282,7 +283,7 @@ export function useUbeswapTradeExactOut(tokenIn?: Token, tokenAmountOut?: TokenA
         for (let i = 1; i <= MAX_HOPS; i++) {
           const currentTrade = bestTradeExactOut(allowedPairs.slice(), tokenIn, tokenAmountOut, directTrade, {
             maxHops: i,
-            maxNumResults: 1,
+            maxNumResults: 1
           })
           if (isTradeBetter(bestTradeSoFar, currentTrade, BETTER_TRADE_LESS_HOPS_THRESHOLD)) {
             bestTradeSoFar = currentTrade
@@ -317,7 +318,7 @@ interface Dependencies {
   inputAmount: string | undefined
 }
 
-export function useMinimaTrade(tokenAmountIn?: TokenAmount, tokenOut?: Token): MinimaRouterTrade | null | undefined {
+export function useMinimaTrade (tokenAmountIn?: TokenAmount, tokenOut?: Token): MinimaRouterTrade | null | undefined {
   const [minimaTrade, setMinimaTrade] = React.useState<MinimaRouterTrade | null | undefined>(undefined)
   const [deps, setDeps] = React.useState<Dependencies | undefined>(undefined)
   const [singleHopOnly] = useUserSingleHopOnly()
@@ -342,7 +343,7 @@ export function useMinimaTrade(tokenAmountIn?: TokenAmount, tokenOut?: Token): M
       singleHopOnly,
       inputAddr: tokenAmountIn.currency.address,
       outputAddr: tokenOut.address,
-      inputAmount: tokenAmountIn.raw.toString(),
+      inputAmount: tokenAmountIn.raw.toString()
     }
     if (_.isEqual(deps, curDeps) && !fetchUpdatedData) {
       return
@@ -363,8 +364,8 @@ export function useMinimaTrade(tokenAmountIn?: TokenAmount, tokenOut?: Token): M
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'X-API-KEY': process.env.REACT_APP_MINIMA_KEY ?? '',
-        },
+          'X-API-KEY': process.env.REACT_APP_MINIMA_KEY ?? ''
+        }
       }
     )
       .then(async (res) => {
@@ -388,7 +389,7 @@ export function useMinimaTrade(tokenAmountIn?: TokenAmount, tokenOut?: Token): M
                     const [tokenName, symbol, decimals] = await Promise.all([
                       tokenContract.name(),
                       tokenContract.symbol(),
-                      tokenContract.decimals(),
+                      tokenContract.decimals()
                     ])
                     return new Token(chainId as number, pathItem, decimals, symbol, tokenName)
                   }
@@ -400,7 +401,7 @@ export function useMinimaTrade(tokenAmountIn?: TokenAmount, tokenOut?: Token): M
                   new Pair(
                     new TokenAmount(tokenAmountIn.currency, JSBI.BigInt(10000)),
                     new TokenAmount(tokenOut, JSBI.BigInt(20000))
-                  ),
+                  )
                 ],
                 tokenAmountIn,
                 new TokenAmount(tokenOut, JSBI.BigInt(data.details.expectedOutputAmount.toString())),
@@ -412,7 +413,7 @@ export function useMinimaTrade(tokenAmountIn?: TokenAmount, tokenOut?: Token): M
                   inputAmount: BigNumber.from(data.details.inputAmount),
                   minOutputAmount: BigNumber.from(data.minimumExpectedOut ?? '0'),
                   expectedOutputAmount: BigNumber.from(data.details.expectedOutputAmount),
-                  deadline: BigNumber.from(data.details.deadline),
+                  deadline: BigNumber.from(data.details.deadline)
                 }
               )
 
@@ -449,7 +450,7 @@ export function useMinimaTrade(tokenAmountIn?: TokenAmount, tokenOut?: Token): M
     singleHopOnly,
     tokenAmountIn,
     tokenOut,
-    tokens,
+    tokens
   ])
 
   React.useEffect(() => {
