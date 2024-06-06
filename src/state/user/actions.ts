@@ -25,4 +25,4 @@ export const addSerializedPair = createAction<{ serializedPair: SerializedPair }
 export const removeSerializedPair = createAction<{ chainId: number, tokenAAddress: string, tokenBAddress: string }>(
   'user/removeSerializedPair'
 )
-export const toggleURLWarning = createAction<any>('app/toggleURLWarning')
+export const toggleURLWarning = createAction('app/toggleURLWarning')

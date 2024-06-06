@@ -7,7 +7,8 @@ import {
   switchCurrencies,
   setRecipient,
   purchasedTicketsOnSwap,
-  RaffleState
+  RaffleState,
+  SwapDelay
 } from './actions'
 
 export interface SwapState {
@@ -20,7 +21,7 @@ export interface SwapState {
     readonly currencyId?: string | undefined
   }
   readonly raffle: RaffleState
-
+  readonly swapDelay: SwapDelay
   // the typed recipient address or ENS name, or null if swap should go to sender
   readonly recipient: string | null
 }
@@ -38,12 +39,13 @@ const initialState: SwapState = {
     ticketsPurchased: false,
     multiplier: null
   },
-  recipient: null
+  recipient: null,
+  swapDelay: SwapDelay.INIT
 }
 
 export default createReducer<SwapState>(initialState, (builder) => {
   builder
-    .addCase(replaceSwapState, (state, { payload: { typedValue, field, inputCurrencyId, outputCurrencyId, recipient, raffle } }) => {
+    .addCase(replaceSwapState, (state, { payload: { typedValue, field, inputCurrencyId, outputCurrencyId, recipient, raffle, swapDelay } }) => {
       return {
         [Field.INPUT]: {
           currencyId: inputCurrencyId
@@ -56,6 +58,7 @@ export default createReducer<SwapState>(initialState, (builder) => {
           ticketsPurchased: raffle.ticketsPurchased,
           multiplier: raffle.multiplier
         },
+        swapDelay,
         typedValue,
         recipient
       }
