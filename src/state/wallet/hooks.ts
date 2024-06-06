@@ -19,7 +19,7 @@ export function useTokenBalancesWithLoadingIndicator (
 
   const balances = useMultipleContractSingleData(validatedTokenAddresses, ERC20_INTERFACE, 'balanceOf', [address])
 
-  const anyLoading: boolean = useMemo(() => balances.some((callState: any) => callState.loading), [balances])
+  const anyLoading: boolean = useMemo(() => balances.some((callState) => callState.loading), [balances])
 
   return [
     useMemo(

@@ -3,3 +3,21 @@
 @tailwind utilities;
 
 
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+ body {
+  background: #1F0051;
+  color: white;
+  background-image: url("../static/assets/img.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
+  background-size: 1500px 1500px;
+
+  
+}
+
