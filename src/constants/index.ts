@@ -1,3 +1,4 @@
+import { TokenList } from '@uniswap/token-lists'
 import { Percent, ERC20ABI, ChainId, Token, WMND, JSBI } from '@monadex/sdk'
 import { Interface } from '@ethersproject/abi'
 import { Hash } from 'viem'
@@ -10,7 +11,6 @@ export const MULTICALL_ADDRESS = '0xeefba1e63905ef1d7acba5a8513c70307c1ce441' as
 export const INITIAL_ALLOWED_SLIPPAGE = 50
 // 20 minutes, denominated in seconds
 export const DEFAULT_DEADLINE_FROM_NOW = 60 * 20
-
 // a list of tokens by chain
 type ChainTokenList = {
   readonly [chainId in ChainId]: Token[]
@@ -42,3 +42,5 @@ export interface TokenData {
 }
 // fake data just for test please change it
 export const DEFAULT_TOKEN_LIST: string[] = []
+export const UNSUPPORTED_LIST_URLS: string[] = []
+export const MONADEX_TOKEN_LIST: TokenList | TokenList[] = [] // token list = list of tokens supported offcially by monadex
