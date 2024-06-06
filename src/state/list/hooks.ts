@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import sortByListPriority from '@/utils/listSort'
 
 import { AppState } from '@/state/store'
-import { DEFAULT_TOKEN_LIST } from '@/constants/index'
+import { UNSUPPORTED_LIST_URLS, MONADEX_TOKEN_LIST } from '@/constants/index'
 
 type TagDetails = Tags[keyof Tags]
 export interface TagInfo extends TagDetails {
@@ -56,22 +56,23 @@ export function listToTokenMap (list: TokenList): TokenAddressMap {
       const tags: TagInfo[] =
         tokenInfo.tags
           ?.map((tagId) => {
-            if (!list.tags?.[tagId]) return undefined
+            if (list.tags?.[tagId] === undefined) return undefined
             return { ...list.tags[tagId], id: tagId }
           })
           ?.filter((x): x is TagInfo => Boolean(x)) ?? []
       const token = new WrappedTokenInfo(tokenInfo, tags)
-      if (tokenMap[token.chainId]?.[token.address] !== undefined)
-        {throw Error(`Duplicate tokens found for ${token.name}`)}
+      if (tokenMap[token.chainId]?.[token.address] !== undefined) {
+        throw Error(`Duplicate tokens found for ${token.name as string}`)
+      }
       return {
         ...tokenMap,
         [token.chainId]: {
           ...tokenMap[token.chainId],
           [token.address]: {
             token,
-            list,
+            list
           }
-        },
+        }
       }
     },
     { ...EMPTY_LIST }
@@ -93,9 +94,9 @@ export function useAllLists (): {
 
 function combineMaps (map1: TokenAddressMap, map2: TokenAddressMap): TokenAddressMap {
   return {
-    [ChainId.Mainnet]: { ...map1[ChainId.Mainnet], ...map2[ChainId.Mainnet] },
-    [ChainId.Alfajores]: { ...map1[ChainId.Alfajores], ...map2[ChainId.Alfajores] },
-    [ChainId.Baklava]: { ...map1[ChainId.Baklava], ...map2[ChainId.Baklava] }
+    [ChainId.SEPOLIA]: { ...map1[ChainId.SEPOLIA], ...map2[ChainId.SEPOLIA] },
+    [ChainId.MONAD_TESTNET]: { ...map1[ChainId.MONAD_TESTNET], ...map2[ChainId.MONAD_TESTNET] },
+    [ChainId.MONAD]: { ...map1[ChainId.MONAD], ...map2[ChainId.MONAD] }
   }
 }
 
@@ -113,7 +114,7 @@ function useCombinedTokenMapFromUrls (urls: string[] | undefined): TokenAddressM
         .sort(sortByListPriority)
         .reduce((allTokens, currentUrl) => {
           const current = lists[currentUrl]?.current
-          if (!current) return allTokens
+          if (current == null) return allTokens
           try {
             const newTokens = Object.assign(listToTokenMap(current))
             return combineMaps(allTokens, newTokens)
@@ -129,21 +130,21 @@ function useCombinedTokenMapFromUrls (urls: string[] | undefined): TokenAddressM
 // filter out unsupported lists
 export function useActiveListUrls (): string[] | undefined {
   return useSelector<AppState, AppState['lists']['activeListUrls']>((state) => state.lists.activeListUrls)?.filter(
-    (url) => !UNSUPPORTED_LIST_URLS.includes(url)
+    (url: string) => !UNSUPPORTED_LIST_URLS.includes(url)
   )
 }
 
 export function useInactiveListUrls (): string[] {
   const lists = useAllLists()
   const allActiveListUrls = useActiveListUrls()
-  return Object.keys(lists).filter((url) => !allActiveListUrls?.includes(url) && !UNSUPPORTED_LIST_URLS.includes(url))
+  return Object.keys(lists).filter((url) => (allActiveListUrls?.includes(url) === undefined) && !UNSUPPORTED_LIST_URLS.includes(url))
 }
 
 // get all the tokens from active lists, combine with local default tokens
 export function useCombinedActiveList (): TokenAddressMap {
   const activeListUrls = useActiveListUrls()
   const activeTokens = useCombinedTokenMapFromUrls(activeListUrls)
-  const defaultTokenMap = listToTokenMap({ ...UBESWAP_TOKEN_LIST, ...UNISWAP_TOKEN_LIST })
+  const defaultTokenMap = listToTokenMap({ ...MONADEX_TOKEN_LIST as TokenList })
   return combineMaps(activeTokens, defaultTokenMap)
 }
 
@@ -155,7 +156,7 @@ export function useCombinedInactiveList (): TokenAddressMap {
 
 // used to hide warnings on import for default tokens
 export function useDefaultTokenList (): TokenAddressMap {
-  return { ...listToTokenMap(UBESWAP_TOKEN_LIST), ...listToTokenMap(UNISWAP_TOKEN_LIST) }
+  return { ...listToTokenMap(MONADEX_TOKEN_LIST as TokenList) }
 }
 
 // list of tokens not supported on interface, used to show warnings and prevent swaps and adds

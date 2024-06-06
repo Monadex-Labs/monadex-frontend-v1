@@ -14,13 +14,9 @@ export function useTokenBalancesWithLoadingIndicator (
     () => tokens?.filter((t?: Token): t is Token => isAddress(t?.address as string) !== false) ?? [], // eslint-disable-line @typescript-eslint/no-unnecessary-boolean-literal-compare
     [tokens]
   )
-
   const validatedTokenAddresses = useMemo(() => validatedTokens.map((vt) => vt.address), [validatedTokens])
-
   const balances = useMultipleContractSingleData(validatedTokenAddresses, ERC20_INTERFACE, 'balanceOf', [address])
-
   const anyLoading: boolean = useMemo(() => balances.some((callState) => callState.loading), [balances])
-
   return [
     useMemo(
       () =>
@@ -63,3 +59,27 @@ export function useCurrencyBalances (account?: string, currencies?: Token[] | un
     [account, currencies, tokenBalances]
   ) as TokenAmount []
 }
+
+export function useTokenBalance (account?: string, token?: Token): TokenAmount | undefined {
+  const tokenBalances = useTokenBalances(account, [token as Token])
+  if (!token) return undefined
+  return tokenBalances[token.address]
+}
+
+export function useCurrencyBalance(account?: string, currency?: Token): TokenAmount | undefined {
+ if (!currency) return undefined;
+ 
+ const balances = useCurrencyBalances(account, [currency as Token]);
+ const tokenBalances: TokenAmount | undefined = balances ? balances[0] : undefined;
+ 
+ return tokenBalances;
+}
+
+// mimics useAllBalances
+// export function useAllTokenBalances(): { [tokenAddress: string]: TokenAmount | undefined } {
+//   const { address: account } = useCelo()
+//   const allTokens = useAllTokens()
+//   const allTokensArray = useMemo(() => Object.values(allTokens ?? {}), [allTokens])
+//   const balances = useTokenBalances(account ?? undefined, allTokensArray)
+//   return balances ?? {}
+// }
