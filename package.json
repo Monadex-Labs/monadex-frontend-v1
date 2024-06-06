@@ -40,7 +40,8 @@
     "react-dom": "^18",
     "react-feather": "^2.0.10",
     "react-redux": "^9.1.2",
-    "redux": "^5.0.1"
+    "redux": "^5.0.1",
+    "redux-localstorage-simple": "^2.5.1"
   },
   "devDependencies": {
     "@types/node": "^20",
