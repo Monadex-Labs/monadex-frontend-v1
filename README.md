@@ -67,3 +67,4 @@ estimated time : 1 day
 - create Trade.ts Hook
 - create useFindBestRoute hook for swap hooks
 - finish swap Hooks
+- start transactions state
