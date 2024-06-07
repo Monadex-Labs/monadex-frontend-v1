@@ -96,7 +96,7 @@ export default createReducer<SwapState>(initialState, (builder) => {
     .addCase(setRecipient, (state, { payload: { recipient } }) => {
       state.recipient = recipient
     })
-    .addCase(purchasedTicketsOnSwap, (state, { payload: { field, raffle } }) => {
+    .addCase(purchasedTicketsOnSwap, (state, { payload: { raffle } }) => {
       return {
         ...state,
         raffle: {

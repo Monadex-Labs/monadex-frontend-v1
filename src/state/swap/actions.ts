@@ -21,9 +21,9 @@ export enum SwapDelay {
 }
 
 export const selectCurrency = createAction<{ field: Field, currencyId: string }>('swap/selectCurrency')
-export const switchCurrencies = createAction<any>('swap/switchCurrencies')
+export const switchCurrencies = createAction('swap/switchCurrencies')
 export const typeInput = createAction<{ field: Field, typedValue: string }>('swap/typeInput')
-export const purchasedTicketsOnSwap = createAction<{ field: Field, raffle: RaffleState }>('swap/purchasedTicketsOnSwap')
+export const purchasedTicketsOnSwap = createAction<{ raffle: RaffleState }>('swap/purchasedTicketsOnSwap')
 export const setSwapDelay = createAction<{ swapDelay: SwapDelay }>('swap/swapDelay')
 export const replaceSwapState = createAction<{
   field: Field
