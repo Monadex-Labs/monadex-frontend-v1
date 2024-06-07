@@ -52,3 +52,12 @@ estimated time : 1 day
 - start user state
 - Token.ts on hooks 
 - Swap Hooks 
+
+# 6/6
+- finished Token.ts hook
+- finished hook for user (managing swap secondary settings (pin/unpin pairs, import tokens, updateSlippage, changeDefaultSlippage))
+- finished lists state
+- swap hooks in progress! 
+
+# 7/6 
+- swap in progress...

@@ -1,7 +1,7 @@
-import { configureStore, EnhancedStore } from '@reduxjs/toolkit'
+import { configureStore } from '@reduxjs/toolkit'
 import { save, load } from 'redux-localstorage-simple'
 import user from './user/reducer'
-import lists from './lists/reducer'
+import lists from './list/reducer'
 import swap from './swap/reducer'
 import multicall from './multicall/reducer'
 import application from './application/reducer'
@@ -20,5 +20,5 @@ const store = configureStore({
 })
 
 export default store
-export type AppState = ReturnType<typeof store.getState>
+export type AppState = ReturnType<typeof store.getState> // @typescript-eslint/no-unused-vars
 export type AppDispatch = typeof store.dispatch
