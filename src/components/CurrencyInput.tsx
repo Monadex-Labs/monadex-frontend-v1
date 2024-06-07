@@ -1,4 +1,4 @@
-import { NativeCurrency, MONAD, currencyEquals } from '@monadex/sdk'
+import { NativeCurrency, MONAD, currencyEquals, Token } from '@monadex/sdk'
 import { TokenInfo } from '@uniswap/token-lists'
 import { useCurrencyBalance } from '@/state/wallet/hooks'
 import useUSDCPrice from 'utils/useUSDCPrice'
@@ -7,12 +7,13 @@ import CurrencySelect from 'components/CurrencySelect'
 import { default as useUSDCPriceV3 } from 'hooks/v3/useUSDCPrice'
 import { WMATIC_EXTENDED } from 'constants/v3/addresses'
 import { WrappedTokenInfo } from '@/state/lists/wrappedTokenInfo'
-import { useConnectWallet, useWallets } from '@web3-onboard/react'
+import { useWallets } from '@web3-onboard/react'
+import NumericalInput from './common/NumericalInput'
 
 interface CurrencyInputProps {
   title?: string
   handleCurrencySelect: (currency: NativeCurrency) => void
-  currency: NativeCurrency | undefined
+  currency: Token | undefined
   otherCurrency?: NativeCurrency | undefined
   amount: string
   setAmount: (value: string) => void
@@ -51,35 +52,35 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
   )
   const usdPriceV2 = Number(useUSDCPrice(currency)?.toSignificant() ?? 0)
   const currencyV3 =
-    chainId && (currency != null)
+    Boolean(account) && (currency != null)
       ? currencyEquals(currency, MONAD)
         ? ({
             ...MONAD,
             isNative: true,
             isToken: false,
             wrapped: WMATIC_EXTENDED
-          } as NativeCurrency)
+          })
         : new WrappedTokenInfo(currency as TokenInfo)
       : undefined
   const usdPriceV3Obj = useUSDCPriceV3(currencyV3)
   const usdPriceV3 = Number(usdPriceV3Obj?.toSignificant() ?? 0)
-  const usdPrice = usdPriceV3 || usdPriceV2
+  const usdPrice = !Number.isNaN(usdPriceV3) ? usdPriceV3 : !Number.isNaN(usdPriceV2) ? usdPriceV2 : 0
 
   return (
     <div
       id={id}
-      className={`swapBox${showPrice ? ' priceShowBox' : ''} ${bgClass ??
+      className={`swapBox${showPrice === true ? ' priceShowBox' : ''} ${bgClass ??
         'bg-secondary2'}`}
     >
       <div className='flex justify-between mb-2'>
         <p>{title ?? 'youPay'}</p>
         <div className='flex'>
-          {account && (currency != null) && showHalfButton && (
+          {Boolean(account) && (currency != null) && showHalfButton === true && (
             <div className='maxWrapper' onClick={onHalf}>
               <small>50%</small>
             </div>
           )}
-          {account && (currency != null) && showMaxButton && (
+          {Boolean(account) && (currency != null) && showMaxButton === true && (
             <div className='maxWrapper ml-5' onClick={onMax}>
               <small>max</small>
             </div>
@@ -106,10 +107,10 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
         </div>
       </div>
       <div className='flex justify-between'>
-        <small className={`${color ? `text-${color}` : 'text-secondary'}}`}>
-          {t('balance')}: {formatTokenAmount(selectedCurrencyBalance)}
+        <small className={`${color !== undefined ? `text-${color}` : 'text-secondary'}}`}>
+          {`Balance: ${formatTokenAmount(selectedCurrencyBalance)}`}
         </small>
-        <small className={`${color ? `text-${color}` : 'text-secondary'}}`}>
+        <small className={`${color !== undefined ? `text-${color}` : 'text-secondary'}}`}>
           ${(usdPrice * Number(amount)).toLocaleString('us')}
         </small>
       </div>
