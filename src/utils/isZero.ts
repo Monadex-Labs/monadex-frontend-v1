@@ -1,3 +1,4 @@
+import { useConnectWallet } from "@web3-onboard/react"
 /**
  * Returns true if the string value is zero in hex
  * @param hexNumberString

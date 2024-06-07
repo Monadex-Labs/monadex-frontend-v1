@@ -57,8 +57,7 @@ export const initialState: UserState = {
   timestamp: currentTimestamp(),
   URLWarningVisible: true
 }
-
-export default createReducer(initialState, builder =>
+export default createReducer<UserState>(initialState, builder =>
   builder
     .addCase(updateVersion, state => {
       // slippage isnt being tracked in local storage, reset to default

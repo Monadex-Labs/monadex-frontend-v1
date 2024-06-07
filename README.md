@@ -47,3 +47,8 @@ estimated time to finish everything clean: 1 week
 - update useContracts but
 estimated time : 1 day
 
+# todo 06/06
+- finish list hooks on state
+- start user state
+- Token.ts on hooks 
+- Swap Hooks 

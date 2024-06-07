@@ -5,10 +5,9 @@ import lists from './lists/reducer'
 import swap from './swap/reducer'
 import multicall from './multicall/reducer'
 import application from './application/reducer'
-
 const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists']
 
-const store: EnhancedStore = configureStore({
+const store = configureStore({
   reducer: {
     user,
     multicall,
@@ -21,6 +20,5 @@ const store: EnhancedStore = configureStore({
 })
 
 export default store
-
 export type AppState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
