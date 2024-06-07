@@ -81,3 +81,14 @@ export const MONADEX_PINNED_PAIRS: { [chainid: number]: Array<[Token, Token]> } 
     // ...other pairs to pin on the list by default
   ]
 }
+
+export enum RouterTypes {
+  MONADEX = 'MONADEX',
+  SMART = 'SMART'
+
+}
+
+export enum SmartRouter {
+  MONADEX = 'MONADEX',
+
+}
