@@ -9,6 +9,10 @@ import {
 } from '@monadex/sdk'
 // import { WrappedTokenInfo } from './wrappedTokenInfo'
 
+/**
+ * Returns the wrapped version of the native currency for a given chain
+ *
+ */
 export function wrappedCurrency (
   currency: NativeCurrency | undefined,
   chainId: ChainId | undefined

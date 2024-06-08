@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Pair, Token, Trade, ChainId } from '@monadex/sdk'
+import { Pair, Token, Trade, ChainId, TokenAmount } from '@monadex/sdk'
 import {
   CUSTOM_BASES,
   BASES_TO_CHECK_TRADES_AGAINST
@@ -8,12 +8,11 @@ import { useMemo } from 'react'
 import { SwapDelay } from '@/state/swap/actions'
 import { PairState, usePairs } from '@/data/Reserves'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
-import { useConnectWallet, useWallets } from '@web3-onboard/react'
-
+import { useConnectWallet } from '@web3-onboard/react'
 
 export function useAllCommonPairs (
-  currencyA?: Currency,
-  currencyB?: Currency
+  currencyA?: Token,
+  currencyB?: Token
 ): Pair[] {
   const ID = useConnectWallet()[0].wallet?.chains[0].id
   const chainId: ChainId | undefined = Number(ID) as ChainId
@@ -79,4 +78,101 @@ export function useAllCommonPairs (
   )
 
   const allPairs = usePairs(allPairCombinations)
+  // only pass along valid pairs, non-duplicated pairs
+  return useMemo(
+    () =>
+      Object.values(
+        allPairs
+          // filter out invalid pairs
+          .filter((result): result is [PairState.EXISTS, Pair] =>
+            Boolean(result[0] === PairState.EXISTS && result[1])
+          )
+          // filter out duplicated pairs
+          .reduce<{ [pairAddress: string]: Pair }>((memo, [, curr]) => {
+          memo[curr.liquidityToken.address] = memo[curr.liquidityToken.address] ?? curr
+          return memo
+        }, {})
+      ),
+    [allPairs]
+  )
+}
+/**
+ * Returns the best trade for the exact amount of tokens in to the given token out
+*/
+let bestTradeExactIn: Trade | null = null
+export function useTradeExactIn (
+  currencyAmountIn?: TokenAmount,
+  currencyOut?: Token,
+  swapDelay?: SwapDelay,
+  onSetSwapDelay?: (swapDelay: SwapDelay) => void
+): Trade | null {
+  const allowedPairs = useAllCommonPairs(
+    currencyAmountIn?.token,
+    currencyOut
+  )
+  bestTradeExactIn = useMemo(() => {
+    if (currencyAmountIn == null) {
+      return null
+    }
+    if (
+      swapDelay !== SwapDelay.USER_INPUT_COMPLETE &&
+      swapDelay !== SwapDelay.SWAP_REFRESH
+    ) {
+      return bestTradeExactIn
+    }
+    if (swapDelay !== SwapDelay.SWAP_REFRESH && (onSetSwapDelay != null)) {
+      onSetSwapDelay(SwapDelay.SWAP_COMPLETE)
+    }
+    if (currencyAmountIn !== undefined && currencyOut !== undefined && allowedPairs.length > 0) {
+      return (
+        Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, {
+          maxHops: 3,
+          maxNumResults: 1
+        })[0] ?? null
+      )
+    }
+    return null
+  }, [allowedPairs, currencyAmountIn, currencyOut, onSetSwapDelay, swapDelay])
+
+  return bestTradeExactIn
+}
+
+/**
+ * Returns the best trade for the token in to the exact amount of token out
+ */
+let bestTradeExactOut: Trade | null = null
+
+export function useTradeExactOut (
+  currencyIn?: Token,
+  currencyAmountOut?: TokenAmount,
+  swapDelay?: SwapDelay,
+  onSetSwapDelay?: (swapDelay: SwapDelay) => void
+): Trade | null {
+  const allowedPairs = useAllCommonPairs(
+    currencyIn,
+    currencyAmountOut?.token
+  )
+  bestTradeExactOut = useMemo(() => {
+    if (currencyAmountOut == null) return null
+    if (
+      swapDelay !== SwapDelay.USER_INPUT_COMPLETE &&
+      swapDelay !== SwapDelay.SWAP_REFRESH
+    ) {
+      return bestTradeExactOut
+    }
+    if (swapDelay !== SwapDelay.SWAP_REFRESH && (onSetSwapDelay != null)) {
+      onSetSwapDelay(SwapDelay.SWAP_COMPLETE)
+    }
+    if (currencyIn !== undefined && currencyAmountOut !== undefined && allowedPairs.length > 0) {
+      return (
+        Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, {
+          maxHops: 3,
+          maxNumResults: 1
+        })[0] ?? null
+      )
+    }
+    return null
+  }, [allowedPairs, currencyIn, currencyAmountOut, onSetSwapDelay, swapDelay])
+
+  return bestTradeExactOut
 }
