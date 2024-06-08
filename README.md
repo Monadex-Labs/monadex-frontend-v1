@@ -63,8 +63,8 @@ estimated time : 1 day
 - swap in progress...
 
 # todo for 08/06 -> 10/06
-- wrapppedCurrency file /utils
-- create Trade.ts Hook
-- create useFindBestRoute hook for swap hooks
+- wrapppedCurrency file /utils  finished
+- create Trade.ts Hook  in Progress = need to compile Pair contract for abi
+- create useFindBestRoute hook for swap hooks 
 - finish swap Hooks
 - start transactions state

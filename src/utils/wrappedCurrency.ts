@@ -7,13 +7,31 @@ import {
   TokenAmount,
   WMND
 } from '@monadex/sdk'
-export function wrappedCurrency(
-    currency: Currency | undefined,
-    chainId: ChainId | undefined,
-  ): Token | undefined {
-    return chainId && currency === MONAD[chainId ? chainId : ChainId.SEPOLIA]
-      ? WETH[chainId]
-      : currency instanceof Token && currency.chainId === chainId
+// import { WrappedTokenInfo } from './wrappedTokenInfo'
+
+export function wrappedCurrency (
+  currency: NativeCurrency | undefined,
+  chainId: ChainId | undefined
+): Token | undefined {
+  return chainId && currency === MONAD
+    ? WMND[chainId]
+    : currency instanceof Token && currency.chainId === chainId
       ? currency
-      : undefined;
-  }
+      : undefined
+}
+export function wrappedCurrencyAmount (
+  currencyAmount: CurrencyAmount | undefined,
+  chainId: ChainId | undefined
+): TokenAmount | undefined {
+  const token =
+    (currencyAmount !== undefined) && chainId
+      ? wrappedCurrency(currencyAmount.currency, chainId)
+      : undefined
+  return (token !== undefined) && (currencyAmount !== undefined)
+    ? new TokenAmount(token, currencyAmount.raw)
+    : undefined
+}
+export function unwrappedToken (token: Token): NativeCurrency | Token {
+  if (token instanceof Token && token.equals(WMND[token.chainId])) return MONAD
+  return token
+}
