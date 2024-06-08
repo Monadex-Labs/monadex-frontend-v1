@@ -1,4 +1,4 @@
-import { TokenAmount, Pair, NativeCurrency, ChainId, Token } from '@monadex/sdk'
+import { TokenAmount, Pair, ChainId, Token } from '@monadex/sdk'
 import { useMemo } from 'react'
 import MonadexV2Pair from '@/constants/abi/JSON/MonadexV1Pair.json'
 import { Interface } from '@ethersproject/abi'
