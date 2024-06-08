@@ -8,6 +8,9 @@ import { isAddress } from 'viem'
 import { useCurrencyBalances } from '../wallet/hooks'
 import { computeSlippageAdjustedAmounts } from '@/utils/price'
 import { AppDispatch, AppState } from '../store'
+import { MinimaRouterTrade, MonadexTrade } from '@/components/swap/trade'
+import { useConnectWallet } from '@web3-onboard/react'
+import { useCurrency } from '@/hooks/Tokens'
 export function useSwapState (): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>((state) => state.swap)
 }
@@ -118,3 +121,67 @@ export function tryParseAmount (value?: string, currency?: NativeCurrency | Toke
     return undefined
   }
 }
+
+function involvesAddress(trade: Trade, checksummedAddress: string): boolean {
+  return (
+    trade.route.path.some((token) => token.address === checksummedAddress) ||
+    trade.route.pairs.some((pair) => pair.liquidityToken.address === checksummedAddress)
+  )
+}
+// from the current swap inputs, compute the best trade and return it.
+
+
+export function useDerivedSwapInfo (): {
+  currencies: { [field in Field]?: Token }
+  currencyBalances: { [field in Field]?: TokenAmount }
+  parsedAmount: TokenAmount | undefined
+  v2Trade: MinimaRouterTrade | MonadexTrade | undefined
+  inputError?: string
+  showRamp: boolean
+  inputError?: string
+  useAutoSlippage: number
+} {
+// grab the informations of the
+  const account = useConnectWallet()
+  const WALLET_ADDRESS = account?.[0].wallet?.accounts[0].address
+  const CHAIN_ID: number | undefined = Number(account?.[0].wallet?.chains[0].id)
+
+  const chainIdToUse = CHAIN_ID ?? ChainId.SEPOLIA // TODO: change the chainId to Monad testnet
+  const {
+    independentField,
+    typedValue,
+    [Field.INPUT]: { currencyId: inputCurrencyId },
+    [Field.OUTPUT]: { currencyId: outputCurrencyId },
+    recipient
+  } = useSwapState()
+
+  const inputCurrency = useCurrency(inputCurrencyId)
+  const outputCurrency = useCurrency(outputCurrencyId)
+  const receiver: string | null = (recipient === null ? account : recipient) ?? null
+
+  const relevantTokenBalances = useCurrencyBalances(WALLET_ADDRESS ?? undefined, [
+    inputCurrency as Token ?? undefined,
+    outputCurrency as Token ?? undefined
+  ])
+  const isExactIn: boolean = independentField === Field.INPUT
+  const parsedAmount = tryParseAmount(
+    typedValue,
+    (isExactIn ? inputCurrency : outputCurrency) ?? undefined
+  )
+}
+/**
+ * export interface SwapState {
+  readonly independentField: Field
+  readonly typedValue: string
+  readonly [Field.INPUT]: {
+    readonly currencyId?: string | undefined
+  }
+  readonly [Field.OUTPUT]: {
+    readonly currencyId?: string | undefined
+  }
+  readonly raffle: RaffleState
+  readonly swapDelay: SwapDelay
+  // the typed recipient address or ENS name, or null if swap should go to sender
+  readonly recipient: string | null
+}
+ */

@@ -61,3 +61,10 @@ estimated time : 1 day
 
 # 7/6 
 - swap in progress...
+
+# todo for 08/06 -> 10/06
+- wrapppedCurrency file /utils
+- create Trade.ts Hook
+- create useFindBestRoute hook for swap hooks
+- finish swap Hooks
+- start transactions state
