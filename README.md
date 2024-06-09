@@ -53,13 +53,13 @@ estimated time : 1 day
 - soso: Token.ts on hooks 
 - soso: Swap Hooks 
 
-# 6/6
+# 06/06
 - soso: finished Token.ts hook
 - soso: finished hook for user (managing swap secondary settings (pin/unpin pairs, import tokens, updateSlippage, changeDefaultSlippage))
 - soso: finished lists state
 - soso: swap hooks in progress! 
 
-# 7/6 
+# 07/06 
 - soso: swap in progress...
 - daniel: fixed AddLiquidity and move to separate file. Remove ConfirmAddModalBottom component from Ubeswap.
 
@@ -70,8 +70,20 @@ estimated time : 1 day
 - soso: finish swap Hooks
 - soso: start transactions state
 
-# 8/6
+# 08/06
 - daniel: Move AddLiquidity and CurrencyInput components. Refactor folders.
 - daniel: Add Logo Component
 - daniel: Add CurrencyLogo component. Pending: currency as Token or NativeCurrency (or Currency with extra properties).
 - daniel: Add CurrencySelect component. Pending: add CurrencySearchModal component (lots of dependencies).
+- soso: wrapppedCurrency file /utils  finished
+- soso: create Trade.ts Hook  in Progress = need to compile Pair contract for abi finished
+- soso: create useFindBestRoute hook for swap hooks  finished
+- soso: finish swap Hooks in Progress
+- soso: start transactions state
+
+# 09/06
+- soso: working on swap hook
+- soso: start Transaction state
+- soso: finish useSwapCallback 
+- soso: start Raffle section state
+

@@ -11,6 +11,7 @@ import { AppDispatch, AppState } from '../store'
 import { MinimaRouterTrade, MonadexTrade } from '@/components/swap/trade'
 import { useConnectWallet } from '@web3-onboard/react'
 import { useCurrency } from '@/hooks/Tokens'
+import useFindBestRoute from '@/hooks/useFindBestRouter'
 export function useSwapState (): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>((state) => state.swap)
 }
@@ -122,7 +123,7 @@ export function tryParseAmount (value?: string, currency?: NativeCurrency | Toke
   }
 }
 
-function involvesAddress(trade: Trade, checksummedAddress: string): boolean {
+export function involvesAddress (trade: Trade, checksummedAddress: string): boolean {
   return (
     trade.route.path.some((token) => token.address === checksummedAddress) ||
     trade.route.pairs.some((pair) => pair.liquidityToken.address === checksummedAddress)
@@ -168,6 +169,14 @@ export function useDerivedSwapInfo (): {
     typedValue,
     (isExactIn ? inputCurrency : outputCurrency) ?? undefined
   )
+
+  const { v2Trade, bestTradeExactIn, bestTradeExactOut } = useFindBestRoute()
+
+  const currencyBalances = {
+    [Field.INPUT]: relevantTokenBalances?[0]
+    [Field.OUTPUT] : relevantTokenBalances?[1]
+  }
+
 }
 /**
  * export interface SwapState {
