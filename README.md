@@ -73,3 +73,4 @@ estimated time : 1 day
 # 8/6
 - daniel: Move AddLiquidity and CurrencyInput components. Refactor folders.
 - daniel: Add Logo Component
+- daniel: Add CurrencyLogo component. Pending: currency as Token or NativeCurrency (or Currency with extra properties).
