@@ -1,2 +1,5 @@
 export { default as AddLiquidity } from './AddLiquidity'
 export { default as CurrencyInput } from './CurrencyInput'
+export { default as CurrencyLogo } from './CurrencyLogo'
+export { default as CurrencySelect } from './CurrencySelect'
+export { default as Logo } from './Logo'
