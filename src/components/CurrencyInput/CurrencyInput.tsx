@@ -8,7 +8,7 @@ import { default as useUSDCPriceV3 } from 'hooks/v3/useUSDCPrice'
 import { WMATIC_EXTENDED } from 'constants/v3/addresses'
 import { WrappedTokenInfo } from '@/state/lists/wrappedTokenInfo'
 import { useWallets } from '@web3-onboard/react'
-import NumericalInput from './common/NumericalInput'
+import NumericalInput from '../common/NumericalInput'
 
 interface CurrencyInputProps {
   title?: string
