@@ -1,1 +1,1 @@
-export * from './AddLiquidity'
+export { default } from './AddLiquidity'

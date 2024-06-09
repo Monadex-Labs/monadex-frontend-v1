@@ -10,7 +10,6 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
 import {
   currencyEquals,
-  Token,
   MONAD,
   TokenAmount,
   ChainId
