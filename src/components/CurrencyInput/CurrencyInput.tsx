@@ -1,12 +1,11 @@
 import { NativeCurrency, MONAD, currencyEquals, Token } from '@monadex/sdk'
 import { TokenInfo } from '@uniswap/token-lists'
 import { useCurrencyBalance } from '@/state/wallet/hooks'
-import useUSDCPrice from 'utils/useUSDCPrice'
-import { formatTokenAmount } from 'utils'
-import CurrencySelect from 'components/CurrencySelect'
-import { default as useUSDCPriceV3 } from 'hooks/v3/useUSDCPrice'
-import { WMATIC_EXTENDED } from 'constants/v3/addresses'
-import { WrappedTokenInfo } from '@/state/lists/wrappedTokenInfo'
+import useUSDCPrice from '@/utils/useUSDCPrice'
+import { formatTokenAmount } from '@/utils'
+import CurrencySelect from '@/components/CurrencySelect'
+import { WMATIC_EXTENDED } from '@/constants/addresses'
+import { WrappedTokenInfo } from '@/state/list/hooks'
 import { useWallets } from '@web3-onboard/react'
 import NumericalInput from '../common/NumericalInput'
 
@@ -14,7 +13,7 @@ interface CurrencyInputProps {
   title?: string
   handleCurrencySelect: (currency: NativeCurrency) => void
   currency: Token | undefined
-  otherCurrency?: NativeCurrency | undefined
+  otherCurrency?: Token | NativeCurrency | undefined
   amount: string
   setAmount: (value: string) => void
   onMax?: () => void
@@ -62,7 +61,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
           })
         : new WrappedTokenInfo(currency as TokenInfo)
       : undefined
-  const usdPriceV3Obj = useUSDCPriceV3(currencyV3)
+  const usdPriceV3Obj = useUSDCPrice(currencyV3)
   const usdPriceV3 = Number(usdPriceV3Obj?.toSignificant() ?? 0)
   const usdPrice = !Number.isNaN(usdPriceV3) ? usdPriceV3 : !Number.isNaN(usdPriceV2) ? usdPriceV2 : 0
 

@@ -1,8 +1,7 @@
 import { currencyEquals, MONAD, Token } from '@monadex/sdk'
 import { useMemo } from 'react'
 import useHttpLocations from '@/hooks/useHttpLocations'
-import { WrappedTokenInfo } from '@/state/lists/hooks'
-import { WrappedTokenInfo as V3WrappedTokenInfo } from '@/state/lists/v3/wrappedTokenInfo'
+import { WrappedTokenInfo } from '@/state/list/hooks'
 import { Logo } from '@/components'
 import { getTokenLogoURL } from '@/utils/getTokenLogoURL'
 import { useInActiveTokens } from '@/hooks/Tokens'
@@ -24,8 +23,7 @@ const CurrencyLogo: React.FC<CurrencyLogoProps> = ({
   const nativeCurrency = MONAD
   const nativeCurrencyImage = currency?.symbol !== undefined ? '/' + currency?.symbol + '.png' : '/.png'
   const uriLocations = useHttpLocations(
-    currency instanceof WrappedTokenInfo ||
-      currency instanceof V3WrappedTokenInfo
+    currency instanceof WrappedTokenInfo
       ? currency?.logoURI ?? currency?.tokenInfo.logoURI
       : undefined
   )
@@ -35,13 +33,11 @@ const CurrencyLogo: React.FC<CurrencyLogoProps> = ({
   const srcs: string[] = useMemo(() => {
     if (
       (currency != null) &&
-      (currencyEquals(currency, nativeCurrency) ||
-        currency.isNative)
+      (currencyEquals(currency, nativeCurrency))
     ) { return [] }
 
     if (
-      currency instanceof WrappedTokenInfo ||
-      currency instanceof V3WrappedTokenInfo
+      currency instanceof WrappedTokenInfo
     ) {
       return [
         ...getTokenLogoURL(
@@ -60,8 +56,7 @@ const CurrencyLogo: React.FC<CurrencyLogoProps> = ({
 
   if (
     (currency != null) &&
-    (currencyEquals(currency, nativeCurrency) ||
-      currency.isNative)
+    (currencyEquals(currency, nativeCurrency))
   ) {
     return (
       <div

@@ -1,12 +1,11 @@
 import React, { useCallback, useState } from 'react'
-import { Token } from '@monadex/sdk'
+import { NativeCurrency, Token } from '@monadex/sdk'
 import { CurrencySearchModal, CurrencyLogo } from '@/components'
-import 'components/styles/CurrencyInput.scss'
 
 interface CurrencySelectProps {
   title?: string
   handleCurrencySelect: (currency: Token) => void
-  currency: Token | undefined
+  currency: Token | NativeCurrency | undefined
   otherCurrency?: Token | undefined
   id?: string
   bgClass?: string
@@ -38,7 +37,7 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({
         {(currency != null)
           ? (
             <div className='flex items-center'>
-              <CurrencyLogo currency={currency} size='28px' />
+              <CurrencyLogo currency={currency as Token} size='28px' />
               <p className='token-symbol-container'>{currency?.symbol}</p>
             </div>
             )

@@ -73,7 +73,7 @@ estimated time : 1 day
 # 08/06
 - daniel: Move AddLiquidity and CurrencyInput components. Refactor folders.
 - daniel: Add Logo Component
-- daniel: Add CurrencyLogo component. Pending: currency as Token or NativeCurrency (or Currency with extra properties).
+- daniel: Add CurrencyLogo component.
 - daniel: Add CurrencySelect component. Pending: add CurrencySearchModal component (lots of dependencies).
 - soso: wrapppedCurrency file /utils  finished
 - soso: create Trade.ts Hook  in Progress = need to compile Pair contract for abi finished
@@ -86,4 +86,5 @@ estimated time : 1 day
 - soso: start Transaction state
 - soso: finish useSwapCallback 
 - soso: start Raffle section state
-
+- daniel: Refactor component imports
+- daniel: Moved swap hooks to hook folder
