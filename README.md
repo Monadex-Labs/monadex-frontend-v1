@@ -69,3 +69,7 @@ estimated time : 1 day
 - soso: create useFindBestRoute hook for swap hooks
 - soso: finish swap Hooks
 - soso: start transactions state
+
+# 8/6
+- daniel: Move AddLiquidity and CurrencyInput components. Refactor folders.
+- daniel: Add Logo Component
