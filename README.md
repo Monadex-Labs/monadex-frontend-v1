@@ -65,9 +65,15 @@ estimated time : 1 day
 # todo for 08/06 -> 10/06
 - wrapppedCurrency file /utils  finished
 - create Trade.ts Hook  in Progress = need to compile Pair contract for abi finished
-- create useFindBestRoute hook for swap hooks  in Progress
-- finish swap Hooks
+- create useFindBestRoute hook for swap hooks  finished
+- finish swap Hooks in Progress
 - start transactions state
+
+# 09/06
+- working on swap hook
+- start Transaction state
+- finish useSwapCallback 
+- start Raffle section state
 
 
 # contracts deployed on base sepolia + verified

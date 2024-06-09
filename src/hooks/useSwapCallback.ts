@@ -1,18 +1,21 @@
-import { useCelo, useConnectedSigner, useProvider } from '@celo/react-celo'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
-import { JsonRpcSigner } from '@ethersproject/providers'
-import { JSBI, Percent, Router, SwapParameters, Trade } from '@monadex/sdk'
+import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
+import { ChainId, JSBI, Percent, Router, SwapParameters, Trade, TradeType } from '@monadex/sdk'
 import { MoolaRouterTrade } from '../components/swap/useTrade'
 import { ContractTransaction } from 'ethers'
 import { useMemo } from 'react'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import invariant from 'tiny-invariant'
-
+import { ethers } from 'ethers'
 import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
-import { calculateGasMargin, getMoolaRouterContract, getRouterContract, isAddress, shortenAddress } from '../utils'
+import { calculateGasMargin, isAddress, shortenAddress } from '../utils'
 import isZero from '../utils/isZero'
 import useTransactionDeadline from './useTransactionDeadline'
+import { useWallets } from '@web3-onboard/react'
+import { useRouterContract } from './useContracts'
+import { purchasedTicketsOnSwap } from '@/state/swap/actions'
+import { useSelector } from 'react-redux'
 
 export enum SwapCallbackState {
   INVALID,
@@ -20,7 +23,7 @@ export enum SwapCallbackState {
   VALID,
 }
 
-interface SwapCall {
+export interface SwapCall {
   contract: Contract
   parameters: SwapParameters
 }
@@ -46,51 +49,56 @@ type EstimatedSwapCall = SuccessfulCall | FailedCall
 export function useSwapCallArguments (
   trade: Trade | undefined, // trade to execute, required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
-  recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+  recipientAddressOrName: string | null // address of the recipient of the trade, or null if swap should be returned to sender
 ): SwapCall[] {
-  const { address: account, network } = useCelo()
-  const library = useProvider()
-  const chainId = network.chainId
-
-  const { address: recipientAddress } = useENS(recipientAddressOrName)
-  const recipient = recipientAddressOrName === null ? account : recipientAddress
+  const account = useWallets()
+  const chainId = Number(account[0].chains[0].id) as ChainId
+  const address = account[0].accounts[0].address
+  const recipient = recipientAddressOrName === null && address
+  const wallet = account[0].provider
   const deadline = useTransactionDeadline()
+  const contract = useRouterContract() as Contract
+  const ticketsState = useMemo(() => {
+    return useSelector(purchasedTicketsOnSwap)
+  }, [])
+  const library = account.length > 0
+    ? new ethers.providers.Web3Provider(wallet as any, 'any')
+    : undefined
 
   return useMemo(() => {
-    if ((trade == null) || !recipient || !library || !account || !chainId || (deadline == null)) return []
+    // checking
+    if ((trade == null) || !recipient || !library || !account || !chainId || (deadline == null)) return [] // eslint-disable-line
+    if (contract === undefined) return []
+    const swapMethods = [] as any[]
 
-    const contract =
-      trade instanceof MoolaRouterTrade
-        ? getMoolaRouterContract(chainId, library, account)
-        : getRouterContract(chainId, library, account)
-
-    const swapCallParameters = Router.swapCallParameters(trade, {
-      feeOnTransfer: !(trade instanceof MoolaRouterTrade),
+    const swapCallParameters =
+      Router.swapCallParameters(trade, {
+        feeOnTransfer: false,
+        allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+        recipient,
+        deadline: deadline.toNumber()
+      }, {
+        purchaseTickets: ticketsState.payload.raffle.ticketsPurchased,
+        multiplier: ticketsState.payload.raffle.multiplier as number
+      })
+    const swapCallParametersOnInput = Router.swapCallParameters(trade, {
+      feeOnTransfer: true,
       allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
       recipient,
       deadline: deadline.toNumber()
+    },
+    {
+      purchaseTickets: ticketsState.payload.raffle.ticketsPurchased,
+      multiplier: ticketsState.payload.raffle.multiplier as number
     })
-    invariant(Array.isArray(swapCallParameters.args[2]), 'arg 2 not path')
-    if (trade instanceof MoolaRouterTrade) {
-      swapCallParameters.args[2] = trade.path.map((p) => p.address)
+
+    if (trade.tradeType === TradeType.EXACT_INPUT) {
+      swapMethods.push(swapCallParametersOnInput)
+    } else {
+      swapMethods.push(swapCallParameters)
     }
-
-    const swapMethods = [swapCallParameters]
-
-    // TODO(igm): figure out why this is failing
-    // if (trade.tradeType === TradeType.EXACT_INPUT) {
-    //   swapMethods.push(
-    //     Router.swapCallParameters(trade, {
-    //       feeOnTransfer: true,
-    //       allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
-    //       recipient,
-    //       deadline: deadline.toNumber()
-    //     })
-    //   )
-    // }
-
     return swapMethods.map((parameters) => ({ parameters, contract }))
-  }, [account, allowedSlippage, chainId, deadline, library, recipient, trade])
+  }, [account, allowedSlippage, chainId, deadline, library, recipient, trade, contract, ticketsState])
 }
 
 // returns a function that will execute a swap, if the parameters are all valid
@@ -100,23 +108,20 @@ export function useSwapCallback (
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
   recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 ): { state: SwapCallbackState, callback: null | (() => Promise<string>), error: string | null } {
-  const { network, address: account } = useCelo()
-  const chainId = network.chainId
+  const account = useWallets()
+  const chainId = Number(account[0].chains[0].id) as ChainId
+  const address = account[0].accounts[0].address
 
   const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName)
-
   const addTransaction = useTransactionAdder()
-
-  const { address: recipientAddress } = useENS(recipientAddressOrName)
-  const recipient = recipientAddressOrName === null ? account : recipientAddress
-
+  const recipient = recipientAddressOrName === null && address
   const signer = useConnectedSigner() as JsonRpcSigner
 
   return useMemo(() => {
-    if ((trade == null) || !account || !chainId) {
+    if ((trade == null) || !address || !chainId) { // eslint-disable-line
       return { state: SwapCallbackState.INVALID, callback: null, error: 'Missing dependencies' }
     }
-    if (!recipient) {
+    if (!recipient) { // eslint-disable-line
       if (recipientAddressOrName !== null) {
         return { state: SwapCallbackState.INVALID, callback: null, error: 'Invalid recipient' }
       } else {
