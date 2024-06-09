@@ -88,3 +88,9 @@ estimated time : 1 day
 - soso: start Raffle section state
 - daniel: Refactor component imports
 - daniel: Moved swap hooks to hook folder
+- soso : Swap state hook 96% done
+
+# todo 10/60
+- finish swap hooks
+- soso: start transaction state + burn + mint
+- soso: do hooks asked by daniel

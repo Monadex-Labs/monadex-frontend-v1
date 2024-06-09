@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Monadex',
-  description: 'The liquidity factory on Monad_'
+  description: 'The liquidity factory on Monad'
 }
 
 export default function RootLayout ({

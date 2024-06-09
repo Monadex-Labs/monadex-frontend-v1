@@ -56,7 +56,7 @@ export function computeTradePriceBreakdown (trade?: Trade | null): {
 export function computeSlippageAdjustedAmounts (
   trade: Trade | undefined,
   allowedSlippage: number
-): { [field in Field]?: CurrencyAmount } {
+): { [field in Field]?: TokenAmount | CurrencyAmount } {
   const pct = basisPointsToPercent(allowedSlippage)
   return {
     [Field.INPUT]: trade?.maximumAmountIn(pct),
