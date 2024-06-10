@@ -80,8 +80,8 @@ const CurrencyLogo: React.FC<CurrencyLogoProps> = ({
     <Box
       width={size}
       height={size}
-      borderRadius={withoutBg ? 0 : size}
-      className={`currencyLogo${withoutBg ? '' : ' bg-white'}`}
+      borderRadius={withoutBg != null ? 0 : size}
+      className={`currencyLogo${withoutBg != null ? '' : ' bg-white'}`}
     >
       <Logo
         srcs={srcs}

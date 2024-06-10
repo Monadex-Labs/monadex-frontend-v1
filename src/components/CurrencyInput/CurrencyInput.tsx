@@ -1,4 +1,4 @@
-import { NativeCurrency, MONAD, currencyEquals, Token } from '@monadex/sdk'
+import { MONAD, currencyEquals, Token } from '@monadex/sdk'
 import { TokenInfo } from '@uniswap/token-lists'
 import { useCurrencyBalance } from '@/state/wallet/hooks'
 import useUSDCPrice from '@/utils/useUSDCPrice'
@@ -12,9 +12,9 @@ import { Box } from '@mui/material'
 
 interface CurrencyInputProps {
   title?: string
-  handleCurrencySelect: (currency: NativeCurrency) => void
+  handleCurrencySelect: (currency: Token) => void
   currency: Token | undefined
-  otherCurrency?: Token | NativeCurrency | undefined
+  otherCurrency?: Token | undefined
   amount: string
   setAmount: (value: string) => void
   onMax?: () => void
@@ -60,7 +60,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
             isToken: false,
             wrapped: WMATIC_EXTENDED
           })
-        : new WrappedTokenInfo(currency as TokenInfo)
+        : new WrappedTokenInfo(currency as TokenInfo, [])
       : undefined
   const usdPriceV3Obj = useUSDCPrice(currencyV3)
   const usdPriceV3 = Number(usdPriceV3Obj?.toSignificant() ?? 0)
@@ -100,7 +100,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
             align='right'
             color={color}
             placeholder='0.00'
-            onUserInput={(val) => {
+            onUserInput={(val: string) => {
               setAmount(val)
             }}
           />

@@ -90,3 +90,6 @@ estimated time : 1 day
 - daniel: Moved swap hooks to hook folder
 - daniel: Add materialUI library (Added both Base for unstyled components and Material for out-of-the-box components)
 - daniel: Remove unused components and move NumericalInput. Fix lint.
+
+# 10/06
+- daniel: Modify NativeCurrency -> Token and (NativeCurrency | Token) -> Token on hooks and components (fixes errors). Fix lint.
