@@ -2,7 +2,7 @@ import React from 'react'
 import { escapeRegExp } from '@/utils'
 import 'components/styles/NumericalInput.scss'
 
-const inputRegex = RegExp('^\\d*(?:\\\\[.])?\\d*$') // match escaped "." characters via in a non-capturing group
+const inputRegex = /^\\d*(?:\\\\[.])?\\d*$/ // match escaped "." characters via in a non-capturing group
 
 export const Input = React.memo(function InnerInput ({
   value,
@@ -21,7 +21,7 @@ export const Input = React.memo(function InnerInput ({
   fontWeight?: string | number
   align?: 'right' | 'left' | 'center'
 } & Omit<React.HTMLProps<HTMLInputElement>, 'ref' | 'onChange' | 'as'>) {
-  const enforcer = (nextUserInput: string) => {
+  const enforcer = (nextUserInput: string): void => {
     if (nextUserInput === '' || inputRegex.test(escapeRegExp(nextUserInput))) {
       onUserInput(nextUserInput)
     }
@@ -44,7 +44,7 @@ export const Input = React.memo(function InnerInput ({
       // text-specific options
       type='text'
       pattern='^[0-9]*[.,]?[0-9]*$'
-      placeholder={placeholder || '0.0'}
+      placeholder={placeholder !== undefined ? placeholder : '0.0'}
       minLength={1}
       maxLength={79}
       spellCheck='false'
