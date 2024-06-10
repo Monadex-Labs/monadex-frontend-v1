@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Monadex',
-  description: 'The liquidity factory on Monad_'
+  description: 'The liquidity factory on Monad'
 }
 
 export default function RootLayout ({
@@ -16,6 +16,7 @@ export default function RootLayout ({
   children: React.ReactNode
 }>): JSX.Element {
   return (
+    // wrap redux provider
     <html lang='en'>
       <Web3ProviderWrapper>
         <body className={inter.className}>{children}</body>

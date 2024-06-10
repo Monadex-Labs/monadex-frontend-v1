@@ -1,17 +1,22 @@
 import { parseUnits } from '@ethersproject/units'
-import { MONAD, WMND, ChainId, JSBI, Token, TokenAmount, Trade, CurrencyAmount, NativeCurrency } from '@monadex/sdk'
+import { MONAD, ChainId, JSBI, Token, TokenAmount, Trade, CurrencyAmount, NativeCurrency, Percent } from '@monadex/sdk'
 import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput, purchasedTicketsOnSwap, RaffleState, SwapDelay, setSwapDelay } from './actions'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { ParsedQs } from 'qs'
+import { GlobalData, SLIPPAGE_AUTO } from '@/constants'
 import { useDispatch, useSelector } from 'react-redux'
+import { ParsedQs } from 'qs'
+import { SwapState } from './reducer'
 import { isAddress } from 'viem'
 import { useCurrencyBalances } from '../wallet/hooks'
 import { computeSlippageAdjustedAmounts } from '@/utils/price'
 import { AppDispatch, AppState } from '../store'
-import { MinimaRouterTrade, MonadexTrade } from '@/hooks/trade'
-import { useConnectWallet } from '@web3-onboard/react'
+import { useWallets } from '@web3-onboard/react'
 import { useCurrency } from '@/hooks/Tokens'
 import useFindBestRoute from '@/hooks/useFindBestRouter'
+import { useUserSlippageTolerance, useSlippageManuallySet } from '../user/hooks'
+import { formatAdvancedPercent } from '@/utils/numbers'
+import useParsedQueryString from '@/hooks/useParseQueryString'
+
 export function useSwapState (): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>((state) => state.swap)
 }
@@ -32,7 +37,6 @@ export function useSwapActionHandlers (): {
 
 } {
   const dispatch = useDispatch<AppDispatch>()
-  const chainId = ChainId.SEPOLIA // TODO: change the chainId to Monad testnet
   const NATIVE = MONAD // TODO: change the native if we do tests on eth sepolia
   const timer = useRef<any>(null)
   const onCurrencySelection = useCallback(
@@ -123,6 +127,14 @@ export function tryParseAmount (value?: string, currency?: NativeCurrency | Toke
   }
 }
 
+const BAD_RECIPIENT_ADDRESSES: string[] = [// TODO: UPDATE THIS WITH MONAD ADDRESSER
+  '0x16104a43529389C139D92f3AC9EbB79Cff22694E', // v2 factory
+  '0x8aA814fB63504711BC3619684c1d4dc449a9ea44', // v2 raffle 01
+  '0xD80b04Ed45b12F4871d9be252dB4db7F6785AbE8', // v2 router 02
+  '0xbcf86B64696B6e429D248526EfDaaC9aDcABe561', // v2 timelock
+  '0xc995D06c9BFD62Bf7E9E50328Cd9B5584370041A' // v2 gouvernor
+]
+
 export function involvesAddress (trade: Trade, checksummedAddress: string): boolean {
   return (
     trade.route.path.some((token) => token.address === checksummedAddress) ||
@@ -131,23 +143,24 @@ export function involvesAddress (trade: Trade, checksummedAddress: string): bool
 }
 // from the current swap inputs, compute the best trade and return it.
 
-
 export function useDerivedSwapInfo (): {
   currencies: { [field in Field]?: Token }
   currencyBalances: { [field in Field]?: TokenAmount }
   parsedAmount: TokenAmount | undefined
-  v2Trade: MinimaRouterTrade | MonadexTrade | undefined
-  inputError?: string
-  showRamp: boolean
+  v2Trade: Trade | undefined
   inputError?: string
   useAutoSlippage: number
 } {
 // grab the informations of the
-  const account = useConnectWallet()
-  const WALLET_ADDRESS = account?.[0].wallet?.accounts[0].address
-  const CHAIN_ID: number | undefined = Number(account?.[0].wallet?.chains[0].id)
-
+  const account = useWallets()[0]
+  const WALLET_ADDRESS = account.accounts[0].address
+  const parsedQuery = useParsedQueryString()
+  const CHAIN_ID: ChainId | undefined = Number(account.chains[0].id) as ChainId
   const chainIdToUse = CHAIN_ID ?? ChainId.SEPOLIA // TODO: change the chainId to Monad testnet
+  const swapSlippage = parsedQuery?.slippage // eslint-disable-line
+    ? (parsedQuery?.slippage as string)
+    : undefined
+
   const {
     independentField,
     typedValue,
@@ -158,7 +171,7 @@ export function useDerivedSwapInfo (): {
 
   const inputCurrency = useCurrency(inputCurrencyId)
   const outputCurrency = useCurrency(outputCurrencyId)
-  const receiver: string | null = (recipient === null ? account : recipient) ?? null
+  const receiver: string | null = (recipient === null ? WALLET_ADDRESS : recipient) ?? null
 
   const relevantTokenBalances = useCurrencyBalances(WALLET_ADDRESS ?? undefined, [
     inputCurrency as Token ?? undefined,
@@ -168,29 +181,211 @@ export function useDerivedSwapInfo (): {
   const parsedAmount = tryParseAmount(
     typedValue,
     (isExactIn ? inputCurrency : outputCurrency) ?? undefined
-  )
+  ) as TokenAmount
 
   const { v2Trade, bestTradeExactIn, bestTradeExactOut } = useFindBestRoute()
 
-  const currencyBalances = {
-    [Field.INPUT]: relevantTokenBalances?[0]
-    [Field.OUTPUT] : relevantTokenBalances?[1]
+  const currencyBalances = { // eslint-disable-line
+    [Field.INPUT]: relevantTokenBalances?.[0] as TokenAmount,
+    [Field.OUTPUT]: relevantTokenBalances?.[1] as TokenAmount
   }
 
-}
-/**
- * export interface SwapState {
-  readonly independentField: Field
-  readonly typedValue: string
-  readonly [Field.INPUT]: {
-    readonly currencyId?: string | undefined
+  const currencies: { [field in Field]?: Token } = {
+    [Field.INPUT]: inputCurrency ?? undefined,
+    [Field.OUTPUT]: outputCurrency ?? undefined
   }
-  readonly [Field.OUTPUT]: {
-    readonly currencyId?: string | undefined
+
+  let inputError: string | undefined
+  if (WALLET_ADDRESS === undefined) {
+    inputError = 'Connect Wallet'
   }
-  readonly raffle: RaffleState
-  readonly swapDelay: SwapDelay
-  // the typed recipient address or ENS name, or null if swap should go to sender
-  readonly recipient: string | null
+
+  if (!parsedAmount) { // eslint-disable-line
+    inputError = inputError ?? 'Enter an amount' // eslint-disable-line
+  }
+  if (currencies[Field.INPUT] === undefined || currencies[Field.OUTPUT] === undefined) {
+    inputError = inputError ?? 'Select a token' // eslint-disable-line
+  }
+  const formattedTo = isAddress(receiver) ? receiver : null
+
+  if (receiver === null || formattedTo === null) {
+    inputError = inputError ?? 'Enter a recipient' // eslint-disable-line
+  } else {
+    if (BAD_RECIPIENT_ADDRESSES.includes(formattedTo) ||
+      (bestTradeExactIn && involvesAddress(bestTradeExactIn, formattedTo)) || // eslint-disable-line
+      (bestTradeExactOut && involvesAddress(bestTradeExactOut, formattedTo)) // eslint-disable-line
+    ){ inputError = inputError ?? 'Invalid recipient' // eslint-disable-line
+    }
+  }
+  const [
+    allowedSlippage,
+    setUserSlippageTolerance
+  ] = useUserSlippageTolerance()
+
+  const [slippageManuallySet] = useSlippageManuallySet()
+  const FIXED_AUTO_SLIPPAGE = new Percent(JSBI.BigInt(5), JSBI.BigInt(10000)) // 0.5%
+  const autoSlippage = allowedSlippage === SLIPPAGE_AUTO
+    ? Math.ceil(
+      Number(
+        parseFloat(formatAdvancedPercent(FIXED_AUTO_SLIPPAGE)).toFixed(2)
+      ) * 100
+    )
+    : allowedSlippage
+  const slippageAdjustedAmount = v2Trade && autoSlippage && computeSlippageAdjustedAmounts(v2Trade, autoSlippage) // eslint-disable-line
+  // compare input balance to max input based on version
+  const [balanceIn, amountIn] = [
+    currencyBalances[Field.INPUT],
+    slippageAdjustedAmount ? slippageAdjustedAmount[Field.INPUT] as TokenAmount : null // eslint-disable-line
+  ]
+  if (
+    balanceIn && // eslint-disable-line
+    amountIn && // eslint-disable-line
+    balanceIn.lessThan(amountIn)
+  ) {
+    inputError = 'Insufficient ' + amountIn.token.symbol + ' balance' // eslint-disable-line
+  }
+  // ADJUST AUTO SLIPPAGE TOLERANCE FOR STABLE COINS TO 0.1%
+  useEffect(() => {
+    const stableCoins = GlobalData.stableCoins[chainIdToUse]
+    const stableCoinAddresses =
+      stableCoins && stableCoins.length > 0 // eslint-disable-line
+        ? stableCoins.map((token) => token.address.toLowerCase())
+        : []
+    if (!swapSlippage && !slippageManuallySet) { // eslint-disable-line
+      if (
+        inputCurrencyId &&  // eslint-disable-line
+        outputCurrencyId && // eslint-disable-line
+        stableCoinAddresses.includes(inputCurrencyId.toLowerCase()) &&
+        stableCoinAddresses.includes(outputCurrencyId.toLowerCase())
+      ) {
+        setUserSlippageTolerance(10)
+      } else {
+        setUserSlippageTolerance(SLIPPAGE_AUTO)
+      }
+    }
+  }, [
+    inputCurrencyId,
+    outputCurrencyId,
+    setUserSlippageTolerance,
+    chainIdToUse,
+    slippageManuallySet
+  ])
+
+  return {
+    currencies,
+    currencyBalances,
+    inputError,
+    parsedAmount,
+    v2Trade: v2Trade as Trade,
+    useAutoSlippage: autoSlippage
+  }
 }
- */
+function parseCurrencyFromURLParameter (urlParam: any): string {
+  if (typeof urlParam === 'string') {
+    const valid = isAddress(urlParam) ? urlParam : null
+    if (valid !== null) return valid
+    if (urlParam.toUpperCase() === 'MONAD') return 'MONAD'
+    if (valid === null) return 'MONAD'// review this
+  }
+  return ''
+}
+
+function parseTokenAmountURLParameter (urlParam: any): string {
+  return typeof urlParam === 'string' && !isNaN(parseFloat(urlParam))
+    ? urlParam
+    : ''
+}
+
+function parseIndependentFieldURLParameter (urlParam: any): Field {
+  return typeof urlParam === 'string' && urlParam.toLowerCase() === 'output'
+    ? Field.OUTPUT
+    : Field.INPUT
+}
+function parseBooleanURLParameter (param: any): string {
+  return param ? 'true' : 'false' // eslint-disable-line
+}
+const ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/
+
+function validatedRecipient (recipient: any): string | null {
+  if (typeof recipient !== 'string') return null
+  const address = isAddress(recipient) ? recipient : null
+  if (address) return address // eslint-disable-line
+  if (ADDRESS_REGEX.test(recipient)) return recipient
+  return null
+}
+export function queryParametersToSwapState (parsedQs: ParsedQs): SwapState {
+  let inputCurrency = parseCurrencyFromURLParameter(
+    parsedQs.currency0 ?? parsedQs.inputCurrency
+  )
+  let outputCurrency = parseCurrencyFromURLParameter(
+    parsedQs.currency1 ?? parsedQs.outputCurrency
+  )
+  if (inputCurrency === outputCurrency) {
+    if (typeof parsedQs.outputCurrency === 'string') {
+      inputCurrency = ''
+    } else {
+      outputCurrency = ''
+    }
+  }
+  const recipient = validatedRecipient(parsedQs.recipient)
+  // Assuming parsedQs has raffle related parameters
+  const raffleState = {
+    ticketsPurchased: parseBooleanURLParameter(parsedQs.ticketsPurchased),
+    multiplier: parseTokenAmountURLParameter(parsedQs.multiplier)
+  }
+  return {
+    [Field.INPUT]: {
+      currencyId: inputCurrency
+    },
+    [Field.OUTPUT]: {
+      currencyId: outputCurrency
+    },
+    typedValue: parseTokenAmountURLParameter(parsedQs.exactAmount),
+    independentField: parseIndependentFieldURLParameter(parsedQs.exactField),
+    recipient,
+    swapDelay: SwapDelay.INIT,
+    raffle: {
+      ...raffleState
+    }
+  }
+}
+// updates the swap state to use the defaults for a given network
+export function useDefaultsFromURLSearch ():
+| {
+  inputCurrencyId: string | undefined
+  outputCurrencyId: string | undefined
+}
+| undefined {
+  const account = useWallets()[0]
+  const chainId = Number(account.chains[0].id) as ChainId
+  const parsedQs = useParsedQueryString()
+  const dispatch = useDispatch<AppDispatch>()
+
+  const [result, setResult] = useState<{ inputCurrencyId: string | undefined, outputCurrencyId: string | undefined } | undefined
+  >()
+  useEffect(() => {
+    if (!chainId) return // eslint-disable-line
+    const parsed = queryParametersToSwapState(parsedQs)
+
+    dispatch(
+      replaceSwapState({
+        typedValue: parsed.typedValue,
+        field: parsed.independentField,
+        inputCurrencyId: parsed[Field.INPUT].currencyId,
+        outputCurrencyId: parsed[Field.OUTPUT].currencyId,
+        recipient: parsed.recipient,
+        swapDelay: SwapDelay.INIT,
+        raffle: {
+          ticketsPurchased: parsed.raffle.ticketsPurchased,
+          multiplier: parsed.raffle.multiplier
+        }
+      })
+    )
+    setResult({
+      inputCurrencyId: parsed[Field.INPUT].currencyId,
+      outputCurrencyId: parsed[Field.OUTPUT].currencyId
+    })
+  }, [dispatch, chainId])
+
+  return result
+}

@@ -11,6 +11,7 @@ export const FACTORY_ADDRESS = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f' as H
 export const RAFFLE_ADDRESS = '0x6c4e7a7f6b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b' as Hash // fake address todo : update
 // default allowed slippage, in bips
 export const INITIAL_ALLOWED_SLIPPAGE = 50
+export const SLIPPAGE_AUTO = 0
 // 20 minutes, denominated in seconds
 export const DEFAULT_DEADLINE_FROM_NOW = 60 * 20
 // a list of tokens by chain
@@ -51,6 +52,25 @@ export const MONADEX_TOKEN_LIST: TokenList | TokenList[] = [] // token list = li
 export const MNDX: { [chainid: number]: Token } = []
 export const USDC: { [chainid: number]: Token } = []
 // -
+
+export const GlobalData = {
+  stableCoins: {
+    [ChainId.SEPOLIA]: [
+      USDC[ChainId.SEPOLIA]
+      // ...other stabletokens to track
+    ],
+    [ChainId.MONAD_TESTNET]: [
+      USDC[ChainId.SEPOLIA]
+      // ...other stabletokens to track
+    ],
+    [ChainId.MONAD]: [
+      USDC[ChainId.SEPOLIA]
+      // ...other stabletokens to track
+    ],
+
+    [ChainId.LOCAL]: [USDC[ChainId.LOCAL]]
+  }
+}
 
 export const BASES_TO_TRACK_LIQUIDITY_FOR: {
   [ChainId: number]: Token[]

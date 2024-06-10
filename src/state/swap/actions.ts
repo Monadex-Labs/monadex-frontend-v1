@@ -7,8 +7,8 @@ export enum Field {
 
 // RaffleState : manage ticket Purchase during a swap
 export interface RaffleState {
-  ticketsPurchased: boolean
-  multiplier?: number | null
+  ticketsPurchased: boolean | string
+  multiplier?: number | null | string
 }
 export enum SwapDelay {
   INIT = 'INIT', // The initial state of the swap cycle before a user interaction
