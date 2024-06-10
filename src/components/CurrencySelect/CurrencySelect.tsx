@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { NativeCurrency, Token } from '@monadex/sdk'
 import { CurrencySearchModal, CurrencyLogo } from '@/components'
+import { Box } from '@mui/material'
 
 interface CurrencySelectProps {
   title?: string
@@ -25,8 +26,8 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({
   }, [])
 
   return (
-    <div>
-      <div
+    <Box>
+      <Box
         className={
           bgClass === null
             ? `currencyButton ${(currency != null) ? 'currencySelected' : 'noCurrency'}`
@@ -36,16 +37,16 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({
       >
         {(currency != null)
           ? (
-            <div className='flex items-center'>
+            <Box className='flex items-center'>
               <CurrencyLogo currency={currency as Token} size='28px' />
               <p className='token-symbol-container'>{currency?.symbol}</p>
-            </div>
+            </Box>
             )
           : (
             <p>Select a token</p>
             )}
         {children}
-      </div>
+      </Box>
       {modalOpen && (
         <CurrencySearchModal
           isOpen={modalOpen}
@@ -58,7 +59,7 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({
           otherSelectedCurrency={otherCurrency}
         />
       )}
-    </div>
+    </Box>
   )
 }
 

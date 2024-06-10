@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useState, useMemo } from 'react'
+import { Box } from '@mui/material'
+import { Button } from '@mui/base'
 import {
   CurrencyInput,
   TransactionErrorContent,
@@ -48,7 +50,6 @@ import { useParams } from 'react-router-dom'
 import { V2_ROUTER_ADDRESS } from 'constants/v3/addresses'
 import usePoolsRedirect from 'hooks/usePoolsRedirect'
 import { SLIPPAGE_AUTO } from 'state/user/reducer'
-import { ButtonPrimary } from '@/components/common'
 
 const AddLiquidity: React.FC<{
   currencyBgClass?: string
@@ -380,37 +381,37 @@ const AddLiquidity: React.FC<{
 
   const modalHeader = () => {
     return (
-      <div>
-        <div className='flex justify-center mt-10 mb-3'>
+      <Box>
+        <Box mt={10} mb={3} className='flex justify-center'>
           <DoubleCurrencyLogo
             currency0={currencies[Field.CURRENCY_A]}
             currency1={currencies[Field.CURRENCY_B]}
             size={48}
           />
-        </div>
-        <div className='mb-6 text-center'>
+        </Box>
+        <Box mb={6} textAlign='center'>
           <h6>
             {pendingText}
             <br />
             {`You will receive ${formatTokenAmount(liquidityMinted)} ${currencies[Field.CURRENCY_A]?.symbol} / ${currencies[Field.CURRENCY_B]?.symbol} LP Tokens`}
           </h6>
-        </div>
-        <div className='mb-3 text-center'>
+        </Box>
+        <Box mb={3} textAlign='center'>
           <small className='text-secondary'>
             {`Output is estimated. If the price changes by more than ${allowedSlippage / 100}% your transaction will revert.`}
           </small>
-        </div>
-        <div className='swapButtonWrapper'>
-          <ButtonPrimary fullWidth onClick={onAddLiquidity}>
+        </Box>
+        <Box className='swapButtonWrapper'>
+          <Button className='w-full' onClick={onAddLiquidity}>
             Confirm Supply
-          </ButtonPrimary>
-        </div>
-      </div>
+          </Button>
+        </Box>
+      </Box>
     )
   }
 
   return (
-    <div>
+    <Box>
       {showConfirm && (
         <TransactionConfirmationModal
           isOpen={showConfirm}
@@ -458,9 +459,9 @@ const AddLiquidity: React.FC<{
         setAmount={onFieldAInput}
         bgClass={currencyBgClass}
       />
-      <div className='exchangeSwap'>
+      <Box className='exchangeSwap'>
         <AddLiquidityIcon />
-      </div>
+      </Box>
       <CurrencyInput
         id='add-liquidity-input-tokenb'
         title='token'
@@ -486,8 +487,8 @@ const AddLiquidity: React.FC<{
         currencies[Field.CURRENCY_B] &&
         pairState !== PairState.INVALID &&
         price && (
-          <div className='my-2'>
-            <div className='swapPrice'>
+          <Box my={2}>
+            <Box className='swapPrice'>
               <small>
                 1 {currencies[Field.CURRENCY_A]?.symbol} ={' '}
                 {price.toSignificant(3)} {currencies[Field.CURRENCY_B]?.symbol}{' '}
@@ -497,36 +498,36 @@ const AddLiquidity: React.FC<{
                 {price.invert().toSignificant(3)}{' '}
                 {currencies[Field.CURRENCY_A]?.symbol}{' '}
               </small>
-            </div>
-            <div className='swapPrice'>
+            </Box>
+            <Box className='swapPrice'>
               <small>Your Pool Share</small>
               <small>
                 {poolTokenPercentage
                   ? poolTokenPercentage.toSignificant(6) + '%'
                   : '-'}
               </small>
-            </div>
-            <div className='swapPrice'>
+            </Box>
+            <Box className='swapPrice'>
               <small>lpTokenReceived</small>
               <small>
                 {formatTokenAmount(userPoolBalance)} lpTokens
               </small>
-            </div>
-          </div>
+            </Box>
+          </Box>
       )}
-      <div className='swapButtonWrapper flex-wrap'>
+      <Box className='swapButtonWrapper flex-wrap'>
         {(approvalA === ApprovalState.NOT_APPROVED ||
           approvalA === ApprovalState.PENDING ||
           approvalB === ApprovalState.NOT_APPROVED ||
           approvalB === ApprovalState.PENDING) &&
           !error && (
-            <div className='flex fullWidth justify-between mb-2'>
+            <Box className='flex fullWidth justify-between mb-2'>
               {approvalA !== ApprovalState.APPROVED && (
-                <div
+                <Box
                   className={`w-[${approvalB !== ApprovalState.APPROVED ? '48%' : '100%'}]`}
                 >
-                  <ButtonPrimary
-                    fullWidth
+                  <Button
+                    className='w-full'
                     onClick={async () => {
                       setApprovingA(true)
                       try {
@@ -545,15 +546,15 @@ const AddLiquidity: React.FC<{
                       : `approve ${
                           currencies[Field.CURRENCY_A]?.symbol
                         }`}
-                  </ButtonPrimary>
-                </div>
+                  </Button>
+                </Box>
               )}
               {approvalB !== ApprovalState.APPROVED && (
-                <div
+                <Box
                   className={`w-[${approvalA !== ApprovalState.APPROVED ? '48%' : '100%'}]`}
                 >
-                  <ButtonPrimary
-                    fullWidth
+                  <Button
+                    className='w-full'
                     onClick={async () => {
                       setApprovingB(true)
                       try {
@@ -572,13 +573,13 @@ const AddLiquidity: React.FC<{
                       : `approve ${
                           currencies[Field.CURRENCY_B]?.symbol
                         }`}
-                  </ButtonPrimary>
-                </div>
+                  </Button>
+                </Box>
               )}
-            </div>
+            </Box>
         )}
-        <ButtonPrimary
-          fullWidth
+        <Button
+          className='w-full'
           disabled={
             Boolean(account) &&
             isSupportedNetwork &&
@@ -589,9 +590,9 @@ const AddLiquidity: React.FC<{
           onClick={account && isSupportedNetwork ? onAdd : connectWallet}
         >
           {buttonText}
-        </ButtonPrimary>
-      </div>
-    </div>
+        </Button>
+      </Box>
+    </Box>
   )
 }
 

@@ -8,6 +8,7 @@ import { WMATIC_EXTENDED } from '@/constants/addresses'
 import { WrappedTokenInfo } from '@/state/list/hooks'
 import { useWallets } from '@web3-onboard/react'
 import NumericalInput from '../common/NumericalInput'
+import { Box } from '@mui/material'
 
 interface CurrencyInputProps {
   title?: string
@@ -66,34 +67,34 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
   const usdPrice = !Number.isNaN(usdPriceV3) ? usdPriceV3 : !Number.isNaN(usdPriceV2) ? usdPriceV2 : 0
 
   return (
-    <div
+    <Box
       id={id}
       className={`swapBox${showPrice === true ? ' priceShowBox' : ''} ${bgClass ??
         'bg-secondary2'}`}
     >
-      <div className='flex justify-between mb-2'>
+      <Box className='flex justify-between' mb={2}>
         <p>{title ?? 'youPay'}</p>
-        <div className='flex'>
+        <Box className='flex'>
           {Boolean(account) && (currency != null) && showHalfButton === true && (
-            <div className='maxWrapper' onClick={onHalf}>
+            <Box className='maxWrapper' onClick={onHalf}>
               <small>50%</small>
-            </div>
+            </Box>
           )}
           {Boolean(account) && (currency != null) && showMaxButton === true && (
-            <div className='maxWrapper ml-5' onClick={onMax}>
+            <Box className='maxWrapper ml-5' onClick={onMax}>
               <small>max</small>
-            </div>
+            </Box>
           )}
-        </div>
-      </div>
-      <div className='mb-2'>
+        </Box>
+      </Box>
+      <Box mb={2}>
         <CurrencySelect
           id={id}
           currency={currency}
           otherCurrency={otherCurrency}
           handleCurrencySelect={handleCurrencySelect}
         />
-        <div className='inputWrapper'>
+        <Box className='inputWrapper'>
           <NumericalInput
             value={amount}
             align='right'
@@ -103,17 +104,17 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
               setAmount(val)
             }}
           />
-        </div>
-      </div>
-      <div className='flex justify-between'>
+        </Box>
+      </Box>
+      <Box className='flex justify-between'>
         <small className={`${color !== undefined ? `text-${color}` : 'text-secondary'}}`}>
           {`Balance: ${formatTokenAmount(selectedCurrencyBalance)}`}
         </small>
         <small className={`${color !== undefined ? `text-${color}` : 'text-secondary'}}`}>
           ${(usdPrice * Number(amount)).toLocaleString('us')}
         </small>
-      </div>
-    </div>
+      </Box>
+    </Box>
   )
 }
 

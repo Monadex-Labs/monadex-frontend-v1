@@ -88,3 +88,4 @@ estimated time : 1 day
 - soso: start Raffle section state
 - daniel: Refactor component imports
 - daniel: Moved swap hooks to hook folder
+- daniel: Add materialUI library (Added both Base for unstyled components and Material for out-of-the-box components)
