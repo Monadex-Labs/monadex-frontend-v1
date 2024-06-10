@@ -96,3 +96,5 @@ estimated time : 1 day
 - soso: do hooks asked by daniel
 # 10/06
 - swap hook on state finished
+- transactions state hooks finished
+- useSwapCallback finished

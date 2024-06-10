@@ -1,19 +1,30 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { AddressZero } from '@ethersproject/constants'
+import { getAddress } from '@ethersproject/address'
+
 import { Contract } from '@ethersproject/contracts'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
-import { JSBI, Percent, TokenAmount } from '@monadex/sdk'
-import { isAddress } from 'viem'
+import { ChainId, JSBI, Percent, TokenAmount } from '@monadex/sdk'
+import { isAddress as isViemAddress } from 'viem'
 import truncateEthAddress from 'truncate-eth-address'
+import { useWallets } from '@web3-onboard/react'
 // import { TokenAddressMap } from '../state/lists/hooks'
 
 // shorten the checksummed version of the input address to have 0x + 4 characters at start and end
 export function shortenAddress (address: string, chars = 4): string {
   const parsed = isAddress(address)
-  if (!parsed) {
+  if (!parsed) { // eslint-disable-line
     throw Error(`Invalid 'address' parameter '${address}'.`)
   }
   return truncateEthAddress(address)
+}
+
+export function isAddress (value: any): string | false {
+  try {
+    return getAddress(value)
+  } catch {
+    return false
+  }
 }
 
 // add 100%
@@ -52,7 +63,7 @@ export function getProviderOrSigner (library: Web3Provider, account?: string): W
 
 // account is optional
 export function getContract (address: string, ABI: any, library: Web3Provider, account?: string): Contract {
-  if (!isAddress(address) || address === AddressZero) {
+  if (!isViemAddress(address) || address === AddressZero) {
     throw Error(`Invalid 'address' parameter '${address}'.`)
   }
 
@@ -66,3 +77,20 @@ export function escapeRegExp (string: string): string {
 // export function isTokenOnList (defaultTokens: TokenAddressMap, currency?: Token): boolean {
 //   return Boolean(currency instanceof Token && defaultTokens[currency.chainId]?.[currency.address])
 // }
+
+export function useWalletData (): {
+  account: string
+  chainId: ChainId
+  provider: Web3Provider
+} {
+  const walletData = useWallets()[0]
+  const chainId = Number(walletData?.chains[0]?.id) as ChainId
+  const account = walletData?.accounts[0]?.address
+  const lib = walletData?.provider
+  const provider = new Web3Provider(lib, 'any')
+  return {
+    account,
+    chainId,
+    provider
+  }
+}

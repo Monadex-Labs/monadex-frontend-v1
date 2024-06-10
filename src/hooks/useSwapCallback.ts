@@ -1,15 +1,12 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
-import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
+import { TransactionResponse, Web3Provider } from '@ethersproject/providers'
 import { ChainId, JSBI, Percent, Router, SwapParameters, Trade, TradeType } from '@monadex/sdk'
-import { MoolaRouterTrade } from './useTrade'
-import { ContractTransaction } from 'ethers'
-import { useMemo } from 'react'
-import { useTransactionAdder } from 'state/transactions/hooks'
-import invariant from 'tiny-invariant'
 import { ethers } from 'ethers'
+import { useMemo } from 'react'
+import { useTransactionAdder } from '@/state/transactions/hooks'
 import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
-import { calculateGasMargin, isAddress, shortenAddress } from '../utils'
+import { calculateGasMargin, shortenAddress, isAddress } from '../utils'
 import isZero from '../utils/isZero'
 import useTransactionDeadline from './useTransactionDeadline'
 import { useWallets } from '@web3-onboard/react'
@@ -78,7 +75,7 @@ export function useSwapCallArguments (
         recipient,
         deadline: deadline.toNumber()
       }, {
-        purchaseTickets: ticketsState.payload.raffle.ticketsPurchased,
+        purchaseTickets: ticketsState.payload.raffle.ticketsPurchased as boolean,
         multiplier: ticketsState.payload.raffle.multiplier as number
       })
     const swapCallParametersOnInput = Router.swapCallParameters(trade, {
@@ -88,7 +85,7 @@ export function useSwapCallArguments (
       deadline: deadline.toNumber()
     },
     {
-      purchaseTickets: ticketsState.payload.raffle.ticketsPurchased,
+      purchaseTickets: ticketsState.payload.raffle.ticketsPurchased as boolean,
       multiplier: ticketsState.payload.raffle.multiplier as number
     })
 
@@ -107,7 +104,7 @@ export function useSwapCallback (
   trade: Trade | undefined, // trade to execute, required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
   recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
-): { state: SwapCallbackState, callback: null | (() => Promise<string>), error: string | null } {
+): { state: SwapCallbackState, callback: null | (() => Promise<{ response: TransactionResponse, summary: string }>), error: string | null } {
   const account = useWallets()
   const chainId = Number(account[0].chains[0].id) as ChainId
   const address = account[0].accounts[0].address
@@ -115,10 +112,14 @@ export function useSwapCallback (
   const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName)
   const addTransaction = useTransactionAdder()
   const recipient = recipientAddressOrName === null && address
-  const signer = useConnectedSigner() as JsonRpcSigner
+  const provider = account[0].provider
+  // const contract = useRouterContract() as Contract
+  const library: Web3Provider | undefined = account.length > 0
+    ? new ethers.providers.Web3Provider(provider as any, 'any')
+    : undefined
 
   return useMemo(() => {
-    if ((trade == null) || !address || !chainId) { // eslint-disable-line
+    if (!trade || !address || !chainId) { // eslint-disable-line
       return { state: SwapCallbackState.INVALID, callback: null, error: 'Missing dependencies' }
     }
     if (!recipient) { // eslint-disable-line
@@ -131,14 +132,18 @@ export function useSwapCallback (
 
     return {
       state: SwapCallbackState.VALID,
-      callback: async function onSwap (): Promise<string> {
+      callback: async function onSwap (): Promise<{ response: TransactionResponse, summary: string }> {
         const estimatedCalls: EstimatedSwapCall[] = await Promise.all(
           swapCalls.map(async (call) => {
             const {
-              parameters: { methodName, args, value },
+              parameters: {
+                methodName,
+                args,
+                value
+              },
               contract
             } = call
-            const options = !value || isZero(value) ? {} : { value }
+            const options = !value || isZero(value) ? {} : { value } // eslint-disable-line
 
             return await contract.estimateGas[methodName](...args, options)
               .then((gasEstimate) => {
@@ -159,13 +164,13 @@ export function useSwapCallback (
                     console.debug('Call threw error', call, callError)
                     let errorMessage: string
                     switch (callError.reason) {
-                      case 'UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT':
-                      case 'UniswapV2Router: EXCESSIVE_INPUT_AMOUNT':
+                      case 'MonadexV1Router: INSUFFICIENT_OUTPUT_AMOUNT':
+                      case 'MonadexV1Router: EXCESSIVE_INPUT_AMOUNT':
                         errorMessage =
                           'This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance.'
                         break
                       default:
-                        errorMessage = `The transaction cannot succeed due to error: ${callError.reason}. This is probably an issue with one of the tokens you are swapping.`
+                        errorMessage = `The transaction cannot succeed due to error: ${callError.reason}. This is probably an issue with one of the tokens you are swapping.` // eslint-disable-line
                     }
                     return { call, error: new Error(errorMessage) }
                   })
@@ -175,8 +180,7 @@ export function useSwapCallback (
 
         // a successful estimation is a bignumber gas estimate and the next call is also a bignumber gas estimate
         const successfulEstimation = estimatedCalls.find(
-          (el, ix, list): el is SuccessfulCall =>
-            'gasEstimate' in el && (ix === list.length - 1 || 'gasEstimate' in list[ix + 1])
+          (el): el is SuccessfulCall => 'gasEstimate' in el
         )
 
         if (successfulEstimation == null) {
@@ -187,41 +191,37 @@ export function useSwapCallback (
 
         const {
           call: {
-            contract: disconnectedContract,
-            parameters: { methodName, args, value }
+            contract,
+            parameters: {
+              methodName, args, value
+            }
           },
           gasEstimate
         } = successfulEstimation
 
-        const contract = disconnectedContract.connect(signer)
         return contract[methodName](...args, {
           gasLimit: calculateGasMargin(gasEstimate)
         })
-          .then((response: ContractTransaction) => {
-            const inputSymbol =
-              trade instanceof MoolaRouterTrade ? trade.path[0].symbol : trade.inputAmount.currency.symbol
-            const outputSymbol =
-              trade instanceof MoolaRouterTrade
-                ? trade.path[trade.path.length - 1].symbol
-                : trade.outputAmount.currency.symbol
-            const inputAmount = trade.inputAmount.toSignificant(3)
+          .then((response: TransactionResponse) => {
+            const inputSymbol = trade.inputAmount.currency.symbol
+            const outputSymbol = trade.outputAmount.currency.symbol
+            const inputAmount = trade.inputAmount.toSignificant(2)
             const outputAmount = trade.outputAmount.toSignificant(3)
 
-            const base = `Swap ${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`
+            const base = `Swap ${inputAmount} ${inputSymbol as string} for ${outputAmount} ${outputSymbol as string}`
             const withRecipient =
-              recipient === account
+              recipient === address
                 ? base
                 : `${base} to ${
-                    recipientAddressOrName && isAddress(recipientAddressOrName)
-                      ? shortenAddress(recipientAddressOrName)
-                      : recipientAddressOrName
+                  recipientAddressOrName && isAddress(recipientAddressOrName) // eslint-disable-line
+                  ? shortenAddress(recipientAddressOrName)
+                  : recipientAddressOrName
                   }`
-
             addTransaction(response, {
               summary: withRecipient
             })
 
-            return response.hash
+            return { response, summary: withRecipient }
           })
           .catch((error: any) => {
             // if the user rejected the tx, pass this along
@@ -230,11 +230,11 @@ export function useSwapCallback (
             } else {
               // otherwise, the error was unexpected and we need to convey that
               console.error('Swap failed', error, methodName, args, value)
-              throw new Error(`Swap failed: ${error.message}`)
+              throw new Error(`Swap failed: ${error.message}`) // eslint-disable-line
             }
           })
       },
       error: null
     }
-  }, [trade, account, chainId, recipient, recipientAddressOrName, swapCalls, signer, addTransaction])
+  }, [trade, account, chainId, recipient, recipientAddressOrName, swapCalls, library, addTransaction])
 }

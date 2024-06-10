@@ -28,7 +28,7 @@ export default createReducer<ApplicationState>(initialState, (builder) =>
       state.openModal = action.payload
     })
     .addCase(addPopup, (state, { payload: { content, key, removeAfterMs = 15000 } }) => {
-      state.popupList = (key ? state.popupList.filter((popup) => popup.key !== key) : state.popupList).concat([
+      state.popupList = (key ? state.popupList.filter((popup) => popup.key !== key) : state.popupList).concat([ // eslint-disable-line
         {
           key: key !== undefined ? key : nanoid(),
           show: true,
