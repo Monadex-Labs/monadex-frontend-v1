@@ -1,9 +1,11 @@
 import { parseUnits } from '@ethersproject/units'
-import { MONAD, WMND, ChainId, JSBI, Token, TokenAmount, Trade, CurrencyAmount, NativeCurrency, Percent } from '@monadex/sdk'
+import { MONAD, ChainId, JSBI, Token, TokenAmount, Trade, CurrencyAmount, NativeCurrency, Percent } from '@monadex/sdk'
 import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput, purchasedTicketsOnSwap, RaffleState, SwapDelay, setSwapDelay } from './actions'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { GlobalData, SLIPPAGE_AUTO } from '@/constants'
 import { useDispatch, useSelector } from 'react-redux'
+import { ParsedQs } from 'qs'
+import { SwapState } from './reducer'
 import { isAddress } from 'viem'
 import { useCurrencyBalances } from '../wallet/hooks'
 import { computeSlippageAdjustedAmounts } from '@/utils/price'
@@ -13,6 +15,7 @@ import { useCurrency } from '@/hooks/Tokens'
 import useFindBestRoute from '@/hooks/useFindBestRouter'
 import { useUserSlippageTolerance, useSlippageManuallySet } from '../user/hooks'
 import { formatAdvancedPercent } from '@/utils/numbers'
+import useParsedQueryString from '@/hooks/useParseQueryString'
 
 export function useSwapState (): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>((state) => state.swap)
@@ -34,7 +37,6 @@ export function useSwapActionHandlers (): {
 
 } {
   const dispatch = useDispatch<AppDispatch>()
-  const chainId = ChainId.SEPOLIA // TODO: change the chainId to Monad testnet
   const NATIVE = MONAD // TODO: change the native if we do tests on eth sepolia
   const timer = useRef<any>(null)
   const onCurrencySelection = useCallback(
@@ -152,8 +154,13 @@ export function useDerivedSwapInfo (): {
 // grab the informations of the
   const account = useWallets()[0]
   const WALLET_ADDRESS = account.accounts[0].address
+  const parsedQuery = useParsedQueryString()
   const CHAIN_ID: ChainId | undefined = Number(account.chains[0].id) as ChainId
   const chainIdToUse = CHAIN_ID ?? ChainId.SEPOLIA // TODO: change the chainId to Monad testnet
+  const swapSlippage = parsedQuery?.slippage // eslint-disable-line
+    ? (parsedQuery?.slippage as string)
+    : undefined
+
   const {
     independentField,
     typedValue,
@@ -244,7 +251,7 @@ export function useDerivedSwapInfo (): {
       stableCoins && stableCoins.length > 0 // eslint-disable-line
         ? stableCoins.map((token) => token.address.toLowerCase())
         : []
-    if (!slippageManuallySet) {
+    if (!swapSlippage && !slippageManuallySet) { // eslint-disable-line
       if (
         inputCurrencyId &&  // eslint-disable-line
         outputCurrencyId && // eslint-disable-line
@@ -275,10 +282,10 @@ export function useDerivedSwapInfo (): {
 }
 function parseCurrencyFromURLParameter (urlParam: any): string {
   if (typeof urlParam === 'string') {
-    const valid = isAddress(urlParam)
-    if (valid) return valid
-    if (urlParam.toUpperCase() === 'ETH') return 'ETH'
-    if (!valid) return 'ETH'
+    const valid = isAddress(urlParam) ? urlParam : null
+    if (valid !== null) return valid
+    if (urlParam.toUpperCase() === 'MONAD') return 'MONAD'
+    if (valid === null) return 'MONAD'// review this
   }
   return ''
 }
@@ -294,6 +301,9 @@ function parseIndependentFieldURLParameter (urlParam: any): Field {
     ? Field.OUTPUT
     : Field.INPUT
 }
+function parseBooleanURLParameter (param: any): string {
+  return param ? 'true' : 'false' // eslint-disable-line
+}
 const ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/
 
 function validatedRecipient (recipient: any): string | null {
@@ -302,4 +312,80 @@ function validatedRecipient (recipient: any): string | null {
   if (address) return address // eslint-disable-line
   if (ADDRESS_REGEX.test(recipient)) return recipient
   return null
+}
+export function queryParametersToSwapState (parsedQs: ParsedQs): SwapState {
+  let inputCurrency = parseCurrencyFromURLParameter(
+    parsedQs.currency0 ?? parsedQs.inputCurrency
+  )
+  let outputCurrency = parseCurrencyFromURLParameter(
+    parsedQs.currency1 ?? parsedQs.outputCurrency
+  )
+  if (inputCurrency === outputCurrency) {
+    if (typeof parsedQs.outputCurrency === 'string') {
+      inputCurrency = ''
+    } else {
+      outputCurrency = ''
+    }
+  }
+  const recipient = validatedRecipient(parsedQs.recipient)
+  // Assuming parsedQs has raffle related parameters
+  const raffleState = {
+    ticketsPurchased: parseBooleanURLParameter(parsedQs.ticketsPurchased),
+    multiplier: parseTokenAmountURLParameter(parsedQs.multiplier)
+  }
+  return {
+    [Field.INPUT]: {
+      currencyId: inputCurrency
+    },
+    [Field.OUTPUT]: {
+      currencyId: outputCurrency
+    },
+    typedValue: parseTokenAmountURLParameter(parsedQs.exactAmount),
+    independentField: parseIndependentFieldURLParameter(parsedQs.exactField),
+    recipient,
+    swapDelay: SwapDelay.INIT,
+    raffle: {
+      ...raffleState
+    }
+  }
+}
+// updates the swap state to use the defaults for a given network
+export function useDefaultsFromURLSearch ():
+| {
+  inputCurrencyId: string | undefined
+  outputCurrencyId: string | undefined
+}
+| undefined {
+  const account = useWallets()[0]
+  const chainId = Number(account.chains[0].id) as ChainId
+  const parsedQs = useParsedQueryString()
+  const dispatch = useDispatch<AppDispatch>()
+
+  const [result, setResult] = useState<{ inputCurrencyId: string | undefined, outputCurrencyId: string | undefined } | undefined
+  >()
+  useEffect(() => {
+    if (!chainId) return // eslint-disable-line
+    const parsed = queryParametersToSwapState(parsedQs)
+
+    dispatch(
+      replaceSwapState({
+        typedValue: parsed.typedValue,
+        field: parsed.independentField,
+        inputCurrencyId: parsed[Field.INPUT].currencyId,
+        outputCurrencyId: parsed[Field.OUTPUT].currencyId,
+        recipient: parsed.recipient,
+        swapDelay: SwapDelay.INIT,
+        raffle: {
+          ticketsPurchased: parsed.raffle.ticketsPurchased,
+          multiplier: parsed.raffle.multiplier
+        }
+      })
+    )
+    setResult({
+      inputCurrencyId: parsed[Field.INPUT].currencyId,
+      outputCurrencyId: parsed[Field.OUTPUT].currencyId
+    })
+  }, [dispatch, chainId])
+
+  return result
 }

@@ -16,6 +16,7 @@ export default function RootLayout ({
   children: React.ReactNode
 }>): JSX.Element {
   return (
+    // wrap redux provider
     <html lang='en'>
       <Web3ProviderWrapper>
         <body className={inter.className}>{children}</body>

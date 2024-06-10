@@ -94,3 +94,5 @@ estimated time : 1 day
 - finish swap hooks
 - soso: start transaction state + burn + mint
 - soso: do hooks asked by daniel
+# 10/06
+- swap hook on state finished
