@@ -95,6 +95,12 @@ estimated time : 1 day
 - soso: start transaction state + burn + mint
 - soso: do hooks asked by daniel
 # 10/06
-- swap hook on state finished
-- transactions state hooks finished
-- useSwapCallback finished
+- soso :swap hook on state finished
+- soso: transactions state hooks finished
+- soso :useSwapCallback finished
+- soso: burn /mint state for liquidy finished
+# 11/06
+- soso: do hooks for daniel
+
+## phase 1
+- stop progress and start testing the hooks :::::::::::::::::::::
