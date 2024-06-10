@@ -89,3 +89,4 @@ estimated time : 1 day
 - daniel: Refactor component imports
 - daniel: Moved swap hooks to hook folder
 - daniel: Add materialUI library (Added both Base for unstyled components and Material for out-of-the-box components)
+- daniel: Remove unused components and move NumericalInput. Fix lint.
