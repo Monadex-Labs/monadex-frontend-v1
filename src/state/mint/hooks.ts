@@ -32,8 +32,8 @@ export function useDerivedMintInfo (): {
   currencies: { [field in Field]?: Token | NativeCurrency }
   pair?: Pair | null
   pairState: PairState
-  currencyBalances: { [field in Field]?: TokenAmount | CurrencyAmount}
-  parsedAmounts: { [field in Field]?: TokenAmount | CurrencyAmount}
+  currencyBalances: { [field in Field]?: TokenAmount | CurrencyAmount }
+  parsedAmounts: { [field in Field]?: TokenAmount | CurrencyAmount }
   price?: Price
   noLiquidity?: boolean
   liquidityMinted?: TokenAmount
@@ -244,5 +244,62 @@ export function useDerivedMintInfo (): {
     liquidityMinted,
     poolTokenPercentage,
     error
+  }
+}
+export function useMintActionHandlers (
+  noLiquidity: boolean | undefined,
+  chainId: ChainId
+): {
+    onFieldAInput: (typedValue: string) => void
+    onFieldBInput: (typedValue: string) => void
+    onCurrencySelection: (field: Field, currency: Token) => void
+  } {
+  const dispatch = useDispatch<AppDispatch>()
+
+  const onFieldAInput = useCallback(
+    (typedValue: string) => {
+      dispatch(
+        typeInput({
+          field: Field.CURRENCY_A,
+          typedValue,
+          noLiquidity: noLiquidity === true
+        })
+      )
+    },
+    [dispatch, noLiquidity]
+  )
+  const onFieldBInput = useCallback(
+    (typedValue: string) => {
+      dispatch(
+        typeInput({
+          field: Field.CURRENCY_B,
+          typedValue,
+          noLiquidity: noLiquidity === true
+        })
+      )
+    },
+    [dispatch, noLiquidity]
+  )
+
+  const onCurrencySelection = useCallback(
+    (field: Field, currency: Token | NativeCurrency) => {
+      dispatch(
+        selectCurrency({
+          field,
+          currencyId:
+              currency instanceof Token
+                ? currency.address
+                : currency === MONAD
+                  ? 'MND'
+                  : ''
+        })
+      )
+    },
+    [chainId, dispatch]
+  )
+  return {
+    onFieldAInput,
+    onFieldBInput,
+    onCurrencySelection
   }
 }
