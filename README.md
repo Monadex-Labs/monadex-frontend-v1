@@ -102,6 +102,6 @@ estimated time : 1 day
 
 # 11/06
 - soso: do hooks for daniel
-
+- added header + footer component folder
 ## phase 1
 - stop progress and start testing the hooks :::::::::::::::::::::
