@@ -4,7 +4,7 @@ import 'components/styles/NumericalInput.scss'
 
 const inputRegex = /^\\d*(?:\\\\[.])?\\d*$/ // match escaped "." characters via in a non-capturing group
 
-export const Input = React.memo(function InnerInput ({
+export const NumericalInput = React.memo(function InnerInput ({
   value,
   onUserInput,
   placeholder,
@@ -52,4 +52,4 @@ export const Input = React.memo(function InnerInput ({
   )
 })
 
-export default Input
+export default NumericalInput
