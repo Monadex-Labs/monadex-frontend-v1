@@ -99,6 +99,7 @@ estimated time : 1 day
 - soso: transactions state hooks finished
 - soso :useSwapCallback finished
 - soso: burn /mint state for liquidy finished
+
 # 11/06
 - soso: do hooks for daniel
 
