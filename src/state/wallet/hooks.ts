@@ -1,6 +1,6 @@
 import { JSBI, Token, TokenAmount } from '@monadex/sdk'
 import { useMemo } from 'react'
-import { ERC20_INTERFACE } from '@/constants'
+import { ERC20_INTERFACE } from '../../constants/index'
 import { isAddress } from 'viem'
 import { useMultipleContractSingleData } from '../multicall/hooks'
 /**

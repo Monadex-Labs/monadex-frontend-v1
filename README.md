@@ -93,13 +93,13 @@ estimated time : 1 day
 
 # 10/06
 - daniel: Modify NativeCurrency -> Token and (NativeCurrency | Token) -> Token on hooks and components (fixes errors). Fix lint.
-- soso : Swap state hook 96% done
 - soso: swap hook on state finished
 - soso: transactions state hooks finished
 - soso: useSwapCallback finished
+- soso: burn /mint state for liquidy finished
 
-# todo 10/60
-- finish swap hooks
-- soso: start transaction state + burn + mint
-- soso: do hooks asked by daniel
-
+# 11/06
+- soso: do hooks for daniel
+- added header + footer component folder
+## phase 1
+- stop progress and start testing the hooks
