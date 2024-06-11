@@ -2,7 +2,7 @@
 export default function Home (): JSX.Element {
   return (
     <div className='text-center'>
-      <p>THE LIQUIDTY FACTORY OF MONAD</p>
+      <p>SWAP PAGE WILL BE THE / ROOT</p>
     </div>
   )
 }

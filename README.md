@@ -103,5 +103,9 @@ estimated time : 1 day
 # 11/06
 - soso: do hooks for daniel
 - added header + footer component folder
+- soso : added UseAllowance hook
+- soso: added useProvider for redux
+- added header
 ## phase 1
 - stop progress and start testing the hooks :::::::::::::::::::::
+- fix errors on the imported componets before!
