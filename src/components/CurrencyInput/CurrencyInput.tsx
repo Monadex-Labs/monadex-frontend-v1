@@ -1,14 +1,13 @@
 import { MONAD, currencyEquals, Token } from '@monadex/sdk'
 import { TokenInfo } from '@uniswap/token-lists'
 import { useCurrencyBalance } from '@/state/wallet/hooks'
-import useUSDCPrice from '@/utils/useUSDCPrice'
 import { formatTokenAmount } from '@/utils'
 import CurrencySelect from '@/components/CurrencySelect'
-import { WMATIC_EXTENDED } from '@/constants/addresses'
 import { WrappedTokenInfo } from '@/state/list/hooks'
 import { useWallets } from '@web3-onboard/react'
-import NumericalInput from '../common/NumericalInput'
+import { NumericalInput } from '@/components'
 import { Box } from '@mui/material'
+import useUSDCPrice from '@/utils/useUSDCPrice'
 
 interface CurrencyInputProps {
   title?: string

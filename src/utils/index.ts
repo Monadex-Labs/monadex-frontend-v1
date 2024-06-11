@@ -4,7 +4,7 @@ import { getAddress } from '@ethersproject/address'
 
 import { Contract } from '@ethersproject/contracts'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
-import { ChainId, JSBI, Percent, TokenAmount } from '@monadex/sdk'
+import { ChainId, CurrencyAmount, JSBI, Percent, TokenAmount } from '@monadex/sdk'
 import { isAddress as isViemAddress } from 'viem'
 import truncateEthAddress from 'truncate-eth-address'
 import { useWallets } from '@web3-onboard/react'
@@ -92,5 +92,46 @@ export function useWalletData (): {
     account,
     chainId,
     provider
+  }
+}
+
+export function formatTokenAmount (
+  amount?: TokenAmount | CurrencyAmount,
+  digits = 3
+): any {
+  if (amount === undefined) return '-'
+  const amountStr = amount.toExact()
+  if (Math.abs(Number(amountStr)) > 1) {
+    return Number(amountStr).toLocaleString('us')
+  }
+  return amount.toSignificant(digits)
+}
+export function calculateGasMarginBonus(value: BigNumber): BigNumber {
+  return value.mul(BigNumber.from(2))
+}
+
+export function getFormattedPrice(price: number) {
+  if (price < 0.001 && price > 0) {
+    return '<0.001';
+  } else if (price > -0.001 && price < 0) {
+    return '>-0.001';
+  } else {
+    const beforeSign = price > 0 ? '+' : '';
+    return beforeSign + price.toLocaleString('us');
+  }
+}
+
+export function getFormattedPercent(percent: number) {
+  if (percent < 0.001 && percent > 0) {
+    return '<+0.001%';
+  } else if (percent > -0.001 && percent < 0) {
+    return '>-0.001%';
+  } else if (percent > 10000) {
+    return '>+10000%';
+  } else if (percent < -10000) {
+    return '<-10000%';
+  } else {
+    const beforeSign = percent > 0 ? '+' : '';
+    return beforeSign + percent.toLocaleString('us') + '%';
   }
 }

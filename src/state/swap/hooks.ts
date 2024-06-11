@@ -2,7 +2,7 @@ import { parseUnits } from '@ethersproject/units'
 import { MONAD, ChainId, JSBI, Token, TokenAmount, Trade, CurrencyAmount, NativeCurrency, Percent } from '@monadex/sdk'
 import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput, purchasedTicketsOnSwap, RaffleState, SwapDelay, setSwapDelay } from './actions'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { GlobalData, SLIPPAGE_AUTO } from '@/constants'
+import { GlobalData, SLIPPAGE_AUTO } from '../../constants/index'
 import { useDispatch, useSelector } from 'react-redux'
 import { ParsedQs } from 'qs'
 import { SwapState } from './reducer'
@@ -249,7 +249,7 @@ export function useDerivedSwapInfo (): {
     const stableCoins = GlobalData.stableCoins[chainIdToUse]
     const stableCoinAddresses =
       stableCoins && stableCoins.length > 0 // eslint-disable-line
-        ? stableCoins.map((token) => token.address.toLowerCase())
+        ? stableCoins.map((token: Token) => token.address.toLowerCase())
         : []
     if (!swapSlippage && !slippageManuallySet) { // eslint-disable-line
       if (

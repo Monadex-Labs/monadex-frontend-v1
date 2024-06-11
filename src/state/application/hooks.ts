@@ -1,6 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { AppDispatch, AppState } from '../store'
-import { ChainId } from '@monadex/sdk'
 import { useCallback, useMemo } from 'react'
 import {
   addPopup,
@@ -9,10 +8,10 @@ import {
   removePopup,
   setOpenModal
 } from './actions'
-import { useWallets } from '@web3-onboard/react'
+import { useWalletData } from '@/utils/index'
 
 export function useBlockNumber (): number | undefined {
-  const chainId = Number(useWallets()[0]?.chains[0]?.id) as ChainId
+  const { chainId } = useWalletData()
   return useSelector((state: AppState) => state.application.blockNumber[chainId ?? -1])
 }
 export function useModalOpen (modal: ApplicationModal): boolean {

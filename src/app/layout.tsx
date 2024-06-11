@@ -1,8 +1,9 @@
 import type { Metadata } from 'next'
+import ReduxProvider from '@/hooks/useReduxProvider'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import Web3ProviderWrapper from '@/utils/ProviderWrapper'
-
+import Header from '@/components/Header'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -19,7 +20,12 @@ export default function RootLayout ({
     // wrap redux provider
     <html lang='en'>
       <Web3ProviderWrapper>
-        <body className={inter.className}>{children}</body>
+        <ReduxProvider>
+          <body className={inter.className}>
+            <Header />
+            {children}
+          </body>
+        </ReduxProvider>
       </Web3ProviderWrapper>
     </html>
   )

@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "npx ts-standard --fix",
-    "test": "next test",
+    "test": "jest",
     "prepare": "husky"
   },
   "dependencies": {
@@ -23,6 +23,7 @@
     "@mui/material": "^5.15.19",
     "@reduxjs/toolkit": "^2.2.5",
     "@tanstack/react-query": "^5.40.1",
+    "@types/jest": "^29.5.12",
     "@types/react-redux": "^7.1.33",
     "@uniswap/token-lists": "^1.0.0-beta.34",
     "@web3-onboard/coinbase": "^2.3.0",
@@ -39,7 +40,7 @@
     "clsx": "^2.1.1",
     "ethers": "^5.7.2",
     "i": "^0.3.7",
-    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "lodash.flatmap": "^4.5.0",
     "next": "14.2.3",
     "npm": "^10.8.1",
@@ -54,11 +55,15 @@
     "viem": "^2.13.6"
   },
   "devDependencies": {
+    "@babel/core": "^7.24.7",
+    "@babel/preset-env": "^7.24.7",
     "@types/lodash.flatmap": "^4.5.9",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "babel-jest": "^29.7.0",
     "husky": "^9.0.11",
+    "jest": "^29.7.0",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "ts-jest": "^29.1.4",
