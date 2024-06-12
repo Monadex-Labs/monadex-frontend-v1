@@ -14,9 +14,9 @@ export const getTokenLogoURL = (address: string, tokenList?: any): any[] => {
         const image = require(`../assets/tokenLogo/${address.toLowerCase()}${ext}`)
         return image
       } catch (e) {
-        return; // eslint-disable-line
+        return
       }
     })
     .concat([tokenList[address]?.tokenInfo?.logoURI])
-    .filter((url) => !!url) // eslint-disable-line
+    .filter((url) => !!url)
 }

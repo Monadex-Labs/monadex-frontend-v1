@@ -1,9 +1,9 @@
 import React from 'react'
 import { escapeRegExp } from '@/utils'
 
-// match escaped "." characters via in a non-capturing group
-const inputRegex = RegExp('^\\d*(?:\\\\[.])?\\d*$') // eslint-disable-line 
-export const Input = React.memo(function InnerInput ({
+const inputRegex = /^\\d*(?:\\\\[.])?\\d*$/ // match escaped "." characters via in a non-capturing group
+
+export const NumericalInput = React.memo(function InnerInput ({
   value,
   onUserInput,
   placeholder,
@@ -43,7 +43,7 @@ export const Input = React.memo(function InnerInput ({
       // text-specific options
       type='text'
       pattern='^[0-9]*[.,]?[0-9]*$'
-      placeholder={placeholder || '0.0'} // eslint-disable-line
+      placeholder={placeholder != null ? placeholder : '0.0'}
       minLength={1}
       maxLength={79}
       spellCheck='false'
@@ -51,4 +51,4 @@ export const Input = React.memo(function InnerInput ({
   )
 })
 
-export default Input
+export default NumericalInput

@@ -1,5 +1,6 @@
 import { currencyEquals, MONAD, Token } from '@monadex/sdk'
 import { useMemo } from 'react'
+import { Box } from '@mui/material'
 import useHttpLocations from '@/hooks/useHttpLocations'
 import { WrappedTokenInfo } from '@/state/list/hooks'
 import { Logo } from '@/components'
@@ -59,22 +60,28 @@ const CurrencyLogo: React.FC<CurrencyLogoProps> = ({
     (currencyEquals(currency, nativeCurrency))
   ) {
     return (
-      <div
+      <Box
         style={style}
-        className={`currencyLogo roudned-full w-[${size}] h-[${size}]`}
+        width={size}
+        height={size}
+        borderRadius={size}
+        className='currencyLogo'
       >
         <Image
           className='ethereumLogo'
           src={nativeCurrencyImage}
           alt='Native Currency Logo'
         />
-      </div>
+      </Box>
     )
   }
 
   return (
-    <div
-      className={`currencyLogo${withoutBg !== undefined ? '' : ' bg-white'} w-[${size}] h-[${size}] rounded-full`}
+    <Box
+      width={size}
+      height={size}
+      borderRadius={withoutBg != null ? 0 : size}
+      className={`currencyLogo${withoutBg != null ? '' : ' bg-white'}`}
     >
       <Logo
         srcs={srcs}
@@ -82,7 +89,7 @@ const CurrencyLogo: React.FC<CurrencyLogoProps> = ({
         alt={`${currency?.symbol ?? 'token'} logo`}
         symbol={currency?.symbol}
       />
-    </div>
+    </Box>
   )
 }
 

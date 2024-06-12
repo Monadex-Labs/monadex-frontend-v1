@@ -98,7 +98,7 @@ export function useWalletData (): {
 export function formatTokenAmount (
   amount?: TokenAmount | CurrencyAmount,
   digits = 3
-): any {
+): string {
   if (amount === undefined) return '-'
   const amountStr = amount.toExact()
   if (Math.abs(Number(amountStr)) > 1) {

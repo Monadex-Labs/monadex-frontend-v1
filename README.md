@@ -88,16 +88,14 @@ estimated time : 1 day
 - soso: start Raffle section state
 - daniel: Refactor component imports
 - daniel: Moved swap hooks to hook folder
-- soso : Swap state hook 96% done
+- daniel: Add materialUI library (Added both Base for unstyled components and Material for out-of-the-box components)
+- daniel: Remove unused components and move NumericalInput. Fix lint.
 
-# todo 10/60
-- finish swap hooks
-- soso: start transaction state + burn + mint
-- soso: do hooks asked by daniel
 # 10/06
-- soso :swap hook on state finished
+- daniel: Modify NativeCurrency -> Token and (NativeCurrency | Token) -> Token on hooks and components (fixes errors). Fix lint.
+- soso: swap hook on state finished
 - soso: transactions state hooks finished
-- soso :useSwapCallback finished
+- soso: useSwapCallback finished
 - soso: burn /mint state for liquidy finished
 
 # 11/06
@@ -105,11 +103,16 @@ estimated time : 1 day
 - added header + footer component folder
 - soso : added UseAllowance hook
 - soso: added useProvider for redux
-- added header
-- created UseApprouveCallback hook  = approuve a swap = before useSwapCallback
+- soso: added header
+- soso: created UseApproveCallback hook  = approve a swap = before useSwapCallback
+- daniel: Add useUSDCPrice hook (basic logic, returns 1) and fix imports on NumericalInput.
+- daniel: Fix linter errors on return types and var types on CurrencyInput
+- daniel: Remove check for v2 and rename getTokenLogoURL util file
+- daniel: Add CustomModal and fix CurrencySearchModal
+- daniel: Add MaterialUI icon library
+- daniel: Add CurrencySearch component. Pending fixes, check NativeCurrency/Token inconsistencies.
+- soso: added main components folders we need
+
 ## phase 1
 - stop progress and start testing the hooks :::::::::::::::::::::
 - fix errors on the imported componets before!
-
-# 11/06
-- added main components folders we need
