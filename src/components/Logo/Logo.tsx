@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { stringToColour } from '@/utils/stringToColour'
+import { stringToColour } from '@/utils/stringToColor'
 
 const BAD_SRCS: { [tokenAddress: string]: true } = {}
 

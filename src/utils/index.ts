@@ -106,32 +106,32 @@ export function formatTokenAmount (
   }
   return amount.toSignificant(digits)
 }
-export function calculateGasMarginBonus(value: BigNumber): BigNumber {
+export function calculateGasMarginBonus (value: BigNumber): BigNumber {
   return value.mul(BigNumber.from(2))
 }
 
-export function getFormattedPrice(price: number) {
+export function getFormattedPrice (price: number): string {
   if (price < 0.001 && price > 0) {
-    return '<0.001';
+    return '<0.001'
   } else if (price > -0.001 && price < 0) {
-    return '>-0.001';
+    return '>-0.001'
   } else {
-    const beforeSign = price > 0 ? '+' : '';
-    return beforeSign + price.toLocaleString('us');
+    const beforeSign = price > 0 ? '+' : ''
+    return beforeSign + price.toLocaleString('us')
   }
 }
 
-export function getFormattedPercent(percent: number) {
+export function getFormattedPercent (percent: number): string {
   if (percent < 0.001 && percent > 0) {
-    return '<+0.001%';
+    return '<+0.001%'
   } else if (percent > -0.001 && percent < 0) {
-    return '>-0.001%';
+    return '>-0.001%'
   } else if (percent > 10000) {
-    return '>+10000%';
+    return '>+10000%'
   } else if (percent < -10000) {
-    return '<-10000%';
+    return '<-10000%'
   } else {
-    const beforeSign = percent > 0 ? '+' : '';
-    return beforeSign + percent.toLocaleString('us') + '%';
+    const beforeSign = percent > 0 ? '+' : ''
+    return beforeSign + percent.toLocaleString('us') + '%'
   }
 }
