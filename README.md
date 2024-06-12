@@ -103,8 +103,14 @@ estimated time : 1 day
 - added header + footer component folder
 - soso : added UseAllowance hook
 - soso: added useProvider for redux
-- added header
-- created UseApproveCallback hook  = approve a swap = before useSwapCallback
+- soso: added header
+- soso: created UseApproveCallback hook  = approve a swap = before useSwapCallback
+- daniel: Add useUSDCPrice hook (basic logic, returns 1) and fix imports on NumericalInput.
+- daniel: Fix linter errors on return types and var types on CurrencyInput
+- daniel: Remove check for v2 and rename getTokenLogoURL util file
+- daniel: Add CustomModal and fix CurrencySearchModal
+- daniel: Add MaterialUI icon library
+- daniel: Add CurrencySearch component. Pending fixes, check NativeCurrency/Token inconsistencies.
 
 ## phase 1
 - stop progress and start testing the hooks :::::::::::::::::::::
