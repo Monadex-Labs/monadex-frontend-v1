@@ -111,6 +111,7 @@ estimated time : 1 day
 - daniel: Add CustomModal and fix CurrencySearchModal
 - daniel: Add MaterialUI icon library
 - daniel: Add CurrencySearch component. Pending fixes, check NativeCurrency/Token inconsistencies.
+- soso: added main components folders we need
 
 ## phase 1
 - stop progress and start testing the hooks :::::::::::::::::::::
