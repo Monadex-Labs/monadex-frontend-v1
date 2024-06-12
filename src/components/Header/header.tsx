@@ -1,13 +1,16 @@
 'use client'
 import Image from 'next/image'
-import { Logo } from '@/components/index'
 import Monadex from '@/static/assets/Dex_logo.svg'
 import Monadex_mobile from '@/static/assets/Dex_logo_mobile.svg'
+import { WalletButton } from '../common/Button'
 const Header: React.FC<any> = () => {
   return (
-    <header>
+    <header className='flex justify-between'>
       <div>
         <Image src={Monadex} alt='logo' />
+      </div>
+      <div>
+        <WalletButton />
       </div>
     </header>
   )

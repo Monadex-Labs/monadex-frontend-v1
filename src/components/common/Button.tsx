@@ -1,6 +1,6 @@
 'use client'
 import { useConnectWallet } from '@web3-onboard/react'
-
+import { cn } from '@/utils/cn'
 interface ButtonProps {
   classNames?: string
   children?: React.ReactNode
@@ -30,10 +30,10 @@ export const WalletButton: React.FC<any> = ({ classNames, children, ...rest }: B
   return (
     <button
       disabled={connecting}
-      onClick={() => (wallet ? disconnect(wallet) : connect())}
-      className={'p-8 w-100 font-semibold text-center rounded-sm outline-none'}
+      onClick={async () => ((wallet != null) ? disconnect(wallet) : connect())}
+      className={cn('p-8 w-100 font-semibold text-center rounded-sm outline-none', classNames)}
     >
-
+      {connecting ? 'Connecting' : (wallet !== null) ? 'Connected' : 'Connect Wallet'}
     </button>
   )
 }

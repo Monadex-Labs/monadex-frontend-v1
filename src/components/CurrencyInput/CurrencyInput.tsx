@@ -4,15 +4,13 @@ import { formatTokenAmount } from '@/utils'
 import CurrencySelect from '@/components/CurrencySelect'
 // import { WrappedTokenInfo } from '@/state/list/hooks'
 import { useWallets } from '@web3-onboard/react'
-import { NumericalInput } from '@/components'
-import { Box } from '@mui/material'
+import NumericalInput from '@/components/NumericalInput'
 import useUSDCPrice from '@/utils/useUsdcPrice'
-
 interface CurrencyInputProps {
   title?: string
-  handleCurrencySelect: (currency: Token) => void
+  handleCurrencySelect: (currency: NativeCurrency) => void
   currency: Token | undefined
-  otherCurrency?: Token | undefined
+  otherCurrency?: Token | NativeCurrency | undefined
   amount: string
   setAmount: (value: string) => void
   onMax?: () => void
@@ -51,54 +49,54 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
   const usdPriceV2 = Number(useUSDCPrice(currency)?.toSignificant() ?? 0)
   const usdPrice = usdPriceV2
   return (
-    <Box
+    <div
       id={id}
       className={`swapBox${showPrice === true ? ' priceShowBox' : ''} ${bgClass ??
         'bg-secondary2'}`}
     >
-      <Box className='flex justify-between' mb={2}>
+      <div className='flex justify-between mb-2'>
         <p>{title ?? 'youPay'}</p>
-        <Box className='flex'>
+        <div className='flex'>
           {Boolean(account) && (currency != null) && showHalfButton === true && (
-            <Box className='maxWrapper' onClick={onHalf}>
+            <div className='maxWrapper' onClick={onHalf}>
               <small>50%</small>
-            </Box>
+            </div>
           )}
           {Boolean(account) && (currency != null) && showMaxButton === true && (
-            <Box className='maxWrapper ml-5' onClick={onMax}>
+            <div className='maxWrapper ml-5' onClick={onMax}>
               <small>max</small>
-            </Box>
+            </div>
           )}
-        </Box>
-      </Box>
-      <Box mb={2}>
+        </div>
+      </div>
+      <div className='mb-2'>
         <CurrencySelect
           id={id}
           currency={currency}
           otherCurrency={otherCurrency as Token}
           handleCurrencySelect={handleCurrencySelect}
         />
-        <Box className='inputWrapper'>
+        <div className='inputWrapper'>
           <NumericalInput
             value={amount}
             align='right'
             color={color}
             placeholder='0.00'
-            onUserInput={(val: string) => {
+            onUserInput={(val:any) => {
               setAmount(val)
             }}
           />
-        </Box>
-      </Box>
-      <Box className='flex justify-between'>
+        </div>
+      </div>
+      <div className='flex justify-between'>
         <small className={`${color !== undefined ? `text-${color}` : 'text-secondary'}}`}>
           {`Balance: ${formatTokenAmount(selectedCurrencyBalance)}`} {/*eslint-disable-line*/}
         </small>
         <small className={`${color !== undefined ? `text-${color}` : 'text-secondary'}}`}>
           ${(usdPrice * Number(amount)).toLocaleString('us')}
         </small>
-      </Box>
-    </Box>
+      </div>
+    </div>
   )
 }
 
