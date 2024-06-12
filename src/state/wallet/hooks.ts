@@ -1,4 +1,4 @@
-import { JSBI, Token, TokenAmount } from '@monadex/sdk'
+import { CurrencyAmount, JSBI, NativeCurrency, Token, TokenAmount } from '@monadex/sdk'
 import { useMemo } from 'react'
 import { ERC20_INTERFACE } from '../../constants/index'
 import { isAddress } from 'viem'
@@ -41,7 +41,12 @@ export function useTokenBalances (
 ): { [tokenAddress: string]: TokenAmount | undefined } {
   return useTokenBalancesWithLoadingIndicator(address, tokens)[0]
 }
-export function useCurrencyBalances (account?: string, currencies?: Token[] | undefined): TokenAmount [] | undefined {
+export function useTokenBalance (account?: string, token?: Token): TokenAmount | undefined {
+  const tokenBalances = useTokenBalances(account, [token as Token])
+  if ((token === undefined)) return undefined
+  return tokenBalances[token.address]
+}
+export function useCurrencyBalances (account?: string, currencies?: NativeCurrency[] | undefined): CurrencyAmount [] | undefined {
   const tokens = useMemo(
     () => currencies?.filter((currency): currency is Token => currency instanceof Token) ?? [],
     [currencies]
@@ -57,19 +62,13 @@ export function useCurrencyBalances (account?: string, currencies?: Token[] | un
         return undefined
       }) ?? [],
     [account, currencies, tokenBalances]
-  ) as TokenAmount []
+  ) as CurrencyAmount []
 }
 export function useCurrencyBalance (
   account?: string,
-  currency?: Token
-): TokenAmount | undefined {
+  currency?: NativeCurrency
+): CurrencyAmount | undefined {
   return useCurrencyBalances(account, (currency !== undefined) ? [currency] : [])?.[0]
-}
-
-export function useTokenBalance (account?: string, token?: Token): TokenAmount | undefined {
-  const tokenBalances = useTokenBalances(account, [token as Token])
-  if ((token === undefined)) return undefined
-  return tokenBalances[token.address]
 }
 
 // mimics useAllBalances

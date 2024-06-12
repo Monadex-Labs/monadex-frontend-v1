@@ -1,5 +1,5 @@
 import { Contract } from '@ethersproject/contracts'
-import { getContract } from '@/utils'
+import { getContract, useWalletData } from '@/utils'
 // import { Web3Provider } from '@ethersproject/providers'
 import { MULTICALL_ADDRESS, ROUTER_ADDRESS } from '@/constants'
 import MonadexV1RouterABI from '../constants/abi/JSON/MonadexV1Router.json'
@@ -9,7 +9,7 @@ import { useMemo } from 'react'
 import { useWallets } from '@web3-onboard/react'
 import { ethers } from 'ethers'
 import { erc20Abi_bytes32 } from 'viem'
-import { ChainId } from '@monadex/sdk'
+import { ChainId, WMND } from '@monadex/sdk'
 
 /**
  * @todo Verfiy that this works
@@ -77,7 +77,16 @@ export function useTokenContract (tokenAddress?: string, withSignerIfPossible?: 
 export function useBytes32TokenContract (tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null | undefined {
   return useContract(tokenAddress, erc20Abi_bytes32, withSignerIfPossible)
 }
-
+export function useWMNDContract (
+  withSignerIfPossible?: boolean
+): Contract | null {
+  const { chainId } = useWalletData()
+  return useContract(
+    (chainId !== null) ? WMND[chainId].address : undefined,
+    ERC20_ABI, // change the abi to WMND_ABI
+    withSignerIfPossible
+  ) as Contract
+}
 // export function usePairContract (pairAddress?: string, withSignerIfPossible?: boolean): Contract | null {
 //   return useContract(pairAddress, IUniswapV2PairABI, withSignerIfPossible)
 // }
