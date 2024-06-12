@@ -1,4 +1,4 @@
-import { Token, MONAD } from '@monadex/sdk'
+import { Token, MONAD, NativeCurrency } from '@monadex/sdk'
 import React, { useCallback } from 'react'
 import { CustomModal } from '@/components'
 import CurrencySearch from './CurrencySearch'
@@ -27,12 +27,12 @@ const CurrencySearchModal: React.FC<CurrencySearchModalProps> = ({
 
   const handleCurrencySelect = useCallback(
     (currency: Token) => {
-      if (currency.isNative) {
+      if (currency instanceof NativeCurrency) {
         onCurrencySelect({
           ...nativeCurrency,
           isNative: true,
           isToken: false
-        } as Token)
+        })
       } else {
         onCurrencySelect(new WrappedTokenInfo(currency as TokenInfo, []))
       }
@@ -46,7 +46,6 @@ const CurrencySearchModal: React.FC<CurrencySearchModalProps> = ({
       open={isOpen}
       onClose={onDismiss}
       modalWrapper='searchModalWrapper'
-      hideBackdrop
     >
       <CurrencySearch
         isOpen={isOpen}
