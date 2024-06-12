@@ -1,6 +1,5 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react'
 import {
-  useDefaultsFromURLSearch,
   useDerivedSwapInfo,
   useSwapActionHandlers,
   useSwapState
@@ -43,28 +42,25 @@ import { Box, CircularProgress } from '@mui/material'
 import { Button } from '@mui/base'
 import { useTransactionFinalizer } from '@/state/transactions/hooks'
 import useWrapCallback, { WrapType } from '@/hooks/useWrapCallback'
-import useToggledVersion, { Version } from '@/hooks/useToggledVersion'
 import { computeTradePriceBreakdown, warningSeverity } from '@utils/prices'
 import TokenWarningModal from 'components/v3/TokenWarningModal'
-import { useHistory } from 'react-router-dom'
 import { useAllTokens, useCurrency } from '@/hooks/Tokens'
-import useParsedQueryString from '@/hooks/useParsedQueryString'
-import useSwapRedirects from '@/hooks/useSwapRedirect'
-import { GlobalValue } from '@/constants/index'
+import { ALLOWED_PRICE_IMPACT_HIGH } from '@/constants'
 import { getConfig } from '@/config/index'
 import { wrappedCurrency } from '@/utils/wrappedCurrency'
 import { useUSDCPriceFromAddress } from '@/utils/useUSDCPrice'
-import { V2_ROUTER_ADDRESS } from '@/constants/v3/addresses'
 import { useV2TradeTypeAnalyticsCallback } from './LiquidityHub'
 import { SLIPPAGE_AUTO } from '@/state/user/reducer'
 import { useWalletInfo } from '@web3modal/ethers5/react'
+import useParsedQueryString from '@/hooks/useParseQueryString'
+import { useConnectWallet } from '@web3-onboard/react'
+import { usePathname, useRouter } from 'next/navigation'
 
 const Swap: React.FC<{
   currencyBgClass?: string
 }> = ({ currencyBgClass }) => {
-  const loadedUrlParams = useDefaultsFromURLSearch()
-  const history = useHistory()
-  const isProMode = useIsProMode()
+  const router = useRouter()
+  const pathname = usePathname()
   const isSupportedNetwork = useIsSupportedNetwork()
   // token warning stuff
   // const [loadedInputCurrency, loadedOutputCurrency] = [
@@ -88,8 +84,8 @@ const Swap: React.FC<{
   // reset if they close warning without tokens in params
   const handleDismissTokenWarning = useCallback(() => {
     setDismissTokenWarning(true)
-    history.push('/swap?swapIndex=1')
-  }, [history])
+    router.push('/swap?swapIndex=1')
+  }, [router])
 
   // dismiss warning if all imported tokens are in active lists
   const defaultTokens = useAllTokens()
@@ -99,21 +95,18 @@ const Swap: React.FC<{
   //     return !Boolean(token.address in defaultTokens);
   //   });
 
-  const { account, chainId } = useWalletData()
-  const chainIdToUse = chainId || ChainId.MONAD
+  const { account, chainId, isConnected } = useWalletData()
+  const [{ wallet, connecting }, connect, disconnect] = useConnectWallet()
+  const chainIdToUse = chainId !== undefined ? chainId : ChainId.MONAD
   const { independentField, typedValue, recipient, swapDelay } = useSwapState()
   const {
-    v1Trade,
     v2Trade,
     currencyBalances,
     parsedAmount,
     currencies,
-    inputError: swapInputError,
-    autoSlippage
+    inputError: swapInputError
   } = useDerivedSwapInfo()
-  const toggledVersion = useToggledVersion()
   const finalizedTransaction = useTransactionFinalizer()
-  const [isExpertMode] = useExpertModeManager()
   const {
     wrapType,
     execute: onWrap,
@@ -125,11 +118,7 @@ const Swap: React.FC<{
   )
 
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
-  const tradesByVersion = {
-    [Version.v1]: v1Trade,
-    [Version.v2]: v2Trade
-  }
-  const trade = showWrap ? undefined : tradesByVersion[toggledVersion]
+  const trade = showWrap ? undefined : v2Trade // WE CAN KEEP THIS
   const {
     onCurrencySelection,
     onUserInput,
@@ -177,7 +166,7 @@ const Swap: React.FC<{
       (currencies[Field.OUTPUT] != null) &&
       parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0))
   )
-  const noRoute = !route
+  const noRoute = route == null
 
   const { priceImpactWithoutFee } = computeTradePriceBreakdown(trade)
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
@@ -200,7 +189,6 @@ const Swap: React.FC<{
     }
   }, [approval, approvalSubmitted])
 
-  const { isConnected } = useWalletData()
   const parsedQs = useParsedQueryString()
   const { redirectWithCurrency, redirectWithSwitch } = useSwapRedirects()
   const parsedCurrency0Id = (parsedQs.currency0 ??
@@ -272,7 +260,7 @@ const Swap: React.FC<{
   const parsedCurrency1Fetched = !(parsedCurrency1 == null)
   useEffect(() => {
     if (
-      history.location.pathname !== '/' &&
+      pathname !== '/' &&
       parsedCurrency0Id === '' &&
       parsedCurrency1Id === ''
     ) {
@@ -336,7 +324,7 @@ const Swap: React.FC<{
       } else if (priceImpactSeverity > 3) {
         return `Price impact is more than ${
           Number(
-            GlobalValue.percents.ALLOWED_PRICE_IMPACT_HIGH.multiply(
+            ALLOWED_PRICE_IMPACT_HIGH.multiply(
               '100'
             ).toFixed(4)
           )
@@ -356,7 +344,6 @@ const Swap: React.FC<{
     noRoute,
     userHasSpecifiedInputOutput,
     priceImpactSeverity,
-    isExpertMode,
     wrapInputError,
     wrapType,
     chainId,
@@ -409,7 +396,6 @@ const Swap: React.FC<{
     isValid,
     approval,
     priceImpactSeverity,
-    isExpertMode,
     chainId,
     swapCallbackError
   ])
@@ -480,7 +466,7 @@ const Swap: React.FC<{
   )
 
   const onSwap = (): void => {
-    if (showWrap && onWrap) {
+    if (showWrap && (onWrap != null)) {
       onWrap()
     } else {
       setSwapState({
@@ -662,7 +648,7 @@ const Swap: React.FC<{
         title='To (estimate):'
         id='swap-currency-output'
         currency={currencies[Field.OUTPUT]}
-        showPrice={Boolean(trade && trade.executionPrice)}
+        showPrice={Boolean((trade != null) && trade.executionPrice)}
         showMaxButton={false}
         otherCurrency={currencies[Field.INPUT]}
         handleCurrencySelect={handleOtherCurrencySelect}
@@ -671,7 +657,7 @@ const Swap: React.FC<{
         color='secondary'
         bgClass={currencyBgClass}
       />
-      {trade?.executionPrice && (
+      {((trade?.executionPrice) != null) && (
         <Box className='swapPrice'>
           <small>Price:</small>
           <small>
@@ -770,11 +756,11 @@ const Swap: React.FC<{
         )}
         <Box width={showApproveFlow ? '48%' : '100%'}>
           <Button
-            fullWidth
+            className='w-full'
             disabled={showApproveFlow || (swapButtonDisabled)}
-            onClick={account && isSupportedNetwork ? onSwap : isConnected}
+            onClick={isConnected && isSupportedNetwork ? onSwap : async () => await connect()}
           >
-            {swapButtonText}
+            {isConnected ? swapButtonText : 'Connect Wallet'}
           </Button>
         </Box>
       </Box>
@@ -783,3 +769,6 @@ const Swap: React.FC<{
 }
 
 export default Swap
+function useSwapRedirects (): { redirectWithCurrency: any, redirectWithSwitch: any } {
+  throw new Error('Function not implemented.')
+}
