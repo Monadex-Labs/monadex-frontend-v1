@@ -1,13 +1,12 @@
-import { MONAD, currencyEquals, Token, WMND } from '@monadex/sdk'
-import { TokenInfo } from '@uniswap/token-lists'
+import { NativeCurrency, MONAD, currencyEquals, Token, WMND } from '@monadex/sdk'
 import { useCurrencyBalance } from '@/state/wallet/hooks'
 import { formatTokenAmount } from '@/utils'
 import CurrencySelect from '@/components/CurrencySelect'
-import { WrappedTokenInfo } from '@/state/list/hooks'
+// import { WrappedTokenInfo } from '@/state/list/hooks'
 import { useWallets } from '@web3-onboard/react'
 import { NumericalInput } from '@/components'
 import { Box } from '@mui/material'
-import useUSDCPrice from '@/utils/useUSDCPrice'
+import useUSDCPrice from '@/utils/useUsdcPrice'
 
 interface CurrencyInputProps {
   title?: string
@@ -50,21 +49,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
     currency
   )
   const usdPriceV2 = Number(useUSDCPrice(currency)?.toSignificant() ?? 0)
-  const currencyV3 =
-    Boolean(account) && (currency != null)
-      ? currencyEquals(currency, MONAD)
-        ? ({
-            ...MONAD,
-            isNative: true,
-            isToken: false,
-            wrapped: WMND
-          })
-        : new WrappedTokenInfo(currency as TokenInfo, [])
-      : undefined
-  const usdPriceV3Obj = useUSDCPrice(currencyV3)
-  const usdPriceV3 = Number(usdPriceV3Obj?.toSignificant() ?? 0)
-  const usdPrice = !Number.isNaN(usdPriceV3) ? usdPriceV3 : !Number.isNaN(usdPriceV2) ? usdPriceV2 : 0
-
+  const usdPrice = usdPriceV2
   return (
     <Box
       id={id}
@@ -90,7 +75,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
         <CurrencySelect
           id={id}
           currency={currency}
-          otherCurrency={otherCurrency}
+          otherCurrency={otherCurrency as Token}
           handleCurrencySelect={handleCurrencySelect}
         />
         <Box className='inputWrapper'>
@@ -107,7 +92,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
       </Box>
       <Box className='flex justify-between'>
         <small className={`${color !== undefined ? `text-${color}` : 'text-secondary'}}`}>
-          {`Balance: ${formatTokenAmount(selectedCurrencyBalance)}`}
+          {`Balance: ${formatTokenAmount(selectedCurrencyBalance)}`} {/*eslint-disable-line*/}
         </small>
         <small className={`${color !== undefined ? `text-${color}` : 'text-secondary'}}`}>
           ${(usdPrice * Number(amount)).toLocaleString('us')}

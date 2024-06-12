@@ -1,3 +1,10 @@
+/**
+ * Retrieves the logo URLs for a given token address.
+ *
+ * @param {string} address - The token address.
+ * @param {any} tokenList - Optional token list.
+ * @return {any[]} An array of logo URLs.
+ */
 export const getTokenLogoURL = (address: string, tokenList?: any): any[] => {
   const logoExtensions = ['.png', '.webp', '.jpeg', '.jpg', '.svg']
   return logoExtensions
@@ -7,9 +14,9 @@ export const getTokenLogoURL = (address: string, tokenList?: any): any[] => {
         const image = require(`../assets/tokenLogo/${address.toLowerCase()}${ext}`)
         return image
       } catch (e) {
-        return // eslint-disable-line
+        return
       }
     })
     .concat([tokenList[address]?.tokenInfo?.logoURI])
-    .filter((url) => !!url) // eslint-disable-line
+    .filter((url) => !!url)
 }
