@@ -4,7 +4,6 @@ import { CustomModal } from '@/components'
 import CurrencySearch from './CurrencySearch'
 import { WrappedTokenInfo } from '@/state/list/hooks'
 import { TokenInfo } from '@uniswap/token-lists'
-import { useIsV2 } from '@/state/application/hooks'
 
 interface CurrencySearchModalProps {
   isOpen: boolean
@@ -24,27 +23,22 @@ const CurrencySearchModal: React.FC<CurrencySearchModalProps> = ({
   otherSelectedCurrency,
   showCommonBases = false
 }) => {
-  const { isV2 } = useIsV2()
   const nativeCurrency = MONAD
 
   const handleCurrencySelect = useCallback(
     (currency: Token) => {
-      if (!isV2) {
-        if (currency.isNative) {
-          onCurrencySelect({
-            ...nativeCurrency,
-            isNative: true,
-            isToken: false
-          } as Token)
-        } else {
-          onCurrencySelect(new WrappedTokenInfo(currency as TokenInfo, []))
-        }
+      if (currency.isNative) {
+        onCurrencySelect({
+          ...nativeCurrency,
+          isNative: true,
+          isToken: false
+        } as Token)
       } else {
-        onCurrencySelect(currency)
+        onCurrencySelect(new WrappedTokenInfo(currency as TokenInfo, []))
       }
       onDismiss()
     },
-    [isV2, onDismiss, onCurrencySelect, nativeCurrency]
+    [onDismiss, onCurrencySelect, nativeCurrency]
   )
 
   return (
