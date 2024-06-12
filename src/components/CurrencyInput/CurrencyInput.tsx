@@ -1,4 +1,4 @@
-import { MONAD, currencyEquals, Token } from '@monadex/sdk'
+import { MONAD, currencyEquals, Token, WMND } from '@monadex/sdk'
 import { TokenInfo } from '@uniswap/token-lists'
 import { useCurrencyBalance } from '@/state/wallet/hooks'
 import { formatTokenAmount } from '@/utils'
@@ -57,7 +57,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
             ...MONAD,
             isNative: true,
             isToken: false,
-            wrapped: WMATIC_EXTENDED
+            wrapped: WMND
           })
         : new WrappedTokenInfo(currency as TokenInfo, [])
       : undefined
