@@ -82,16 +82,19 @@ export function useWalletData (): {
   account: string
   chainId: ChainId
   provider: Web3Provider
+  isConnected: boolean
 } {
   const walletData = useWallets()[0]
   const chainId = Number(walletData?.chains[0]?.id) as ChainId
   const account = walletData?.accounts[0]?.address
   const lib = walletData?.provider
   const provider = new Web3Provider(lib, 'any')
+  const isConnected = walletData?.accounts.length > 0
   return {
     account,
     chainId,
-    provider
+    provider,
+    isConnected
   }
 }
 
