@@ -52,6 +52,11 @@ export const MONADEX_TOKEN_LIST: TokenList | TokenList[] = [] // token list = li
 export const MNDX: { [chainid: number]: Token } = []
 export const USDC: { [chainid: number]: Token } = []
 // -
+export const SUPPORTED_CHAINIDS = [
+  ChainId.SEPOLIA,
+  ChainId.MONAD,
+  ChainId.MONAD_TESTNET
+]
 
 export const GlobalData = {
   stableCoins: {
@@ -69,6 +74,28 @@ export const GlobalData = {
     ],
 
     [ChainId.LOCAL]: [USDC[ChainId.LOCAL]]
+  },
+  percents: {
+    ALLOWED_PRICE_IMPACT_LOW: new Percent( // used for warning states
+      JSBI.BigInt(100),
+      BIPS_BASE
+    ), // 1%
+    ALLOWED_PRICE_IMPACT_MEDIUM: new Percent(
+      JSBI.BigInt(300),
+      BIPS_BASE
+    ), // 3%
+    ALLOWED_PRICE_IMPACT_HIGH: new Percent(
+      JSBI.BigInt(500),
+      BIPS_BASE
+    ), // 5%
+    PRICE_IMPACT_WITHOUT_FEE_CONFIRM_MIN: new Percent( // if the price slippage exceeds this number, force the user to type 'confirm' to execute
+      JSBI.BigInt(1000),
+      BIPS_BASE
+    ), // 10%
+    BLOCKED_PRICE_IMPACT_NON_EXPERT: new Percent( // for non expert mode disable swaps above this
+      JSBI.BigInt(1500),
+      BIPS_BASE
+    ) // 15%
   }
 }
 
@@ -100,6 +127,15 @@ export const MONADEX_PINNED_PAIRS: { [chainid: number]: Array<[Token, Token]> } 
     [WMND[ChainId.MONAD_TESTNET], USDC[ChainId.MONAD_TESTNET]]
     // ...other pairs to pin on the list by default
   ]
+}
+
+export const MIN_NATIVE_CURRENCY_FOR_GAS: {
+  [chainId in ChainId]: JSBI;
+} = {
+  [ChainId.SEPOLIA]: JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)), // .01 ETH
+  [ChainId.MONAD_TESTNET] : JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)), // .01 ETH
+  [ChainId.MONAD]: JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)), // .01 ETH
+  [ChainId.LOCAL]: JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)) // .01 ETH
 }
 
 export enum RouterTypes {

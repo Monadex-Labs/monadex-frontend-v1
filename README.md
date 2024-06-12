@@ -116,3 +116,6 @@ estimated time : 1 day
 ## phase 1
 - stop progress and start testing the hooks :::::::::::::::::::::
 - fix errors on the imported componets before!
+- soso: removed getUSDPricesFromAddresses hook on swap and getConfig
+- soso: refactorred handleCurrencySelect and handleOtherCurrencySelect with instanceof Token and added NativeToken | Token as a parameter 
+  - changed also the props from the component CurrencyInput to accept NativeToken too

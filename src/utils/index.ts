@@ -4,10 +4,11 @@ import { getAddress } from '@ethersproject/address'
 
 import { Contract } from '@ethersproject/contracts'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
-import { ChainId, CurrencyAmount, JSBI, Percent, TokenAmount } from '@monadex/sdk'
+import { ChainId, CurrencyAmount, JSBI, MONAD, Percent, TokenAmount, Token } from '@monadex/sdk'
 import { isAddress as isViemAddress } from 'viem'
 import truncateEthAddress from 'truncate-eth-address'
 import { useWallets } from '@web3-onboard/react'
+import { SUPPORTED_CHAINIDS,GlobalData, MIN_NATIVE_CURRENCY_FOR_GAS } from '@/constants'
 // import { TokenAddressMap } from '../state/lists/hooks'
 
 // shorten the checksummed version of the input address to have 0x + 4 characters at start and end
@@ -137,4 +138,78 @@ export function getFormattedPercent (percent: number): string {
     const beforeSign = percent > 0 ? '+' : ''
     return beforeSign + percent.toLocaleString('us') + '%'
   }
+}
+export function useIsSupportedNetwork (): boolean {
+  const { chainId } = useWalletData()
+  const checkInclude = SUPPORTED_CHAINIDS.includes(chainId)
+  if (checkInclude) {
+    return true
+  } else {
+    return false
+  }
+}
+
+/**
+ * Given the price impact, get user confirmation.
+ *
+ * @param priceImpactWithoutFee price impact of the trade without the fee.
+ */
+export function confirmPriceImpactWithoutFee (
+  priceImpactWithoutFee: Percent
+): boolean {
+  if (
+    !priceImpactWithoutFee.lessThan(
+      GlobalData.percents.PRICE_IMPACT_WITHOUT_FEE_CONFIRM_MIN
+    )
+  ) {
+    return (
+      window.prompt(
+        `typeConfirmSwapPriceImpact : ${GlobalData.percents.PRICE_IMPACT_WITHOUT_FEE_CONFIRM_MIN.toFixed(0)}`
+      ) === 'confirm'
+    )
+  } else if (
+    !priceImpactWithoutFee.lessThan(
+      GlobalData.percents.ALLOWED_PRICE_IMPACT_HIGH
+    )
+  ) {
+    return window.confirm(
+     `confirmSwapPriceImpact : ${GlobalData.percents.PRICE_IMPACT_WITHOUT_FEE_CONFIRM_MIN.toFixed(0)}`
+    )
+  }
+  return true
+}
+export function maxAmountSpend (
+  chainId: ChainId,
+  currencyAmount?: CurrencyAmount
+): CurrencyAmount | undefined {
+  if (currencyAmount === null) return undefined
+  if (currencyAmount?.currency === MONAD) {
+    if (
+      JSBI.greaterThan(currencyAmount.raw, MIN_NATIVE_CURRENCY_FOR_GAS[chainId])
+    ) {
+      return CurrencyAmount.ether(
+        JSBI.subtract(currencyAmount.raw, MIN_NATIVE_CURRENCY_FOR_GAS[chainId])
+      )
+    } else {
+      return CurrencyAmount.ether(JSBI.BigInt(0))
+    }
+  }
+  return currencyAmount
+}
+
+export function halfAmountSpend (
+  chainId: ChainId,
+  currencyAmount?: CurrencyAmount
+): CurrencyAmount | undefined {
+  if (currencyAmount === null) return undefined
+  const halfAmount = JSBI.divide(currencyAmount?.raw as JSBI, JSBI.BigInt(2))
+
+  if (currencyAmount?.currency === MONAD) {
+    if (JSBI.greaterThan(halfAmount, MIN_NATIVE_CURRENCY_FOR_GAS[chainId])) {
+      return CurrencyAmount.ether(halfAmount)
+    } else {
+      return CurrencyAmount.ether(JSBI.BigInt(0))
+    }
+  }
+  return new TokenAmount(currencyAmount?.currency as Token, halfAmount)
 }

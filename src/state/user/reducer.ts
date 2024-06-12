@@ -15,7 +15,7 @@ import {
 } from './actions'
 
 const currentTimestamp = (): number => new Date().getTime()
-
+export const SLIPPAGE_AUTO = 0
 export interface UserState {
   // the timestamp of the last updateVersion action
   lastUpdateVersionTimestamp?: number

@@ -8,7 +8,7 @@ import NumericalInput from '@/components/NumericalInput'
 import useUSDCPrice from '@/utils/useUsdcPrice'
 interface CurrencyInputProps {
   title?: string
-  handleCurrencySelect: (currency: NativeCurrency) => void
+  handleCurrencySelect: (currency: NativeCurrency | Token) => void
   currency: Token | undefined
   otherCurrency?: Token | NativeCurrency | undefined
   amount: string
