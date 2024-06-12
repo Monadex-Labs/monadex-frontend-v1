@@ -110,3 +110,6 @@ estimated time : 1 day
 ## phase 1
 - stop progress and start testing the hooks :::::::::::::::::::::
 - fix errors on the imported componets before!
+
+# 11/06
+- added main components folders we need
