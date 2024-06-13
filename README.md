@@ -122,3 +122,5 @@ estimated time : 1 day
 - soso: started hooks we need liquidityHub
 - soso: created useSwapRedirectHook for redirect after swap
 - commented :  useV2TradeTypeAnalyticsCallback = for later is used to save swap data on a api endpoint to do analytics with swap data = for later on 
+- soso: added header and configured the wallet styling
+- soso: configured the logo sizing in function the screen size

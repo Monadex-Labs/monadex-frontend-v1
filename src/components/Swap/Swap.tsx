@@ -739,11 +739,8 @@ const Swap: React.FC<{
           <Button
             className='w-full'
             disabled={showApproveFlow || (swapButtonDisabled)}
-<<<<<<< HEAD
             onClick={isConnected && isSupportedNetwork ? onSwap : async () => (await connect())}
-=======
-            onClick={isConnected && isSupportedNetwork ? onSwap : () => { void connect() }}
->>>>>>> f7351b7095556aa3821639da650588c5f1f17f17
+
           >
             {isConnected ? swapButtonText : 'Connect Wallet'}
           </Button>

@@ -31,7 +31,7 @@ export const WalletButton: React.FC<any> = ({ classNames, children, ...rest }: B
     <button
       disabled={connecting}
       onClick={async () => ((wallet != null) ? disconnect(wallet) : connect())}
-      className={cn('p-8 w-100 font-semibold text-center rounded-sm outline-none', classNames)}
+      className={cn('text-white bg-[#836EF9] hover:bg-[#836EF9]/50 focus:outline-none focus:ring-4 focus:ring-[#836EF9]/50 font-medium rounded-full text-sm px-5 py-2.5 text-center', classNames)}
     >
       {connecting ? 'Connecting' : (wallet !== null) ? 'Connected' : 'Connect Wallet'}
     </button>
