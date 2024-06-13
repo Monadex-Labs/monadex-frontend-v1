@@ -48,11 +48,13 @@ import { computeTradePriceBreakdown, warningSeverity } from '@/utils/price'
 import { useAllTokens, useCurrency } from '@/hooks/Tokens'
 import { ALLOWED_PRICE_IMPACT_HIGH } from '@/constants'
 import { wrappedCurrency } from '@/utils/wrappedCurrency'
-import { useV2TradeTypeAnalyticsCallback } from './LiquidityHub'
+// this one is not mandatory but helpful to track analytics for swap we will implement it later with an centralised endpoint to save trade datas
+// import { useV2TradeTypeAnalyticsCallback } from './LiquidityHub'
 import { SLIPPAGE_AUTO } from '@/state/user/reducer'
 import { useWallets, useConnectWallet } from '@web3-onboard/react'
 import useParsedQueryString from '@/hooks/useParseQueryString'
 import { usePathname, useRouter } from 'next/navigation'
+import useSwapRedirects from '@/hooks/useSwapRedirect'
 
 const Swap: React.FC<{
   currencyBgClass?: string
@@ -496,15 +498,15 @@ const Swap: React.FC<{
 
   const fromTokenWrapped = wrappedCurrency(currencies[Field.INPUT], chainId)
 
-  const onV2TradeAnalytics = useV2TradeTypeAnalyticsCallback(
-    currencies,
-    allowedSlippage
-  )
+  // const onV2TradeAnalytics = useV2TradeTypeAnalyticsCallback(
+  //   currencies,
+  //   allowedSlippage
+  // )
 
   const walletInfos = useWallets()[0]
 
   const handleSwap = useCallback(() => {
-    onV2TradeAnalytics(trade)
+    // onV2TradeAnalytics(trade)
     if (
       priceImpactWithoutFee &&
       !confirmPriceImpactWithoutFee(priceImpactWithoutFee)
@@ -566,7 +568,7 @@ const Swap: React.FC<{
         })
       })
   }, [
-    onV2TradeAnalytics,
+    // onV2TradeAnalytics,
     trade,
     priceImpactWithoutFee,
     swapCallback,
@@ -736,7 +738,7 @@ const Swap: React.FC<{
           <Button
             className='w-full'
             disabled={showApproveFlow || (swapButtonDisabled)}
-            onClick={isConnected && isSupportedNetwork ? onSwap : async () => (connect())}
+            onClick={isConnected && isSupportedNetwork ? onSwap : async () => (await connect())}
           >
             {isConnected ? swapButtonText : 'Connect Wallet'}
           </Button>

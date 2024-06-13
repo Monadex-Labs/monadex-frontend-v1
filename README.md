@@ -119,3 +119,6 @@ estimated time : 1 day
 - soso: removed getUSDPricesFromAddresses hook on swap and getConfig
 - soso: refactorred handleCurrencySelect and handleOtherCurrencySelect with instanceof Token and added NativeToken | Token as a parameter 
   - changed also the props from the component CurrencyInput to accept NativeToken too
+- soso: started hooks we need liquidityHub
+- soso: created useSwapRedirectHook for redirect after swap
+- commented :  useV2TradeTypeAnalyticsCallback = for later is used to save swap data on a api endpoint to do analytics with swap data = for later on 
