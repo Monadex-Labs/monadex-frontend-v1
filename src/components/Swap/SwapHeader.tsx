@@ -15,7 +15,7 @@ const SwapPageHeader: React.FC<{ isTablet: boolean }> = ({
       <h1 className='text-2xl font-medium opacity-60'>Swap</h1>
       {helpURL && (
         <Box
-          className='border border-indigo-500 rounded-md p-2 px-4 flex items-center justify-center text-indigo-500 hover:bg-indigo-500 hover:text-white cursor-pointer'
+          className='border  rounded-md p-2 px-4 flex items-center justify-center opacity-60 gap-2 hover:bg-indigo-500 hover:text-white cursor-pointer'
           onClick={() => window.open(helpURL, '_blank')}
         >
           <small>Help</small>

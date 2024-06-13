@@ -124,3 +124,5 @@ estimated time : 1 day
 - commented :  useV2TradeTypeAnalyticsCallback = for later is used to save swap data on a api endpoint to do analytics with swap data = for later on 
 - soso: added header and configured the wallet styling
 - soso: configured the logo sizing in function the screen size
+# todo 
+- fix useWalletData Web3Providers
