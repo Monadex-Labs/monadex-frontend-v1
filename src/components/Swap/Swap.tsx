@@ -78,7 +78,6 @@ const Swap: React.FC<{
   //   [loadedInputCurrency, loadedOutputCurrency],
   // );
 
-
   // dismiss warning if all imported tokens are in active lists
   const defaultTokens = useAllTokens()
   // const importTokensNotInDefault =
@@ -88,7 +87,7 @@ const Swap: React.FC<{
   //   });
 
   const { account, chainId, isConnected } = useWalletData()
-  const [{ wallet, connecting }, connect, disconnect] = useConnectWallet()
+  const [, connect] = useConnectWallet()
   const chainIdToUse = chainId !== undefined ? chainId : ChainId.MONAD
   const { independentField, typedValue, recipient, swapDelay } = useSwapState()
   const {
@@ -164,10 +163,10 @@ const Swap: React.FC<{
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
   const [mainPrice, setMainPrice] = useState(true)
   const priceImpactSeverity = warningSeverity(priceImpactWithoutFee)
-  const isValid = !swapInputError
+  const isValid = swapInputError === undefined
 
   const showApproveFlow =
-    !swapInputError &&
+    swapInputError === undefined &&
     (approval === ApprovalState.NOT_APPROVED ||
       approval === ApprovalState.PENDING ||
       (approvalSubmitted && approval === ApprovalState.APPROVED)) &&
@@ -182,7 +181,7 @@ const Swap: React.FC<{
   }, [approval, approvalSubmitted])
 
   const parsedQs = useParsedQueryString()
-  const { redirectWithCurrency, redirectWithSwitch } = useSwapRedirects() //TODO: ADD THIS HOOK
+  const { redirectWithCurrency, redirectWithSwitch } = useSwapRedirects() // TODO: ADD THIS HOOK
   const parsedCurrency0Id = (parsedQs.currency0 ??
     parsedQs.inputCurrency) as string
   const parsedCurrency1Id = (parsedQs.currency1 ??
@@ -231,8 +230,7 @@ const Swap: React.FC<{
       if (isSwichRedirect) {
         redirectWithSwitch()
       } else {
-
-        if (!( outputCurrency instanceof Token && outputCurrency.address in defaultTokens)) {
+        if (!(outputCurrency instanceof Token && outputCurrency.address in defaultTokens)) {
           setDismissTokenWarning(false)
         }
         redirectWithCurrency(outputCurrency, false)
@@ -280,6 +278,7 @@ const Swap: React.FC<{
       ) ?? [],
     [parsedCurrency0, parsedCurrency1]
   )
+  // TODO: check if needed
   const selectedTokensNotInDefault =
     selectedTokens?.filter((token: Token) => {
       return !(token.address in defaultTokens)
@@ -302,7 +301,7 @@ const Swap: React.FC<{
       ) {
         return 'Enter Amount'
       } else if (showWrap) {
-        if (wrapInputError) return wrapInputError
+        if (wrapInputError != null) return wrapInputError
         return wrapType === WrapType.WRAP
           ? `Wrap ${MONAD.symbol ?? '[INVALID SYMBOL]'}`
           : wrapType === WrapType.UNWRAP
@@ -460,7 +459,7 @@ const Swap: React.FC<{
 
   const onSwap = (): void => {
     if (showWrap && (onWrap != null)) {
-      onWrap()
+      void onWrap()
     } else {
       setSwapState({
         tradeToConfirm: trade,
@@ -508,7 +507,7 @@ const Swap: React.FC<{
   const handleSwap = useCallback(() => {
     // onV2TradeAnalytics(trade)
     if (
-      priceImpactWithoutFee &&
+      (priceImpactWithoutFee != null) &&
       !confirmPriceImpactWithoutFee(priceImpactWithoutFee)
     ) {
       return
@@ -588,6 +587,16 @@ const Swap: React.FC<{
     swapDelay === SwapDelay.FETCHING_SWAP ||
     swapDelay === SwapDelay.FETCHING_BONUS
 
+  const handleApprove = async (): Promise<void> => {
+    setApproving(true)
+    try {
+      await approveCallback()
+      setApproving(false)
+    } catch (err) {
+      setApproving(false)
+    }
+  }
+
   return (
     <Box>
       {showConfirm && (
@@ -628,7 +637,7 @@ const Swap: React.FC<{
         title='To (estimate):'
         id='swap-currency-output'
         currency={currencies[Field.OUTPUT]}
-        showPrice={Boolean((trade != null) && trade.executionPrice)}
+        showPrice={Boolean(trade?.executionPrice)}
         showMaxButton={false}
         otherCurrency={currencies[Field.INPUT]}
         handleCurrencySelect={handleOtherCurrencySelect}
@@ -710,15 +719,7 @@ const Swap: React.FC<{
                 approval !== ApprovalState.NOT_APPROVED ||
                 approvalSubmitted
               }
-              onClick={async () => {
-                setApproving(true)
-                try {
-                  await approveCallback()
-                  setApproving(false)
-                } catch (err) {
-                  setApproving(false)
-                }
-              }}
+              onClick={() => { void handleApprove() }}
             >
               {approvalSubmitted && approval !== ApprovalState.APPROVED
                 ? (
@@ -738,7 +739,11 @@ const Swap: React.FC<{
           <Button
             className='w-full'
             disabled={showApproveFlow || (swapButtonDisabled)}
+<<<<<<< HEAD
             onClick={isConnected && isSupportedNetwork ? onSwap : async () => (await connect())}
+=======
+            onClick={isConnected && isSupportedNetwork ? onSwap : () => { void connect() }}
+>>>>>>> f7351b7095556aa3821639da650588c5f1f17f17
           >
             {isConnected ? swapButtonText : 'Connect Wallet'}
           </Button>
