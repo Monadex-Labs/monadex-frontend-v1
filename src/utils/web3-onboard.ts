@@ -61,7 +61,7 @@ export default init({
     "--w3o-foreground-color": "#2E008B", 
     "--w3o-text-color": "white",
     "--w3o-border-color": "#a280ff", 
-    "--w3o-action-color": "#836EF9", 
+    "--w3o-action-color": "#8133FF", 
     "--w3o-border-radius": "10px",
     "--w3o-font-family": "unset"  
   },

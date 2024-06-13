@@ -1,5 +1,8 @@
 'use client'
-import { useConnectWallet } from '@web3-onboard/react'
+import Image from 'next/image'
+import { useConnectWallet, useWallets } from '@web3-onboard/react'
+import { Avatar } from '@mui/material'
+import molandak from '../../static/assets/hedgehog.png'
 import { cn } from '@/utils/cn'
 interface ButtonProps {
   classNames?: string
@@ -30,10 +33,18 @@ export const WalletButton: React.FC<any> = ({ classNames, children, ...rest }: B
   return (
     <button
       disabled={connecting}
-      onClick={async () => ((wallet != null) ? disconnect(wallet) : connect())}
-      className={cn('text-white bg-[#836EF9] hover:bg-[#836EF9]/50 focus:outline-none focus:ring-4 focus:ring-[#836EF9]/50 font-medium rounded-full text-sm px-5 py-2.5 text-center', classNames)}
+      onClick={async () => ((wallet != null) ?  disconnect(wallet): connect())}
+      className={cn('flex p-2 items-center justify-center gap-4 text-white bg-[#836EF9] hover:bg-[#836EF9]/50 focus:outline-none focus:ring-4 focus:ring-[#836EF9]/50 font-medium rounded-full text-sm px-5 py-2.5 text-center', classNames)}
     >
-      {connecting ? 'Connecting' : (wallet !== null) ? 'Connected' : 'Connect Wallet'}
+      <Image src={molandak} alt="molandak" width={20} height={20}/>
+       {connecting
+          ? "Connecting"
+          : wallet
+          ? `${wallet.accounts[0].address.slice(
+              0,
+              4
+            )}...${wallet.accounts[0].address.slice(-4)}`
+          : 'Connect Wallet'}
     </button>
   )
 }
