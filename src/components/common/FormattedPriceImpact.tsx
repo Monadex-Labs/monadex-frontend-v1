@@ -1,5 +1,5 @@
 'use client'
-import { Percent } from '@monadex/sdk'
+import {JSBI, Percent } from '@monadex/sdk'
 import React from 'react'
 import { warningSeverity } from '@/utils/price'
 /**

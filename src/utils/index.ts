@@ -11,6 +11,7 @@ import { useWallets } from '@web3-onboard/react'
 import { SUPPORTED_CHAINIDS,GlobalData, MIN_NATIVE_CURRENCY_FOR_GAS } from '@/constants'
 import { ethers } from 'ethers'
 import { useEffect, useMemo, useState } from 'react'
+import { useWeb3Onboard } from '@web3-onboard/react/dist/context'
 // import { TokenAddressMap } from '../state/lists/hooks'
 
 // shorten the checksummed version of the input address to have 0x + 4 characters at start and end
@@ -81,28 +82,28 @@ export function escapeRegExp (string: string): string {
 //   return Boolean(currency instanceof Token && defaultTokens[currency.chainId]?.[currency.address])
 // }
 
-export function useWalletData() {
-  const walletData = useWallets()[0];
-  const chainId = Number(walletData?.chains[0]?.id) as ChainId;
-  const account = walletData?.accounts[0]?.address;
-  const [provider, setProvider] = useState<any>(null);
-
+export function useWalletData () {
+  const walletData = useWallets()[0]
+  const chainId = Number(walletData?.chains[0]?.id) as ChainId
+  const account = walletData?.accounts[0]?.address
+  const [provider, setProvider] = useState<any>(null)
+  const [signer, setSigner] = useState<any>(null)
   useEffect(() => {
-    const findProvider = async () => {
-      const lib = await walletData?.provider.request({ method: 'eth_requestAccounts' });
-      setProvider(lib);
-    };
+    if (walletData?.provider == null) return
+    const ethersProvider = new ethers.providers.Web3Provider(walletData.provider, 'any')
+    setSigner(ethersProvider.getSigner())
+    setProvider(ethersProvider)
+  }, [chainId, walletData])
 
-    findProvider();
-  }, [chainId, walletData]);
-
-  const isConnected = walletData?.accounts.length > 0;
+  const isConnected = walletData?.accounts.length > 0
   return {
     account,
     chainId,
     findProvider: provider,
     isConnected,
-  };
+    signer,
+    provider
+  }
 }
 
 export function formatTokenAmount (

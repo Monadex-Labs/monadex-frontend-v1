@@ -1,7 +1,7 @@
 "use client";
 import Image from 'next/image'
-import Monadex from '@/static/assets/Dex_logo.svg'
-import Monadex_mobile from '@/static/assets/Dex_logo_mobile.svg'
+import Monadex from '@/static/assets/mona_logo.svg'
+import Monadex_mobile from '@/static/assets/Dex_logo_Mobile.svg'
 import { WalletButton } from '../common/Button'
 import { useMediaQuery, useTheme, Box } from '@mui/material'
 import Link from 'next/link'

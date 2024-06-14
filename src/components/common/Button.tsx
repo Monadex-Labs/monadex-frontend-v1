@@ -4,6 +4,8 @@ import { useConnectWallet, useWallets } from '@web3-onboard/react'
 import { Avatar } from '@mui/material'
 import molandak from '../../static/assets/hedgehog.png'
 import { cn } from '@/utils/cn'
+import { useEffect, useState } from 'react'
+import { supportedChainId } from '@/utils/supportedChain'
 interface ButtonProps {
   classNames?: string
   children?: React.ReactNode
@@ -30,6 +32,16 @@ export const ButtonPrimary: React.FC<any> = ({ classNames, children, ...rest }: 
 
 export const WalletButton: React.FC<any> = ({ classNames, children, ...rest }: ButtonProps) => {
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet()
+  const [message, setMessage] = useState<string>('')
+  const [messageBtn, setMsgBtn] = useState<boolean>(false)
+  useEffect(() => {
+    if (wallet?.chains === null) return undefined
+    const checkWallet = supportedChainId(Number(wallet?.chains[0].id))
+    if(checkWallet === undefined) {
+      setMessage('Unsupported chain')
+      setMsgBtn(true)
+    } 
+  }, [wallet, connecting])
   return (
     <button
       disabled={connecting}
