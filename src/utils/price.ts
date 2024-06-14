@@ -1,6 +1,6 @@
 import { Fraction, JSBI, Percent, TokenAmount, Trade, CurrencyAmount } from '@monadex/sdk'
 import { MinimaRouterTrade } from '../hooks/trade'
-
+import { OptimalRate } from '@paraswap/sdk'
 import {
   ALLOWED_PRICE_IMPACT_HIGH,
   ALLOWED_PRICE_IMPACT_LOW,
@@ -84,4 +84,10 @@ export function formatExecutionPrice (trade?: Trade, inverted?: boolean): string
     : `${trade.executionPrice.toSignificant(6)} ${trade.outputAmount.currency.symbol as string} / ${
         trade.inputAmount.currency.symbol as string
       }`
+}
+export function computePriceImpact(rate: OptimalRate): Percent {
+  const destUSDBigInt = JSBI.BigInt((Number(rate.destUSD) * 10 ** 10).toFixed(0))
+  const srcUSDBigInt = JSBI.BigInt(((Number(rate.srcUSD) * 10 ** 10).toFixed(0)))
+  const priceChange = JSBI.subtract(srcUSDBigInt, destUSDBigInt)
+  return new Percent(priceChange, srcUSDBigInt)
 }

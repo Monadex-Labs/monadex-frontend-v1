@@ -1,4 +1,4 @@
-import { currencyEquals, MONAD, Token } from '@monadex/sdk'
+import { currencyEquals, MONAD, NativeCurrency, Token } from '@monadex/sdk'
 import { useMemo } from 'react'
 import { Box } from '@mui/material'
 import useHttpLocations from '@/hooks/useHttpLocations'
@@ -9,7 +9,7 @@ import { useInActiveTokens } from '@/hooks/Tokens'
 import Image from 'next/image'
 
 interface CurrencyLogoProps {
-  currency?: Token
+  currency?: Token | NativeCurrency
   size?: string
   style?: React.CSSProperties
   withoutBg?: boolean
@@ -68,7 +68,7 @@ const CurrencyLogo: React.FC<CurrencyLogoProps> = ({
         className='currencyLogo'
       >
         <Image
-          className='ethereumLogo'
+          className='monad logo'
           src={nativeCurrencyImage}
           alt='Native Currency Logo'
         />

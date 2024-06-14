@@ -21,7 +21,7 @@ export default function RootLayout ({
     <html lang='en'>
       <Web3ProviderWrapper>
         <ReduxProvider>
-          <body className={inter.className}>
+          <body className={`${inter.className} max-w-[95%] mx-auto`}>
             <Header />
             {children}
           </body>

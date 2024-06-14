@@ -5,10 +5,13 @@ import { getAddress } from '@ethersproject/address'
 import { Contract } from '@ethersproject/contracts'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { ChainId, CurrencyAmount, JSBI, MONAD, Percent, TokenAmount, Token } from '@monadex/sdk'
-import { isAddress as isViemAddress } from 'viem'
+import { EIP1193Provider, isAddress as isViemAddress } from 'viem'
 import truncateEthAddress from 'truncate-eth-address'
 import { useWallets } from '@web3-onboard/react'
 import { SUPPORTED_CHAINIDS,GlobalData, MIN_NATIVE_CURRENCY_FOR_GAS } from '@/constants'
+import { ethers } from 'ethers'
+import { useEffect, useMemo, useState } from 'react'
+import { useWeb3Onboard } from '@web3-onboard/react/dist/context'
 // import { TokenAddressMap } from '../state/lists/hooks'
 
 // shorten the checksummed version of the input address to have 0x + 4 characters at start and end
@@ -79,23 +82,27 @@ export function escapeRegExp (string: string): string {
 //   return Boolean(currency instanceof Token && defaultTokens[currency.chainId]?.[currency.address])
 // }
 
-export function useWalletData (): {
-  account: string
-  chainId: ChainId
-  provider: Web3Provider
-  isConnected: boolean
-} {
+export function useWalletData () {
   const walletData = useWallets()[0]
   const chainId = Number(walletData?.chains[0]?.id) as ChainId
   const account = walletData?.accounts[0]?.address
-  const lib = walletData?.provider
-  const provider = new Web3Provider(lib, 'any')
+  const [provider, setProvider] = useState<any>(null)
+  const [signer, setSigner] = useState<any>(null)
+  useEffect(() => {
+    if (walletData?.provider == null) return
+    const ethersProvider = new ethers.providers.Web3Provider(walletData.provider, 'any')
+    setSigner(ethersProvider.getSigner())
+    setProvider(ethersProvider)
+  }, [chainId, walletData])
+
   const isConnected = walletData?.accounts.length > 0
   return {
     account,
     chainId,
-    provider,
-    isConnected
+    findProvider: provider,
+    isConnected,
+    signer,
+    provider
   }
 }
 
