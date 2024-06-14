@@ -8,7 +8,7 @@ import web3authModule from '@web3-onboard/web3auth'
 import { init } from '@web3-onboard/react'
 
 // Example key • Replace with your infura key
-const PROVIDER_KEY = process.env.INFURA_KEY ?? ''
+const PROVIDER_KEY = process.env.ALCHEMY_KEY ?? ''
 
 const injected = injectedModule()
 const web3Auth = web3authModule({
@@ -33,7 +33,7 @@ export default init({
   wallets: [
     injected,
     web3Auth,
-    metamask,
+    // metamask,
     phantom,
     taho,
     coinbase
@@ -42,10 +42,10 @@ export default init({
   // An array of Chains that your app supports
   chains: [
     {
-      id: 11155111,
+      id: 84532 ,
       token: 'ETH',
-      label: 'ETH Sepolia',
-      rpcUrl: `https://sepolia.infura.io/v3/${PROVIDER_KEY}`,
+      label: 'BASE ETH Sepolia',
+      rpcUrl: `https://base-sepolia.g.alchemy.com/v2/${PROVIDER_KEY}`,
       icon: '<svg fill="#000000" width="800px" height="800px" viewBox="0 0 24 24" role="img" xmlns="http://www.w3.org/2000/svg"><title>Ethereum icon</title><path d="M11.944 17.97L4.58 13.62 11.943 24l7.37-10.38-7.372 4.35h.003zM12.056 0L4.69 12.223l7.365 4.354 7.365-4.35L12.056 0z"/></svg>'
     },
     // TODO: Remove for production

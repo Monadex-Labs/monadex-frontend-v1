@@ -10,10 +10,10 @@ import {
 } from '@/state/user/hooks'
 import { Field, SwapDelay } from '@/state/swap/actions'
 // useLiquidyHubState
+import { AdvancedSwapDetails } from './AdvancedSwapDetails'
+import  CurrencyInput  from '@/components/CurrencyInput/CurrencyInput'
 import {
-  CurrencyInput,
   ConfirmSwapModal,
-  AdvancedSwapDetails,
   AddressInput
 } from '@/components'
 import {
