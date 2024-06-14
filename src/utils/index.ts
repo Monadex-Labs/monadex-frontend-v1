@@ -88,9 +88,19 @@ export function useWalletData () {
   const account = walletData?.accounts[0]?.address
   const [provider, setProvider] = useState<any>(null)
   const [signer, setSigner] = useState<any>(null)
+  const [networkName, setNetworkName] = useState<string>('')
   useEffect(() => {
     if (walletData?.provider == null) return
     const ethersProvider = new ethers.providers.Web3Provider(walletData.provider, 'any')
+    const fetchNetworkName = async () => {
+      try {
+        const network = await ethersProvider.getNetwork()
+        setNetworkName(network.name)
+      } catch (error) {
+        console.error('Failed to get network name:', error)
+      }
+    }
+    fetchNetworkName()
     setSigner(ethersProvider.getSigner())
     setProvider(ethersProvider)
   }, [chainId, walletData])
@@ -102,7 +112,8 @@ export function useWalletData () {
     findProvider: provider,
     isConnected,
     signer,
-    provider
+    provider,
+    networkName,
   }
 }
 
@@ -219,4 +230,21 @@ export function halfAmountSpend (
     }
   }
   return new TokenAmount(currencyAmount?.currency as Token, halfAmount)
+}
+
+export function useSwitchNetwork () {
+  const { provider, chainId } = useWalletData()
+  useMemo(() => {
+    const swtich = async (): Promise<void> => {
+      try {
+        await window.ethereum?.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: `0x${chainId.toString(16)}` }]
+        })
+      } catch (error: any) {
+        console.log('error', error)
+      }
+    }
+    swtich()
+  },[provider, chainId])
 }
