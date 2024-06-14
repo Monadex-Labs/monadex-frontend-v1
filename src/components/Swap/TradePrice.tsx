@@ -12,7 +12,7 @@ export default function TradePrice ({
   price,
   showInverted,
   setShowInverted
-}: TradePriceProps): React.ElementRef<any> {
+}: TradePriceProps): React.ReactNode {
   let formattedPrice: string
   try {
     formattedPrice = showInverted

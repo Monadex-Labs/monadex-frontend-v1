@@ -13,7 +13,7 @@ export default function SwapModalFooter ({
   onConfirm: () => void
   swapErrorMessage: ReactNode | undefined
   disabledConfirm: boolean
-}): React.ElementRef<any> {
+}): React.ReactNode {
   return (
     <Box mt={2} className='swapButtonWrapper'>
       <Button onClick={onConfirm} disabled={disabledConfirm} className='w-full'>
