@@ -1,107 +1,125 @@
-import React, { ReactElement, ReactNode, useCallback, useMemo } from 'react'
-import { Percent, Trade } from '@monadex/sdk'
-import TransactionConfirmationModal, {
-  ConfirmationModalContent,
-  TransactionErrorContent
-} from '@/components/TransactionConfirmationModal'
-import SwapModalFooter from './SwapModalFooter'
+import { Token, currencyEquals, Trade } from '@monadex/sdk'
+import React, { useCallback, useMemo } from 'react'
+import {
+  TransactionConfirmationModal,
+  TransactionErrorContent,
+  ConfirmationModalContent
+} from '@/components'
 import SwapModalHeader from './SwapModalHeader'
+import { formatTokenAmount } from '@/utils'
+import 'components/styles/ConfirmSwapModal.scss'
+import { OptimalRate } from '@paraswap/sdk'
+import { useLiquidityHubState } from '@/state/swap/liquidity-hub/hooks'
 
 /**
  * Returns true if the trade requires a confirmation of details before we can submit it
- * @param args either a pair of V2 trades or a pair of V3 trades
+ * @param tradeA trade A
+ * @param tradeB trade B
  */
-function tradeMeaningfullyDiffers (
-  ...args: [
-    Trade,
-    Trade,
-  ]
-): boolean {
-  const [tradeA, tradeB] = args
+function tradeMeaningfullyDiffers (tradeA: Trade, tradeB: Trade): boolean {
   return (
     tradeA.tradeType !== tradeB.tradeType ||
-    !(tradeA.inputAmount.currency === tradeB.inputAmount.currency) ||
+    !currencyEquals(tradeA.inputAmount.currency, tradeB.inputAmount.currency) ||
     !tradeA.inputAmount.equalTo(tradeB.inputAmount) ||
-    !(tradeA.outputAmount.currency === tradeB.outputAmount.currency) ||
+    !currencyEquals(
+      tradeA.outputAmount.currency,
+      tradeB.outputAmount.currency
+    ) ||
     !tradeA.outputAmount.equalTo(tradeB.outputAmount)
   )
 }
 
 interface ConfirmSwapModalProps {
   isOpen: boolean
-  trade: Trade | undefined
-  originalTrade: Trade | undefined
+  optimalRate?: OptimalRate | null
+  trade?: Trade
+  originalTrade?: Trade
+  inputCurrency?: Token
+  outputCurrency?: Token
   attemptingTxn: boolean
+  txPending?: boolean
   txHash: string | undefined
   recipient: string | null
-  allowedSlippage: Percent
+  allowedSlippage: number
   onAcceptChanges: () => void
   onConfirm: () => void
-  swapErrorMessage: ReactNode | undefined
+  swapErrorMessage: string | undefined
   onDismiss: () => void
-  txPending?: boolean
 }
 
-export default function ConfirmSwapModal ({
+const ConfirmSwapModal: React.FC<ConfirmSwapModalProps> = ({
   trade,
+  optimalRate,
+  inputCurrency,
+  outputCurrency,
   originalTrade,
   onAcceptChanges,
   allowedSlippage,
   onConfirm,
   onDismiss,
-  recipient,
   swapErrorMessage,
   isOpen,
   attemptingTxn,
   txHash,
   txPending
-}: ConfirmSwapModalProps): ReactElement {
+}) => {
   const showAcceptChanges = useMemo(
     () =>
       Boolean(
-        trade instanceof Trade &&
-          originalTrade instanceof Trade &&
+        optimalRate == null &&
+          (trade != null) &&
+          (originalTrade != null) &&
           tradeMeaningfullyDiffers(trade, originalTrade)
       ),
-    [originalTrade, trade]
+    [originalTrade, trade, optimalRate]
   )
 
   const modalHeader = useCallback(() => {
-    return (trade != null)
+    return ((optimalRate ?? trade) != null)
       ? (
         <SwapModalHeader
           trade={trade}
+          optimalRate={optimalRate}
+          inputCurrency={inputCurrency}
+          outputCurrency={outputCurrency}
           allowedSlippage={allowedSlippage}
-          recipient={recipient}
+          onConfirm={onConfirm}
           showAcceptChanges={showAcceptChanges}
           onAcceptChanges={onAcceptChanges}
         />
         )
       : null
-  }, [allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, trade])
+  }, [
+    allowedSlippage,
+    onAcceptChanges,
+    optimalRate,
+    showAcceptChanges,
+    trade,
+    onConfirm,
+    inputCurrency,
+    outputCurrency
+  ])
 
-  const modalBottom = useCallback(() => {
-    return (trade != null)
-      ? (
-        <SwapModalFooter
-          onConfirm={onConfirm}
-          trade={trade}
-          disabledConfirm={showAcceptChanges}
-          swapErrorMessage={swapErrorMessage}
-        />
-        )
-      : null
-  }, [onConfirm, showAcceptChanges, swapErrorMessage, trade])
-
+  const liquidityHubState = useLiquidityHubState()
+  const amount1 = (optimalRate != null)
+    ? Number(optimalRate.srcAmount) / 10 ** optimalRate.srcDecimals
+    : formatTokenAmount(trade?.inputAmount)
+  const symbol1 = (trade != null)
+    ? trade?.inputAmount?.currency?.symbol
+    : inputCurrency?.symbol
+  const amount2 = (optimalRate != null)
+    ? Number(liquidityHubState.outAmount || optimalRate.destAmount) /
+    10 ** optimalRate.destDecimals
+    : formatTokenAmount(trade?.outputAmount)
+  const symbol2 = (trade != null)
+    ? trade?.outputAmount?.currency?.symbol
+    : outputCurrency?.symbol
   // text to show while loading
-  const pendingText = `Swapping ${trade?.inputAmount?.toSignificant(6) ?? 'INVALID AMOUNT'} 
-    ${trade?.inputAmount?.currency?.symbol ?? 'INVALID SYMBOL'} for 
-    ${trade?.outputAmount?.toSignificant(6) ?? 'INVALID AMOUNT'} 
-    ${trade?.outputAmount?.currency?.symbol ?? 'INVALID SYMBOL'}`
+  const pendingText = `Swapping ${amount1} ${symbol1 ?? 'INVALID SYMBOL'} for ${amount2} ${symbol2 ?? 'INVALID SYMBOL'}`
 
   const confirmationContent = useCallback(
     () =>
-      swapErrorMessage !== undefined
+      swapErrorMessage != null
         ? (
           <TransactionErrorContent
             onDismiss={onDismiss}
@@ -110,13 +128,12 @@ export default function ConfirmSwapModal ({
           )
         : (
           <ConfirmationModalContent
-            title='Confirm Swap'
+            title='Confirm Transaction'
             onDismiss={onDismiss}
-            topContent={modalHeader}
-            bottomContent={modalBottom}
+            content={modalHeader}
           />
           ),
-    [onDismiss, modalBottom, modalHeader, swapErrorMessage]
+    [onDismiss, modalHeader, swapErrorMessage]
   )
 
   return (
@@ -125,9 +142,12 @@ export default function ConfirmSwapModal ({
       onDismiss={onDismiss}
       attemptingTxn={attemptingTxn}
       hash={txHash}
+      txPending={txPending}
       content={confirmationContent}
       pendingText={pendingText}
-      txPending={txPending}
+      modalContent={txPending != null && txPending ? 'Submitted transaction to swap your tokens' : 'Successfully swapped your tokens'}
     />
   )
 }
+
+export default ConfirmSwapModal

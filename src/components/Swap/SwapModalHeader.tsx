@@ -1,161 +1,175 @@
-import React, { useState } from 'react'
-import { Percent, Trade, TradeType } from '@monadex/sdk'
-import { WarningAmber, ArrowDownward } from '@mui/icons-material'
-import { FiatValue } from '../CurrencyInputPanel/FiatValue'
-
-import { AdvancedSwapDetails } from './AdvancedSwapDetails'
-import TradePrice from './TradePrice'
-import { useUSDCValue } from '@/hooks/useUSDCPrice'
-import { isAddress } from 'ethers/lib/utils'
-import { shortenAddress } from '@/utils'
-import CurrencyLogo from '@/components/CurrencyLogo'
-import { computeFiatValuePriceImpact } from '@/utils/computeFiatValuePriceImpact'
-import { WrappedCurrency } from '@/models/types'
+import { Token, Fraction, Trade, TradeType } from '@monadex/sdk'
+import React, { useMemo } from 'react'
 import { Box } from '@mui/material'
 import { Button } from '@mui/base'
+import { Field } from '@/state/swap/actions'
+import { DoubleCurrencyLogo } from '@/components'
+import { useUSDCPriceFromAddress } from '@/utils/useUsdcPrice'
+import { computeSlippageAdjustedAmounts } from '@/utils/price'
+import { ArrowDownward, WarningAmber } from '@mui/icons-material'
+import {
+  basisPointsToPercent,
+  formatTokenAmount,
+  useWalletData
+} from '@/utils'
+import { OptimalRate, SwapSide } from '@paraswap/sdk'
+import { ONE } from '@/constants'
+import { wrappedCurrency } from '@/utils/wrappedCurrency'
 
 interface SwapModalHeaderProps {
-  trade: Trade
-  allowedSlippage: Percent
-  recipient: string | null
+  trade?: Trade
+  optimalRate?: OptimalRate | null
+  inputCurrency?: Token
+  outputCurrency?: Token
+  allowedSlippage: number
   showAcceptChanges: boolean
   onAcceptChanges: () => void
+  onConfirm: () => void
 }
 
-export default function SwapModalHeader ({
+const SwapModalHeader: React.FC<SwapModalHeaderProps> = ({
   trade,
+  optimalRate,
+  inputCurrency,
+  outputCurrency,
   allowedSlippage,
-  recipient,
   showAcceptChanges,
-  onAcceptChanges
-}: SwapModalHeaderProps): React.ReactNode {
-  const [showInverted, setShowInverted] = useState<boolean>(false)
+  onAcceptChanges,
+  onConfirm
+}) => {
+  const { chainId } = useWalletData()
+  const slippageAdjustedAmounts = useMemo(
+    () => computeSlippageAdjustedAmounts(trade, allowedSlippage),
+    [trade, allowedSlippage]
+  )
+  const wrappedToken = wrappedCurrency(
+    trade != null ? trade.inputAmount.currency : inputCurrency,
+    chainId
+  )
+  const { price: usdPrice } = useUSDCPriceFromAddress(
+    wrappedToken?.address ?? ''
+  )
 
-  const fiatValueInput = useUSDCValue(trade.inputAmount)
-  const fiatValueOutput = useUSDCValue(trade.outputAmount)
+  const pct = basisPointsToPercent(allowedSlippage)
+
+  const bestTradeAmount =
+    optimalRate != null
+      ? optimalRate.side === SwapSide.SELL
+        ? new Fraction(ONE).add(pct).invert().multiply(optimalRate.destAmount)
+          .quotient
+        : new Fraction(ONE).add(pct).multiply(optimalRate.srcAmount).quotient
+      : undefined
 
   return (
-    <div>
-      <Box
-        className='bg-secondary1'
-        borderRadius='6px'
-        padding={2}
-        paddingTop={2}
-      >
-        <Box className='flex justify-between'>
-          <small>From</small>
-          <FiatValue fiatValue={fiatValueInput} />
-        </Box>
-
-        <Box mt={1} className='flex justify-between'>
-          <Box className='flex'>
-            <Box mr='6px'>
-              <CurrencyLogo
-                currency={trade.inputAmount.currency as WrappedCurrency}
-                size='24px'
-              />
-            </Box>
-            <p className='weight-600'>{trade.inputAmount.currency.symbol}</p>
-          </Box>
-          <p
-            className={`truncatedText weight-600 ${
-              showAcceptChanges && trade.tradeType === TradeType.EXACT_OUTPUT
-                ? 'text-primary'
-                : ''
-            }`}
-          >
-            {trade.inputAmount.toSignificant(6)}
-          </p>
-        </Box>
-      </Box>
-      <Box className='swapModalHeaderArrowWrapper'>
-        <ArrowDownward />
-      </Box>
-      <Box className='bg-secondary1' borderRadius='6px' marginTop={1}>
-        <Box padding={2}>
-          <Box className='flex justify-between'>
-            <small>To</small>
-            <FiatValue
-              fiatValue={fiatValueOutput}
-              priceImpact={computeFiatValuePriceImpact(
-                fiatValueInput,
-                fiatValueOutput
-              )}
-            />
-          </Box>
-
-          <Box mt={1} className='flex justify-between'>
-            <Box className='flex'>
-              <Box mr='6px'>
-                <CurrencyLogo
-                  currency={trade.outputAmount.currency as WrappedCurrency}
-                  size='24px'
-                />
-              </Box>
-              <p className='weight-600'>{trade.outputAmount.currency.symbol}</p>
-            </Box>
-            <p className='truncatedText weight-600'>
-              {trade.outputAmount.toSignificant(6)}
-            </p>
-          </Box>
-        </Box>
-      </Box>
-
-      <Box my={2} px={1} className='flex justify-between'>
-        <small>Price</small>
-        <TradePrice
-          price={trade.executionPrice}
-          showInverted={showInverted}
-          setShowInverted={setShowInverted}
+    <Box>
+      <Box mt={10} className='flex justify-center'>
+        <DoubleCurrencyLogo
+          currency0={trade != null ? trade.inputAmount.currency : inputCurrency}
+          currency1={
+            trade != null ? trade.outputAmount.currency : outputCurrency
+          }
+          size={48}
         />
       </Box>
-
-      <Box className='bg-secondary1' borderRadius='6px' padding={1} mb={2}>
-        <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} />
+      <Box className='swapContent'>
+        <p>
+          Swap{' '}
+          {optimalRate != null
+            ? (
+                Number(optimalRate.srcAmount) /
+                10 ** optimalRate.srcDecimals
+              ).toLocaleString('us')
+            : trade != null
+              ? formatTokenAmount(trade.inputAmount)
+              : ''}{' '}
+          {trade != null
+            ? trade.inputAmount.currency.symbol
+            : inputCurrency?.symbol}{' '}
+          ($
+          {(
+            (usdPrice ?? 0) *
+            (optimalRate != null
+              ? Number(optimalRate.srcAmount) / 10 ** optimalRate.srcDecimals
+              : trade != null
+                ? Number(trade.inputAmount.toSignificant())
+                : 0)
+          ).toLocaleString('us')}
+          )
+        </p>
+        <ArrowDownward />
+        <p>
+          {optimalRate != null
+            ? (
+                Number(optimalRate.destAmount) /
+                10 ** optimalRate.destDecimals
+              ).toLocaleString('us')
+            : trade != null
+              ? formatTokenAmount(trade.outputAmount)
+              : ''}{' '}
+          {trade != null
+            ? trade.outputAmount.currency.symbol
+            : outputCurrency?.symbol}
+        </p>
       </Box>
-
-      {showAcceptChanges
-        ? (
-          <Box
-            mb={2}
-            p={1}
-            borderRadius='6px'
-            className='flex items-center bg-primaryLight justify-between'
-          >
-            <Box className='flex text-primary'>
-              <WarningAmber />
-              <small>Price Updated</small>
-            </Box>
-            <Button
-              style={{
-                padding: '.5rem',
-                width: 'fit-content',
-                fontSize: '0.825rem',
-                borderRadius: '12px'
-              }}
-              onClick={onAcceptChanges}
-            >
-              Accept
-            </Button>
+      {showAcceptChanges && (
+        <Box className='priceUpdate'>
+          <Box>
+            <WarningAmber />
+            <p>Price Updated</p>
           </Box>
-          )
-        : null}
-
-      <div>
-        {trade.tradeType === TradeType.EXACT_INPUT
-          ? `Output is estimated. You will receive at least ${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol ?? 'INVALID SYMBOL'} or the transaction will revert.`
-          : `Input is estimated. You will sell at most ${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol ?? 'INVALID SYMBOL'} or the transaction will revert.`}
-      </div>
-      {recipient !== null
-        ? (
-          <div>
-            {'Output will be sent to' + ' '}
-            <b title={recipient}>
-              {isAddress(recipient) ? shortenAddress(recipient) : recipient}
-            </b>
-          </div>
-          )
-        : null}
-    </div>
+          <Button onClick={onAcceptChanges}>Accept</Button>
+        </Box>
+      )}
+      <Box className='transactionText'>
+        {trade?.tradeType === TradeType.EXACT_INPUT ||
+        optimalRate?.side === SwapSide.SELL
+          ? (
+            <p className='small'>
+              {`Output is estimated. You will receive at least ${
+              trade != null
+                ? formatTokenAmount(slippageAdjustedAmounts[Field.OUTPUT])
+                : bestTradeAmount != null && outputCurrency != null
+                ? (
+                    Number(bestTradeAmount.toString()) /
+                    10 ** outputCurrency.decimals
+                  ).toLocaleString()
+                : ''
+            } ${
+              trade != null
+                ? trade.outputAmount.currency.symbol ?? 'INVALID SYMBOL'
+                : outputCurrency?.symbol ?? 'INVALID SYMBOL'
+            } or the transaction will revert.`}
+            </p>
+            )
+          : trade?.tradeType === TradeType.EXACT_OUTPUT ||
+          optimalRate?.side === SwapSide.BUY
+            ? (
+              <p className='small'>
+                {`Input is estimated. You will sell at most ${
+              trade != null
+                ? formatTokenAmount(slippageAdjustedAmounts[Field.INPUT])
+                : bestTradeAmount != null && inputCurrency != null
+                ? (
+                    Number(bestTradeAmount.toString()) /
+                    10 ** inputCurrency.decimals
+                  ).toLocaleString()
+                : ''
+            } ${
+              trade != null
+                ? trade.inputAmount.currency.symbol ?? 'INVALID SYMBOL'
+                : inputCurrency?.symbol ?? 'INVALID SYMBOL'
+            }  or the transaction will revert.`}
+              </p>
+              )
+            : (
+              <></>
+              )}
+        <Button onClick={onConfirm} className='swapButton'>
+          Confirm Swap
+        </Button>
+      </Box>
+    </Box>
   )
 }
+
+export default SwapModalHeader

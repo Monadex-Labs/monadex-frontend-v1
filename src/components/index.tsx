@@ -6,6 +6,7 @@ export { default as CurrencySearchModal } from './CurrencySearchModal'
 export { default as CustomModal } from './CustomModal'
 export { default as NumericalInput } from './NumericalInput'
 export { default as Logo } from './Logo'
+export { default as DoubleCurrencyLogo } from './DoubleCurrencyLogo'
 export { default as Swap, AdvancedSwapDetails } from './Swap'
 export {
   default as ConfirmSwapModal,

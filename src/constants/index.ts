@@ -2,6 +2,12 @@ import { TokenList } from '@uniswap/token-lists'
 import { Percent, ERC20ABI, ChainId, Token, WMND, JSBI } from '@monadex/sdk'
 import { Interface } from '@ethersproject/abi'
 import { Hash } from 'viem'
+
+// constants used internally but not expected to be used externally
+export const NEGATIVE_ONE = JSBI.BigInt(-1)
+export const ZERO = JSBI.BigInt(0)
+export const ONE = JSBI.BigInt(1)
+
 export const ZERO_PERCENT = new Percent('0')
 export const ONE_HUNDRED_PERCENT = new Percent('1')
 export const ROUTER_ADDRESS = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D' as Hash // fake address todo : update
@@ -133,7 +139,7 @@ export const MIN_NATIVE_CURRENCY_FOR_GAS: {
   [chainId in ChainId]: JSBI;
 } = {
   [ChainId.SEPOLIA]: JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)), // .01 ETH
-  [ChainId.MONAD_TESTNET] : JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)), // .01 ETH
+  [ChainId.MONAD_TESTNET]: JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)), // .01 ETH
   [ChainId.MONAD]: JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)), // .01 ETH
   [ChainId.LOCAL]: JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)) // .01 ETH
 }
