@@ -126,3 +126,5 @@ estimated time : 1 day
 - soso: configured the logo sizing in function the screen size
 # todo 
 - fix useWalletData Web3Providers
+# 14/06
+- added ToggleSwitch component + QuestionHelper + toolTip + SettingsModal + AdvancedSwapDetails + BestTradeAdvancedSwapDetails component
