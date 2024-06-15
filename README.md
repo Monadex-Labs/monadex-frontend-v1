@@ -127,9 +127,12 @@ estimated time : 1 day
 # todo 
 - fix useWalletData Web3Providers
 # 14/06
-- added ToggleSwitch component + QuestionHelper + toolTip + SettingsModal + AdvancedSwapDetails + BestTradeAdvancedSwapDetails component
-- check useLiquidityHubState
-- added the dynamic modal to manage wallet connections + switch network / add network if user don't have the required network
+- soso: added ToggleSwitch component + QuestionHelper + toolTip + SettingsModal + AdvancedSwapDetails + BestTradeAdvancedSwapDetails component
+- soso: check useLiquidityHubState
+- soso: added the dynamic modal to manage wallet connections + switch network / add network if user don't have the required network
 
 # 15/06
-- Refactored ConfirmSwapModal
+- soso: Refactored ConfirmSwapModal
+- soso: Refactored useContracts
+- soso: fixed imports on addLiquidity Component
+- soso: workin on usePoolsRedirect

@@ -1,4 +1,4 @@
-import { Token, ChainId, currencyEquals } from '@monadex/sdk'
+import { Token, ChainId, currencyEquals, NativeCurrency, MONAD } from '@monadex/sdk'
 import { parseBytes32String } from '@ethersproject/strings'
 import { useMemo } from 'react'
 import { useBytes32TokenContract, useTokenContract } from './useContracts'
@@ -7,6 +7,7 @@ import { useCombinedInactiveList, useCombinedActiveList, useDefaultTokenList, To
 import { useUserAddedTokens } from '@/state/user/hooks'
 import { isAddress, getAddress } from 'viem'
 import { arrayify } from 'ethers/lib/utils'
+import { useWalletData } from '@/utils'
 
 function useTokensFromMap (
   tokenMap: TokenAddressMap,
@@ -135,6 +136,17 @@ export function useToken (tokenAddress?: string): Token | undefined | null {
   ])
 }
 export function useCurrency (currencyId: string | undefined): Token | null | undefined {
-  const token = useToken(currencyId)
+  const token = useToken(currencyId)²
   return token
+}
+// FOR NATIVE CURRENCY
+export function _useCurrency(
+  currencyId: string | undefined,
+): NativeCurrency | null | undefined {
+  const { chainId } = useWalletData();
+  const chainIdToUse = chainId ? chainId : ChainId.SEPOLIA
+  const nativeCurrency = MONAD;
+  const isMND = currencyId?.toUpperCase() === 'MND';
+  const token = useToken(isMND ? undefined : currencyId);
+  return isMND ? nativeCurrency : token
 }

@@ -16,23 +16,25 @@ import {
   TokenAmount,
   ChainId
 } from '@monadex/sdk'
-import { useActiveWeb3React, useConnectWallet } from 'hooks'
-import { useRouterContract } from 'hooks/useContract'
-import useTransactionDeadline from 'hooks/useTransactionDeadline'
-import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
-import { Field } from 'state/mint/actions'
-import { PairState } from 'data/Reserves'
+import { useWalletData } from '@/utils/index'
+import { useConnectWallet } from '@web3-onboard/react'
+import { useRouterContract } from '@/hooks/useContracts'
+import useTransactionDeadline from '@/hooks/useTransactionDeadline'
+import { ApprovalState, useApproveCallback } from '@/hooks/useApprouveCallback'
+import { Field } from '@/state/mint/actions'
+import { PairState } from '@/data/Reserves'
 import {
   useTransactionAdder,
   useTransactionFinalizer
-} from 'state/transactions/hooks'
+} from '@/state/transactions/hooks'
 import {
   useDerivedMintInfo,
   useMintActionHandlers,
   useMintState
-} from 'state/mint/hooks'
-import { useTokenBalance } from 'state/wallet/hooks'
-import { useIsExpertMode, useUserSlippageTolerance } from 'state/user/hooks'
+} from '@/state/mint/hooks'
+import { useTokenBalance } from '@/state/wallet/hooks'
+import { useUserSlippageTolerance } from '@/state/user/hooks'
+
 import {
   maxAmountSpend,
   calculateSlippageAmount,
@@ -40,17 +42,17 @@ import {
   useIsSupportedNetwork,
   formatTokenAmount,
   halfAmountSpend
-} from 'utils'
-import { wrappedCurrency } from 'utils/wrappedCurrency'
-import { ReactComponent as AddLiquidityIcon } from 'assets/images/AddLiquidityIcon.svg'
-import useParsedQueryString from 'hooks/useParsedQueryString'
-import { useCurrency } from 'hooks/Tokens'
-import { useDerivedSwapInfo } from 'state/swap/hooks'
-import { useParams } from 'react-router-dom'
-import { V2_ROUTER_ADDRESS } from 'constants/v3/addresses'
-import usePoolsRedirect from 'hooks/usePoolsRedirect'
-import { SLIPPAGE_AUTO } from 'state/user/reducer'
+} from '@/utils'
+import { wrappedCurrency } from '@/utils/wrappedCurrency'
 
+import { ReactComponent as AddLiquidityIcon } from 'assets/images/AddLiquidityIcon.svg'
+import useParsedQueryString from '@/hooks/useParseQueryString'
+import { _useCurrency } from '@/hooks/Tokens'
+import { useDerivedSwapInfo } from 'state/swap/hooks'
+import { useParams } from 'next/navigation'
+import { ROUTER_ADDRESS } from '@/constants/index'
+
+import { SLIPPAGE_AUTO } from '@/state/user/reducer'
 const AddLiquidity: React.FC<{
   currencyBgClass?: string
 }> = ({ currencyBgClass }) => {
