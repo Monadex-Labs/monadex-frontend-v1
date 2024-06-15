@@ -122,7 +122,7 @@ const ConfirmSwapModal: React.FC<ConfirmSwapModalProps> = ({
           ),
     [onDismiss, modalHeader, swapErrorMessage]
   )
-// add how much tickets raffle user will receive on swap
+// add how much tickets raffle user will receive on swap previewPurchase()
   return (
     <TransactionConfirmationModal
       isOpen={isOpen}
