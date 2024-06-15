@@ -45,10 +45,10 @@ import {
 } from '@/utils'
 import { wrappedCurrency } from '@/utils/wrappedCurrency'
 
-import { ReactComponent as AddLiquidityIcon } from 'assets/images/AddLiquidityIcon.svg'
+import { PiTestTubeFill } from "react-icons/pi"; //liquidity icon
 import useParsedQueryString from '@/hooks/useParseQueryString'
 import { _useCurrency } from '@/hooks/Tokens'
-import { useDerivedSwapInfo } from 'state/swap/hooks'
+import { useDerivedSwapInfo } from '@/state/swap/hooks'
 import { useParams } from 'next/navigation'
 import { ROUTER_ADDRESS } from '@/constants/index'
 
