@@ -130,3 +130,6 @@ estimated time : 1 day
 - added ToggleSwitch component + QuestionHelper + toolTip + SettingsModal + AdvancedSwapDetails + BestTradeAdvancedSwapDetails component
 - check useLiquidityHubState
 - added the dynamic modal to manage wallet connections + switch network / add network if user don't have the required network
+
+# 15/06
+- Refactored ConfirmSwapModal
