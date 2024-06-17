@@ -22,7 +22,6 @@ import { filterTokens } from '@/utils/filtering'
 import { useTokenComparator } from '@/utils/sorting'
 import useDebouncedChangeHandler from '@/utils/useDebouncedChangeHandler'
 import { useCurrencyBalances } from '@/state/wallet/hooks'
-import { useWallets } from '@web3-onboard/react'
 import { Close, Search } from '@mui/icons-material'
 
 interface CurrencySearchProps {
