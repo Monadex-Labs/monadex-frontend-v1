@@ -126,5 +126,26 @@ estimated time : 1 day
 - soso: configured the logo sizing in function the screen size
 # todo 
 - fix useWalletData Web3Providers
+
+# 13/06
+- daniel: Add TradePrice component
+- daniel: Add SwaCallbackError component
+- daniel: Add SwapModalFooter component
+
 # 14/06
-- added ToggleSwitch component + QuestionHelper + toolTip + SettingsModal + AdvancedSwapDetails + BestTradeAdvancedSwapDetails component
+- soso: added ToggleSwitch component + QuestionHelper + toolTip + SettingsModal + AdvancedSwapDetails + BestTradeAdvancedSwapDetails component
+- daniel: Add AdvanchedSwapDetails
+- daniel: Add TransactionConfirmationModal component. pending fixes.
+- daniel: Add swapModalHeader. Pending files.
+- daniel: Add DoubleCurrencyLogo component. 
+- daniel: Refactor components that were mistakenly taken from v3 (ConfirmSwapModal, SwapCallbackError, delete SwapModalFooter, SwapModalHeader)
+- daniel: Add constants for JSBI.
+- daniel: Add AddresInput component
+- merge branches
+
+# todo 16/06
+- daniel: Check changes on soso branch
+- daniel: Finish TransactionConfirmationModal, TransactionErrorContent and ConfirmationModalContent
+- daniel: Add RemoveLiquidity component and dependent files (first changes)
+- daniel: Pending files on Pools.
+- daniel: Pending fixes on CurrencySearch, CurrencyRow, CurrencyList, CommonBases (dependencies of AddLiquidity)
