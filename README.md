@@ -167,3 +167,12 @@ estimated time : 1 day
 - daniel: Fixes on CurrencySearch, CurrencyRow, CurrencyList, CommonBases
 - daniel: Add TOKEN_LIST_URL constant (pending final publish)
 - daniel: Add TokenWarningCard component. Add Metamask wallet connected check (getIsMetamaskWallet).
+- soso:finished usePoolsRedirect for add Liquidy 
+- soso:Fixed addLiquidty component
+
+# 18/06
+- added missing hooks
+- formatted lists state hooks and reducer
+
+# todo 19/06
+- integrating sucessfully the addliqudity component whithout errors

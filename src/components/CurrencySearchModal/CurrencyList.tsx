@@ -9,7 +9,7 @@ import {
 } from '@monadex/sdk'
 import React, { useMemo, useCallback } from 'react'
 import { Virtuoso } from 'react-virtuoso'
-import { useSelectedTokenList } from '@/state/lists/hooks'
+import { useSelectedTokenList } from '@/state/list/hooks'
 import { isTokensOnList } from '@/utils'
 import CurrencyRow from './CurrencyRow'
 

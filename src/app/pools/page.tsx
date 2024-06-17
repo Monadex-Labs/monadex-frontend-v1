@@ -1,6 +1,9 @@
+import PageHeader from '@/components/Swap/SwapHeader'
 const Pool = () => {
     return (
-        <div>Pool</div>
+        <div>
+            <PageHeader isTablet={false} pageName='Pools'/>
+        </div>
     )
 }
 
