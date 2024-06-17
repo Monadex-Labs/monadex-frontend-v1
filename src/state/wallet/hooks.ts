@@ -3,6 +3,8 @@ import { useMemo } from 'react'
 import { ERC20_INTERFACE } from '../../constants/index'
 import { isAddress } from 'viem'
 import { useMultipleContractSingleData } from '../multicall/hooks'
+import { useWalletData } from '@/utils'
+import { useAllTokens } from '@/hooks/Tokens'
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.
 */
@@ -72,10 +74,15 @@ export function useCurrencyBalance (
 }
 
 // mimics useAllBalances
-// export function useAllTokenBalances(): { [tokenAddress: string]: TokenAmount | undefined } {
-//   const { address: account } = useCelo()
-//   const allTokens = useAllTokens()
-//   const allTokensArray = useMemo(() => Object.values(allTokens ?? {}), [allTokens])
-//   const balances = useTokenBalances(account ?? undefined, allTokensArray)
-//   return balances ?? {}
-// }
+export function useAllTokenBalances(): {
+  [tokenAddress: string]: TokenAmount | undefined;
+} {
+  const { account } = useWalletData();
+  const allTokens = useAllTokens();
+  const allTokensArray = useMemo(() => Object.values(allTokens ?? {}), [
+    allTokens,
+  ]);
+  const balances = useTokenBalances(account ?? undefined, allTokensArray);
+  return balances ?? {};
+}
+
