@@ -149,3 +149,6 @@ estimated time : 1 day
 - daniel: Add RemoveLiquidity component and dependent files (first changes)
 - daniel: Pending files on Pools.
 - daniel: Pending fixes on CurrencySearch, CurrencyRow, CurrencyList, CommonBases (dependencies of AddLiquidity)
+
+# 16/06
+- fix: Lint fixes on TransactionModal component
