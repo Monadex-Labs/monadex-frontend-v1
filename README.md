@@ -150,14 +150,13 @@ estimated time : 1 day
 - soso: workin on usePoolsRedirect
 
 # todo 16/06
-- daniel: Check changes on soso branch
-- daniel: Finish TransactionConfirmationModal, TransactionErrorContent and ConfirmationModalContent
 - daniel: Add RemoveLiquidity component and dependent files (first changes)
 - daniel: Pending files on Pools.
 - daniel: Pending fixes on CurrencySearch, CurrencyRow, CurrencyList, CommonBases (dependencies of AddLiquidity)
 
 # 16/06
-- fix: Lint fixes on TransactionModal component
+- daniel: Finish TransactionConfirmationModal, TransactionErrorContent and ConfirmationModalContent
+- daniel: Lint fixes on TransactionModal component
 - soso: check useLiquidityHubState
 - soso: added the dynamic modal to manage wallet connections + switch network / add network if user don't have the required network
 

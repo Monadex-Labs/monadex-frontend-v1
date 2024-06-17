@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, useMemo } from 'react'
+import { useCallback, useEffect, useState, useMemo, ReactElement } from 'react'
 import { Box } from '@mui/material'
 import { Button } from '@mui/base'
 import {
@@ -45,8 +45,7 @@ import {
   halfAmountSpend
 } from '@/utils'
 import { wrappedCurrency } from '@/utils/wrappedCurrency'
-import { Web3Provider } from '@ethersproject/providers'
-import { PiTestTubeFill } from "react-icons/pi"; //liquidity icon
+import { PiTestTubeFill } from 'react-icons/pi' // liquidity icon
 import useParsedQueryString from '@/hooks/useParseQueryString'
 import { _useCurrency } from '@/hooks/Tokens'
 import { useDerivedSwapInfo } from '@/state/swap/hooks'
@@ -63,7 +62,7 @@ const AddLiquidity: React.FC<{
 
   const isSupportedNetwork = useIsSupportedNetwork()
   const { account, chainId, provider } = useWalletData()
-  const chainIdToUse = chainId || ChainId.MONAD
+  const chainIdToUse = chainId ?? ChainId.MONAD
   const nativeCurrency = MONAD
   const { useAutoSlippage } = useDerivedSwapInfo()
 
@@ -82,20 +81,19 @@ const AddLiquidity: React.FC<{
   const params: any = useParams()
   const parsedQuery = useParsedQueryString()
   const currency0Id =
-    params && params.currencyIdA
-      ?params.currencyIdA.toLowerCase() === 'mnd'
+    params?.currencyIdA
+      ? params.currencyIdA.toLowerCase() === 'mnd'
         ? 'MND'
         : params.currencyIdA
       : parsedQuery && parsedQuery.currency0
         ? (parsedQuery.currency0 as string)
         : undefined
   const currency1Id =
-    params && params.currencyIdB
-      ?
-        params.currencyIdB.toLowerCase() === 'mnd'
+    params?.currencyIdB
+      ? params.currencyIdB.toLowerCase() === 'mnd'
         ? 'MND'
         : params.currencyIdB
-      : parsedQuery && parsedQuery.currency1
+      : parsedQuery?.currency1
         ? (parsedQuery.currency1 as string)
         : undefined
   const currency0 = _useCurrency(currency0Id)
@@ -123,7 +121,7 @@ const AddLiquidity: React.FC<{
     symbolB: currencies[Field.CURRENCY_B]?.symbol
   }
 
-  const pendingText = `Supplying ${liquidityTokenData.amountA} ${liquidityTokenData.symbolA} and ${liquidityTokenData.amountB} ${liquidityTokenData.symbolB}`
+  const pendingText = `Supplying ${liquidityTokenData.amountA} ${liquidityTokenData.symbolA ?? 'INVALID SYMBOL'} and ${liquidityTokenData.amountB} ${liquidityTokenData.symbolB ?? 'INVALID SYMBOL'}`
 
   const {
     onFieldAInput,
@@ -153,7 +151,7 @@ const AddLiquidity: React.FC<{
 
   const formattedAmounts = {
     [independentField]: typedValue,
-    [dependentField]: noLiquidity
+    [dependentField]: noLiquidity != null
       ? otherTypedValue
       : parsedAmounts[dependentField]?.toExact() ?? ''
   }
@@ -162,11 +160,11 @@ const AddLiquidity: React.FC<{
   const [approvingB, setApprovingB] = useState(false)
   const [approvalA, approveACallback] = useApproveCallback(
     parsedAmounts[Field.CURRENCY_A],
-    chainId ? V1_ROUTER_ADDRESS[chainId] : undefined
+    chainId != null ? V1_ROUTER_ADDRESS[chainId] : undefined
   )
   const [approvalB, approveBCallback] = useApproveCallback(
     parsedAmounts[Field.CURRENCY_B],
-    chainId ? V1_ROUTER_ADDRESS[chainId] : undefined
+    chainId != null ? V1_ROUTER_ADDRESS[chainId] : undefined
   )
 
   const userPoolBalance = useTokenBalance(
@@ -190,10 +188,7 @@ const AddLiquidity: React.FC<{
     (currencyA: any) => {
       const isSwichRedirect = currencyEquals(currencyA, MONAD)
         ? currency1Id === 'ETH'
-        : currency1Id &&
-          currencyA &&
-          currencyA.address &&
-          currencyA.address.toLowerCase() === currency1Id.toLowerCase()
+        : currencyA?.address?.toLowerCase() === currency1Id?.toLowerCase()
       if (isSwichRedirect) {
         redirectWithSwitch(currencyA, true)
       } else {
@@ -213,10 +208,7 @@ const AddLiquidity: React.FC<{
     (currencyB: any) => {
       const isSwichRedirect = currencyEquals(currencyB, MONAD)
         ? currency0Id === 'MND'
-        : currencyB &&
-          currencyB.address &&
-          currency0Id &&
-          currencyB.address.toLowerCase() === currency0Id.toLowerCase()
+        : currencyB?.address?.toLowerCase() === currency0Id?.toLowerCase()
       if (isSwichRedirect) {
         redirectWithSwitch(currencyB, false)
       } else {
@@ -233,29 +225,28 @@ const AddLiquidity: React.FC<{
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currency1Id])
 
-  const onAdd = () => {
+  const onAdd = (): void => {
     setAddLiquidityErrorMessage(null)
-      setTxHash('')
-      onAddLiquidity()
-      setShowConfirm(true)
-  
+    setTxHash('')
+    onAddLiquidity()
+    setShowConfirm(true)
   }
 
   const router = useRouterContract()
 
   const onAddLiquidity = async () => {
-    if (!chainId || !provider || !account || !router) return
+    if (chainId === undefined || provider === undefined || account === undefined || (router == null)) return
 
     const {
       [Field.CURRENCY_A]: parsedAmountA,
       [Field.CURRENCY_B]: parsedAmountB
     } = parsedAmounts
     if (
-      !parsedAmountA ||
-      !parsedAmountB ||
-      !currencies[Field.CURRENCY_A] ||
-      !currencies[Field.CURRENCY_B] ||
-      !deadline
+      (parsedAmountA == null) ||
+      (parsedAmountB == null) ||
+      (currencies[Field.CURRENCY_A] == null) ||
+      (currencies[Field.CURRENCY_B] == null) ||
+      (deadline == null)
     ) {
       return
     }
@@ -263,11 +254,11 @@ const AddLiquidity: React.FC<{
     const amountsMin = {
       [Field.CURRENCY_A]: calculateSlippageAmount(
         parsedAmountA as TokenAmount,
-        noLiquidity ? 0 : allowedSlippage
+        noLiquidity != null ? 0 : allowedSlippage
       )[0],
       [Field.CURRENCY_B]: calculateSlippageAmount(
         parsedAmountB as TokenAmount,
-        noLiquidity ? 0 : allowedSlippage
+        noLiquidity != null ? 0 : allowedSlippage
       )[0]
     }
 
@@ -327,7 +318,7 @@ const AddLiquidity: React.FC<{
         }).then(async (response) => {
           setAttemptingTxn(false)
           setTxPending(true)
-          const summary = `Add ${liquidityTokenData.amountA} ${liquidityTokenData.symbolA} and ${liquidityTokenData.amountB} ${liquidityTokenData.symbolB}`
+          const summary = `Add ${liquidityTokenData.amountA} ${liquidityTokenData.symbolA ?? 'INVALID SYMBOL'} and ${liquidityTokenData.amountB} ${liquidityTokenData.symbolB ?? 'INVALID SYMBOL'}`
 
           addTransaction(response, {
             summary
@@ -359,25 +350,25 @@ const AddLiquidity: React.FC<{
       })
   }
 
-  const [{ wallet, connecting }, connect, disconnect] = useConnectWallet()
+  const [, connect] = useConnectWallet()
   const handleDismissConfirmation = useCallback(() => {
     setShowConfirm(false)
     // if there was a tx hash, we want to clear the input
-    if (txHash) {
+    if (txHash !== undefined) {
       onFieldAInput('')
     }
     setTxHash('')
   }, [onFieldAInput, txHash])
 
   const buttonText = useMemo(() => {
-    if (account) {
+    if (account !== undefined) {
       if (!isSupportedNetwork) return 'Switch Network'
       return error ?? 'S  upply'
     }
     return 'Connect Wallet'
   }, [account, isSupportedNetwork, error])
 
-  const modalHeader = () => {
+  const modalHeader = (): ReactElement => {
     return (
       <Box>
         <Box mt={10} mb={3} className='flex justify-center'>
@@ -481,10 +472,10 @@ const AddLiquidity: React.FC<{
         setAmount={onFieldBInput}
         bgClass={currencyBgClass}
       />
-      {currencies[Field.CURRENCY_A] &&
-        currencies[Field.CURRENCY_B] &&
+      {(currencies[Field.CURRENCY_A] != null) &&
+        (currencies[Field.CURRENCY_B] != null) &&
         pairState !== PairState.INVALID &&
-        price && (
+        (price != null) && (
           <Box my={2}>
             <Box className='swapPrice'>
               <small>
@@ -500,7 +491,7 @@ const AddLiquidity: React.FC<{
             <Box className='swapPrice'>
               <small>Your Pool Share</small>
               <small>
-                {poolTokenPercentage
+                {(poolTokenPercentage != null)
                   ? poolTokenPercentage.toSignificant(6) + '%'
                   : '-'}
               </small>
@@ -585,7 +576,7 @@ const AddLiquidity: React.FC<{
               approvalA !== ApprovalState.APPROVED ||
               approvalB !== ApprovalState.APPROVED)
           }
-          onClick={account && isSupportedNetwork ? onAdd : (async() => connect())}
+          onClick={account && isSupportedNetwork ? onAdd : async () => await connect()}
         >
           {buttonText}
         </Button>
