@@ -152,7 +152,6 @@ estimated time : 1 day
 # todo 16/06
 - daniel: Add RemoveLiquidity component and dependent files (first changes)
 - daniel: Pending files on Pools.
-- daniel: Pending fixes on CurrencySearch, CurrencyRow, CurrencyList, CommonBases (dependencies of AddLiquidity)
 
 # 16/06
 - daniel: Finish TransactionConfirmationModal, TransactionErrorContent and ConfirmationModalContent
@@ -161,5 +160,10 @@ estimated time : 1 day
 - soso: added the dynamic modal to manage wallet connections + switch network / add network if user don't have the required network
 
 # 17/06
-- soso:finished usePoolsRedirect for add Liquidy 
-- soso:Fixed addLiquidty component
+- soso: finished usePoolsRedirect for add Liquidy 
+- soso: Fixed addLiquidty component
+- daniel: Add useAllTokenBalances. Add token sorting (useTokenComparator) and filtering (filterTokens) functions (utils folder).
+- daniel: Fix linter errors on AddLiquidity (null cases, variable typing)
+- daniel: Fixes on CurrencySearch, CurrencyRow, CurrencyList, CommonBases
+- daniel: Add TOKEN_LIST_URL constant (pending final publish)
+- daniel: Add TokenWarningCard component. Add Metamask wallet connected check (getIsMetamaskWallet).
