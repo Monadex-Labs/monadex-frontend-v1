@@ -170,3 +170,11 @@ export const BASES_TO_CHECK_TRADES_AGAINST: {
 // Some tokens can only be swapped via certain pairs, so we override the list of bases that are considered for these tokens.
 export const CUSTOM_BASES: {
   [ChainId: number]: { [tokenAddress: string]: Token[] } } = {}
+
+
+export const RAFFLE_WL_TOKEN_ADDRESS = {
+  [ChainId.SEPOLIA]: [
+    '0x3444O454', // add raffle wl tokens here
+    '0x3444O454'
+  ]
+}

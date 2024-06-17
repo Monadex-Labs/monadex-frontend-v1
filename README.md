@@ -136,3 +136,6 @@ estimated time : 1 day
 - soso: Refactored useContracts
 - soso: fixed imports on addLiquidity Component
 - soso: workin on usePoolsRedirect
+
+# 17/06
+- soso:finished usePoolsRedirect for add Liquidy 
