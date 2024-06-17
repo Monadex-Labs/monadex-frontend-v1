@@ -57,6 +57,7 @@ export interface TokenData {
 export const DEFAULT_TOKEN_LIST: string[] = []
 export const UNSUPPORTED_LIST_URLS: string[] = []
 export const MONADEX_TOKEN_LIST: TokenList | TokenList[] = [] // token list = list of tokens supported offcially by monadex
+export const DEFAULT_TOKEN_LIST_URL = 'https://dani3.com/assets/docs/list.json' // TODO: Publish MONAD json file, extract to env and change URL
 
 // let's add some tokens in eth-sepolia for test purposes // USDC - ETH
 export const MNDX: { [chainid: number]: Token } = []
