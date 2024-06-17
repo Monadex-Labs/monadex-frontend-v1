@@ -126,16 +126,39 @@ estimated time : 1 day
 - soso: configured the logo sizing in function the screen size
 # todo 
 - fix useWalletData Web3Providers
+
+# 13/06
+- daniel: Add TradePrice component
+- daniel: Add SwaCallbackError component
+- daniel: Add SwapModalFooter component
+
 # 14/06
 - soso: added ToggleSwitch component + QuestionHelper + toolTip + SettingsModal + AdvancedSwapDetails + BestTradeAdvancedSwapDetails component
-- soso: check useLiquidityHubState
-- soso: added the dynamic modal to manage wallet connections + switch network / add network if user don't have the required network
+- daniel: Add AdvanchedSwapDetails
+- daniel: Add TransactionConfirmationModal component. pending fixes.
+- daniel: Add swapModalHeader. Pending files.
+- daniel: Add DoubleCurrencyLogo component. 
+- daniel: Refactor components that were mistakenly taken from v3 (ConfirmSwapModal, SwapCallbackError, delete SwapModalFooter, SwapModalHeader)
+- daniel: Add constants for JSBI.
+- daniel: Add AddresInput component
+- merge branches
 
 # 15/06
 - soso: Refactored ConfirmSwapModal
 - soso: Refactored useContracts
 - soso: fixed imports on addLiquidity Component
 - soso: workin on usePoolsRedirect
+
+# todo 16/06
+- daniel: Add RemoveLiquidity component and dependent files (first changes)
+- daniel: Pending files on Pools.
+- daniel: Pending fixes on CurrencySearch, CurrencyRow, CurrencyList, CommonBases (dependencies of AddLiquidity)
+
+# 16/06
+- daniel: Finish TransactionConfirmationModal, TransactionErrorContent and ConfirmationModalContent
+- daniel: Lint fixes on TransactionModal component
+- soso: check useLiquidityHubState
+- soso: added the dynamic modal to manage wallet connections + switch network / add network if user don't have the required network
 
 # 17/06
 - soso:finished usePoolsRedirect for add Liquidy 
