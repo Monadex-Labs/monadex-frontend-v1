@@ -239,7 +239,7 @@ export function useSwitchNetwork() {
       return;
     }
 
-    console.log('Attempting to switch network to:', "0x14a34");
+    console.log('Attempting to switch network to:', `0x${Number(ChainId.SEPOLIA).toString(16)}`);
 
     try {
       await window.ethereum?.request({
@@ -257,7 +257,7 @@ export function useSwitchNetwork() {
           await window.ethereum?.request({
             method: 'wallet_addEthereumChain',
             params: [{
-              params: [{ chainId: `0x${Number(ChainId.SEPOLIA).toString(16)}` }], // Update with the actual chain ID
+              chainId: `${Number(ChainId.SEPOLIA).toString(16)}`, // Update with the actual chain ID
               rpcUrls: ['https://base-sepolia-rpc.publicnode.com'], // Update with the actual RPC URL for Monad
               chainName: 'Monad Testnet', // Provide a name for the network
               nativeCurrency: {
