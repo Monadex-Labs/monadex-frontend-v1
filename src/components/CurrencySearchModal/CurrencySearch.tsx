@@ -1,4 +1,4 @@
-import { ChainId, Token, MONAD } from '@monadex/sdk'
+import { ChainId, Token, MONAD, NativeCurrency } from '@monadex/sdk'
 import React, {
   KeyboardEvent,
   RefObject,
@@ -13,17 +13,15 @@ import { useDispatch } from 'react-redux'
 import { useAllTokens, useToken, useInActiveTokens } from '@/hooks/Tokens'
 import { useSelectedListInfo } from '@/state/list/hooks'
 import { selectList } from '@/state/list/actions'
-import { GlobalConst } from '@/constants/index'
-import CommonBases from './CommonBases'
+import { DEFAULT_TOKEN_LIST_URL } from '@/constants/index'
+import CommonBases from './CommomBases'
 import CurrencyList from './CurrencyList'
 import { AppDispatch } from '@/state/store'
-import { isAddress } from '@/utils'
+import { isAddress, useWalletData } from '@/utils'
 import { filterTokens } from '@/utils/filtering'
 import { useTokenComparator } from '@/utils/sorting'
 import useDebouncedChangeHandler from '@/utils/useDebouncedChangeHandler'
 import { useCurrencyBalances } from '@/state/wallet/hooks'
-import { useUSDCPricesFromAddresses } from '@/utils/useUSDCPrice'
-import { wrappedCurrency } from '@/utils/wrappedCurrency'
 import { useWallets } from '@web3-onboard/react'
 import { Close, Search } from '@mui/icons-material'
 
@@ -31,7 +29,7 @@ interface CurrencySearchProps {
   isOpen: boolean
   onDismiss: () => void
   selectedCurrency?: Token | null
-  onCurrencySelect: (currency: Token) => void
+  onCurrencySelect: (currency: Token | NativeCurrency) => void
   otherSelectedCurrency?: Token | null
   showCommonBases?: boolean
   onChangeList: () => void
@@ -45,8 +43,7 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
   onDismiss,
   isOpen
 }) => {
-  const wallets = useWallets()
-  const account = wallets[0].accounts[0].address
+  const { account } = useWalletData()
   const dispatch = useDispatch<AppDispatch>()
   const chainIdToUse = ChainId.MONAD
   const nativeCurrency = MONAD
@@ -90,7 +87,7 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
       (token) => token.address
     )
     const filteredDefaultTokens = filteredResult.filter(
-      (token) => !inactiveAddresses.includes(token.address)
+      (token: any) => !inactiveAddresses.includes(token.address)
     )
     // return filterTokens(Object.values(allTokens), searchQuery);
     return [...filteredDefaultTokens, ...filteredInactiveResult]
@@ -126,17 +123,8 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
     allCurrencies
   )
 
-  const tokenAddresses = allCurrencies
-    .map((currency) => {
-      const token = wrappedCurrency(currency, chainIdToUse)
-      return (token != null) ? token.address.toLowerCase() : ''
-    })
-    .filter((address, ind, self) => self.indexOf(address) === ind)
-
-  const { prices: usdPrices } = useUSDCPricesFromAddresses(tokenAddresses)
-
   const handleCurrencySelect = useCallback(
-    (currency: Token) => {
+    (currency: Token | NativeCurrency) => {
       onCurrencySelect(currency)
       onDismiss()
     },
@@ -174,7 +162,7 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
   let selectedListInfo = useSelectedListInfo()
 
   if (selectedListInfo.current === null) {
-    dispatch(selectList(GlobalConst.utils.DEFAULT_TOKEN_LIST_URL))
+    dispatch(selectList(DEFAULT_TOKEN_LIST_URL))
   }
   selectedListInfo = useSelectedListInfo()
 
@@ -215,7 +203,7 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
           otherCurrency={otherSelectedCurrency}
           selectedCurrency={selectedCurrency}
           balances={currencyBalances}
-          usdPrices={usdPrices}
+          usdPrices={[]} // TODO: Add USDC token prices
         />
       </Box>
 

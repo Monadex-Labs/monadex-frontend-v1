@@ -48,7 +48,7 @@ export function useTokenBalance (account?: string, token?: Token): TokenAmount |
   if ((token === undefined)) return undefined
   return tokenBalances[token.address]
 }
-export function useCurrencyBalances (account?: string, currencies?: NativeCurrency[] | undefined): CurrencyAmount [] | undefined {
+export function useCurrencyBalances (account?: string, currencies?: NativeCurrency[] | undefined): (CurrencyAmount | undefined)[] {
   const tokens = useMemo(
     () => currencies?.filter((currency): currency is Token => currency instanceof Token) ?? [],
     [currencies]
