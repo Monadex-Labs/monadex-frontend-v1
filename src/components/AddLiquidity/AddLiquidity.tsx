@@ -14,25 +14,28 @@ import {
   currencyEquals,
   MONAD,
   TokenAmount,
-  ChainId
+  ChainId,
+  Token
 } from '@monadex/sdk'
-import { useActiveWeb3React, useConnectWallet } from 'hooks'
-import { useRouterContract } from 'hooks/useContract'
-import useTransactionDeadline from 'hooks/useTransactionDeadline'
-import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
-import { Field } from 'state/mint/actions'
-import { PairState } from 'data/Reserves'
+import { useWalletData } from '@/utils/index'
+import { useConnectWallet } from '@web3-onboard/react'
+import { useRouterContract } from '@/hooks/useContracts'
+import useTransactionDeadline from '@/hooks/useTransactionDeadline'
+import { ApprovalState, useApproveCallback } from '@/hooks/useApprouveCallback'
+import { Field } from '@/state/mint/actions'
+import { PairState } from '@/data/Reserves'
 import {
   useTransactionAdder,
   useTransactionFinalizer
-} from 'state/transactions/hooks'
+} from '@/state/transactions/hooks'
 import {
   useDerivedMintInfo,
   useMintActionHandlers,
   useMintState
-} from 'state/mint/hooks'
-import { useTokenBalance } from 'state/wallet/hooks'
-import { useIsExpertMode, useUserSlippageTolerance } from 'state/user/hooks'
+} from '@/state/mint/hooks'
+import { useTokenBalance } from '@/state/wallet/hooks'
+import { useUserSlippageTolerance } from '@/state/user/hooks'
+
 import {
   maxAmountSpend,
   calculateSlippageAmount,
@@ -40,17 +43,17 @@ import {
   useIsSupportedNetwork,
   formatTokenAmount,
   halfAmountSpend
-} from 'utils'
-import { wrappedCurrency } from 'utils/wrappedCurrency'
-import { ReactComponent as AddLiquidityIcon } from 'assets/images/AddLiquidityIcon.svg'
-import useParsedQueryString from 'hooks/useParsedQueryString'
-import { useCurrency } from 'hooks/Tokens'
-import { useDerivedSwapInfo } from 'state/swap/hooks'
-import { useParams } from 'react-router-dom'
-import { V2_ROUTER_ADDRESS } from 'constants/v3/addresses'
-import usePoolsRedirect from 'hooks/usePoolsRedirect'
-import { SLIPPAGE_AUTO } from 'state/user/reducer'
-
+} from '@/utils'
+import { wrappedCurrency } from '@/utils/wrappedCurrency'
+import { Web3Provider } from '@ethersproject/providers'
+import { PiTestTubeFill } from "react-icons/pi"; //liquidity icon
+import useParsedQueryString from '@/hooks/useParseQueryString'
+import { _useCurrency } from '@/hooks/Tokens'
+import { useDerivedSwapInfo } from '@/state/swap/hooks'
+import { useParams } from 'next/navigation'
+import { V1_ROUTER_ADDRESS } from '@/constants/index'
+import usePoolsRedirects from '@/hooks/usePoolsRedirect'
+import { SLIPPAGE_AUTO } from '@/state/user/reducer'
 const AddLiquidity: React.FC<{
   currencyBgClass?: string
 }> = ({ currencyBgClass }) => {
@@ -59,17 +62,17 @@ const AddLiquidity: React.FC<{
   >(null)
 
   const isSupportedNetwork = useIsSupportedNetwork()
-  const { account, chainId, library } = useActiveWeb3React()
+  const { account, chainId, provider } = useWalletData()
   const chainIdToUse = chainId || ChainId.MONAD
   const nativeCurrency = MONAD
-  const { autoSlippage } = useDerivedSwapInfo()
+  const { useAutoSlippage } = useDerivedSwapInfo()
 
   const [showConfirm, setShowConfirm] = useState(false)
   const [attemptingTxn, setAttemptingTxn] = useState(false)
   const [txPending, setTxPending] = useState(false)
   let [allowedSlippage] = useUserSlippageTolerance()
   allowedSlippage =
-    allowedSlippage === SLIPPAGE_AUTO ? autoSlippage : allowedSlippage
+    allowedSlippage === SLIPPAGE_AUTO ? useAutoSlippage : allowedSlippage
   const deadline = useTransactionDeadline()
   const [txHash, setTxHash] = useState('')
   const addTransaction = useTransactionAdder()
@@ -80,27 +83,25 @@ const AddLiquidity: React.FC<{
   const parsedQuery = useParsedQueryString()
   const currency0Id =
     params && params.currencyIdA
-      ? params.currencyIdA.toLowerCase() === 'matic' ||
-        params.currencyIdA.toLowerCase() === 'eth'
-        ? 'ETH'
+      ?params.currencyIdA.toLowerCase() === 'mnd'
+        ? 'MND'
         : params.currencyIdA
       : parsedQuery && parsedQuery.currency0
         ? (parsedQuery.currency0 as string)
         : undefined
   const currency1Id =
     params && params.currencyIdB
-      ? params.currencyIdB.toLowerCase() === 'matic' ||
-        params.currencyIdB.toLowerCase() === 'eth'
-        ? 'ETH'
-        : params.currencyIdBMATIC
+      ?
+        params.currencyIdB.toLowerCase() === 'mnd'
+        ? 'MND'
+        : params.currencyIdB
       : parsedQuery && parsedQuery.currency1
         ? (parsedQuery.currency1 as string)
         : undefined
-  const currency0 = useCurrency(currency0Id)
-  const currency1 = useCurrency(currency1Id)
+  const currency0 = _useCurrency(currency0Id)
+  const currency1 = _useCurrency(currency1Id)
 
   const { independentField, typedValue, otherTypedValue } = useMintState()
-  const expertMode = useIsExpertMode()
   const {
     dependentField,
     currencies,
@@ -161,11 +162,11 @@ const AddLiquidity: React.FC<{
   const [approvingB, setApprovingB] = useState(false)
   const [approvalA, approveACallback] = useApproveCallback(
     parsedAmounts[Field.CURRENCY_A],
-    chainId ? V2_ROUTER_ADDRESS[chainId] : undefined
+    chainId ? V1_ROUTER_ADDRESS[chainId] : undefined
   )
   const [approvalB, approveBCallback] = useApproveCallback(
     parsedAmounts[Field.CURRENCY_B],
-    chainId ? V2_ROUTER_ADDRESS[chainId] : undefined
+    chainId ? V1_ROUTER_ADDRESS[chainId] : undefined
   )
 
   const userPoolBalance = useTokenBalance(
@@ -183,7 +184,7 @@ const AddLiquidity: React.FC<{
     }
   }, {})
 
-  const { redirectWithCurrency, redirectWithSwitch } = usePoolsRedirect()
+  const { redirectWithCurrency, redirectWithSwitch } = usePoolsRedirects()
 
   const handleCurrencyASelect = useCallback(
     (currencyA: any) => {
@@ -211,7 +212,7 @@ const AddLiquidity: React.FC<{
   const handleCurrencyBSelect = useCallback(
     (currencyB: any) => {
       const isSwichRedirect = currencyEquals(currencyB, MONAD)
-        ? currency0Id === 'ETH'
+        ? currency0Id === 'MND'
         : currencyB &&
           currencyB.address &&
           currency0Id &&
@@ -234,18 +235,16 @@ const AddLiquidity: React.FC<{
 
   const onAdd = () => {
     setAddLiquidityErrorMessage(null)
-    setTxHash('')
-    if (expertMode) {
+      setTxHash('')
       onAddLiquidity()
-    } else {
       setShowConfirm(true)
-    }
+  
   }
 
   const router = useRouterContract()
 
   const onAddLiquidity = async () => {
-    if (!chainId || !library || !account || !router) return
+    if (!chainId || !provider || !account || !router) return
 
     const {
       [Field.CURRENCY_A]: parsedAmountA,
@@ -263,11 +262,11 @@ const AddLiquidity: React.FC<{
 
     const amountsMin = {
       [Field.CURRENCY_A]: calculateSlippageAmount(
-        parsedAmountA,
+        parsedAmountA as TokenAmount,
         noLiquidity ? 0 : allowedSlippage
       )[0],
       [Field.CURRENCY_B]: calculateSlippageAmount(
-        parsedAmountB,
+        parsedAmountB as TokenAmount,
         noLiquidity ? 0 : allowedSlippage
       )[0]
     }
@@ -321,7 +320,7 @@ const AddLiquidity: React.FC<{
 
     setAttemptingTxn(true)
     await estimate(...args, (value != null) ? { value } : {})
-      .then(async (estimatedGasLimit: number) =>
+      .then(async (estimatedGasLimit: BigNumber): Promise<any> =>
         await method(...args, {
           ...((value != null) ? { value } : {}),
           gasLimit: calculateGasMargin(estimatedGasLimit)
@@ -360,8 +359,7 @@ const AddLiquidity: React.FC<{
       })
   }
 
-  const { connectWallet } = useConnectWallet(isSupportedNetwork)
-
+  const [{ wallet, connecting }, connect, disconnect] = useConnectWallet()
   const handleDismissConfirmation = useCallback(() => {
     setShowConfirm(false)
     // if there was a tx hash, we want to clear the input
@@ -384,8 +382,8 @@ const AddLiquidity: React.FC<{
       <Box>
         <Box mt={10} mb={3} className='flex justify-center'>
           <DoubleCurrencyLogo
-            currency0={currencies[Field.CURRENCY_A]}
-            currency1={currencies[Field.CURRENCY_B]}
+            currency0={currencies[Field.CURRENCY_A] as Token}
+            currency1={currencies[Field.CURRENCY_B] as Token}
             size={48}
           />
         </Box>
@@ -443,7 +441,7 @@ const AddLiquidity: React.FC<{
       <CurrencyInput
         id='add-liquidity-input-tokena'
         title='token'
-        currency={currencies[Field.CURRENCY_A]}
+        currency={currencies[Field.CURRENCY_A] as Token}
         showHalfButton={Boolean(maxAmounts[Field.CURRENCY_A])}
         showMaxButton={atMaxAmounts[Field.CURRENCY_A] == null}
         onMax={() =>
@@ -459,14 +457,14 @@ const AddLiquidity: React.FC<{
         setAmount={onFieldAInput}
         bgClass={currencyBgClass}
       />
-      <Box className='exchangeSwap'>
-        <AddLiquidityIcon />
+      <Box className=''>
+        <PiTestTubeFill />
       </Box>
       <CurrencyInput
         id='add-liquidity-input-tokenb'
         title='token'
         showHalfButton={Boolean(maxAmounts[Field.CURRENCY_B])}
-        currency={currencies[Field.CURRENCY_B]}
+        currency={currencies[Field.CURRENCY_B] as Token}
         showMaxButton={atMaxAmounts[Field.CURRENCY_B] == null}
         onHalf={() => {
           const maxAmount = maxAmounts[Field.CURRENCY_B]
@@ -587,7 +585,7 @@ const AddLiquidity: React.FC<{
               approvalA !== ApprovalState.APPROVED ||
               approvalB !== ApprovalState.APPROVED)
           }
-          onClick={account && isSupportedNetwork ? onAdd : connectWallet}
+          onClick={account && isSupportedNetwork ? onAdd : (async() => connect())}
         >
           {buttonText}
         </Button>

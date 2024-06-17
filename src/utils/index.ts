@@ -10,7 +10,7 @@ import truncateEthAddress from 'truncate-eth-address'
 import { useWallets } from '@web3-onboard/react'
 import { SUPPORTED_CHAINIDS,GlobalData, MIN_NATIVE_CURRENCY_FOR_GAS } from '@/constants'
 import { ethers } from 'ethers'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useWeb3Onboard } from '@web3-onboard/react/dist/context'
 // import { TokenAddressMap } from '../state/lists/hooks'
 
@@ -86,11 +86,21 @@ export function useWalletData () {
   const walletData = useWallets()[0]
   const chainId = Number(walletData?.chains[0]?.id) as ChainId
   const account = walletData?.accounts[0]?.address
-  const [provider, setProvider] = useState<any>(null)
+  const [provider, setProvider] = useState<Web3Provider>()
   const [signer, setSigner] = useState<any>(null)
+  const [networkName, setNetworkName] = useState<string>('')
   useEffect(() => {
     if (walletData?.provider == null) return
     const ethersProvider = new ethers.providers.Web3Provider(walletData.provider, 'any')
+    const fetchNetworkName = async () => {
+      try {
+        const network = await ethersProvider.getNetwork()
+        setNetworkName(network.name)
+      } catch (error) {
+        console.error('Failed to get network name:', error)
+      }
+    }
+    fetchNetworkName()
     setSigner(ethersProvider.getSigner())
     setProvider(ethersProvider)
   }, [chainId, walletData])
@@ -102,7 +112,8 @@ export function useWalletData () {
     findProvider: provider,
     isConnected,
     signer,
-    provider
+    provider,
+    networkName
   }
 }
 
@@ -220,3 +231,58 @@ export function halfAmountSpend (
   }
   return new TokenAmount(currencyAmount?.currency as Token, halfAmount)
 }
+export function useSwitchNetwork() {
+  const { provider, chainId } = useWalletData();
+  const switchNetwork = useCallback(async () => {
+    if (!provider || !chainId) {
+      console.log('Provider or chainId is missing');
+      return;
+    }
+
+    console.log('Attempting to switch network to:', "0x14a34");
+
+    try {
+      await window.ethereum?.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: `0x${Number(ChainId.SEPOLIA).toString(16)}` }]
+      });
+      console.log('Network switched successfully');
+    } catch (switchError: any) {
+      console.log('Error switching network:', switchError);
+
+      // This error code indicates that the chain has not been added to MetaMask
+      if (switchError.code === 4902) {
+        console.log('Chain not found. Adding new chain...');
+        try {
+          await window.ethereum?.request({
+            method: 'wallet_addEthereumChain',
+            params: [{
+              params: [{ chainId: `0x${Number(ChainId.SEPOLIA).toString(16)}` }], // Update with the actual chain ID
+              rpcUrls: ['https://base-sepolia-rpc.publicnode.com'], // Update with the actual RPC URL for Monad
+              chainName: 'Monad Testnet', // Provide a name for the network
+              nativeCurrency: {
+                name: 'ETH',
+                symbol: 'ETH',
+                decimals: 18,
+              },
+              blockExplorerUrls: ['https://explorer-sepolia.etherscan.io'] // Update with the actual block explorer URL for Monad
+            }]
+          });
+          console.log('New chain added successfully');
+        } catch (addError: any) {
+          console.error('Error adding new chain:', addError);
+        }
+      }
+    }
+  }, [provider, chainId]);
+
+  useEffect(() => {
+    if (provider && chainId) {
+      switchNetwork();
+    }
+  }, [provider, chainId, switchNetwork]);
+
+  return { switchNetwork };
+}
+
+export default useSwitchNetwork

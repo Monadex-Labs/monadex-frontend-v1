@@ -143,6 +143,12 @@ estimated time : 1 day
 - daniel: Add AddresInput component
 - merge branches
 
+# 15/06
+- soso: Refactored ConfirmSwapModal
+- soso: Refactored useContracts
+- soso: fixed imports on addLiquidity Component
+- soso: workin on usePoolsRedirect
+
 # todo 16/06
 - daniel: Check changes on soso branch
 - daniel: Finish TransactionConfirmationModal, TransactionErrorContent and ConfirmationModalContent
@@ -152,3 +158,9 @@ estimated time : 1 day
 
 # 16/06
 - fix: Lint fixes on TransactionModal component
+- soso: check useLiquidityHubState
+- soso: added the dynamic modal to manage wallet connections + switch network / add network if user don't have the required network
+
+# 17/06
+- soso:finished usePoolsRedirect for add Liquidy 
+- soso:Fixed addLiquidty component

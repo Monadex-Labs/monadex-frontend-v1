@@ -9,10 +9,12 @@ import {
   useUserSlippageTolerance
 } from '@/state/user/hooks'
 import { Field, SwapDelay } from '@/state/swap/actions'
+// useLiquidyHubState
+import { AdvancedSwapDetails } from './AdvancedSwapDetails'
+import  CurrencyInput  from '@/components/CurrencyInput/CurrencyInput'
+import ConfirmSwapModal from './ConfirmSwapModal'
 import {
-  CurrencyInput,
-  ConfirmSwapModal,
-  AdvancedSwapDetails,
+
   AddressInput
 } from '@/components'
 import {
@@ -291,7 +293,7 @@ const Swap: React.FC<{
   )
 
   const swapButtonText = useMemo(() => {
-    if (account !== '') {
+    if (account !== null) {
       if (!isSupportedNetwork) return 'Switch Network'
       if ((currencies[Field.INPUT] == null) || (currencies[Field.OUTPUT] == null)) {
         return 'Select a token'

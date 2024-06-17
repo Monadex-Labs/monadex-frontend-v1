@@ -8,8 +8,6 @@ import {
 import SwapModalHeader from './SwapModalHeader'
 import { formatTokenAmount } from '@/utils'
 import 'components/styles/ConfirmSwapModal.scss'
-import { OptimalRate } from '@paraswap/sdk'
-import { useLiquidityHubState } from '@/state/swap/liquidity-hub/hooks'
 
 /**
  * Returns true if the trade requires a confirmation of details before we can submit it
@@ -31,7 +29,6 @@ function tradeMeaningfullyDiffers (tradeA: Trade, tradeB: Trade): boolean {
 
 interface ConfirmSwapModalProps {
   isOpen: boolean
-  optimalRate?: OptimalRate | null
   trade?: Trade
   originalTrade?: Trade
   inputCurrency?: Token
@@ -49,7 +46,6 @@ interface ConfirmSwapModalProps {
 
 const ConfirmSwapModal: React.FC<ConfirmSwapModalProps> = ({
   trade,
-  optimalRate,
   inputCurrency,
   outputCurrency,
   originalTrade,
@@ -66,20 +62,18 @@ const ConfirmSwapModal: React.FC<ConfirmSwapModalProps> = ({
   const showAcceptChanges = useMemo(
     () =>
       Boolean(
-        optimalRate == null &&
           (trade != null) &&
           (originalTrade != null) &&
           tradeMeaningfullyDiffers(trade, originalTrade)
       ),
-    [originalTrade, trade, optimalRate]
+    [originalTrade, trade]
   )
 
   const modalHeader = useCallback(() => {
-    return ((optimalRate ?? trade) != null)
+    return ((trade) != null)
       ? (
         <SwapModalHeader
           trade={trade}
-          optimalRate={optimalRate}
           inputCurrency={inputCurrency}
           outputCurrency={outputCurrency}
           allowedSlippage={allowedSlippage}
@@ -92,7 +86,6 @@ const ConfirmSwapModal: React.FC<ConfirmSwapModalProps> = ({
   }, [
     allowedSlippage,
     onAcceptChanges,
-    optimalRate,
     showAcceptChanges,
     trade,
     onConfirm,
@@ -100,17 +93,11 @@ const ConfirmSwapModal: React.FC<ConfirmSwapModalProps> = ({
     outputCurrency
   ])
 
-  const liquidityHubState = useLiquidityHubState()
-  const amount1 = (optimalRate != null)
-    ? Number(optimalRate.srcAmount) / 10 ** optimalRate.srcDecimals
-    : formatTokenAmount(trade?.inputAmount)
+  const amount1 = formatTokenAmount(trade?.inputAmount)
   const symbol1 = (trade != null)
     ? trade?.inputAmount?.currency?.symbol
     : inputCurrency?.symbol
-  const amount2 = (optimalRate != null)
-    ? Number(liquidityHubState.outAmount || optimalRate.destAmount) /
-    10 ** optimalRate.destDecimals
-    : formatTokenAmount(trade?.outputAmount)
+  const amount2 = formatTokenAmount(trade?.outputAmount)
   const symbol2 = (trade != null)
     ? trade?.outputAmount?.currency?.symbol
     : outputCurrency?.symbol
@@ -135,7 +122,7 @@ const ConfirmSwapModal: React.FC<ConfirmSwapModalProps> = ({
           ),
     [onDismiss, modalHeader, swapErrorMessage]
   )
-
+// add how much tickets raffle user will receive on swap previewPurchase()
   return (
     <TransactionConfirmationModal
       isOpen={isOpen}

@@ -252,7 +252,7 @@ export function useMintActionHandlers (
 ): {
     onFieldAInput: (typedValue: string) => void
     onFieldBInput: (typedValue: string) => void
-    onCurrencySelection: (field: Field, currency: Token) => void
+    onCurrencySelection: (field: Field, currency: Token | NativeCurrency) => void
   } {
   const dispatch = useDispatch<AppDispatch>()
 

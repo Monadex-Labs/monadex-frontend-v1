@@ -6,6 +6,7 @@ import molandak from '../../static/assets/hedgehog.png'
 import { cn } from '@/utils/cn'
 import { useEffect, useState } from 'react'
 import { supportedChainId } from '@/utils/supportedChain'
+import { SwitchChainPopUp } from '../Popup/switchChainPopup'
 interface ButtonProps {
   classNames?: string
   children?: React.ReactNode
@@ -26,7 +27,7 @@ const Base: React.FC<any> = ({ classNames, children, ...rest }: ButtonProps) => 
 
 export const ButtonPrimary: React.FC<any> = ({ classNames, children, ...rest }: ButtonProps) => {
   return (
-    <Base {...rest} classNames={`bg-indigo-500 hover:bg-indigo-600 text-white focus:shadow-md ${classNames ?? ''}`} />
+    <Base {...rest} classNames={`bg-[#23006A] hover:bg-[#23006A]/90 text-white focus:shadow-md ${classNames ?? ''}`} />
   )
 }
 
@@ -34,29 +35,41 @@ export const WalletButton: React.FC<any> = ({ classNames, children, ...rest }: B
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet()
   const [message, setMessage] = useState<string>('')
   const [messageBtn, setMsgBtn] = useState<boolean>(false)
+  const checkWallet = supportedChainId(Number(wallet?.chains[0].id))
   useEffect(() => {
-    if (wallet?.chains === null) return undefined
+    if (Number(wallet?.chains[0].id) === undefined ) return undefined
     const checkWallet = supportedChainId(Number(wallet?.chains[0].id))
-    if(checkWallet === undefined) {
+    if (checkWallet === "Unsupported chain") {
       setMessage('Unsupported chain')
       setMsgBtn(true)
-    } 
-  }, [wallet, connecting])
+    } else {
+      setMsgBtn(false)
+    }
+  }, [wallet, connecting, checkWallet])
   return (
+  <>
+        {messageBtn &&  
+          <SwitchChainPopUp 
+          open={messageBtn}
+          onClose={() => setMsgBtn(false)} 
+        />
+    }
     <button
-      disabled={connecting}
-      onClick={async () => ((wallet != null) ?  disconnect(wallet): connect())}
-      className={cn('flex p-2 items-center justify-center gap-4 text-white bg-[#836EF9] hover:bg-[#836EF9]/50 focus:outline-none focus:ring-4 focus:ring-[#836EF9]/50 font-medium rounded-full text-sm px-5 py-2.5 text-center', classNames)}
-    >
-      <Image src={molandak} alt="molandak" width={20} height={20}/>
-       {connecting
-          ? "Connecting"
-          : wallet
-          ? `${wallet.accounts[0].address.slice(
+       disabled={connecting}
+       onClick={async () => ((wallet != null) ? await disconnect(wallet) : await connect())}
+       className={cn('flex p-2 items-center justify-center gap-4 text-white bg-[#836EF9] hover:bg-[#836EF9]/50 focus:outline-none focus:ring-4 focus:ring-[#836EF9]/50 font-medium rounded-full text-sm px-5 py-2.5 text-center', classNames)}
+     >
+  
+    {connecting
+         ? 'Connecting'
+         : (wallet != null)
+           ? `${wallet.accounts[0].address.slice(
               0,
               4
             )}...${wallet.accounts[0].address.slice(-4)}`
-          : 'Connect Wallet'}
-    </button>
+           : 'Connect Wallet'}
+     </button>
+     </>
+
   )
 }
