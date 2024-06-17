@@ -163,3 +163,10 @@ estimated time : 1 day
 # 17/06
 - soso:finished usePoolsRedirect for add Liquidy 
 - soso:Fixed addLiquidty component
+
+# 18/06
+- added missing hooks
+- formatted lists state hooks and reducer
+
+# todo 19/06
+- integrating sucessfully the addliqudity component whithout errors

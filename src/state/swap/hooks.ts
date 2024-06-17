@@ -16,7 +16,7 @@ import useFindBestRoute from '@/hooks/useFindBestRouter'
 import { useUserSlippageTolerance, useSlippageManuallySet } from '../user/hooks'
 import { formatAdvancedPercent } from '@/utils/numbers'
 import useParsedQueryString from '@/hooks/useParseQueryString'
-
+import { useWalletData } from '@/utils'
 export function useSwapState (): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>((state) => state.swap)
 }
@@ -152,10 +152,9 @@ export function useDerivedSwapInfo (): {
   useAutoSlippage: number
 } {
 // grab the informations of the
-  const account = useWallets()[0]
-  const WALLET_ADDRESS = account.accounts[0].address
+  const { account: address, chainId } = useWalletData()
   const parsedQuery = useParsedQueryString()
-  const CHAIN_ID: ChainId | undefined = Number(account.chains[0].id) as ChainId
+  const CHAIN_ID: ChainId | undefined = chainId
   const chainIdToUse = CHAIN_ID ?? ChainId.SEPOLIA // TODO: change the chainId to Monad testnet
   const swapSlippage = parsedQuery?.slippage // eslint-disable-line
     ? (parsedQuery?.slippage as string)
@@ -171,9 +170,9 @@ export function useDerivedSwapInfo (): {
 
   const inputCurrency = useCurrency(inputCurrencyId)
   const outputCurrency = useCurrency(outputCurrencyId)
-  const receiver: string | null = (recipient === null ? WALLET_ADDRESS : recipient) ?? null
+  const receiver: string | null = (recipient === null ? address : recipient) ?? null
 
-  const relevantTokenBalances = useCurrencyBalances(WALLET_ADDRESS ?? undefined, [
+  const relevantTokenBalances = useCurrencyBalances(address ?? undefined, [
     inputCurrency as Token ?? undefined,
     outputCurrency as Token ?? undefined
   ])
@@ -196,7 +195,7 @@ export function useDerivedSwapInfo (): {
   }
 
   let inputError: string | undefined
-  if (WALLET_ADDRESS === undefined) {
+  if (address === undefined) {
     inputError = 'Connect Wallet'
   }
 
@@ -356,8 +355,8 @@ export function useDefaultsFromURLSearch ():
   outputCurrencyId: string | undefined
 }
 | undefined {
-  const account = useWallets()[0]
-  const chainId = Number(account.chains[0].id) as ChainId
+  const { chainId: Id } = useWalletData()
+  const chainId = Id
   const parsedQs = useParsedQueryString()
   const dispatch = useDispatch<AppDispatch>()
 

@@ -4,14 +4,15 @@ import { getAddress } from '@ethersproject/address'
 
 import { Contract } from '@ethersproject/contracts'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
-import { ChainId, CurrencyAmount, JSBI, MONAD, Percent, TokenAmount, Token } from '@monadex/sdk'
+import { ChainId, CurrencyAmount, JSBI, MONAD, Percent, TokenAmount, Token, NativeCurrency } from '@monadex/sdk'
 import { EIP1193Provider, isAddress as isViemAddress } from 'viem'
 import truncateEthAddress from 'truncate-eth-address'
 import { useWallets } from '@web3-onboard/react'
-import { SUPPORTED_CHAINIDS,GlobalData, MIN_NATIVE_CURRENCY_FOR_GAS } from '@/constants'
+import { SUPPORTED_CHAINIDS, GlobalData, MIN_NATIVE_CURRENCY_FOR_GAS } from '@/constants'
 import { ethers } from 'ethers'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useWeb3Onboard } from '@web3-onboard/react/dist/context'
+import { TokenAddressMap } from '@/state/list/hooks'
 // import { TokenAddressMap } from '../state/lists/hooks'
 
 // shorten the checksummed version of the input address to have 0x + 4 characters at start and end
@@ -116,7 +117,38 @@ export function useWalletData () {
     networkName
   }
 }
+export function isTokensOnList (
+  defaultTokens: TokenAddressMap,
+  currencies: Array<NativeCurrency | Token | undefined>,
+  chainId: ChainId
+): boolean[] {
+  return currencies.map((currency) => {
+    if (currency === MONAD) return true
 
+    return Boolean(
+      currency instanceof Token &&
+        defaultTokens[currency.chainId]?.[currency.address]
+    )
+  })
+}
+export function formatNumber (
+  unformatted: number | string | undefined,
+  showDigits = 2
+): string | 0 {
+  // get fraction digits for small number
+  if (!unformatted) return 0
+  const absNumber = Math.abs(Number(unformatted))
+  if (absNumber > 0) {
+    const digits = Math.ceil(Math.log10(1 / absNumber))
+    if (digits < 3) {
+      return Number(unformatted).toLocaleString('us')
+    } else {
+      return Number(unformatted).toFixed(digits + showDigits)
+    }
+  } else {
+    return 0
+  }
+}
 export function formatTokenAmount (
   amount?: TokenAmount | CurrencyAmount,
   digits = 3
@@ -231,28 +263,28 @@ export function halfAmountSpend (
   }
   return new TokenAmount(currencyAmount?.currency as Token, halfAmount)
 }
-export function useSwitchNetwork() {
-  const { provider, chainId } = useWalletData();
+export function useSwitchNetwork () {
+  const { provider, chainId } = useWalletData()
   const switchNetwork = useCallback(async () => {
-    if (!provider || !chainId) {
-      console.log('Provider or chainId is missing');
-      return;
+    if ((provider == null) || !chainId) {
+      console.log('Provider or chainId is missing')
+      return
     }
 
-    console.log('Attempting to switch network to:', `0x${Number(ChainId.SEPOLIA).toString(16)}`);
+    console.log('Attempting to switch network to:', `0x${Number(ChainId.SEPOLIA).toString(16)}`)
 
     try {
       await window.ethereum?.request({
         method: 'wallet_switchEthereumChain',
         params: [{ chainId: `0x${Number(ChainId.SEPOLIA).toString(16)}` }]
-      });
-      console.log('Network switched successfully');
+      })
+      console.log('Network switched successfully')
     } catch (switchError: any) {
-      console.log('Error switching network:', switchError);
+      console.log('Error switching network:', switchError)
 
       // This error code indicates that the chain has not been added to MetaMask
       if (switchError.code === 4902) {
-        console.log('Chain not found. Adding new chain...');
+        console.log('Chain not found. Adding new chain...')
         try {
           await window.ethereum?.request({
             method: 'wallet_addEthereumChain',
@@ -263,26 +295,26 @@ export function useSwitchNetwork() {
               nativeCurrency: {
                 name: 'ETH',
                 symbol: 'ETH',
-                decimals: 18,
+                decimals: 18
               },
               blockExplorerUrls: ['https://explorer-sepolia.etherscan.io'] // Update with the actual block explorer URL for Monad
             }]
-          });
-          console.log('New chain added successfully');
+          })
+          console.log('New chain added successfully')
         } catch (addError: any) {
-          console.error('Error adding new chain:', addError);
+          console.error('Error adding new chain:', addError)
         }
       }
     }
-  }, [provider, chainId]);
+  }, [provider, chainId])
 
   useEffect(() => {
-    if (provider && chainId) {
-      switchNetwork();
+    if ((provider != null) && chainId) {
+      switchNetwork()
     }
-  }, [provider, chainId, switchNetwork]);
+  }, [provider, chainId, switchNetwork])
 
-  return { switchNetwork };
+  return { switchNetwork }
 }
 
 export default useSwitchNetwork

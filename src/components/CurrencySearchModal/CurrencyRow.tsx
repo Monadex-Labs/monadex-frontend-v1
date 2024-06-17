@@ -7,13 +7,12 @@ import { useIsUserAddedToken, useCurrency } from '@/hooks/Tokens'
 import { CurrencyLogo } from '@/components'
 import { getTokenLogoURL } from '@/utils/getTokenLogoURL'
 import { PlusHelper } from '@/components/common/QuestionHelper'
-import { formatNumber, formatTokenAmount } from '@/utils'
+import { formatNumber, formatTokenAmount } from '@/utils/index'
 import { getIsMetaMaskWallet } from '@/utils/connectors'
 import TokenWarningModal from '@/components/TokenWarningModal'
 import { wrappedCurrency } from '@/utils/wrappedCurrency'
 import { useWalletData } from '@/utils'
 import { FiCheck } from 'react-icons/fi'
-
 
 // TODO Investigate: shouldnt this key return 'ETH' not 'MONAD'
 function currencyKey (currency: Token): string {
@@ -24,7 +23,7 @@ function currencyKey (currency: Token): string {
       : ''
 }
 
-function Balance ({ balance }: { balance: CurrencyAmount }) {
+function Balance ({ balance }: { balance: CurrencyAmount }): JSX.Element {
   return (
     <p className='small' title={balance.toExact()}>
       {formatTokenAmount(balance)}
@@ -32,7 +31,7 @@ function Balance ({ balance }: { balance: CurrencyAmount }) {
   )
 }
 
-function TokenTags ({ currency }: { currency: Token }) {
+function TokenTags ({ currency }: { currency: Token }): JSX.Element {
   if (!(currency instanceof WrappedTokenInfo)) {
     return <span />
   }
@@ -50,14 +49,14 @@ function TokenTags ({ currency }: { currency: Token }) {
       </Tooltip>
       {tags.length > 1
         ? (
-  <Tooltip
-          title={tags
-            .slice(1)
-            .map(({ name, description }) => `${name}: ${description}`)
-            .join('; \n')}
-        >
-          <Box className='tag'>...</Box>
-        </Tooltip>
+          <Tooltip
+        title={tags
+          .slice(1)
+          .map(({ name, description }) => `${name}: ${description}`)
+          .join('; \n')}
+      >
+        <Box className='tag'>...</Box>
+      </Tooltip>
           )
         : null}
     </Box>
@@ -100,7 +99,7 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
     tokenDecimals: any,
     tokenImage: any
   ) => {
-    if (provider && provider.provider.request) {
+    if ((provider != null) && (provider.provider.request != null)) {
       provider.provider.request({
         method: 'wallet_watchAsset',
         params: [{
@@ -164,7 +163,7 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
               <small className='currencySymbol'>{currency.symbol}</small>
               {isMetamask &&
                 currency !== nativeCurrency &&
-                !(currency.name === "MONAD") && (
+                !(currency.name === 'MONAD') && (
                   <Box
                     className='cursor-pointer'
                     ml='2px'
@@ -184,20 +183,20 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
             </Box>
             {isOnSelectedList
               ? (
-  <span className='currencyName'>{currency.name}</span>
+                <span className='currencyName'>{currency.name}</span>
                 )
               : (
-  <Box className='flex items-center'>
-                <span>
+                <Box className='flex items-center'>
+    <span>
                   {customAdded ? 'Added by user' : 'Found by address'}
                 </span>
-                <Box
+    <Box
                   ml={0.5}
                   className='text-primary'
                   onClick={(event) => {
                     event.stopPropagation()
                     if (customAdded) {
-                      if (chainId && currency instanceof Token) { removeToken(chainId, currency.address)}
+                      if (chainId && currency instanceof Token) { removeToken(chainId, currency.address) }
                     } else {
                       if (currency instanceof Token) {
                         addToken(currency)
@@ -210,25 +209,25 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
                     {customAdded ? 'Remove' : 'Add'}
                   </span>
                 </Box>
-              </Box>
+  </Box>
                 )}
           </Box>
 
           <Box flex={1} />
           <TokenTags currency={currency} />
           <Box textAlign='right'>
-            {balance
+            {(balance != null)
               ? (
-  <>
-                <Balance balance={balance} />
-                <span className='text-secondary'>
+                <>
+    <Balance balance={balance} />
+    <span className='text-secondary'>
                   ${formatNumber(Number(balance.toExact()) * usdPrice)}
                 </span>
-              </>
+  </>
                 )
               : account
                 ? (
-  <CircularProgress size={24} color='secondary' />
+                  <CircularProgress size={24} color='secondary' />
                   )
                 : null}
           </Box>

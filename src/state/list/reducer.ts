@@ -3,8 +3,8 @@ import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
 import { TokenList } from '@uniswap/token-lists/dist/types'
 import { DEFAULT_TOKEN_LIST } from '../../constants/index'
 import { updateVersion } from '../global/actions'
-import { acceptListUpdate, addList, fetchTokenList, removeList } from './actions'
-
+import { DEFAULT_TOKEN_LIST_URL } from '@/constants/index'
+import { acceptListUpdate, addList, fetchTokenList, removeList, selectList } from './actions'
 export interface ListsState {
   readonly byUrl: {
     readonly [url: string]: {
@@ -18,7 +18,8 @@ export interface ListsState {
   readonly lastInitializedDefaultListOfLists?: string[]
 
   // currently active lists
-  readonly activeListUrls: string[] | undefined
+  // readonly activeListUrls: string[] | undefined
+  readonly selectedListUrl: string | undefined
 }
 
 type ListState = ListsState['byUrl'][string]
@@ -40,7 +41,8 @@ const initialState: ListsState = {
       return memo
     }, {})
   },
-  activeListUrls: DEFAULT_TOKEN_LIST
+  // activeListUrls: DEFAULT_TOKEN_LIST,
+  selectedListUrl: DEFAULT_TOKEN_LIST_URL
 }
 
 export default createReducer(initialState, (builder) =>
@@ -76,10 +78,9 @@ export default createReducer(initialState, (builder) =>
         }
       } else {
         // activate if on default active
-        if (DEFAULT_TOKEN_LIST.includes(url)) {
-          state.activeListUrls?.push(url)
-        }
-
+        // if (DEFAULT_TOKEN_LIST.includes(url)) {
+        //   state.activeListUrls?.push(url)
+        // }
         state.byUrl[url] = {
           ...state.byUrl[url],
           loadingRequestId: null,
@@ -103,6 +104,12 @@ export default createReducer(initialState, (builder) =>
         pendingUpdate: null
       }
     })
+    .addCase(selectList, (state, { payload: url }) => {
+      state.selectedListUrl = url
+      if (state.byUrl[url] == null) {
+        state.byUrl[url] = NEW_LIST_STATE
+      }
+    })
     .addCase(addList, (state, { payload: url }) => {
       if (state.byUrl[url] == null) {
         state.byUrl[url] = NEW_LIST_STATE
@@ -113,8 +120,11 @@ export default createReducer(initialState, (builder) =>
         delete state.byUrl[url] // eslint-disable-line @typescript-eslint/no-dynamic-delete
       }
       // remove list from active urls if needed
-      if ((state.activeListUrls != null) && state.activeListUrls.includes(url)) { // eslint-disable-line @typescript-eslint/prefer-optional-chain
-        state.activeListUrls = state.activeListUrls.filter((u) => u !== url)
+      if ((state.selectedListUrl === url)) { // eslint-disable-line @typescript-eslint/prefer-optional-chain
+        state.selectedListUrl =
+          url === DEFAULT_TOKEN_LIST_URL
+            ? Object.keys(state.byUrl)[0]
+            : DEFAULT_TOKEN_LIST_URL
       }
     })
     .addCase(acceptListUpdate, (state, { payload: url }) => {
@@ -131,7 +141,7 @@ export default createReducer(initialState, (builder) =>
       // state loaded from localStorage, but new lists have never been initialized
       if (state.lastInitializedDefaultListOfLists !== undefined) {
         state.byUrl = initialState.byUrl
-        state.activeListUrls = initialState.activeListUrls
+        state.selectedListUrl = DEFAULT_TOKEN_LIST_URL
       } else if (state.lastInitializedDefaultListOfLists !== null) {
         // @ts-expect-error
         const lastInitializedSet = state.lastInitializedDefaultListOfLists.reduce<Set<string>>(
@@ -157,16 +167,11 @@ export default createReducer(initialState, (builder) =>
       state.lastInitializedDefaultListOfLists = DEFAULT_TOKEN_LIST
 
       // if no active lists, activate defaults
-      if (state.activeListUrls == null) {
-        state.activeListUrls = DEFAULT_TOKEN_LIST
-
-        // for each list on default list, initialize if needed
-        DEFAULT_TOKEN_LIST.map((listUrl: string) => {
-          if (state.byUrl[listUrl] == null) {
-            state.byUrl[listUrl] = NEW_LIST_STATE
-          }
-          return true
-        })
+      if (state.selectedListUrl === null) {
+        state.selectedListUrl = DEFAULT_TOKEN_LIST_URL
+        if (state.byUrl[DEFAULT_TOKEN_LIST_URL] == null) {
+          state.byUrl[DEFAULT_TOKEN_LIST_URL] = NEW_LIST_STATE
+        }
       }
     })
 )

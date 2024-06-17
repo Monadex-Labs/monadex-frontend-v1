@@ -26,7 +26,7 @@ const CurrencySearchModal: React.FC<CurrencySearchModalProps> = ({
   const nativeCurrency = MONAD
 
   const handleCurrencySelect = useCallback(
-    (currency: Token) => {
+    (currency: Token | NativeCurrency) => {
       if (currency instanceof NativeCurrency) {
         onCurrencySelect({
           ...nativeCurrency,

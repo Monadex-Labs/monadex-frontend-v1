@@ -15,7 +15,8 @@ import {
   MONAD,
   TokenAmount,
   ChainId,
-  Token
+  Token,
+  CurrencyAmount
 } from '@monadex/sdk'
 import { useWalletData } from '@/utils/index'
 import { useConnectWallet } from '@web3-onboard/react'

@@ -3,7 +3,7 @@ import { parseBytes32String } from '@ethersproject/strings'
 import { useMemo } from 'react'
 import { useBytes32TokenContract, useTokenContract } from './useContracts'
 import { NEVER_RELOAD, useSingleCallResult } from '@/state/multicall/hooks'
-import { useCombinedInactiveList, useCombinedActiveList, useDefaultTokenList, TokenAddressMap } from '@/state/list/hooks'
+import { TokenAddressMap, useSelectedTokenList, useInactiveListUrls } from '@/state/list/hooks'
 import { useUserAddedTokens } from '@/state/user/hooks'
 import { isAddress, getAddress } from 'viem'
 import { arrayify } from 'ethers/lib/utils'
@@ -21,8 +21,8 @@ function useTokensFromMap (
     if ((chainId === undefined) || (tokenMap[chainId] === undefined)) return {}
 
     // reduce to just tokens
-    const mapWithoutUrls = Object.keys(tokenMap[chainId]).reduce<{ [address: string]: Token }>((newMap, address) => {
-      newMap[address] = tokenMap[chainId][address].token
+    const mapWithoutUrls = userAddedTokens.reduce<{ [address: string]: Token }>((newMap, token) => {
+      newMap[token.address] = token
       return newMap
     }, {})
 
@@ -46,16 +46,17 @@ function useTokensFromMap (
   }, [chainId, userAddedTokens, tokenMap, includeUserAdded])
 }
 export function useAllTokens (chainId?: ChainId): { [address: string]: Token } {
-  const allTokens = useCombinedActiveList()
+  const allTokens = useSelectedTokenList()
   return useTokensFromMap(allTokens, true, chainId)
 }
-export function useDefaultTokens (): { [address: string]: Token } {
-  const defaultList = useDefaultTokenList()
-  return useTokensFromMap(defaultList, false)
-}
+// export function useDefaultTokens (): { [address: string]: Token } {
+//   const defaultList = useDefaultTokenList()
+//   return useTokensFromMap(defaultList, false)
+// }
 
 export function useInActiveTokens (): { [address: string]: Token } {
-  const inactiveTokensMap = useCombinedInactiveList()
+  const { chainId } = useWalletData()
+  const inactiveTokensMap = useInactiveListUrls(chainId)
   const inactiveTokens = useTokensFromMap(inactiveTokensMap, false)
   return inactiveTokens
 }
@@ -90,7 +91,7 @@ export function parseStringOrBytes32 (
 // null if loading
 // otherwise returns the token
 export function useToken (tokenAddress?: string): Token | undefined | null {
-  const chainId = ChainId.SEPOLIA
+  const {chainId} = useWalletData()
   const tokens = useAllTokens()
   const _isAddress: boolean = isAddress(tokenAddress as string)
   const address = _isAddress ? getAddress(tokenAddress as string) : undefined
@@ -136,11 +137,11 @@ export function useToken (tokenAddress?: string): Token | undefined | null {
   ])
 }
 export function useCurrency (currencyId: string | undefined): Token | null | undefined {
-  const token = useToken(currencyId)²
+  const token = useToken(currencyId)
   return token
 }
 // FOR NATIVE CURRENCY
-export function _useCurrency(
+export function _useCurrency (
   currencyId: string | undefined,
 ): NativeCurrency | null | undefined {
   const { chainId } = useWalletData();

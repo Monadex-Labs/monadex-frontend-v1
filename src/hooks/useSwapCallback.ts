@@ -13,6 +13,7 @@ import { useWallets } from '@web3-onboard/react'
 import { useRouterContract } from './useContracts'
 import { purchasedTicketsOnSwap } from '@/state/swap/actions'
 import { useSelector } from 'react-redux'
+import { useWalletData } from '../utils/index'
 
 export enum SwapCallbackState {
   INVALID,
@@ -48,23 +49,16 @@ export function useSwapCallArguments (
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
   recipientAddressOrName: string | null // address of the recipient of the trade, or null if swap should be returned to sender
 ): SwapCall[] {
-  const account = useWallets()
-  const chainId = Number(account[0].chains[0].id) as ChainId
-  const address = account[0].accounts[0].address
+  const { account: address, chainId, provider: wallet } = useWalletData()
   const recipient = recipientAddressOrName === null && address
-  const wallet = account[0].provider
   const deadline = useTransactionDeadline()
   const contract = useRouterContract() as Contract
   const ticketsState = useMemo(() => {
     return useSelector(purchasedTicketsOnSwap)
   }, [])
-  const library = account.length > 0
-    ? new ethers.providers.Web3Provider(wallet as any, 'any')
-    : undefined
-
   return useMemo(() => {
     // checking
-    if ((trade == null) || !recipient || !library || !account || !chainId || (deadline == null)) return [] // eslint-disable-line
+    if ((trade == null) || !recipient || !wallet  || !chainId || (deadline == null)) return [] // eslint-disable-line
     if (contract === undefined) return []
     const swapMethods = [] as any[]
 
@@ -95,7 +89,7 @@ export function useSwapCallArguments (
       swapMethods.push(swapCallParameters)
     }
     return swapMethods.map((parameters) => ({ parameters, contract }))
-  }, [account, allowedSlippage, chainId, deadline, library, recipient, trade, contract, ticketsState])
+  }, [address, allowedSlippage, chainId, deadline, wallet, recipient, trade, contract, ticketsState])
 }
 
 // returns a function that will execute a swap, if the parameters are all valid
@@ -105,18 +99,12 @@ export function useSwapCallback (
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
   recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 ): { state: SwapCallbackState, callback: null | (() => Promise<{ response: TransactionResponse, summary: string }>), error: string | null } {
-  const account = useWallets()
-  const chainId = Number(account[0].chains[0].id) as ChainId
-  const address = account[0].accounts[0].address
-
+ 
+  const { account: address, chainId, provider: library } = useWalletData()
   const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName)
   const addTransaction = useTransactionAdder()
   const recipient = recipientAddressOrName === null && address
-  const provider = account[0].provider
   // const contract = useRouterContract() as Contract
-  const library: Web3Provider | undefined = account.length > 0
-    ? new ethers.providers.Web3Provider(provider as any, 'any')
-    : undefined
 
   return useMemo(() => {
     if (!trade || !address || !chainId) { // eslint-disable-line
@@ -236,5 +224,5 @@ export function useSwapCallback (
       },
       error: null
     }
-  }, [trade, account, chainId, recipient, recipientAddressOrName, swapCalls, library, addTransaction])
+  }, [trade, address, chainId, recipient, recipientAddressOrName, swapCalls, library, addTransaction])
 }
