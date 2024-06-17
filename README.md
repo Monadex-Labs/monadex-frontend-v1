@@ -139,3 +139,4 @@ estimated time : 1 day
 
 # 17/06
 - soso:finished usePoolsRedirect for add Liquidy 
+- soso:Fixed addLiquidty component

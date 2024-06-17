@@ -10,7 +10,7 @@ export const ONE = JSBI.BigInt(1)
 
 export const ZERO_PERCENT = new Percent('0')
 export const ONE_HUNDRED_PERCENT = new Percent('1')
-export const ROUTER_ADDRESS = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D' as Hash // fake address todo : update
+export const ROUTER_ADDRESS = '0xD80b04Ed45b12F4871d9be252dB4db7F6785AbE8' as Hash // fake address todo : update
 export const ERC20_INTERFACE = new Interface(ERC20ABI)
 export const MULTICALL_ADDRESS = '0xeefba1e63905ef1d7acba5a8513c70307c1ce441' as Hash // fake address todo : update
 export const FACTORY_ADDRESS = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f' as Hash // fake address todo : update
@@ -24,13 +24,17 @@ export const DEFAULT_DEADLINE_FROM_NOW = 60 * 20
 type ChainTokenList = {
   readonly [chainId in ChainId]: Token[]
 }
-
+type AddressMap = { [chainId: number]: string }
 export const WMND_ONLY: ChainTokenList = {
   [ChainId.MONAD_TESTNET]: [WMND[ChainId.MONAD_TESTNET]],
   [ChainId.MONAD]: [WMND[ChainId.MONAD]],
   [ChainId.SEPOLIA]: [WMND[ChainId.SEPOLIA]],
   [ChainId.LOCAL]: [WMND[ChainId.LOCAL]]
 
+}
+export const V1_ROUTER_ADDRESS: AddressMap = {
+  [ChainId.SEPOLIA] : '0xD80b04Ed45b12F4871d9be252dB4db7F6785AbE8',
+  // add chain.monad testnet and monad here 
 }
 // one basis point
 export const ONE_BIPS = new Percent(JSBI.BigInt(1), JSBI.BigInt(10000))

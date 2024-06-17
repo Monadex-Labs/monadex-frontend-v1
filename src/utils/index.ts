@@ -86,7 +86,7 @@ export function useWalletData () {
   const walletData = useWallets()[0]
   const chainId = Number(walletData?.chains[0]?.id) as ChainId
   const account = walletData?.accounts[0]?.address
-  const [provider, setProvider] = useState<any>(null)
+  const [provider, setProvider] = useState<Web3Provider>()
   const [signer, setSigner] = useState<any>(null)
   const [networkName, setNetworkName] = useState<string>('')
   useEffect(() => {

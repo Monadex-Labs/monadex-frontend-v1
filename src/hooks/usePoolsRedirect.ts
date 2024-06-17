@@ -117,5 +117,10 @@ export default function usePoolsRedirects () {
           parsedQs.currency0,
           parsedQs.currency1,
         ],
-      );
+    )
+    return {
+        redirectWithCurrencySingleToken,
+        redirectWithCurrency,
+        redirectWithSwitch
+    }
 }
