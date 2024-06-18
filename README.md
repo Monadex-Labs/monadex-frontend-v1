@@ -171,8 +171,13 @@ estimated time : 1 day
 - soso:Fixed addLiquidty component
 
 # 18/06
-- added missing hooks
-- formatted lists state hooks and reducer
+- soso: added missing hooks
+- soso: formatted lists state hooks and reducer
+- daniel: fix lint errors on common components and Swap folder componnets. Fix imports on ommon componnets.
+
+# todo 18/06
+- daniel: Finish lint fixes on components. Check for import errors.
+- daniel: Test AddLiquidity
 
 # todo 19/06
 - integrating sucessfully the addliqudity component whithout errors
