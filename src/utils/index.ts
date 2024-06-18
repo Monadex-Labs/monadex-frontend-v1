@@ -1,3 +1,4 @@
+'use client'
 import { BigNumber } from '@ethersproject/bignumber'
 import { AddressZero } from '@ethersproject/constants'
 import { getAddress } from '@ethersproject/address'
@@ -249,11 +250,10 @@ export function maxAmountSpend (
 
 export function halfAmountSpend (
   chainId: ChainId,
-  currencyAmount?: CurrencyAmount
-): CurrencyAmount | undefined {
-  if (currencyAmount === null) return undefined
-  const halfAmount = JSBI.divide(currencyAmount?.raw as JSBI, JSBI.BigInt(2))
-
+  currencyAmount?: CurrencyAmount | TokenAmount
+): CurrencyAmount | TokenAmount | undefined {
+  if (!currencyAmount) return undefined
+  const halfAmount = JSBI.divide(currencyAmount?.raw, JSBI.BigInt(2))
   if (currencyAmount?.currency === MONAD) {
     if (JSBI.greaterThan(halfAmount, MIN_NATIVE_CURRENCY_FOR_GAS[chainId])) {
       return CurrencyAmount.ether(halfAmount)
@@ -263,7 +263,9 @@ export function halfAmountSpend (
   }
   return new TokenAmount(currencyAmount?.currency as Token, halfAmount)
 }
-export function useSwitchNetwork () {
+export function useSwitchNetwork (): { 
+  switchNetwork: () => Promise<void>
+} {
   const { provider, chainId } = useWalletData()
   const switchNetwork = useCallback(async () => {
     if ((provider == null) || !chainId) {
@@ -289,7 +291,7 @@ export function useSwitchNetwork () {
           await window.ethereum?.request({
             method: 'wallet_addEthereumChain',
             params: [{
-              chainId: `${Number(ChainId.SEPOLIA).toString(16)}`, // Update with the actual chain ID
+              chainId: `0x${Number(ChainId.SEPOLIA).toString(16)}`, // Update with the actual chain ID
               rpcUrls: ['https://base-sepolia-rpc.publicnode.com'], // Update with the actual RPC URL for Monad
               chainName: 'Monad Testnet', // Provide a name for the network
               nativeCurrency: {

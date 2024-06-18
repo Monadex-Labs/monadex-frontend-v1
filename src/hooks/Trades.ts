@@ -8,21 +8,18 @@ import { useMemo } from 'react'
 import { SwapDelay } from '@/state/swap/actions'
 import { PairState, usePairs } from '@/data/Reserves'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
-import { useConnectWallet } from '@web3-onboard/react'
-
+import { useWalletData } from '@/utils'
 export function useAllCommonPairs (
   currencyA?: Token,
   currencyB?: Token
 ): Pair[] {
-  const ID = useConnectWallet()[0].wallet?.chains[0].id
-  const chainId: ChainId | undefined = Number(ID) as ChainId
-
+  const { chainId } = useWalletData()
   const bases: Token[] = useMemo(
-    () => ((chainId !== undefined) ? BASES_TO_CHECK_TRADES_AGAINST[chainId] : []),
+    () => (chainId ? BASES_TO_CHECK_TRADES_AGAINST[chainId] : []),
     [chainId]
   )
 
-  const [tokenA, tokenB] = (chainId !== undefined)
+  const [tokenA, tokenB] = chainId
     ? [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)]
     : [undefined, undefined]
 

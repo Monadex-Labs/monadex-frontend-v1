@@ -1,12 +1,12 @@
-import { Token } from '@monadex/sdk'
+import { NativeCurrency, Token } from '@monadex/sdk'
 import React from 'react'
 import { Box } from '@mui/material'
 import { CurrencyLogo } from '@/components'
 
 interface DoubleCurrencyLogoProps {
   size?: number
-  currency0?: Token
-  currency1?: Token
+  currency0?: Token | NativeCurrency
+  currency1?: Token | NativeCurrency
 }
 const DoubleCurrencyLogo: React.FC<DoubleCurrencyLogoProps> = ({
   currency0,

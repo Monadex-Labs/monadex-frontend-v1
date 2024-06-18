@@ -7,14 +7,14 @@ import { SwitchChainPopUp } from '../Popup/switchChainPopup'
 interface ButtonProps {
   classNames?: string
   children?: React.ReactNode
+  onClick?: () => void
 }
 
 const Base: React.FC<any> = ({ classNames, children, ...rest }: ButtonProps) => {
   return (
     <button
       {...rest}
-      className={`p-8 w-100 font-semibold text-center rounded-sm outline-none 
-      border text-white flex content-center items-center flex-nowrap cursor-pointer ${classNames ?? ''}`}
+      className={cn('bg-[#836EF9] hover:bg-[#836EF9]/50 text-white focus:shadow-md text-sm px-5 py-2.5 text-center rounded-sm', classNames)}
 
     >
       {children}
@@ -24,13 +24,23 @@ const Base: React.FC<any> = ({ classNames, children, ...rest }: ButtonProps) => 
 
 export const ButtonPrimary: React.FC<any> = ({ classNames, children, ...rest }: ButtonProps) => {
   return (
-    <Base {...rest} classNames={`bg-[#23006A] hover:bg-[#23006A]/90 text-white focus:shadow-md ${classNames ?? ''}`} />
+    <Base {...rest} />
+  )
+}
+export const PrimaryButton: React.FC<any> = ({children, classNames, onClick }: ButtonProps) => {
+  return (
+    <button
+      onClick={onClick}
+      className={cn('bg-[#836EF9] hover:bg-[#836EF9]/50 text-white focus:shadow-md text-sm px-5 py-2.5 text-center rounded-sm', classNames)}
+    >{children}
+    </button>
   )
 }
 
 export const ConnectButton: React.FC<any> = ({ classNames, children, ...rest }: ButtonProps) => {
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet()
   const [messageBtn, setMsgBtn] = useState<boolean>(false)
+  const [hover, setHover] = useState(false)
   const checkWallet = supportedChainId(Number(wallet?.chains[0].id))
   useEffect(() => {
     if (Number(wallet?.chains[0].id) === undefined) return undefined
@@ -50,6 +60,7 @@ export const ConnectButton: React.FC<any> = ({ classNames, children, ...rest }: 
         />}
       <button
         disabled={connecting}
+        onMouseOver={() => setHover(true)}
         onClick={async () => ((wallet != null) ? await disconnect(wallet) : await connect())} // eslint-disable-line
         className={cn('flex p-2 items-center justify-center gap-4 text-white bg-[#836EF9] hover:bg-[#836EF9]/50 focus:outline-none focus:ring-4 focus:ring-[#836EF9]/50 font-medium rounded-full text-sm px-5 py-2.5 text-center', classNames)}
         {...rest}
@@ -62,7 +73,7 @@ export const ConnectButton: React.FC<any> = ({ classNames, children, ...rest }: 
               0,
               4
             )}...${wallet.accounts[0].address.slice(-4)}`
-              : 'Connect Wallet'}
+              : (hover && wallet != null ? 'Disconnect' : 'Connect')}
       </button>
     </>
 

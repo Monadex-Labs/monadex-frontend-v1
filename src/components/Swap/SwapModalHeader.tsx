@@ -4,7 +4,6 @@ import { Box } from '@mui/material'
 import { Button } from '@mui/base'
 import { Field } from '@/state/swap/actions'
 import { DoubleCurrencyLogo } from '@/components'
-import { useUSDCPriceFromAddress } from '@/utils/useUsdcPrice'
 import { computeSlippageAdjustedAmounts } from '@/utils/price'
 import { ArrowDownward, WarningAmber } from '@mui/icons-material'
 import {
@@ -46,9 +45,7 @@ const SwapModalHeader: React.FC<SwapModalHeaderProps> = ({
     trade != null ? trade.inputAmount.currency : inputCurrency,
     chainId
   )
-  const { price: usdPrice } = useUSDCPriceFromAddress(
-    wrappedToken?.address ?? ''
-  )
+
 
   const pct = basisPointsToPercent(allowedSlippage)
 
@@ -64,9 +61,9 @@ const SwapModalHeader: React.FC<SwapModalHeaderProps> = ({
     <Box>
       <Box mt={10} className='flex justify-center'>
         <DoubleCurrencyLogo
-          currency0={trade != null ? trade.inputAmount.currency : inputCurrency}
+          currency0={trade != null ? trade.inputAmount.currency : inputCurrency as Token}
           currency1={
-            trade != null ? trade.outputAmount.currency : outputCurrency
+            trade != null ? trade.outputAmount.currency : outputCurrency as Token
           }
           size={48}
         />

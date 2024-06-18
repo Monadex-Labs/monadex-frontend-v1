@@ -181,3 +181,6 @@ estimated time : 1 day
 
 # todo 19/06
 - integrating sucessfully the addliqudity component whithout errors
+
+# 18/06
+- debugging to display addLiquidity component on the UI

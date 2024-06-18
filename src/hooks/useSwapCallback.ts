@@ -1,15 +1,13 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
-import { TransactionResponse, Web3Provider } from '@ethersproject/providers'
-import { ChainId, JSBI, Percent, Router, SwapParameters, Trade, TradeType } from '@monadex/sdk'
-import { ethers } from 'ethers'
+import { TransactionResponse } from '@ethersproject/providers'
+import { JSBI, Percent, Router, SwapParameters, Trade, TradeType } from '@monadex/sdk'
 import { useMemo } from 'react'
 import { useTransactionAdder } from '@/state/transactions/hooks'
 import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
 import { calculateGasMargin, shortenAddress, isAddress } from '../utils'
 import isZero from '../utils/isZero'
 import useTransactionDeadline from './useTransactionDeadline'
-import { useWallets } from '@web3-onboard/react'
 import { useRouterContract } from './useContracts'
 import { purchasedTicketsOnSwap } from '@/state/swap/actions'
 import { useSelector } from 'react-redux'
@@ -56,10 +54,12 @@ export function useSwapCallArguments (
   const ticketsState = useMemo(() => {
     return useSelector(purchasedTicketsOnSwap)
   }, [])
+  const ticketsPurchased = ticketsState.payload.raffle?.ticketsPurchased as boolean
+  const multiplier = ticketsState.payload.raffle?.multiplier as number
   return useMemo(() => {
     // checking
-    if ((trade == null) || !recipient || !wallet  || !chainId || (deadline == null)) return [] // eslint-disable-line
-    if (contract === undefined) return []
+    if (!trade || !recipient || !wallet  || !chainId || !deadline || !ticketsPurchased || !multiplier) return [] // eslint-disable-line
+    if (!contract) return []
     const swapMethods = [] as any[]
 
     const swapCallParameters =
@@ -69,8 +69,8 @@ export function useSwapCallArguments (
         recipient,
         deadline: deadline.toNumber()
       }, {
-        purchaseTickets: ticketsState.payload.raffle.ticketsPurchased as boolean,
-        multiplier: ticketsState.payload.raffle.multiplier as number
+        purchaseTickets: ticketsPurchased,
+        multiplier: multiplier
       })
     const swapCallParametersOnInput = Router.swapCallParameters(trade, {
       feeOnTransfer: true,
@@ -79,8 +79,8 @@ export function useSwapCallArguments (
       deadline: deadline.toNumber()
     },
     {
-      purchaseTickets: ticketsState.payload.raffle.ticketsPurchased as boolean,
-      multiplier: ticketsState.payload.raffle.multiplier as number
+      purchaseTickets: ticketsPurchased,
+      multiplier: multiplier
     })
 
     if (trade.tradeType === TradeType.EXACT_INPUT) {
@@ -99,7 +99,6 @@ export function useSwapCallback (
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
   recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 ): { state: SwapCallbackState, callback: null | (() => Promise<{ response: TransactionResponse, summary: string }>), error: string | null } {
- 
   const { account: address, chainId, provider: library } = useWalletData()
   const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName)
   const addTransaction = useTransactionAdder()
