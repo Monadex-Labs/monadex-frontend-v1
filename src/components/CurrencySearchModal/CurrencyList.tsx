@@ -49,14 +49,14 @@ const CurrencyList: React.FC<CurrencyListProps> = ({
     ({ data, index, style }: { data: any[], index: number, style?: any }) => {
       const currency = data[index]
       const isSelected = Boolean(
-        selectedCurrency && currencyEquals(selectedCurrency, currency)
+        (selectedCurrency != null) && currencyEquals(selectedCurrency, currency)
       )
       const otherSelected = Boolean(
-        otherCurrency && currencyEquals(otherCurrency, currency)
+        (otherCurrency != null) && currencyEquals(otherCurrency, currency)
       )
-      const handleSelect = () => onCurrencySelect(currency)
+      const handleSelect = (): void => onCurrencySelect(currency)
       const token =
-          currencyEquals(currency, MONAD) || currency.isNative
+          currencyEquals(currency, MONAD) || currency.name === 'MONAD'
             ? WMND[chainId]
             : currency
       const usdPrice = (usdPrices != null)
@@ -67,15 +67,15 @@ const CurrencyList: React.FC<CurrencyListProps> = ({
         : undefined
       return (
         <CurrencyRow
-            style={style}
-            currency={currency}
-            isSelected={isSelected}
-            onSelect={handleSelect}
-            otherSelected={otherSelected}
-            isOnSelectedList={isOnSelectedList[index]}
-            balance={balances[index]}
-            usdPrice={(usdPrice != null) ? usdPrice.price : 0}
-          />
+          style={style}
+          currency={currency}
+          isSelected={isSelected}
+          onSelect={handleSelect}
+          otherSelected={otherSelected}
+          isOnSelectedList={isOnSelectedList[index]}
+          balance={balances[index]}
+          usdPrice={(usdPrice != null) ? usdPrice.price : 0}
+        />
       )
     },
     [
@@ -91,9 +91,9 @@ const CurrencyList: React.FC<CurrencyListProps> = ({
 
   return (
     <Virtuoso
-        totalCount={itemData.length}
-        itemContent={(index: number) => Row({ data: itemData, index })}
-      />
+      totalCount={itemData.length}
+      itemContent={(index: number) => Row({ data: itemData, index })}
+    />
   )
 }
 

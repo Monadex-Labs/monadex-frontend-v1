@@ -61,7 +61,7 @@ const ConfirmSwapModal: React.FC<ConfirmSwapModalProps> = ({
   const showAcceptChanges = useMemo(
     () =>
       Boolean(
-          (trade != null) &&
+        (trade != null) &&
           (originalTrade != null) &&
           tradeMeaningfullyDiffers(trade, originalTrade)
       ),
@@ -121,7 +121,7 @@ const ConfirmSwapModal: React.FC<ConfirmSwapModalProps> = ({
           ),
     [onDismiss, modalHeader, swapErrorMessage]
   )
-// add how much tickets raffle user will receive on swap previewPurchase()
+  // add how much tickets raffle user will receive on swap previewPurchase()
   return (
     <TransactionConfirmationModal
       isOpen={isOpen}

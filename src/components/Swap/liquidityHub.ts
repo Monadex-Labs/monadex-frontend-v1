@@ -1,6 +1,6 @@
 import { useWalletData } from '@/utils'
 import { wrappedCurrency } from '@/utils/wrappedCurrency'
-import { NativeCurrency, Token, Trade, TradeType } from '@monadex/sdk'
+import { NativeCurrency, Trade, TradeType } from '@monadex/sdk'
 import { useCallback } from 'react'
 import { Field } from '@/state/swap/actions'
 type actionState = 'pending' | 'success' | 'failed' | 'null' | ''
@@ -105,7 +105,7 @@ const initialData: Partial<LiquidityHubAnalyticsData> = {
   isForceClob: false,
   isDexTrade: false,
   version: ANALYTICS_VERSION
-};
+}
 class LiquidityHubAnalytics {
   initialTimestamp = Date.now()
   data = initialData
@@ -399,7 +399,7 @@ class LiquidityHubAnalytics {
   }
 }
 
-function delay (ms: number) {
+async function delay (ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
@@ -409,7 +409,7 @@ export async function waitForTx (txHash: string, library: any): Promise<any> {
 
     await delay(2_000) // to avoid potential rate limiting from public rpc
     try {
-      const tx = await library.getTransaction(txHash);
+      const tx = await library.getTransaction(txHash)
       if (tx && tx instanceof Object && (tx.blockNumber != null)) {
         return tx
       }

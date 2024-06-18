@@ -9,14 +9,11 @@ import {
   useUserSlippageTolerance
 } from '@/state/user/hooks'
 import { Field, SwapDelay } from '@/state/swap/actions'
-// useLiquidyHubState
+// TODO: useLiquidyHubState?
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
-import  CurrencyInput  from '@/components/CurrencyInput/CurrencyInput'
+import CurrencyInput from '@/components/CurrencyInput/CurrencyInput'
 import ConfirmSwapModal from './ConfirmSwapModal'
-import {
-
-  AddressInput
-} from '@/components'
+import { AddressInput } from '@/components'
 import {
   useWalletData,
   useIsSupportedNetwork,
@@ -35,7 +32,6 @@ import {
   JSBI,
   Trade,
   Token,
-  ChainId,
   MONAD,
   currencyEquals,
   WMND,
@@ -55,13 +51,12 @@ import { wrappedCurrency } from '@/utils/wrappedCurrency'
 import { SLIPPAGE_AUTO } from '@/state/user/reducer'
 import { useWallets, useConnectWallet } from '@web3-onboard/react'
 import useParsedQueryString from '@/hooks/useParseQueryString'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import useSwapRedirects from '@/hooks/useSwapRedirect'
 
 const Swap: React.FC<{
   currencyBgClass?: string
 }> = ({ currencyBgClass }) => {
-  const router = useRouter()
   const pathname = usePathname()
   const isSupportedNetwork = useIsSupportedNetwork()
   // token warning stuff
@@ -90,7 +85,6 @@ const Swap: React.FC<{
 
   const { account, chainId, isConnected } = useWalletData()
   const [, connect] = useConnectWallet()
-  const chainIdToUse = chainId !== undefined ? chainId : ChainId.MONAD
   const { independentField, typedValue, recipient, swapDelay } = useSwapState()
   const {
     v2Trade,
@@ -117,7 +111,7 @@ const Swap: React.FC<{
     onCurrencySelection,
     onUserInput,
     onRecipientChange,
-    onPurchasedTickets
+    onPurchasedTickets // TODO: check if needed
   } = useSwapActionHandlers()
   let [allowedSlippage] = useUserSlippageTolerance()
   allowedSlippage = allowedSlippage === SLIPPAGE_AUTO ? autoSlippage : allowedSlippage
@@ -212,7 +206,6 @@ const Swap: React.FC<{
       parsedCurrency1Id,
       redirectWithCurrency,
       redirectWithSwitch,
-      chainIdToUse,
       defaultTokens
     ]
   )
@@ -242,7 +235,6 @@ const Swap: React.FC<{
       parsedCurrency0Id,
       redirectWithCurrency,
       redirectWithSwitch,
-      chainIdToUse,
       defaultTokens
     ]
   )
@@ -434,12 +426,12 @@ const Swap: React.FC<{
   )
 
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(
-    chainIdToUse,
+    chainId,
     currencyBalances[Field.INPUT]
   )
 
   const halfAmountInput: CurrencyAmount | undefined = halfAmountSpend(
-    chainIdToUse,
+    chainId,
     currencyBalances[Field.INPUT]
   )
 

@@ -2,11 +2,7 @@
 import React, { useState, useMemo } from 'react'
 import { Box, Divider } from '@mui/material'
 import { FiAlertTriangle } from 'react-icons/fi'
-// components
-import CustomModal from './CustomModal'
-import QuestionHelper from '../common/QuestionHelper'
-import { ToggleSwitch } from '../common/index'
-import { NumericalInput } from '../NumericalInput/NumericalInput'
+import { QuestionHelper, CustomModal, NumericalInput } from '@/components'
 import { useSwapActionHandlers } from '@/state/swap/hooks'
 import { useUserSlippageTolerance, useSlippageManuallySet, useUserTransactionTTL } from '@/state/user/hooks'
 import { IoMdCloseCircleOutline } from 'react-icons/io'
@@ -67,12 +63,12 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose }) => {
     }
   }, [deadlineInput, deadlineInputIsValid])
   const parseCustomSlippage = (value: string) => {
-    setSlippageInput(value);
+    setSlippageInput(value)
 
     try {
       const valueAsIntFromRoundedFloat = Number.parseInt(
-        (Number.parseFloat(value) * 100).toString(),
-      );
+        (Number.parseFloat(value) * 100).toString()
+      )
       if (
         !Number.isNaN(valueAsIntFromRoundedFloat) &&
         valueAsIntFromRoundedFloat < 5000
@@ -85,7 +81,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose }) => {
     } catch {}
   }
   const parseCustomDeadline = (value: string) => {
-    setDeadlineInput(value);
+    setDeadlineInput(value)
 
     try {
       const valueAsInt: number = Number.parseInt(value) * 60
@@ -103,103 +99,103 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose }) => {
       </Box>
       <Divider />
       <Box my={2.5} className='flex items-center'>
-          <Box mr='6px'>
-            <p>Slippage tolerance</p>
-          </Box>
+        <Box mr='6px'>
+          <p>Slippage tolerance</p>
+        </Box>
         <QuestionHelper size={20} text='slippageHelper' />
       </Box>
       <Box mb={2.5}>
-          <Box className='flex items-center'>
-            <Box
-              className={`slippageButton${
+        <Box className='flex items-center'>
+          <Box
+            className={`slippageButton${
                 userSlippageTolerance === SLIPPAGE_AUTO
                   ? ' activeSlippageButton'
                   : ''
               }`}
-              onClick={() => {
-                setSlippageInput('');
-                setUserSlippageTolerance(SLIPPAGE_AUTO);
-                if (userSlippageTolerance !== SLIPPAGE_AUTO) {
-                  setSlippageManuallySet(true);
-                }
-              }}
-            >
-              <small>AUTO</small>
-            </Box>
-            <Box
-              className={`slippageButton${
+            onClick={() => {
+              setSlippageInput('')
+              setUserSlippageTolerance(SLIPPAGE_AUTO)
+              if (userSlippageTolerance !== SLIPPAGE_AUTO) {
+                setSlippageManuallySet(true)
+              }
+            }}
+          >
+            <small>AUTO</small>
+          </Box>
+          <Box
+            className={`slippageButton${
                 userSlippageTolerance === 10 ? ' activeSlippageButton' : ''
               }`}
-              onClick={() => {
-                setSlippageInput('');
-                setUserSlippageTolerance(10);
-                if (userSlippageTolerance !== 10) {
-                  setSlippageManuallySet(true);
-                }
-              }}
-            >
-              <small>0.1%</small>
-            </Box>
-            <Box
-              className={`slippageButton${
+            onClick={() => {
+              setSlippageInput('')
+              setUserSlippageTolerance(10)
+              if (userSlippageTolerance !== 10) {
+                setSlippageManuallySet(true)
+              }
+            }}
+          >
+            <small>0.1%</small>
+          </Box>
+          <Box
+            className={`slippageButton${
                 userSlippageTolerance === 50 ? ' activeSlippageButton' : ''
               }`}
-              onClick={() => {
-                setSlippageInput('');
-                setUserSlippageTolerance(50);
-                if (userSlippageTolerance !== 50) {
-                  setSlippageManuallySet(true);
-                }
-              }}
-            >
-              <small>0.5%</small>
-            </Box>
-            <Box
-              className={`slippageButton${
+            onClick={() => {
+              setSlippageInput('')
+              setUserSlippageTolerance(50)
+              if (userSlippageTolerance !== 50) {
+                setSlippageManuallySet(true)
+              }
+            }}
+          >
+            <small>0.5%</small>
+          </Box>
+          <Box
+            className={`slippageButton${
                 userSlippageTolerance === 100 ? ' activeSlippageButton' : ''
               }`}
-              onClick={() => {
-                setSlippageInput('');
-                setUserSlippageTolerance(100);
-                if (userSlippageTolerance !== 100) {
-                  setSlippageManuallySet(true);
-                }
-              }}
-            >
-              <small>1%</small>
-            </Box>
-            <Box
-              className={`settingsInputWrapper ${
+            onClick={() => {
+              setSlippageInput('')
+              setUserSlippageTolerance(100)
+              if (userSlippageTolerance !== 100) {
+                setSlippageManuallySet(true)
+              }
+            }}
+          >
+            <small>1%</small>
+          </Box>
+          <Box
+            className={`settingsInputWrapper ${
                 slippageAlert ? 'border-primary' : 'border-secondary1'
               }`}
-            >
-              {slippageAlert && <FiAlertTriangle color='#836EF9' size={16} />}
-              <NumericalInput
-                placeholder={(userSlippageTolerance / 100).toFixed(2)}
-                value={slippageInput}
-                fontSize={14}
-                fontWeight={500}
-                align='right'
-                onBlur={() => {
-                  parseCustomSlippage((userSlippageTolerance / 100).toFixed(2));
-                }}
-                onUserInput={(value) => parseCustomSlippage(value)}
-              />
-              <small>%</small>
-            </Box>
+          >
+            {slippageAlert && <FiAlertTriangle color='#836EF9' size={16} />}
+            <NumericalInput
+              placeholder={(userSlippageTolerance / 100).toFixed(2)}
+              value={slippageInput}
+              fontSize={14}
+              fontWeight={500}
+              align='right'
+              onBlur={() => {
+                parseCustomSlippage((userSlippageTolerance / 100).toFixed(2))
+              }}
+              onUserInput={(value) => parseCustomSlippage(value)}
+            />
+            <small>%</small>
           </Box>
-          {slippageError && (
-            <Box mt={1.5}>
-              <small className='text-yellow3'>
-                {slippageError === SlippageError.InvalidInput
-                  ? 'enter valid slippage'
-                  : slippageError === SlippageError.RiskyLow
-                  ? 'tx May Fail'
-                  : 'tx May Be Frontrunned' }
-              </small>
-            </Box>
-          )}
         </Box>
+        {slippageError && (
+          <Box mt={1.5}>
+            <small className='text-yellow3'>
+              {slippageError === SlippageError.InvalidInput
+                ? 'enter valid slippage'
+                : slippageError === SlippageError.RiskyLow
+                  ? 'tx May Fail'
+                  : 'tx May Be Frontrunned'}
+            </small>
+          </Box>
+        )}
+      </Box>
     </CustomModal>
   )
 }

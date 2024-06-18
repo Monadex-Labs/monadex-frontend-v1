@@ -2,16 +2,13 @@
 /**
  * AdvancedSwapDetails is used to display the details of a trade using Monadex V1 router
  */
-import { Trade, TradeType, Token, CurrencyAmount } from '@monadex/sdk'
+import { Trade, TradeType, CurrencyAmount } from '@monadex/sdk'
 import React, { useState } from 'react'
 import { Box } from '@mui/material'
 import { Field } from '@/state/swap/actions'
 import { useUserSlippageTolerance } from '@/state/user/hooks'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown } from '@/utils/price'
-import SettingsModal from '../CustomModal/SettingsModal'
-import QuestionHelper from '../common/QuestionHelper'
-import FormattedPriceImpact from '../common/FormattedPriceImpact'
-import CurrencyLogo from '../CurrencyLogo'
+import { QuestionHelper, CurrencyLogo, SettingsModal, FormattedPriceImpact } from '@/components'
 import { MdEdit } from 'react-icons/md'
 import { formatTokenAmount } from '@/utils'
 import { useDerivedSwapInfo } from '@/state/swap/hooks'
@@ -94,11 +91,11 @@ export const TradeSummary: React.FC<TradeSummaryProps> = ({
               const isLastItem: boolean = i === path.length - 1
               return (
                 <small key={i}>
-                    {token.symbol}{' '}
-                    {// this is not to show the arrow at the end of the trade path
+                  {token.symbol}{' '}
+                  {
                   isLastItem ? '' : ' > '
-                 }
-                  </small>
+                  }
+                </small>
               )
             })}
           </Box>

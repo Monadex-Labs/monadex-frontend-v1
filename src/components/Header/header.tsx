@@ -1,8 +1,8 @@
-"use client";
+'use client'
 import Image from 'next/image'
 import Monadex from '@/static/assets/mona_logo.svg'
 import Monadex_mobile from '@/static/assets/Dex_logo_Mobile.svg'
-import { WalletButton } from '../common/Button'
+import { ConnectButton } from '@/components/common'
 import { useMediaQuery, useTheme, Box } from '@mui/material'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -42,7 +42,7 @@ const Header: React.FC<any> = () => {
         )}
       </Box>
       <div className='flex gap-6 p-2'>
-        {paths.map((k,v) => {
+        {paths.map((k, v) => {
           return (
             <Link
               className={`text-gray-500 active:text-[#836EF9] font-medium hover:text-[#836EF9] text-md transition-all ${k.id === 'Docs' ? 'underline underline-offset-2 decoration-dotted' : ''}`}
@@ -55,7 +55,7 @@ const Header: React.FC<any> = () => {
         })}
       </div>
       <div>
-        <WalletButton />
+        <ConnectButton />
       </div>
     </Box>
   )

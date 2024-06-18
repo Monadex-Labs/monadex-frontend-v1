@@ -1,27 +1,27 @@
-import React, { useCallback, useState } from 'react';
-import { Box, Button } from '@mui/material';
-import { Token } from '@monadex/sdk';
-import { CustomModal, CurrencyLogo } from '@/components';
-import { FiAlertTriangle } from 'react-icons/fi';
-import { shortenAddress, useWalletData } from '@/utils';
+import React, { useCallback, useState } from 'react'
+import { Box, Button } from '@mui/material'
+import { Token } from '@monadex/sdk'
+import { CustomModal, CurrencyLogo } from '@/components'
+import { FiAlertTriangle } from 'react-icons/fi'
+import { shortenAddress, useWalletData } from '@/utils'
 
-function TokenWarningCard({ token }: { token?: Token }) {
-  const { chainId } = useWalletData();
+function TokenWarningCard ({ token }: { token?: Token }): React.ReactElement {
+  const { chainId } = useWalletData()
 
-  if (!token) return null;
+  if (token == null) return <></>
 
   return (
     <Box mb={2} className='flex' key={token.address}>
       <Box mr={1} className='flex'>
-        <CurrencyLogo currency={token} size={'32px'} />
+        <CurrencyLogo currency={token} size='32px' />
       </Box>
       <Box>
         <p>
-          {token && token.name && token.symbol && token.name !== token.symbol
+          {token?.name != null && token?.symbol != null && token?.name !== token?.symbol
             ? `${token.name} (${token.symbol})`
-            : token.name || token.symbol}{' '}
+            : token?.name ?? token?.symbol}{' '}
         </p>
-        {chainId && (
+        {chainId != null && (
           <a
             className='text-primary'
             href='' // TODO: Add ENS link to address
@@ -35,25 +35,25 @@ function TokenWarningCard({ token }: { token?: Token }) {
         )}
       </Box>
     </Box>
-  );
+  )
 }
 
-export default function TokenWarningModal({
+export default function TokenWarningModal ({
   isOpen,
   tokens,
   onConfirm,
-  onDismiss,
+  onDismiss
 }: {
-  isOpen: boolean;
+  isOpen: boolean
   tokens: Token[]
-  onConfirm: () => void;
-  onDismiss: () => void;
-}) {
-  const [understandChecked, setUnderstandChecked] = useState(false);
+  onConfirm: () => void
+  onDismiss: () => void
+}): React.ReactElement {
+  const [understandChecked, setUnderstandChecked] = useState(false)
   const toggleUnderstand = useCallback(
     () => setUnderstandChecked((uc) => !uc),
-    [],
-  );
+    []
+  )
 
   return (
     <CustomModal open={isOpen} onClose={onDismiss}>
@@ -77,7 +77,7 @@ export default function TokenWarningModal({
         </Box>
 
         {tokens.map((token) => {
-          return <TokenWarningCard key={token.address} token={token} />;
+          return <TokenWarningCard key={token.address} token={token} />
         })}
         <Box className='flex justify-between items-center'>
           <p style={{ cursor: 'pointer', userSelect: 'none' }}>
@@ -92,10 +92,10 @@ export default function TokenWarningModal({
           <Button
             disabled={!understandChecked}
             style={{
-              borderRadius: '10px',
+              borderRadius: '10px'
             }}
             onClick={() => {
-              onConfirm();
+              onConfirm()
             }}
           >
             Continue
@@ -103,5 +103,5 @@ export default function TokenWarningModal({
         </Box>
       </Box>
     </CustomModal>
-  );
+  )
 }

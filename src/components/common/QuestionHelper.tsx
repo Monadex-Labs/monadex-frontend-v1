@@ -1,9 +1,9 @@
 import React from 'react'
 import { Box } from '@mui/material'
 import { AiOutlinePlusCircle, AiOutlineQuestionCircle } from 'react-icons/ai'
-import CustomTooltip from './tooltip'
+import { CustomTooltip } from './Tooltip'
 
-const QuestionHelper: React.FC<{
+export const QuestionHelper: React.FC<{
   text: string
   size?: number
   className?: string
@@ -16,8 +16,6 @@ const QuestionHelper: React.FC<{
     </CustomTooltip>
   )
 }
-
-export default QuestionHelper
 
 export const PlusHelper: React.FC<{ text: string, color?: string }> = ({
   text,

@@ -1,18 +1,14 @@
-import { NativeCurrency, Token, Fraction, Percent, JSBI } from '@monadex/sdk'
+import { NativeCurrency, Token, Fraction, Percent } from '@monadex/sdk'
 import React, { useState } from 'react'
 import { Box } from '@mui/material'
 import { useUserSlippageTolerance } from '@/state/user/hooks'
 import { computePriceImpact } from '@/utils/price'
-import SettingsModal from '../CustomModal/SettingsModal'
-import QuestionHelper from '../common/QuestionHelper'
-import FormattedPriceImpact from '../common/FormattedPriceImpact'
-import CurrencyLogo from '../CurrencyLogo'
-import { MdEdit } from 'react-icons/md';
+import { QuestionHelper, FormattedPriceImpact, CurrencyLogo, SettingsModal } from '@/components'
+import { MdEdit } from 'react-icons/md'
 import { basisPointsToPercent } from '@/utils'
 import { OptimalRate } from '@paraswap/sdk'
-import { SLIPPAGE_AUTO } from '@/constants'
+import { ONE, SLIPPAGE_AUTO } from '@/constants'
 import { useAutoSlippageToleranceBestTrade } from '@/hooks/useAutoSlippageTolerance'
-export const ONE = JSBI.BigInt(1)
 
 export enum SwapSide {
   BUY = 'BUY',
@@ -29,7 +25,7 @@ const BestTradeSummary: React.FC<TradeSummaryProps> = ({
   allowedSlippage,
   inputCurrency,
   outputCurrency
-  }) => {
+}) => {
   const [openSettingsModal, setOpenSettingsModal] = useState(false)
   const [userSlippage] = useUserSlippageTolerance()
   const priceImpactWithoutFee = computePriceImpact(optimalRate)
@@ -46,19 +42,19 @@ const BestTradeSummary: React.FC<TradeSummaryProps> = ({
       .multiply(optimalRate.srcAmount).quotient
 
   return (
-   <Box mt={1.5}>
-     {openSettingsModal && (
+    <Box mt={1.5}>
+      {openSettingsModal && (
         <SettingsModal
-         open={openSettingsModal}
+          open={openSettingsModal}
           onClose={() => setOpenSettingsModal(false)}
         />
-            )}
-          <Box className='summaryRow'>
-          <Box>
+      )}
+      <Box className='summaryRow'>
+        <Box>
           <small>max slippage :</small>
-          <QuestionHelper text="slippage helper" />
+          <QuestionHelper text='slippage helper' />
         </Box>
-          <Box
+        <Box
           onClick={() => setOpenSettingsModal(true)}
           className='swapSlippage'
         >
@@ -70,32 +66,32 @@ const BestTradeSummary: React.FC<TradeSummaryProps> = ({
           </small>
           <MdEdit />
         </Box>
-          <Box className='summaryRow'>
+        <Box className='summaryRow'>
           <Box>
-          <small>{isExactIn ? 'min received' : 'max sold'}:</small>
-          <QuestionHelper text="tx limit helder" />
-        </Box>
+            <small>{isExactIn ? 'min received' : 'max sold'}:</small>
+            <QuestionHelper text='tx limit helder' />
+          </Box>
           <Box>
-          <small>
-            {(
-              Number(tradeAmount.toString()) /
+            <small>
+              {(
+                Number(tradeAmount.toString()) /
               10 ** currency.decimals
-            ).toLocaleString('us')}{' '}
-            {currency.symbol}
-          </small>
+              ).toLocaleString('us')}{' '}
+              {currency.symbol}
+            </small>
 
-          <CurrencyLogo currency={currency as Token} size='16px' />
+            <CurrencyLogo currency={currency as Token} size='16px' />
+          </Box>
         </Box>
+        <Box className='summaryRow'>
+          <Box>
+            <small>price impact :</small>
+            <QuestionHelper text='priceImpactHelper' />
+          </Box>
+          <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
         </Box>
-          <Box className='summaryRow'>
-         <Box>
-          <small>price impact :</small>
-          <QuestionHelper text='priceImpactHelper' />
-        </Box>
-         <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
-       </Box>
-        </Box>
-        </Box>
+      </Box>
+    </Box>
   )
 }
 
@@ -117,11 +113,11 @@ export const BestTradeAdvancedSwapDetails: React.FC<BestTradeAdvancedSwapDetails
     <>
       {(inputCurrency != null) && (outputCurrency != null) && (optimalRate != null) && (
         <BestTradeSummary
-            optimalRate={optimalRate}
-            inputCurrency={inputCurrency}
-            outputCurrency={outputCurrency}
-            allowedSlippage={pct}
-          />
+          optimalRate={optimalRate}
+          inputCurrency={inputCurrency}
+          outputCurrency={outputCurrency}
+          allowedSlippage={pct}
+        />
       )}
     </>
   )
