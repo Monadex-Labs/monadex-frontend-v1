@@ -184,3 +184,4 @@ estimated time : 1 day
 
 # 18/06
 - debugging to display addLiquidity component on the UI
+- fixed TransactionConfirmationModal component

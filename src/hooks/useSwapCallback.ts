@@ -70,7 +70,7 @@ export function useSwapCallArguments (
         deadline: deadline.toNumber()
       }, {
         purchaseTickets: ticketsPurchased,
-        multiplier: multiplier
+        multiplier: multiplier || undefined
       })
     const swapCallParametersOnInput = Router.swapCallParameters(trade, {
       feeOnTransfer: true,

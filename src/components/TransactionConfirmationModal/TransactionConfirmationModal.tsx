@@ -2,12 +2,20 @@ import { ChainId } from '@monadex/sdk'
 import { Box, Button } from '@mui/material'
 import { CustomModal } from '@/components'
 import { Close, CheckCircleOutline } from '@mui/icons-material'
-import {
-  LiquidityHubConfirmationModalContent,
-  useConfirmationPendingContent
-} from '@/components/Swap/LiquidityHub'
 import { useWalletData } from '@/utils'
 
+interface useConfirmationPendingContentProps {
+  title: string
+  pending?: string
+  confirm: string
+}
+export const useConfirmationPendingContent = (pendingText?: string): useConfirmationPendingContentProps => {
+  return {
+    title: 'Waiting For Confirmation',
+    pending: pendingText,
+    confirm: 'Please confirm this transaction in your wallet.'
+  }
+}
 interface ConfirmationPendingContentProps {
   onDismiss: () => void
   pendingText?: string
@@ -39,8 +47,8 @@ interface TransactionSubmittedContentProps {
   onDismiss: () => void
   hash: string | undefined
   chainId: ChainId
-  txPending?: boolean
   modalContent: string
+  txPending?: boolean
 }
 
 export const TransactionSubmittedContent: React.FC<TransactionSubmittedContentProps> = ({
@@ -60,7 +68,6 @@ export const TransactionSubmittedContent: React.FC<TransactionSubmittedContentPr
         <p>
           {txPending === null && <CheckCircleOutline />}
           {modalContent}
-          <LiquidityHubConfirmationModalContent txPending={txPending} />
         </p>
       </Box>
       <Box className='flex justify-between' mt={2}>
@@ -85,6 +92,7 @@ export const TransactionSubmittedContent: React.FC<TransactionSubmittedContentPr
     </Box>
   )
 }
+// }
 
 interface ConfirmationModalContentProps {
   title: string
