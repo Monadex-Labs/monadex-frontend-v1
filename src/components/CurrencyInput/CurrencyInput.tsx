@@ -1,9 +1,7 @@
-import { NativeCurrency, MONAD, currencyEquals, Token, WMND } from '@monadex/sdk'
+import { NativeCurrency, Token } from '@monadex/sdk'
 import { useCurrencyBalance } from '@/state/wallet/hooks'
-import { formatTokenAmount } from '@/utils'
+import { formatTokenAmount, useWalletData } from '@/utils'
 import CurrencySelect from '@/components/CurrencySelect'
-// import { WrappedTokenInfo } from '@/state/list/hooks'
-import { useWallets } from '@web3-onboard/react'
 import NumericalInput from '@/components/NumericalInput'
 import useUSDCPrice from '@/utils/useUsdcPrice'
 interface CurrencyInputProps {
@@ -39,9 +37,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
   color,
   id
 }) => {
-  const wallets = useWallets()
-
-  const account = wallets[0].accounts[0].address
+  const { account } = useWalletData()
   const selectedCurrencyBalance = useCurrencyBalance(
     account ?? undefined,
     currency
@@ -82,7 +78,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
             align='right'
             color={color}
             placeholder='0.00'
-            onUserInput={(val:any) => {
+            onUserInput={(val: any) => {
               setAmount(val)
             }}
           />
@@ -90,7 +86,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
       </div>
       <div className='flex justify-between'>
         <small className={`${color !== undefined ? `text-${color}` : 'text-secondary'}}`}>
-          {`Balance: ${formatTokenAmount(selectedCurrencyBalance)}`} {/*eslint-disable-line*/}
+          {`Balance: ${formatTokenAmount(selectedCurrencyBalance)}`}
         </small>
         <small className={`${color !== undefined ? `text-${color}` : 'text-secondary'}}`}>
           ${(usdPrice * Number(amount)).toLocaleString('us')}

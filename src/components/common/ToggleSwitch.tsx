@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box } from '@mui/material'
 
-const ToggleSwitch: React.FC<{
+export const ToggleSwitch: React.FC<{
   disabled?: boolean
   toggled: boolean
   onToggle: () => void
@@ -9,17 +9,15 @@ const ToggleSwitch: React.FC<{
   return (
     <Box
       className={`${toggled ? ' toggled' : ''}${
-        disabled ? ' opacity-disabled' : ' cursor-pointer'
+        disabled != null ? ' opacity-disabled' : ' cursor-pointer'
       }`}
       onClick={() => {
-        if (!disabled) {
+        if (disabled == null) {
           onToggle()
         }
       }}
     >
-    <Box className='innerCircle' />
+      <Box className='innerCircle' />
     </Box>
   )
 }
-
-export default ToggleSwitch

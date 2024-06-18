@@ -1,3 +1,5 @@
-export * as FormattedPriceImpact from './FormattedPriceImpact'
-export * as QuestionHelper from './QuestionHelper'
-export * as ToggleSwitch from './ToggleSwitch'
+export * from './FormattedPriceImpact'
+export * from './QuestionHelper'
+export * from './ToggleSwitch'
+export * from './ConnectButton'
+export * from './Tooltip'

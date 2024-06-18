@@ -4,12 +4,10 @@ import { Box, Tooltip, CircularProgress, ListItem } from '@mui/material'
 import { WrappedTokenInfo } from '@/state/list/hooks'
 import { useAddUserToken, useRemoveUserAddedToken } from '@/state/user/hooks'
 import { useIsUserAddedToken, useCurrency } from '@/hooks/Tokens'
-import { CurrencyLogo } from '@/components'
+import { CurrencyLogo, PlusHelper, TokenWarningModal } from '@/components'
 import { getTokenLogoURL } from '@/utils/getTokenLogoURL'
-import { PlusHelper } from '@/components/common/QuestionHelper'
 import { formatNumber, formatTokenAmount } from '@/utils/index'
 import { getIsMetaMaskWallet } from '@/utils/connectors'
-import TokenWarningModal from '@/components/TokenWarningModal'
 import { wrappedCurrency } from '@/utils/wrappedCurrency'
 import { useWalletData } from '@/utils'
 import { FiCheck } from 'react-icons/fi'
@@ -37,7 +35,7 @@ function TokenTags ({ currency }: { currency: Token }): JSX.Element {
   }
 
   const tags = currency.tags
-  if (!tags || tags.length === 0) return <span />
+  if (tags === undefined || tags.length === 0) return <span />
 
   const tag = tags[0]
   return (
@@ -50,13 +48,13 @@ function TokenTags ({ currency }: { currency: Token }): JSX.Element {
       {tags.length > 1
         ? (
           <Tooltip
-        title={tags
-          .slice(1)
-          .map(({ name, description }) => `${name}: ${description}`)
-          .join('; \n')}
-      >
-        <Box className='tag'>...</Box>
-      </Tooltip>
+            title={tags
+              .slice(1)
+              .map(({ name, description }) => `${name}: ${description}`)
+              .join('; \n')}
+          >
+            <Box className='tag'>...</Box>
+          </Tooltip>
           )
         : null}
     </Box>
@@ -93,14 +91,14 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
   const addToken = useAddUserToken()
   const isMetamask = getIsMetaMaskWallet() && isOnSelectedList
 
-  const addTokenToMetamask = (
+  const addTokenToMetamask = async (
     tokenAddress: any,
     tokenSymbol: any,
     tokenDecimals: any,
     tokenImage: any
-  ) => {
-    if ((provider != null) && (provider.provider.request != null)) {
-      provider.provider.request({
+  ): Promise<void> => {
+    if (provider?.provider?.request != null) {
+      await provider.provider.request({
         method: 'wallet_watchAsset',
         params: [{
           type: 'ERC20',
@@ -161,14 +159,14 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
           <Box ml={1} height={32}>
             <Box className='flex items-center'>
               <small className='currencySymbol'>{currency.symbol}</small>
-              {isMetamask &&
+              {isMetamask != null &&
                 currency !== nativeCurrency &&
                 !(currency.name === 'MONAD') && (
                   <Box
                     className='cursor-pointer'
                     ml='2px'
                     onClick={(event: any) => {
-                      addTokenToMetamask(
+                      addTokenToMetamask( // eslint-disable-line
                         currency.address,
                         currency.symbol,
                         currency.decimals,
@@ -181,35 +179,35 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
                   </Box>
               )}
             </Box>
-            {isOnSelectedList
+            {isOnSelectedList != null
               ? (
                 <span className='currencyName'>{currency.name}</span>
                 )
               : (
                 <Box className='flex items-center'>
-    <span>
-                  {customAdded ? 'Added by user' : 'Found by address'}
-                </span>
-    <Box
-                  ml={0.5}
-                  className='text-primary'
-                  onClick={(event) => {
-                    event.stopPropagation()
-                    if (customAdded) {
-                      if (chainId && currency instanceof Token) { removeToken(chainId, currency.address) }
-                    } else {
-                      if (currency instanceof Token) {
-                        addToken(currency)
-                        setDismissTokenWarning(false)
-                      }
-                    }
-                  }}
-                >
                   <span>
-                    {customAdded ? 'Remove' : 'Add'}
+                    {customAdded ? 'Added by user' : 'Found by address'}
                   </span>
+                  <Box
+                    ml={0.5}
+                    className='text-primary'
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      if (customAdded) {
+                        if (chainId != null && currency instanceof Token) { removeToken(chainId, currency.address) }
+                      } else {
+                        if (currency instanceof Token) {
+                          addToken(currency)
+                          setDismissTokenWarning(false)
+                        }
+                      }
+                    }}
+                  >
+                    <span>
+                      {customAdded ? 'Remove' : 'Add'}
+                    </span>
+                  </Box>
                 </Box>
-  </Box>
                 )}
           </Box>
 
@@ -219,13 +217,13 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
             {(balance != null)
               ? (
                 <>
-    <Balance balance={balance} />
-    <span className='text-secondary'>
-                  ${formatNumber(Number(balance.toExact()) * usdPrice)}
-                </span>
-  </>
+                  <Balance balance={balance} />
+                  <span className='text-secondary'>
+                    ${formatNumber(Number(balance.toExact()) * usdPrice)}
+                  </span>
+                </>
                 )
-              : account
+              : account != null
                 ? (
                   <CircularProgress size={24} color='secondary' />
                   )

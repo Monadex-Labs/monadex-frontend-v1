@@ -5,7 +5,7 @@ interface CustomTooltipProps extends TooltipProps {
   padding?: string | number
 }
 
-const CustomTooltip: React.FC<CustomTooltipProps> = ({
+export const CustomTooltip: React.FC<CustomTooltipProps> = ({
   padding = '14px',
   title,
   ...props
@@ -16,4 +16,3 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
     title={<Box padding={padding}>{title}</Box>}
   />
 )
-export default CustomTooltip

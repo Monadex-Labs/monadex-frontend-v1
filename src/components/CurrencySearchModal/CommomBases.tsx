@@ -27,7 +27,7 @@ const CommonBases: React.FC<CommonBasesProps> = ({
           className='baseWrapper'
           onClick={() => {
             if (
-              !selectedCurrency ||
+              (selectedCurrency == null) ||
               !currencyEquals(selectedCurrency, nativeCurrency)
             ) {
               onSelect(nativeCurrency)
@@ -37,7 +37,8 @@ const CommonBases: React.FC<CommonBasesProps> = ({
           <CurrencyLogo currency={nativeCurrency} size='24px' />
           <small>{nativeCurrency.name}</small>
         </Box>
-        {/*(chainId != null ? SUGGESTED_BASES[chainId] ?? [] []).map((token: Token) => {
+        {/*
+        (chainId != null ? SUGGESTED_BASES[chainId] ?? [] []).map((token: Token) => {
           const selected = Boolean(
             selectedCurrency != null && currencyEquals(selectedCurrency, token)
           )
@@ -55,7 +56,7 @@ const CommonBases: React.FC<CommonBasesProps> = ({
               <small>{token.symbol}</small>
             </Box>
           )
-        })*/}
+        }) */}
       </Box>
     </Box>
   )
