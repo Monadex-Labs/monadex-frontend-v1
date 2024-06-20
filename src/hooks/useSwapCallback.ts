@@ -59,7 +59,7 @@ export function useSwapCallArguments (
   return useMemo(() => {
     // checking
     if (!trade || !recipient || !wallet  || !chainId || !deadline || !ticketsPurchased || !multiplier) return [] // eslint-disable-line
-    if (!contract) return []
+    if (contract === undefined) return []
     const swapMethods = [] as any[]
 
     const swapCallParameters =
@@ -80,7 +80,7 @@ export function useSwapCallArguments (
     },
     {
       purchaseTickets: ticketsPurchased,
-      multiplier: multiplier
+      multiplier
     })
 
     if (trade.tradeType === TradeType.EXACT_INPUT) {
