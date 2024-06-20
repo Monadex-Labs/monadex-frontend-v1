@@ -104,7 +104,7 @@ function combineMaps (map1: TokenAddressMap, map2: TokenAddressMap): TokenAddres
     [ChainId.SEPOLIA]: { ...map1[ChainId.SEPOLIA], ...map2[ChainId.SEPOLIA] },
     [ChainId.MONAD_TESTNET]: { ...map1[ChainId.MONAD_TESTNET], ...map2[ChainId.MONAD_TESTNET] },
     [ChainId.MONAD]: { ...map1[ChainId.MONAD], ...map2[ChainId.MONAD] },
-    [ChainId.LOCAL]: {...map1[ChainId.LOCAL], ...map2[ChainId.LOCAL]},
+    [ChainId.LOCAL]: { ...map1[ChainId.LOCAL], ...map2[ChainId.LOCAL] }
   }
 }
 
@@ -178,12 +178,12 @@ export function useSelectedListInfo (): {
   return {
     current: list?.current ?? null,
     pending: list?.pendingUpdate ?? null,
-    loading: list?.loadingRequestId !== null
+    loading: list?.loadingRequestId != null
   }
 }
 export function useAllLists (): TokenList[] {
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(
-    (state) => state.lists.byUrl,
+    (state) => state.lists.byUrl
   );
 
   return useMemo(
@@ -191,7 +191,7 @@ export function useAllLists (): TokenList[] {
       Object.keys(lists)
         .map((url) => lists[url].current)
         .filter((l): l is TokenList => Boolean(l)),
-    [lists],
+    [lists]
   );
 }
 // get all the tokens from active lists, combine with local default tokens

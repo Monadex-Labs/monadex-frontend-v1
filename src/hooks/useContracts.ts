@@ -21,29 +21,28 @@ import { ChainId, WMND } from '@monadex/sdk'
  * @returns Contract Refactored to sync function instead of async with useWallet instead of connectWallet
  */
 export function useContract (address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null | undefined {
-  const {account, chainId, provider:library } = useWalletData()
-    return useMemo(() => {
-      if (address === undefined || ABI === undefined || library === undefined) return null
-      try {
-        return getContract(address, ABI, library, withSignerIfPossible && (account !== undefined) ? account : undefined)
-      } catch (error) {
-        console.error('Failed to get contract', error)
-        return null
-      }
-    }, [address, ABI, library, withSignerIfPossible, account])
+  const { account, chainId, provider: library } = useWalletData()
+  return useMemo(() => {
+    if (address === undefined || ABI === undefined || library === undefined) return null
+    try {
+      return getContract(address, ABI, library, withSignerIfPossible && (account !== undefined) ? account : undefined)
+    } catch (error) {
+      console.error('Failed to get contract', error)
+      return null
+    }
+  }, [address, ABI, library, withSignerIfPossible, account])
 }
 
 export function useContracts (addresses: string[] | undefined, ABI: any, withSignerIfPossible = true): Contract[] | null | undefined {
-  const {account, chainId, provider:library } = useWalletData()
-    return useMemo(() => {
-      if (addresses === undefined || ABI === undefined || library === undefined) return null
-      return addresses.map((address) => {
-        if (addresses === undefined) return null
-        return getContract(address, ABI, library, withSignerIfPossible && (account !== undefined) ? account : undefined)
-      }) as Contract[]
-    }, [addresses, ABI, library, withSignerIfPossible, account])
-  }
-
+  const { account, chainId, provider: library } = useWalletData()
+  return useMemo(() => {
+    if (addresses === undefined || ABI === undefined || library === undefined) return null
+    return addresses.map((address) => {
+      if (addresses === undefined) return null
+      return getContract(address, ABI, library, withSignerIfPossible && (account !== undefined) ? account : undefined)
+    }) as Contract[]
+  }, [addresses, ABI, library, withSignerIfPossible, account])
+}
 
 // update to monad testnet
 export function useMulticallContract (): Contract | null | undefined {
@@ -51,7 +50,7 @@ export function useMulticallContract (): Contract | null | undefined {
   return useContract(chainId === ChainId.SEPOLIA ? MULTICALL_ADDRESS : undefined, MULTICALL_ABI, false)
 }
 export function useRouterContract (): Contract | null | undefined {
-  const  {chainId, account} = useWalletData()
+  const { chainId, account } = useWalletData()
   return useContract(
     chainId === ChainId.SEPOLIA ? ROUTER_ADDRESS : undefined,
     MonadexV1RouterABI,
@@ -69,7 +68,7 @@ export function useWMNDContract (
 ): Contract | null {
   const { chainId } = useWalletData()
   return useContract(
-    (chainId !== null) ? WMND[chainId].address : undefined,
+    (chainId != null) ? WMND[chainId].address : undefined,
     ERC20_ABI, // change the abi to WMND_ABI
     withSignerIfPossible
   ) as Contract
@@ -78,7 +77,6 @@ export function usePairContract (pairAddress?: string, withSignerIfPossible?: bo
   return useContract(pairAddress, MONADEXV1PAIR_ABI, withSignerIfPossible)
 }
 export function useRaffleContract (): Contract | null | undefined {
-  const  {chainId} = useWalletData()
-  return useContract( chainId === ChainId.SEPOLIA ? RAFFLE_ADDRESS : undefined,RAFFLE_ABI, true)
-
+  const { chainId } = useWalletData()
+  return useContract(chainId === ChainId.SEPOLIA ? RAFFLE_ADDRESS : undefined, RAFFLE_ABI, true)
 }

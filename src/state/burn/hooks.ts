@@ -52,18 +52,18 @@ export function useDerivedBurnInfo (
   const totalSupply = useTotalSupply(pair?.liquidityToken)
   const liquidityValueA =
     (pair !== null) &&
-    (totalSupply !== null) &&
-    (userLiquidity !== null) &&
-    (tokenA !== null) &&
+    (totalSupply !== undefined) &&
+    (userLiquidity !== undefined) &&
+    (tokenA != null) &&
     // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
-    JSBI.greaterThanOrEqual(totalSupply?.raw as JSBI, userLiquidity?.raw as JSBI)
-      ? new TokenAmount(tokenA, pair.getLiquidityValue(tokenA, totalSupply as TokenAmount, userLiquidity as TokenAmount, false).raw)
+    JSBI.greaterThanOrEqual(totalSupply?.raw , userLiquidity?.raw )
+      ? new TokenAmount(tokenA, pair.getLiquidityValue(tokenA, totalSupply , userLiquidity , false).raw)
       : undefined
   const liquidityValueB =
       (pair !== null) &&
-      (totalSupply !== null) &&
-      (userLiquidity !== null) &&
-      (tokenB !== null) &&
+      (totalSupply !== undefined) &&
+      (userLiquidity !== undefined) &&
+      (tokenB != null) &&
       // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
       JSBI.greaterThanOrEqual(totalSupply?.raw as JSBI, userLiquidity?.raw as JSBI)
         ? new TokenAmount(tokenB, pair.getLiquidityValue(tokenB, totalSupply as TokenAmount, userLiquidity as TokenAmount, false).raw)

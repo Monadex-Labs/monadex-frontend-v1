@@ -4,7 +4,7 @@ import { useCallback } from 'react'
 import useParsedQueryString from './useParseQueryString'
 import { useSearchParams, usePathname, useRouter } from 'next/navigation'
 import { cp } from 'fs'
-export default function useSwapRedirects () : {
+export default function useSwapRedirects (): {
   redirectWithCurrency: (currency: any, isInput: boolean, isV2?: boolean) => void
   redirectWithSwitch: () => void
 } {
@@ -19,7 +19,7 @@ export default function useSwapRedirects () : {
   const isMonad = useCallback(
     (currency: any) => {
       // ether does not have address
-      if (currency?.address !== null) return false
+      if (currency?.address != null) return false
 
       // Check if it is actually an ether;
       // don't use 'currencyEquals' method from uniswap because,
@@ -45,7 +45,7 @@ export default function useSwapRedirects () : {
         : currency.address
       if (isInput) {
         if (parsedQs.currency0 ?? parsedQs.inputCurrency) { // eslint-disable-line
-          if (parsedQs.currency0 !== null) { 
+          if (parsedQs.currency0 != null) {
             redirectPath = currentPath.replace(
               `currency0=${parsedQs.currency0}`,
               `currency0=${currencyId}`
@@ -93,43 +93,43 @@ export default function useSwapRedirects () : {
     ]
   )
   const redirectWithSwitch = useCallback(() => {
-    let redirectPath = '';
-    const inputCurrencyId = parsedQs.currency0 ?? parsedQs.inputCurrency;
-    const outputCurrencyId = parsedQs.currency1 ?? parsedQs.outputCurrency;
+    let redirectPath = ''
+    const inputCurrencyId = parsedQs.currency0 ?? parsedQs.inputCurrency
+    const outputCurrencyId = parsedQs.currency1 ?? parsedQs.outputCurrency
     if (inputCurrencyId) {
       if (outputCurrencyId) {
         if (parsedQs.currency1) {
           redirectPath = currentPath.replace(
             `currency1=${parsedQs.currency1}`,
-            `currency1=${inputCurrencyId}`,
+            `currency1=${inputCurrencyId}`
           );
         } else {
           redirectPath = currentPath.replace(
             `outputCurrency=${parsedQs.outputCurrency}`,
-            `currency1=${inputCurrencyId}`,
+            `currency1=${inputCurrencyId}`
           );
         }
         if (parsedQs.currency0) {
           redirectPath = redirectPath.replace(
             `currency0=${parsedQs.currency0}`,
-            `currency0=${outputCurrencyId}`,
+            `currency0=${outputCurrencyId}`
           );
         } else {
           redirectPath = redirectPath.replace(
             `inputCurrency=${parsedQs.inputCurrency}`,
-            `currency0=${outputCurrencyId}`,
+            `currency0=${outputCurrencyId}`
           );
         }
       } else {
         if (parsedQs.currency0) {
           redirectPath = currentPath.replace(
             `currency0=${parsedQs.currency0}`,
-            `currency1=${parsedQs.currency0}`,
+            `currency1=${parsedQs.currency0}`
           );
         } else {
           redirectPath = currentPath.replace(
             `inputCurrency=${inputCurrencyId}`,
-            `currency1=${inputCurrencyId}`,
+            `currency1=${inputCurrencyId}`
           );
         }
       }
@@ -138,17 +138,17 @@ export default function useSwapRedirects () : {
         if (parsedQs.currency1) {
           redirectPath = currentPath.replace(
             `currency1=${parsedQs.currency1}`,
-            `currency0=${parsedQs.currency1}`,
+            `currency0=${parsedQs.currency1}`
           );
         } else {
           redirectPath = currentPath.replace(
             `outputCurrency=${outputCurrencyId}`,
-            `currency0=${outputCurrencyId}`,
+            `currency0=${outputCurrencyId}`
           );
         }
       }
     }
-    router.push(redirectPath);
+    router.push(redirectPath)
   }, [currentPath, history, parsedQs])
 
   return { redirectWithCurrency, redirectWithSwitch }

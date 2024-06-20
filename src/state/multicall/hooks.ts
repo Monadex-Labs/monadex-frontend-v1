@@ -96,7 +96,7 @@ function useCallsData (calls: Call[] | undefined, options?: ListenerOptions): Ca
 
         const result = callResults[chainId]?.[toCallKey(call)]
         let data
-        if (result?.data !== null && result?.data !== '0x') {
+        if (result?.data != null && result?.data !== '0x') {
           data = result.data
         }
 
@@ -198,14 +198,14 @@ export function useMultipleContractSingleData (
   const fragment = useMemo(() => contractInterface.getFunction(methodName), [contractInterface, methodName])
   const callData: string | undefined = useMemo(
     () =>
-      fragment !== null && isValidMethodArgs(callInputs)
+      fragment != null && isValidMethodArgs(callInputs)
         ? contractInterface.encodeFunctionData(fragment, callInputs)
         : undefined,
     [callInputs, contractInterface, fragment]
   )
   const calls = useMemo(
     () =>
-      fragment !== null && addresses !== null && addresses.length > 0 && callData !== null
+      fragment != null && addresses != null && addresses.length > 0 && callData !== undefined
         ? addresses.map<Call | undefined>((address) => {
           if (address !== undefined && callData !== undefined) {
             return {

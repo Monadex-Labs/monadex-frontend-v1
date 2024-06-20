@@ -285,7 +285,7 @@ const Swap: React.FC<{
   )
 
   const swapButtonText = useMemo(() => {
-    if (account !== null) {
+    if (account !== undefined) {
       if (!isSupportedNetwork) return 'Switch Network'
       if ((currencies[Field.INPUT] == null) || (currencies[Field.OUTPUT] == null)) {
         return 'Select a token'

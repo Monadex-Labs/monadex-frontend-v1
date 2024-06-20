@@ -10,7 +10,7 @@ export function useAutoSlippageToleranceBestTrade (
 ): Percent {
   return useMemo(() => {
     if (trade == null) return DEFAULT_AUTO_SLIPPAGE_V2
-    if ((trade !== null) && Number(trade.destUSD) > 0) {
+    if ((trade != null) && Number(trade.destUSD) > 0) {
       const result = new Percent(
         ((Number(trade.gasCostUSD) / Number(trade.destUSD)) * 10000).toFixed(0),
         JSBI.BigInt(10000)

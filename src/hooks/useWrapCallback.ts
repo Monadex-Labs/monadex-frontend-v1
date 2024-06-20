@@ -31,7 +31,7 @@ export default function useWrapCallback (
     inputError?: string
   } {
   const { chainId, account } = useWalletData()
-  const chainIdToUse = (chainId !== null) ? chainId : ChainId.SEPOLIA
+  const chainIdToUse = (chainId != null) ? chainId : ChainId.SEPOLIA
   const nativeCurrency = MONAD
   const wmndContract = useWMNDContract()
   const balance = useCurrencyBalance(account ?? undefined, inputCurrency) as CurrencyAmount
@@ -45,7 +45,7 @@ export default function useWrapCallback (
   const [unwrapping, setUnWrapping] = useState(false)
   return useMemo(() => {
     if (wmndContract === null || inputCurrency === null || outputCurrency === null) return NOT_APPLICABLE
-    const sufficientBalance = (inputAmount !== null) && (balance !== null) && !balance.lessThan(inputAmount as CurrencyAmount)
+    const sufficientBalance = (inputAmount != null) && (balance != null) && !balance.lessThan(inputAmount as CurrencyAmount)
     if (
       inputCurrency === nativeCurrency &&
         currencyEquals(MONAD, outputCurrency as NativeCurrency)
