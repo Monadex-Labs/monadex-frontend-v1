@@ -185,3 +185,8 @@ estimated time : 1 day
 # 18/06
 - debugging to display addLiquidity component on the UI
 - fixed TransactionConfirmationModal component
+
+# 20/06
+- soso: fixed some errors 
+# todo 21/06
+- soso: make addLiquidity work perfectly 

@@ -248,7 +248,7 @@ export function useDerivedSwapInfo (): {
     const stableCoins = GlobalData.stableCoins[chainIdToUse]
     const stableCoinAddresses =
       stableCoins && stableCoins.length > 0 // eslint-disable-line
-        ? stableCoins.map((token: Token) => token.address.toLowerCase())
+        ? stableCoins.map((token) => token.address.toLowerCase())
         : []
     if (!swapSlippage && !slippageManuallySet) { // eslint-disable-line
       if (

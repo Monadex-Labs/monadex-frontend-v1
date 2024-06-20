@@ -8,7 +8,7 @@ const Pool = (): JSX.Element => {
     <div>
       <PageHeader isTablet={false} pageName='Pools' />
       <PrimaryButton
-        onClick={() => router.push('/pools/add')}
+        onClick={() => router.push('/add')}
       >
         add liquidity
       </PrimaryButton>

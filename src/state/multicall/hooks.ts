@@ -97,7 +97,7 @@ function useCallsData (calls: Call[] | undefined, options?: ListenerOptions): Ca
         const result = callResults[chainId]?.[toCallKey(call)]
         let data
         if (result?.data !== null && result?.data !== '0x') {
-          data = result.data
+          data = result.data as string
         }
 
         return { valid: true, data, blockNumber: result?.blockNumber }

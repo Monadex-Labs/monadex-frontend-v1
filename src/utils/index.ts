@@ -262,7 +262,7 @@ export function halfAmountSpend (
   chainId: ChainId,
   currencyAmount?: CurrencyAmount | TokenAmount
 ): CurrencyAmount | TokenAmount | undefined {
-  if (currencyAmount == null) return undefined
+  if (!currencyAmount) return undefined
   const halfAmount = JSBI.divide(currencyAmount?.raw, JSBI.BigInt(2))
   if (currencyAmount?.currency === MONAD) {
     if (JSBI.greaterThan(halfAmount, MIN_NATIVE_CURRENCY_FOR_GAS[chainId])) {
