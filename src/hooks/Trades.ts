@@ -27,7 +27,7 @@ export function useAllCommonPairs (
     () =>
       flatMap(bases, (base): Array<[Token, Token]> =>
         bases.map((otherBase) => [base, otherBase])
-      ).filter(([t0, t1]) => t0.address !== t1.address),
+      ).filter(([t0, t1]) => t0?.address !== t1?.address),
     [bases]
   )
   const allPairCombinations: Array<[Token, Token]> = useMemo(

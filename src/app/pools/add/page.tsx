@@ -12,28 +12,28 @@ const SupplyLiquidity: React.FC = () => {
     <>
       {openSettingsModal && (
         <SettingsModal
-            open={openSettingsModal}
-            onClose={() => setOpenSettingsModal(false)}
-          />
+          open={openSettingsModal}
+          onClose={() => setOpenSettingsModal(false)}
+        />
       )}
       <Box className='flex justify-between items-center'>
-          <p className='weight-600'>supplyLiquidity</p>
-          <Box className='flex items-center'>
-            <Box className=''>
-              <QuestionHelper
-                size={24}
-                className='text-secondary'
-                text='supplyLiquidityHelp'
-              />
-            </Box>
-            <Box className='headingItem'>
-              <IoMdSettings onClick={() => setOpenSettingsModal(true)} className='text-white cursor-pointer' />
-            </Box>
+        <p className='weight-600'>supplyLiquidity</p>
+        <Box className='flex items-center'>
+          <Box className=''>
+            <QuestionHelper
+              size={24}
+              className='text-secondary'
+              text='supplyLiquidityHelp'
+            />
+          </Box>
+          <Box className='headingItem'>
+            <IoMdSettings onClick={() => setOpenSettingsModal(true)} className='text-white cursor-pointer' />
           </Box>
         </Box>
+      </Box>
       <Box mt={2.5}>
-          <AddLiquidity />
-        </Box>
+        <AddLiquidity />
+      </Box>
     </>
   )
 }

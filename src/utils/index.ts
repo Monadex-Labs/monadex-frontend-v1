@@ -84,17 +84,27 @@ export function escapeRegExp (string: string): string {
 //   return Boolean(currency instanceof Token && defaultTokens[currency.chainId]?.[currency.address])
 // }
 
-export function useWalletData () {
+interface WalletData {
+  account: string
+  chainId: ChainId
+  findProvider: Web3Provider | undefined
+  isConnected: boolean
+  signer: JsonRpcSigner | undefined
+  provider: Web3Provider | undefined
+  networkName: string
+}
+
+export function useWalletData (): WalletData {
   const walletData = useWallets()[0]
   const chainId = Number(walletData?.chains[0]?.id) as ChainId
   const account = walletData?.accounts[0]?.address
   const [provider, setProvider] = useState<Web3Provider>()
-  const [signer, setSigner] = useState<any>(null)
+  const [signer, setSigner] = useState<JsonRpcSigner>()
   const [networkName, setNetworkName] = useState<string>('')
   useEffect(() => {
     if (walletData?.provider == null) return
     const ethersProvider = new ethers.providers.Web3Provider(walletData.provider, 'any')
-    const fetchNetworkName = async () => {
+    const fetchNetworkName = async (): Promise<void> => {
       try {
         const network = await ethersProvider.getNetwork()
         setNetworkName(network.name)
@@ -102,7 +112,7 @@ export function useWalletData () {
         console.error('Failed to get network name:', error)
       }
     }
-    fetchNetworkName()
+    void fetchNetworkName()
     setSigner(ethersProvider.getSigner())
     setProvider(ethersProvider)
   }, [chainId, walletData])
@@ -252,7 +262,7 @@ export function halfAmountSpend (
   chainId: ChainId,
   currencyAmount?: CurrencyAmount | TokenAmount
 ): CurrencyAmount | TokenAmount | undefined {
-  if (!currencyAmount) return undefined
+  if (currencyAmount == null) return undefined
   const halfAmount = JSBI.divide(currencyAmount?.raw, JSBI.BigInt(2))
   if (currencyAmount?.currency === MONAD) {
     if (JSBI.greaterThan(halfAmount, MIN_NATIVE_CURRENCY_FOR_GAS[chainId])) {
@@ -263,7 +273,7 @@ export function halfAmountSpend (
   }
   return new TokenAmount(currencyAmount?.currency as Token, halfAmount)
 }
-export function useSwitchNetwork (): { 
+export function useSwitchNetwork (): {
   switchNetwork: () => Promise<void>
 } {
   const { provider, chainId } = useWalletData()
