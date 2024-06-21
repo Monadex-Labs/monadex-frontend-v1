@@ -1,6 +1,5 @@
-import { Box, Fade, Backdrop } from '@mui/material'
-import { Modal } from '@mui/base'
-
+import { Box, Fade, Backdrop, Modal } from '@mui/material'
+import { cn } from '@/utils/cn'
 interface CustomModalProps {
   open: boolean
   onClose?: () => void
@@ -9,6 +8,7 @@ interface CustomModalProps {
   overflow?: string
   modalWrapper?: string
   hideBackdrop?: boolean
+  classname?: string
 }
 
 const CustomModal: React.FC<CustomModalProps> = ({
@@ -18,22 +18,28 @@ const CustomModal: React.FC<CustomModalProps> = ({
   background,
   overflow,
   modalWrapper,
-  hideBackdrop
+  hideBackdrop,
+  classname
 }) => {
   return (
     <Modal
       open={open}
       onClose={onClose}
-      BackdropComponent={hideBackdrop ? undefined : Backdrop}
-      BackdropProps={
+      slots={hideBackdrop ? undefined : { backdrop: Backdrop }}
+      slotProps={
         hideBackdrop
           ? undefined
-          : { timeout: 500, classes: { root: 'backdrop-opacity-10 backdrop-invert bg-white/30' } }
+          : {
+              backdrop: {
+                timeout: 500,
+                className: 'backdrop-filter backdrop-blur-[9.9px] bg-opacity-30 bg-white'
+              },
+            }
       }
     >
       <Fade in={open}>
         <Box
-          className={`${modalWrapper != null ? modalWrapper : ''} border max-w-fit rounded-md border-[#836EF9] border-2 p-4 transition duration-300 bg-[#23006A]`}
+          className={cn(`${modalWrapper ?? ''} m-0 p-4 max-w-[750px] max-h-[90vh] overflow-y-auto w-full absolute top-1/2 left-1/2 rounded-[10px] transform -translate-x-1/2 -translate-y-1/2 outline-none border border-[#836EF9] bg-[#23006A]`, classname)}
           bgcolor={background}
           overflow={overflow}
         >
@@ -42,6 +48,6 @@ const CustomModal: React.FC<CustomModalProps> = ({
       </Fade>
     </Modal>
   )
-}
+};
 
 export default CustomModal

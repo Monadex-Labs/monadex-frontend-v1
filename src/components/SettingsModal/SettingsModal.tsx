@@ -100,12 +100,12 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose }) => {
       <Divider />
       <Box my={2.5} className='flex items-center'>
         <Box mr='6px'>
-          <p>Slippage tolerance</p>
+          <p className='text-[#C6CACF]'>Slippage tolerance</p>
         </Box>
-        <QuestionHelper size={20} text='slippageHelper' />
+        <QuestionHelper size={20} text='Your transaction will revert if the price changes unfavorably by more than this percentage' />
       </Box>
       <Box mb={2.5}>
-        <Box className='flex items-center border p-2 gap-3'>
+        <Box className='flex items-center p-2 gap-3'>
           <Box
             className={`border border-[#23232C] p-1 rounded-sm mr-4${
                 userSlippageTolerance === SLIPPAGE_AUTO
@@ -138,7 +138,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose }) => {
           </Box>
           <Box
             className={`border border-[#23232C] p-1 rounded-sm mr-4${
-                userSlippageTolerance === 50 ? ' activeSlippageButton' : ''
+                userSlippageTolerance === 50 ? 'bg-red-400' : ''
               }`}
             onClick={() => {
               setSlippageInput('')
@@ -165,7 +165,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose }) => {
             <small>1%</small>
           </Box>
           <Box
-            className={`settingsInputWrapper ${
+            className={`${
                 slippageAlert ? 'border-primary' : 'border-secondary1'
               }`}
           >
@@ -198,12 +198,12 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose }) => {
       </Box>
       <Divider />
       <Box my={2.5} className='flex items-center'>
-          <Box mr='6px'>
+        <Box mr='6px'>
             <p>Transaction Deadline </p>
           </Box>
-          <QuestionHelper size={20} text='Your transaction will revert if it is pending for more than this long.' />
-        </Box>
-        <Box mb={2.5} className='flex items-center'>
+        <QuestionHelper size={20} text='Your transaction will revert if it is pending for more than this long.' />
+      </Box>
+      <Box mb={2.5} className='flex items-center'>
           <Box className='settingsInputWrapper' maxWidth={168}>
             <NumericalInput
               placeholder={(ttl / 60).toString()}
@@ -211,7 +211,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose }) => {
               fontSize={14}
               fontWeight={500}
               onBlur={() => {
-                parseCustomDeadline((ttl / 60).toString());
+                parseCustomDeadline((ttl / 60).toString())
               }}
               onUserInput={(value) => parseCustomDeadline(value)}
             />
@@ -220,7 +220,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose }) => {
             <small>minutes</small>
           </Box>
         </Box>
-        {deadlineError && (
+      {deadlineError && (
           <Box mt={1.5}>
             <small className='text-yellow3'>Enter a valid deadline</small>
           </Box>

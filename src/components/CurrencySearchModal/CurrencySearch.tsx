@@ -167,19 +167,20 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
 
   return (
     <Box className='currencySearchWrapper'>
-      <Box className='currencySearchHeader'>
-        <h6>Select a token</h6>
+      <Box className='flex justify-between p-3 items-center'>
+        <h6 className='text-lg'>Select a token</h6>
         <Close onClick={onDismiss} />
       </Box>
-      <Box className='searchInputWrapper'>
-        <Search />
+      <Box className='w-full h-12 flex items-center px-3 my-3 rounded-lg outline-none border-2 border-gray-400 bg-transparent'>
+        <Search className='text-neutral-200' />
         <input
           type='text'
-          placeholder='Search name or paste address'
+          placeholder='Search or paste address'
           value={searchQueryInput}
           ref={inputRef as RefObject<HTMLInputElement>}
           onChange={(e) => setSearchQueryInput(e.target.value)}
           onKeyDown={handleEnter}
+          className='bg-transparent focus:outline-none'
           autoFocus
         />
       </Box>
