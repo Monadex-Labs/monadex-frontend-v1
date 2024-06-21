@@ -284,7 +284,7 @@ function parseCurrencyFromURLParameter (urlParam: any): string {
     const valid = isAddress(urlParam) ? urlParam : null
     if (valid !== null) return valid
     if (urlParam.toUpperCase() === 'MONAD') return 'MONAD'
-    if (valid === null) return 'MONAD'// review this
+    if (valid === null) return 'MONAD'// TODO: review this
   }
   return ''
 }

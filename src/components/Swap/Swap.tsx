@@ -177,7 +177,7 @@ const Swap: React.FC<{
   }, [approval, approvalSubmitted])
 
   const parsedQs = useParsedQueryString()
-  const { redirectWithCurrency, redirectWithSwitch } = useSwapRedirects() // TODO: ADD THIS HOOK
+  const { redirectWithCurrency, redirectWithSwitch } = useSwapRedirects()
   const parsedCurrency0Id = (parsedQs.currency0 ??
     parsedQs.inputCurrency) as string
   const parsedCurrency1Id = (parsedQs.currency1 ??
@@ -285,7 +285,7 @@ const Swap: React.FC<{
   )
 
   const swapButtonText = useMemo(() => {
-    if (account !== null) {
+    if (account !== undefined) {
       if (!isSupportedNetwork) return 'Switch Network'
       if ((currencies[Field.INPUT] == null) || (currencies[Field.OUTPUT] == null)) {
         return 'Select a token'

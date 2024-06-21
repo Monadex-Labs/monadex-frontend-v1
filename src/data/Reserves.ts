@@ -6,7 +6,7 @@ import { useMultipleContractSingleData } from '@/state/multicall/hooks'
 import { wrappedCurrency } from '@/utils/wrappedCurrency'
 import { useConnectWallet } from '@web3-onboard/react'
 
-const PAIR_INTERFACE = new Interface(MonadexV2Pair.abi)
+const PAIR_INTERFACE = new Interface(MonadexV2Pair)
 
 export enum PairState {
   LOADING,

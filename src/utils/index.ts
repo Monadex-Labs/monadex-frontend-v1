@@ -60,7 +60,7 @@ export function getSigner (library: Web3Provider, account: string): JsonRpcSigne
 
 // account is optional
 export function getProviderOrSigner (library: Web3Provider, account?: string): Web3Provider | JsonRpcSigner {
-  if (account !== undefined && account !== null && account !== '') {
+  if (account !== undefined && account != null && account !== '') {
     return library.getSigner(account)
   } else {
     return library

@@ -142,7 +142,7 @@ export default createReducer(initialState, (builder) =>
       if (state.lastInitializedDefaultListOfLists !== undefined) {
         state.byUrl = initialState.byUrl
         state.selectedListUrl = DEFAULT_TOKEN_LIST_URL
-      } else if (state.lastInitializedDefaultListOfLists !== null) {
+      } else if (state.lastInitializedDefaultListOfLists != null) {
         // @ts-expect-error
         const lastInitializedSet = state.lastInitializedDefaultListOfLists.reduce<Set<string>>(
           (s: Set<string>, l: string) => s.add(l),
@@ -151,7 +151,7 @@ export default createReducer(initialState, (builder) =>
         const newListOfListsSet = DEFAULT_TOKEN_LIST.reduce<Set<string>>((s: Set<string>, l: string) => s.add(l), new Set())
 
         DEFAULT_TOKEN_LIST.forEach((listUrl) => {
-          if (lastInitializedSet.has(listUrl) !== null) {
+          if (lastInitializedSet.has(listUrl) !== '') {
             state.byUrl[listUrl] = NEW_LIST_STATE
           }
         })

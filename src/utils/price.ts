@@ -34,20 +34,20 @@ export function computeTradePriceBreakdown (trade?: Trade | null): {
       )
 
   // remove lp fees from price impact
-  const priceImpactWithoutFeeFraction = trade !== null && realizedLPFee !== null ? trade?.priceImpact.subtract(realizedLPFee as Fraction) : undefined
+  const priceImpactWithoutFeeFraction = trade != null && realizedLPFee !== undefined ? trade?.priceImpact.subtract(realizedLPFee) : undefined
 
   // the x*y=k impact
-  const priceImpactWithoutFeePercent = priceImpactWithoutFeeFraction !== null
-    ? new Percent(priceImpactWithoutFeeFraction?.numerator as JSBI, priceImpactWithoutFeeFraction?.denominator)
+  const priceImpactWithoutFeePercent = priceImpactWithoutFeeFraction !== undefined
+    ? new Percent(priceImpactWithoutFeeFraction?.numerator, priceImpactWithoutFeeFraction?.denominator)
     : undefined
 
   // the amount of the input that accrues to LPs
   const realizedLPFeeAmount =
-    realizedLPFee !== null &&
-    trade !== null &&
+    realizedLPFee !== undefined &&
+    trade != null &&
     (trade?.inputAmount instanceof TokenAmount
-      ? new TokenAmount(trade.inputAmount.token, realizedLPFee?.multiply(trade?.inputAmount.raw).quotient as JSBI)
-      : CurrencyAmount.ether(realizedLPFee?.multiply(trade?.inputAmount.raw as JSBI).quotient as JSBI))
+      ? new TokenAmount(trade.inputAmount.token, realizedLPFee?.multiply(trade?.inputAmount.raw).quotient)
+      : CurrencyAmount.ether(realizedLPFee?.multiply(trade?.inputAmount.raw).quotient))
 
   return { priceImpactWithoutFee: priceImpactWithoutFeePercent, realizedLPFee: realizedLPFeeAmount as TokenAmount }
 }
@@ -77,7 +77,7 @@ export function formatExecutionPrice (trade?: Trade, inverted?: boolean): string
   if (trade == null) {
     return ''
   }
-  return inverted !== null
+  return inverted !== undefined
     ? `${trade.executionPrice.invert().toSignificant(6)} ${trade.inputAmount.currency.symbol as string} / ${
         trade.outputAmount.currency.symbol as string
       }`
@@ -85,7 +85,7 @@ export function formatExecutionPrice (trade?: Trade, inverted?: boolean): string
         trade.inputAmount.currency.symbol as string
       }`
 }
-export function computePriceImpact(rate: OptimalRate): Percent {
+export function computePriceImpact (rate: OptimalRate): Percent {
   const destUSDBigInt = JSBI.BigInt((Number(rate.destUSD) * 10 ** 10).toFixed(0))
   const srcUSDBigInt = JSBI.BigInt(((Number(rate.srcUSD) * 10 ** 10).toFixed(0)))
   const priceChange = JSBI.subtract(srcUSDBigInt, destUSDBigInt)
