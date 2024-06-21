@@ -17,7 +17,7 @@ interface CurrencyLogoProps {
 
 const CurrencyLogo: React.FC<CurrencyLogoProps> = ({
   currency,
-  size = '24px',
+  size = '24px', // TODO: Refactor size to be a number
   style,
   withoutBg
 }) => {
@@ -71,6 +71,8 @@ const CurrencyLogo: React.FC<CurrencyLogoProps> = ({
           className='monad logo'
           src={nativeCurrencyImage}
           alt='Native Currency Logo'
+          width={24} // TODO: use prop size here
+          height={24}
         />
       </Box>
     )
