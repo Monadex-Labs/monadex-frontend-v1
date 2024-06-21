@@ -3,7 +3,7 @@ import { useWalletData } from '@/utils'
 import { useCallback } from 'react'
 import useParsedQueryString from './useParseQueryString'
 import { useSearchParams, usePathname, useRouter } from 'next/navigation'
-import { cp } from 'fs'
+
 export default function useSwapRedirects (): {
   redirectWithCurrency: (currency: any, isInput: boolean, isV2?: boolean) => void
   redirectWithSwitch: () => void
@@ -102,35 +102,35 @@ export default function useSwapRedirects (): {
           redirectPath = currentPath.replace(
             `currency1=${parsedQs.currency1}`,
             `currency1=${inputCurrencyId}`
-          );
+          )
         } else {
           redirectPath = currentPath.replace(
             `outputCurrency=${parsedQs.outputCurrency}`,
             `currency1=${inputCurrencyId}`
-          );
+          )
         }
         if (parsedQs.currency0) {
           redirectPath = redirectPath.replace(
             `currency0=${parsedQs.currency0}`,
             `currency0=${outputCurrencyId}`
-          );
+          )
         } else {
           redirectPath = redirectPath.replace(
             `inputCurrency=${parsedQs.inputCurrency}`,
             `currency0=${outputCurrencyId}`
-          );
+          )
         }
       } else {
         if (parsedQs.currency0) {
           redirectPath = currentPath.replace(
             `currency0=${parsedQs.currency0}`,
             `currency1=${parsedQs.currency0}`
-          );
+          )
         } else {
           redirectPath = currentPath.replace(
             `inputCurrency=${inputCurrencyId}`,
             `currency1=${inputCurrencyId}`
-          );
+          )
         }
       }
     } else {
@@ -139,12 +139,12 @@ export default function useSwapRedirects (): {
           redirectPath = currentPath.replace(
             `currency1=${parsedQs.currency1}`,
             `currency0=${parsedQs.currency1}`
-          );
+          )
         } else {
           redirectPath = currentPath.replace(
             `outputCurrency=${outputCurrencyId}`,
             `currency0=${outputCurrencyId}`
-          );
+          )
         }
       }
     }
