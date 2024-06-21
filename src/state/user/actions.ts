@@ -8,6 +8,10 @@ export interface SerializedToken {
   name?: string
 }
 
+export interface FeeTier {
+  
+}
+
 export interface SerializedPair {
   token0: SerializedToken
   token1: SerializedToken

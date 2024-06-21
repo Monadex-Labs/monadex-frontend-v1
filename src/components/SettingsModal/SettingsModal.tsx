@@ -92,9 +92,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose }) => {
   }
 
   return (
-    <CustomModal open={open} onClose={onClose}>
+    <CustomModal open={open} onClose={onClose} background='bg-[#836EF9]'>
       <Box mb={3} className='flex items-center justify-between'>
-        <h5>Settings</h5>
+        <h5 className='text-xl '>Settings</h5>
         <IoMdCloseCircleOutline onClick={onClose} />
       </Box>
       <Divider />
@@ -105,11 +105,11 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose }) => {
         <QuestionHelper size={20} text='slippageHelper' />
       </Box>
       <Box mb={2.5}>
-        <Box className='flex items-center'>
+        <Box className='flex items-center border p-2 gap-3'>
           <Box
-            className={`slippageButton${
+            className={`border border-[#23232C] p-1 rounded-sm mr-4${
                 userSlippageTolerance === SLIPPAGE_AUTO
-                  ? ' activeSlippageButton'
+                  ? 'bg-neutral-300'
                   : ''
               }`}
             onClick={() => {
@@ -123,7 +123,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose }) => {
             <small>AUTO</small>
           </Box>
           <Box
-            className={`slippageButton${
+            className={`border border-[#23232C] p-1 rounded-sm mr-4${
                 userSlippageTolerance === 10 ? ' activeSlippageButton' : ''
               }`}
             onClick={() => {
@@ -137,7 +137,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose }) => {
             <small>0.1%</small>
           </Box>
           <Box
-            className={`slippageButton${
+            className={`border border-[#23232C] p-1 rounded-sm mr-4${
                 userSlippageTolerance === 50 ? ' activeSlippageButton' : ''
               }`}
             onClick={() => {
@@ -151,7 +151,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose }) => {
             <small>0.5%</small>
           </Box>
           <Box
-            className={`slippageButton${
+            className={`border border-[#23232C] p-1 rounded-sm mr-4${
                 userSlippageTolerance === 100 ? ' activeSlippageButton' : ''
               }`}
             onClick={() => {
@@ -186,7 +186,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose }) => {
         </Box>
         {slippageError && (
           <Box mt={1.5}>
-            <small className='text-yellow3'>
+            <small className='text-yellow-400'>
               {slippageError === SlippageError.InvalidInput
                 ? 'enter valid slippage'
                 : slippageError === SlippageError.RiskyLow
@@ -196,6 +196,35 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose }) => {
           </Box>
         )}
       </Box>
+      <Divider />
+      <Box my={2.5} className='flex items-center'>
+          <Box mr='6px'>
+            <p>Transaction Deadline </p>
+          </Box>
+          <QuestionHelper size={20} text='Your transaction will revert if it is pending for more than this long.' />
+        </Box>
+        <Box mb={2.5} className='flex items-center'>
+          <Box className='settingsInputWrapper' maxWidth={168}>
+            <NumericalInput
+              placeholder={(ttl / 60).toString()}
+              value={deadlineInput}
+              fontSize={14}
+              fontWeight={500}
+              onBlur={() => {
+                parseCustomDeadline((ttl / 60).toString());
+              }}
+              onUserInput={(value) => parseCustomDeadline(value)}
+            />
+          </Box>
+          <Box ml={1}>
+            <small>minutes</small>
+          </Box>
+        </Box>
+        {deadlineError && (
+          <Box mt={1.5}>
+            <small className='text-yellow3'>Enter a valid deadline</small>
+          </Box>
+        )}
     </CustomModal>
   )
 }

@@ -47,25 +47,24 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
   return (
     <div
       id={id}
-      className={`swapBox${showPrice === true ? ' priceShowBox' : ''} ${bgClass ??
-        'bg-secondary2'}`}
+      className={`${showPrice === true ? ' priceShowBox' : ''} ${'bg-[#1F0050]/50 rounded-sm'} mb-4 p-2`}
     >
       <div className='flex justify-between mb-2'>
         <p>{title ?? 'youPay'}</p>
         <div className='flex'>
           {Boolean(account) && (currency != null) && showHalfButton === true && (
-            <div className='maxWrapper' onClick={onHalf}>
+            <div className='border p-2' onClick={onHalf}>
               <small>50%</small>
             </div>
           )}
           {Boolean(account) && (currency != null) && showMaxButton === true && (
-            <div className='maxWrapper ml-5' onClick={onMax}>
+            <div className='border p-2' onClick={onMax}>
               <small>max</small>
             </div>
           )}
         </div>
       </div>
-      <div className='mb-2'>
+      <div className='mb-2 flex justify-between p-3 items-center'>
         <CurrencySelect
           id={id}
           currency={currency}
@@ -84,11 +83,11 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
           />
         </div>
       </div>
-      <div className='flex justify-between'>
-        <small className={`${color !== undefined ? `text-${color}` : 'text-secondary'}}`}>
+      <div className='flex justify-between px-4'>
+        <small className='text-[#C7CBD8] text-md p-1'>
           {`Balance: ${formatTokenAmount(selectedCurrencyBalance)}`}
         </small>
-        <small className={`${color !== undefined ? `text-${color}` : 'text-secondary'}}`}>
+        <small className='text-[#C7CBD8] text-md p-1'>
           ${(usdPrice * Number(amount)).toLocaleString('us')}
         </small>
       </div>
