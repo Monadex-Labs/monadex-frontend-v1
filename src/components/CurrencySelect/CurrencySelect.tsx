@@ -26,11 +26,11 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({
   }, [])
 
   return (
-    <Box>
+    <Box className='px-3 py-2 rounded-full'>
       <Box
         className={
           bgClass === null
-            ? `currencyButton ${(currency != null) ? 'currencySelected' : 'noCurrency'}`
+            ? `${(currency !== null) ? 'bg-[#404557]' : 'bg-gradient-to-r from-[#18003E]'}`
             : bgClass
         }
         onClick={handleOpenModal}

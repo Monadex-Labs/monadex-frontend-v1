@@ -372,7 +372,7 @@ const AddLiquidity: React.FC<{
 
   const modalHeader = (): ReactElement => {
     return (
-      <Box>
+      <Box className='border'>
         <Box mt={10} mb={3} className='flex justify-center'>
           <DoubleCurrencyLogo
             currency0={currencies[Field.CURRENCY_A] as Token}
@@ -402,7 +402,7 @@ const AddLiquidity: React.FC<{
   }
 
   return (
-    <Box>
+    <Box className=''>
       {showConfirm && (
         <TransactionConfirmationModal
           isOpen={showConfirm}
@@ -433,7 +433,7 @@ const AddLiquidity: React.FC<{
       )}
       <CurrencyInput
         id='add-liquidity-input-tokena'
-        title='token'
+        title=''
         currency={currencies[Field.CURRENCY_A] as Token}
         showHalfButton={Boolean(maxAmounts[Field.CURRENCY_A])}
         showMaxButton={atMaxAmounts[Field.CURRENCY_A] == null}
@@ -450,12 +450,9 @@ const AddLiquidity: React.FC<{
         setAmount={onFieldAInput}
         bgClass={currencyBgClass}
       />
-      <Box className=''>
-        <PiTestTubeFill />
-      </Box>
       <CurrencyInput
         id='add-liquidity-input-tokenb'
-        title='token'
+        title=''
         showHalfButton={Boolean(maxAmounts[Field.CURRENCY_B])}
         currency={currencies[Field.CURRENCY_B] as Token}
         showMaxButton={atMaxAmounts[Field.CURRENCY_B] == null}
@@ -473,6 +470,7 @@ const AddLiquidity: React.FC<{
         amount={formattedAmounts[Field.CURRENCY_B]}
         setAmount={onFieldBInput}
         bgClass={currencyBgClass}
+        showPrice={true}
       />
       {(currencies[Field.CURRENCY_A] != null) &&
         (currencies[Field.CURRENCY_B] != null) &&
@@ -518,7 +516,7 @@ const AddLiquidity: React.FC<{
                   className={`w-[${approvalB !== ApprovalState.APPROVED ? '48%' : '100%'}]`}
                 >
                   <Button
-                    className='w-full'
+                    className='w-full py-4 px-4 bg-gradient-to-r from-[#23006A] to-[#23006A]/50'
                     onClick={async () => {
                       setApprovingA(true)
                       try {
@@ -545,7 +543,7 @@ const AddLiquidity: React.FC<{
                   className={`w-[${approvalA !== ApprovalState.APPROVED ? '48%' : '100%'}]`}
                 >
                   <Button
-                    className='w-full'
+                    className='w-full py-4 px-4 bg-gradient-to-r from-[#23006A] to-[#23006A]/50'
                     onClick={async () => {
                       setApprovingB(true)
                       try {
@@ -570,7 +568,7 @@ const AddLiquidity: React.FC<{
             </Box>
         )}
         <Button
-          className='w-full'
+          className='w-full py-4 px-4 bg-gradient-to-r from-[#23006A] to-[#23006A]/50'
           disabled={
             Boolean(account) &&
             isSupportedNetwork &&
