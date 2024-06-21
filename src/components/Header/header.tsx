@@ -35,10 +35,10 @@ const Header: React.FC<any> = () => {
     <Box className='flex justify-between items-center p-4'>
       <Box>
         {tabletWindowSize && (
-          <Image src={Monadex_mobile} alt='MonadexLogo' className='cursor-pointer' onClick={() => router.push('/')} width={80} height={80} />
+          <Image src={Monadex_mobile} priority alt='MonadexLogo' className='cursor-pointer' onClick={() => router.push('/')} width={80} height={80} />
         )}
         {!tabletWindowSize && (
-          <Image src={Monadex} alt='MonadexLogo' className='cursor-pointer' onClick={() => router.push('/')} width={230} height={230} />
+          <Image src={Monadex} priority alt='MonadexLogo' className='cursor-pointer' onClick={() => router.push('/')} width={230} height={230} />
         )}
       </Box>
       <div className='flex gap-6 p-2'>
