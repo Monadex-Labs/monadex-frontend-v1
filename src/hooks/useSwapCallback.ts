@@ -51,9 +51,7 @@ export function useSwapCallArguments (
   const recipient = recipientAddressOrName === null && address
   const deadline = useTransactionDeadline()
   const contract = useRouterContract() as Contract
-  const ticketsState = useMemo(() => {
-    return useSelector(purchasedTicketsOnSwap)
-  }, [])
+  const ticketsState = useSelector(purchasedTicketsOnSwap)
   const ticketsPurchased = ticketsState.payload.raffle?.ticketsPurchased as boolean
   const multiplier = ticketsState.payload.raffle?.multiplier as number
   return useMemo(() => {
@@ -67,16 +65,16 @@ export function useSwapCallArguments (
         feeOnTransfer: false,
         allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
         recipient,
-        deadline: deadline.toNumber()
+        ttl: deadline.toNumber()
       }, {
         purchaseTickets: ticketsPurchased,
-        multiplier: multiplier || undefined
+        multiplier
       })
     const swapCallParametersOnInput = Router.swapCallParameters(trade, {
       feeOnTransfer: true,
       allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
       recipient,
-      deadline: deadline.toNumber()
+      ttl: deadline.toNumber()
     },
     {
       purchaseTickets: ticketsPurchased,
