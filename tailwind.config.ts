@@ -14,9 +14,11 @@ const config: Config = {
       '2xl': '1536px' // => @media (min-width: 1536px) { ... }
     },
     extend: {
+
       colors: {
         'primary-button': 'bg-gradient-to-r from-[#2E0485] via-[#3A0A9C] to-[#310093]',
-        'warning-button': 'bg-[#826FF9]'
+        'warning-button': 'bg-[#826FF9]',
+        'secondary-color': 'text-[#C6CACF]'
       }
     }
   },
