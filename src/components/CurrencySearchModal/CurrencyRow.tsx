@@ -153,7 +153,7 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
           if (!isSelected && !otherSelected) onSelect()
         }}
       >
-        <Box className='currencyRow'>
+        <Box className='w-full bg-transparent flex p-4'>
           {(otherSelected || isSelected) && <FiCheck />}
           <CurrencyLogo currency={currency} size='32px' />
           <Box ml={1} height={32}>
@@ -163,7 +163,7 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
                 currency !== nativeCurrency &&
                 !(currency.name === 'MONAD') && (
                   <Box
-                    className='cursor-pointer'
+                    className='border bg-red-300'
                     ml='2px'
                     onClick={(event: any) => {
                       addTokenToMetamask( // eslint-disable-line
@@ -181,7 +181,7 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
             </Box>
             {isOnSelectedList != null
               ? (
-                <span className='currencyName'>{currency.name}</span>
+                <span className='text-[#C6CACF]'>{currency.name}</span>
                 )
               : (
                 <Box className='flex items-center'>

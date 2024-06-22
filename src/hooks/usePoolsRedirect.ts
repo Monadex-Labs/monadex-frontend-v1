@@ -39,7 +39,7 @@ export default function usePoolsRedirects () {
       } else {
         if (path.includes('/add')) {
           redirectPath = `${currentPath}/${currencyId}/${
-                    currencyIdBParam || currencyId === 'ETH'
+                    currencyIdBParam || currencyId === 'MND'
                   }${params && params.version ? `/${params.version}` : ''}`
         } else {
           redirectPath = `${currentPath}${search === '' ? '?' : '&'}currency0=${currencyId}`

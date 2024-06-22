@@ -8,6 +8,7 @@ import { useUserAddedTokens } from '@/state/user/hooks'
 import { isAddress, getAddress } from 'viem'
 import { arrayify } from 'ethers/lib/utils'
 import { useWalletData } from '@/utils'
+import { FaRegTired } from 'react-icons/fa'
 
 function useTokensFromMap (
   tokenMap: TokenAddressMap,
@@ -45,9 +46,25 @@ function useTokensFromMap (
     return mapWithoutUrls
   }, [chainId, userAddedTokens, tokenMap, includeUserAdded])
 }
-export function useAllTokens (chainId?: ChainId): { [address: string]: Token } {
+export function useAllTokens (): { [address: string]: Token } {
+  const { chainId } = useWalletData()
+  const userAddedTokens = useUserAddedTokens()
   const allTokens = useSelectedTokenList()
-  return useTokensFromMap(allTokens, true, chainId)
+
+  return useMemo(() => {
+    if (!chainId) return {}
+    return (
+      userAddedTokens.reduce<{ [address: string]: Token }>(
+        (tokenMap, token) => {
+          tokenMap[token.address] = token
+          return tokenMap
+        },
+        // must make a copy because reduce modifies the map, and we do not
+        // want to make a copy in every iteration
+        { ...allTokens[chainId] }
+      )
+    )
+  }, [chainId, userAddedTokens, allTokens])
 }
 // export function useDefaultTokens (): { [address: string]: Token } {
 //   const defaultList = useDefaultTokenList()
@@ -91,7 +108,7 @@ export function parseStringOrBytes32 (
 // null if loading
 // otherwise returns the token
 export function useToken (tokenAddress?: string): Token | undefined | null {
-  const {chainId} = useWalletData()
+  const { chainId } = useWalletData()
   const tokens = useAllTokens()
   const _isAddress: boolean = isAddress(tokenAddress as string)
   const address = _isAddress ? getAddress(tokenAddress as string) : undefined
@@ -142,12 +159,12 @@ export function useCurrency (currencyId: string | undefined): Token | null | und
 }
 // FOR NATIVE CURRENCY
 export function _useCurrency (
-  currencyId: string | undefined,
+  currencyId: string | undefined
 ): NativeCurrency | null | undefined {
-  const { chainId } = useWalletData();
-  const chainIdToUse = chainId ? chainId : ChainId.SEPOLIA
-  const nativeCurrency = MONAD;
-  const isMND = currencyId?.toUpperCase() === 'MND';
-  const token = useToken(isMND ? undefined : currencyId);
+  const { chainId } = useWalletData()
+  const chainIdToUse = chainId || ChainId.SEPOLIA
+  const nativeCurrency = MONAD
+  const isMND = currencyId?.toUpperCase() === 'MND'
+  const token = useToken(isMND ? undefined : currencyId)
   return isMND ? nativeCurrency : token
 }

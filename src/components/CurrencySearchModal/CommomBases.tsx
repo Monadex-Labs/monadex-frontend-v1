@@ -18,13 +18,13 @@ const CommonBases: React.FC<CommonBasesProps> = ({
     <Box mb={2}>
       <Box display='flex' my={1.5}>
         <Box mr='6px'>
-          <span>Common bases</span>
+          <span>Popular</span>
         </Box>
         <QuestionHelper text='These tokens are commonly paired with other tokens.' />
       </Box>
       <Box className='flex flex-wrap'>
         <Box
-          className='baseWrapper'
+          className='hover:cursor-pointer flex border gap-2 items-center p-2 rounded-full w-fit'
           onClick={() => {
             if (
               (selectedCurrency == null) ||

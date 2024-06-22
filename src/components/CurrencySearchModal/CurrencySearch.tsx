@@ -59,14 +59,15 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
 
   const allTokens = useAllTokens()
   const inactiveTokens = useInActiveTokens()
-
+  console.log('all Tokens', allTokens)
+  console.log('inactive', inactiveTokens)
   // if they input an address, use it
   const isAddressSearch = isAddress(searchQuery)
   const searchToken = useToken(searchQuery)
 
   const showETH: boolean = useMemo(() => {
     const s = searchQuery.toLowerCase().trim()
-    return s === '' || s === 'e' || s === 'et' || s === 'eth'
+    return s === '' || s === 'm' || s === 'mn' || s === 'mnd'
   }, [searchQuery])
 
   const tokenComparator = useTokenComparator(false)
@@ -166,21 +167,21 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
   selectedListInfo = useSelectedListInfo()
 
   return (
-    <Box className='currencySearchWrapper'>
-      <Box className='flex justify-between p-3 items-center'>
+    <Box className='pt-8 px-6 h-[90vh]  flex flex-col backdrop-blur-[9.9px] overflow-hidden no-scrollbar'>
+      <Box className='flex justify-between items-center m-[6px]'>
         <h6 className='text-lg'>Select a token</h6>
         <Close onClick={onDismiss} />
       </Box>
-      <Box className='w-full h-12 flex items-center px-3 my-3 rounded-lg outline-none border-2 border-gray-400 bg-transparent'>
+      <Box className='w-full h-12 gap-3 flex items-center px-3 my-3 rounded-lg outline-none border-2 border-gray-400 bg-transparent'>
         <Search className='text-neutral-200' />
         <input
           type='text'
-          placeholder='Search or paste address'
+          placeholder='Search by name, Symbol or Address'
           value={searchQueryInput}
           ref={inputRef as RefObject<HTMLInputElement>}
           onChange={(e) => setSearchQueryInput(e.target.value)}
           onKeyDown={handleEnter}
-          className='bg-transparent focus:outline-none'
+          className='bg-transparent focus:outline-none w-full'
           autoFocus
         />
       </Box>

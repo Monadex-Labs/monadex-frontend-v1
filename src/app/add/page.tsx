@@ -8,10 +8,18 @@ import { IoMdSettings } from 'react-icons/io'
 import { QuestionHelper } from '@/components/common/QuestionHelper'
 import SettingsModal from '@/components/SettingsModal/SettingsModal'
 import Marketing from '@/static/assets/marketing.png'
+import { useParams, useSearchParams, usePathname, useRouter } from 'next/navigation'
 const AddLiquidity = lazy(async () => await import('@/components/AddLiquidity'))
 
 const SupplyLiquidity: React.FC = () => {
   const [openSettingsModal, setOpenSettingsModal] = useState(false)
+  const router = useRouter()
+  const params = useParams()
+  const search = useSearchParams()
+  const path = usePathname()
+  console.log(params)
+  console.log(search)
+  console.log(path)
   return (
     <>
       <Link href='/pools' className='flex flex-row items-center gap-1 max-w-[500px] mx-auto mb-5 hover:text-[#8133FF] transition-all'><IoMdArrowBack />

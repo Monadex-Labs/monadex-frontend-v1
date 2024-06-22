@@ -33,8 +33,8 @@ export const WMND_ONLY: ChainTokenList = {
 
 }
 export const V1_ROUTER_ADDRESS: AddressMap = {
-  [ChainId.SEPOLIA] : '0xD80b04Ed45b12F4871d9be252dB4db7F6785AbE8',
-  // add chain.monad testnet and monad here 
+  [ChainId.SEPOLIA]: '0xD80b04Ed45b12F4871d9be252dB4db7F6785AbE8'
+  // add chain.monad testnet and monad here
 }
 // one basis point
 export const ONE_BIPS = new Percent(JSBI.BigInt(1), JSBI.BigInt(10000))

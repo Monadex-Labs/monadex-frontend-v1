@@ -17,6 +17,7 @@ import { useAllTokens } from '@/hooks/Tokens'
 import { useSelector, useDispatch } from 'react-redux'
 // import { useWallets } from '@web3-onboard/react' // check if its works
 import { BASES_TO_TRACK_LIQUIDITY_FOR, MONADEX_PINNED_PAIRS } from '@/constants'
+import { useWalletData } from '@/utils'
 export function serializeToken (token: Token): SerializedToken {
   return {
     chainId: token.chainId,
@@ -129,18 +130,18 @@ export function useUserSlippageTolerance (): [
 }
 
 export function useUserAddedTokens (): Token[] {
-  // const chainId = useWallets()[0]?.chains[0]?.id
-  const chainId = ChainId.SEPOLIA
+  const { chainId } = useWalletData()
+  const chainInUse = chainId ? chainId : ChainId.SEPOLIA
   const serializedTokensMap = useSelector<AppState, AppState['user']['tokens']>(
     ({ user: { tokens } }) => tokens
   )
 
   return useMemo(() => {
     if (chainId === undefined) return []
-    return Object.values(serializedTokensMap[chainId as ChainId] ?? {}).map(
+    return Object.values(serializedTokensMap[chainInUse] ?? {}).map(
       deserializeToken
     )
-  }, [serializedTokensMap, chainId])
+  }, [serializedTokensMap, chainId, chainInUse])
 }
 export function useUserTransactionTTL (): [number, (slippage: number) => void] {
   const dispatch = useDispatch<AppDispatch>()
