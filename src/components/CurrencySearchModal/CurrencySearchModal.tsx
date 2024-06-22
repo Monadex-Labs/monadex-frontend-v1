@@ -28,11 +28,7 @@ const CurrencySearchModal: React.FC<CurrencySearchModalProps> = ({
   const handleCurrencySelect = useCallback(
     (currency: Token | NativeCurrency) => {
       if (currency instanceof NativeCurrency) {
-        onCurrencySelect({
-          ...nativeCurrency,
-          isNative: true,
-          isToken: false
-        })
+        onCurrencySelect(nativeCurrency) // TODO: Simplify this or check why it was like that before
       } else {
         onCurrencySelect(new WrappedTokenInfo(currency as TokenInfo, []))
       }

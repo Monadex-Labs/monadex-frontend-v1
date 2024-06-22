@@ -1,5 +1,5 @@
-import { Box, Fade, Backdrop } from '@mui/material'
 import { Modal } from '@mui/base'
+import { Box, Fade } from '@mui/material'
 
 interface CustomModalProps {
   open: boolean
@@ -24,16 +24,11 @@ const CustomModal: React.FC<CustomModalProps> = ({
     <Modal
       open={open}
       onClose={onClose}
-      BackdropComponent={hideBackdrop ? undefined : Backdrop}
-      BackdropProps={
-        hideBackdrop
-          ? undefined
-          : { timeout: 500, classes: { root: 'backdrop-opacity-10 backdrop-invert bg-white/30' } }
-      }
+      hideBackdrop={hideBackdrop}
     >
       <Fade in={open}>
         <Box
-          className={`${modalWrapper != null ? modalWrapper : ''} border max-w-fit rounded-md border-[#836EF9] border-2 p-4 transition duration-300 bg-[#23006A]`}
+          className={`${modalWrapper != null ? modalWrapper : ''} max-w-fit rounded-md border-[#836EF9] border-2 p-4 transition duration-300 bg-[#23006A]`}
           bgcolor={background}
           overflow={overflow}
         >

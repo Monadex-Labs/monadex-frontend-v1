@@ -189,7 +189,7 @@ const AddLiquidity: React.FC<{
   const handleCurrencyASelect = useCallback(
     (currencyA: any) => {
       const isSwichRedirect = currencyEquals(currencyA, MONAD)
-        ? currency1Id === 'ETH'
+        ? currency1Id === 'MND'
         : currencyA?.address?.toLowerCase() === currency1Id?.toLowerCase()
       if (isSwichRedirect) {
         redirectWithSwitch(currencyA, true)
@@ -201,7 +201,7 @@ const AddLiquidity: React.FC<{
   )
 
   useEffect(() => {
-    if (currency0) {
+    if (currency0 != null) {
       onCurrencySelection(Field.CURRENCY_A, currency0)
     }
   }, [currency0Id])
@@ -221,10 +221,9 @@ const AddLiquidity: React.FC<{
   )
 
   useEffect(() => {
-    if (currency1) {
+    if (currency1 != null) {
       onCurrencySelection(Field.CURRENCY_B, currency1)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currency1Id])
 
   const onAdd = (): void => {
@@ -432,7 +431,7 @@ const AddLiquidity: React.FC<{
         />
       )}
       <CurrencyInput
-        id='add-liquidity-input-tokena'
+        id='add-liquidity-input-tokens'
         title=''
         currency={currencies[Field.CURRENCY_A] as Token}
         showHalfButton={Boolean(maxAmounts[Field.CURRENCY_A])}
@@ -470,7 +469,7 @@ const AddLiquidity: React.FC<{
         amount={formattedAmounts[Field.CURRENCY_B]}
         setAmount={onFieldBInput}
         bgClass={currencyBgClass}
-        showPrice={true}
+        showPrice
       />
       {(currencies[Field.CURRENCY_A] != null) &&
         (currencies[Field.CURRENCY_B] != null) &&
