@@ -93,19 +93,19 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose }) => {
 
   return (
     <CustomModal open={open} onClose={onClose} background='bg-[#836EF9]'>
-      <Box mb={3} className='flex items-center justify-between'>
+      <Box mb={3} className='flex items-center justify-between p-4'>
         <h5 className='text-xl '>Settings</h5>
         <IoMdCloseCircleOutline onClick={onClose} />
       </Box>
       <Divider />
-      <Box my={2.5} className='flex items-center'>
+      <Box my={2.5} className='flex items-center p-4'>
         <Box mr='6px'>
           <p className='text-[#C6CACF]'>Slippage tolerance</p>
         </Box>
         <QuestionHelper size={20} text='Your transaction will revert if the price changes unfavorably by more than this percentage' />
       </Box>
       <Box mb={2.5}>
-        <Box className='flex items-center p-2 gap-3'>
+        <Box className='flex items-center p-2 gap-3 p7'>
           <Box
             className={`border border-[#23232C] p-1 rounded-sm mr-4${
                 userSlippageTolerance === SLIPPAGE_AUTO

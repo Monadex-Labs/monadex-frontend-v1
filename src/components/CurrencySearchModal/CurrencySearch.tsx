@@ -167,12 +167,12 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
   selectedListInfo = useSelectedListInfo()
 
   return (
-    <Box className='pt-8 px-6 h-[90vh]  flex flex-col backdrop-blur-[9.9px] overflow-hidden no-scrollbar'>
+    <Box className='pt-5 px-6 h-[80vh] flex flex-col'>
       <Box className='flex justify-between items-center m-[6px]'>
         <h6 className='text-lg'>Select a token</h6>
         <Close onClick={onDismiss} />
       </Box>
-      <Box className='w-full h-12 gap-3 flex items-center px-3 my-3 rounded-lg outline-none border-2 border-gray-400 bg-transparent'>
+      <Box className='w-full h-12 gap-3 flex items-center px-3 my-3 rounded-lg outline-none border-2 border-[#836EF9] bg-transparent'>
         <Search className='text-neutral-200' />
         <input
           type='text'
@@ -195,7 +195,7 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
 
       <Divider />
 
-      <Box flex={1}>
+      <Box flex={1} className='w-full border border-[#493E5D] rounded-tl-lg rounded-tr-lg bg-[#220258]'>
         <CurrencyList
           chainId={chainIdToUse}
           showETH={showETH}
