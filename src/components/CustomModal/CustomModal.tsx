@@ -25,15 +25,15 @@ const CustomModal: React.FC<CustomModalProps> = ({
     <Modal
       open={open}
       onClose={onClose}
-      slots={hideBackdrop ? undefined : { backdrop: Backdrop }}
+      slots={hideBackdrop != null && hideBackdrop ? undefined : { backdrop: Backdrop }}
       slotProps={
-        hideBackdrop
+        hideBackdrop != null && hideBackdrop
           ? undefined
           : {
               backdrop: {
                 timeout: 500,
                 className: 'backdrop-filter backdrop-blur-[9.9px] bg-opacity-30 bg-white'
-              },
+              }
             }
       }
     >
@@ -48,6 +48,6 @@ const CustomModal: React.FC<CustomModalProps> = ({
       </Fade>
     </Modal>
   )
-};
+}
 
 export default CustomModal

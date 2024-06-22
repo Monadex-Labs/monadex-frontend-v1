@@ -11,7 +11,7 @@ export default function usePoolsRedirects () {
   const params = useParams()
   const search = useSearchParams().toString()
   const path = usePathname()
-  const currentPath = path + search
+  const currentPath = path + '?' + search
   const parsedQs = useParsedQueryString()
   const currencyIdAParam = params ? params.currencyIdA : undefined
   const currencyIdBParam = params ? params.currencyIdB : undefined

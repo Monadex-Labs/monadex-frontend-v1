@@ -18,7 +18,7 @@ export default function RootLayout ({
 }>): JSX.Element {
   return (
     // wrap redux provider
-    <html lang='en'>
+    <html lang='en-US'>
       <QueryWrapper>
         <Web3ProviderWrapper>
           <ReduxProvider>
