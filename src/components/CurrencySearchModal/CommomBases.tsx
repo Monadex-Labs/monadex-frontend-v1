@@ -24,7 +24,8 @@ const CommonBases: React.FC<CommonBasesProps> = ({
       </Box>
       <Box className='flex flex-wrap'>
         <Box
-          className='hover:cursor-pointer flex border gap-2 items-center p-2 rounded-full w-fit'
+
+          className='rounded-full flex p-2 mt-1 mr-2 mb-1 ml-0 items-center bg-indigo-800 hover:cursor-pointer'
           onClick={() => {
             if (
               (selectedCurrency == null) ||
@@ -35,7 +36,7 @@ const CommonBases: React.FC<CommonBasesProps> = ({
           }}
         >
           <CurrencyLogo currency={nativeCurrency} size='24px' />
-          <small>{nativeCurrency.name}</small>
+          <small className='ml-1'>{nativeCurrency.name}</small>
         </Box>
         {/*
         (chainId != null ? SUGGESTED_BASES[chainId] ?? [] []).map((token: Token) => {

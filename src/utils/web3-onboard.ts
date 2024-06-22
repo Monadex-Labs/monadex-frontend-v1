@@ -42,7 +42,7 @@ export default init({
   // An array of Chains that your app supports
   chains: [
     {
-      id: 84532 ,
+      id: 84532,
       token: 'ETH',
       label: 'BASE ETH Sepolia',
       rpcUrl: `https://base-sepolia.g.alchemy.com/v2/${PROVIDER_KEY}`,
@@ -57,13 +57,13 @@ export default init({
     }
   ],
   theme: {
-    "--w3o-background-color": "#2D0186",
-    "--w3o-foreground-color": "#2E008B", 
-    "--w3o-text-color": "white",
-    "--w3o-border-color": "#a280ff", 
-    "--w3o-action-color": "#8133FF", 
-    "--w3o-border-radius": "10px",
-    "--w3o-font-family": "unset"  
+    '--w3o-background-color': '#2D0186',
+    '--w3o-foreground-color': '#2E008B',
+    '--w3o-text-color': 'white',
+    '--w3o-border-color': '#a280ff',
+    '--w3o-action-color': '#8133FF',
+    '--w3o-border-radius': '10px',
+    '--w3o-font-family': 'unset'
   },
 
   appMetadata: {
