@@ -195,3 +195,7 @@ estimated time : 1 day
 - soso:debugged show token on addLiquidity
 - soso: currentrly debbugging the bug where when we pass a token address we should see the token name on the currency search
 Tokens.ts | CurrencySearch.ts
+- soso: added useFetchListCallback + some others utils files
+- soso: still tyring to debug the show token on the currencySearch
+- todo: debut the address find tokens as well
+# TODO:fix errors when user entrer an address of a token + show the tokenList on the currencySearch

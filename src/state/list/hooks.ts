@@ -1,11 +1,10 @@
 import { Token, ChainId } from '@monadex/sdk'
 import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
-import { useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import sortByListPriority from '@/utils/listSort'
-import { DEFAULT_TOKEN_LIST_URL, UNSUPPORTED_LIST_URLS, MONADEX_TOKEN_LIST } from '@/constants/index'
+import { DEFAULT_TOKEN_LIST_URL } from '@/constants/index'
 import { AppState } from '@/state/store'
-
+import getTokenList from '@/utils/getTokenList'
 type TagDetails = Tags[keyof Tags]
 export interface TagInfo extends TagDetails {
   id: string
@@ -87,26 +86,6 @@ export function listToTokenMap (list: TokenList): TokenAddressMap {
   listCache?.set(list, map)
   return map
 }
-
-// export function useAllLists (): {
-//   readonly [url: string]: {
-//     readonly current: TokenList | null
-//     readonly pendingUpdate: TokenList | null
-//     readonly loadingRequestId: string | null
-//     readonly error: string | null
-//   }
-// } {
-//   return useSelector<AppState, AppState['lists']['byUrl']>((state) => state.lists.byUrl)
-// }
-
-function combineMaps (map1: TokenAddressMap, map2: TokenAddressMap): TokenAddressMap {
-  return {
-    [ChainId.SEPOLIA]: { ...map1[ChainId.SEPOLIA], ...map2[ChainId.SEPOLIA] },
-    [ChainId.MONAD_TESTNET]: { ...map1[ChainId.MONAD_TESTNET], ...map2[ChainId.MONAD_TESTNET] },
-    [ChainId.MONAD]: { ...map1[ChainId.MONAD], ...map2[ChainId.MONAD] },
-    [ChainId.LOCAL]: { ...map1[ChainId.LOCAL], ...map2[ChainId.LOCAL] }
-  }
-}
 export function useSelectedListUrl (): string | undefined {
   return useSelector<AppState, AppState['lists']['selectedListUrl']>(
     (state) => state.lists.selectedListUrl
@@ -140,7 +119,6 @@ export function useSelectedListInfo (): {
     (state) => state.lists.byUrl
   )
   const list = selectedUrl ? listsByUrl[selectedUrl] : undefined
-
   return {
     current: list?.current ?? null,
     pending: list?.pendingUpdate ?? null,
@@ -165,6 +143,7 @@ export function useTokenList (url: string | undefined): TokenAddressMap {
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(
     (state) => state.lists.byUrl
   )
+  console.log('lists', lists)
   return useMemo(() => {
     if (!url) return EMPTY_LIST
     const current = lists[url]?.current

@@ -3,6 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+
 import {
   addMulticallListeners,
   Call,
@@ -70,6 +71,7 @@ function useCallsData (calls: Call[] | undefined, options?: ListenerOptions): Ca
     const callKeys: string[] = JSON.parse(serializedCallKeys)
     if (chainId === undefined || callKeys.length === 0) return undefined
     const calls = callKeys.map((key) => parseCallKey(key))
+    // const fetchingBlockNumber = provider?.getBlockNumber()
     console.log('Dispatching addMulticallListeners:', { chainId, calls, options })
     dispatch(
       addMulticallListeners({

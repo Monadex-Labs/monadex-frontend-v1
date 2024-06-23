@@ -1,7 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
 import { TokenList } from '@uniswap/token-lists/dist/types'
-import { DEFAULT_TOKEN_LIST } from '../../constants/index'
 import { updateVersion } from '../global/actions'
 import { DEFAULT_TOKEN_LIST_URL } from '@/constants/index'
 import { acceptListUpdate, addList, fetchTokenList, removeList, selectList } from './actions'
@@ -16,11 +15,11 @@ export interface ListsState {
   }
   // this contains the default list of lists from the last time the updateVersion was called, i.e. the app was reloaded
   readonly lastInitializedDefaultListOfLists?: string[]
-
-  // currently active lists
-  // readonly activeListUrls: string[] | undefined
   readonly selectedListUrl: string | undefined
 }
+export const DEFAULT_TOKEN_LIST = [
+  DEFAULT_TOKEN_LIST_URL
+]
 
 type ListState = ListsState['byUrl'][string]
 
@@ -41,24 +40,23 @@ const initialState: ListsState = {
       return memo
     }, {})
   },
-  // activeListUrls: DEFAULT_TOKEN_LIST,
   selectedListUrl: DEFAULT_TOKEN_LIST_URL
 }
 
 export default createReducer(initialState, (builder) =>
   builder
     .addCase(fetchTokenList.pending, (state, { payload: { requestId, url } }) => {
-      const current = ((state.byUrl[url]?.current) != null) ? state.byUrl[url]?.current : null
-      const pendingUpdate = ((state.byUrl[url]?.pendingUpdate) != null) ? state.byUrl[url]?.pendingUpdate : null
       state.byUrl[url] = {
         ...state.byUrl[url],
-        current,
-        pendingUpdate,
         loadingRequestId: requestId,
-        error: null
+        error: null,
+        current: null,
+        pendingUpdate: null
       }
     })
     .addCase(fetchTokenList.fulfilled, (state, { payload: { requestId, tokenList, url } }) => {
+      console.log('tok', tokenList)
+      console.log('tokenList', tokenList)
       const current = state.byUrl[url]?.current
       const loadingRequestId = state.byUrl[url]?.loadingRequestId
 
@@ -77,10 +75,6 @@ export default createReducer(initialState, (builder) =>
           }
         }
       } else {
-        // activate if on default active
-        // if (DEFAULT_TOKEN_LIST.includes(url)) {
-        //   state.activeListUrls?.push(url)
-        // }
         state.byUrl[url] = {
           ...state.byUrl[url],
           loadingRequestId: null,
@@ -106,7 +100,7 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(selectList, (state, { payload: url }) => {
       state.selectedListUrl = url
-      if (state.byUrl[url] == null) {
+      if (!state.byUrl[url]) {
         state.byUrl[url] = NEW_LIST_STATE
       }
     })
@@ -167,7 +161,7 @@ export default createReducer(initialState, (builder) =>
       state.lastInitializedDefaultListOfLists = DEFAULT_TOKEN_LIST
 
       // if no active lists, activate defaults
-      if (state.selectedListUrl === null) {
+      if (!state.selectedListUrl) {
         state.selectedListUrl = DEFAULT_TOKEN_LIST_URL
         if (state.byUrl[DEFAULT_TOKEN_LIST_URL] == null) {
           state.byUrl[DEFAULT_TOKEN_LIST_URL] = NEW_LIST_STATE

@@ -54,7 +54,7 @@ export interface TokenData {
   decimals: number
 }
 // fake data just for test please change it
-export const DEFAULT_TOKEN_LIST: string[] = []
+
 export const UNSUPPORTED_LIST_URLS: string[] = []
 export const MONADEX_TOKEN_LIST: TokenList | TokenList[] = [] // token list = list of tokens supported offcially by monadex
 export const DEFAULT_TOKEN_LIST_URL: string = 'https://dani3.com/assets/docs/list.json' // TODO: Publish MONAD json file, extract to env and change URL

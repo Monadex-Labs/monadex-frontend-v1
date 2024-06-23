@@ -60,8 +60,8 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
 
   const allTokens = useAllTokens()
   const inactiveTokens = useInActiveTokens()
-  // console.log('all Tokens', allTokens)
-  // console.log('inactive', inactiveTokens)
+  console.log('all Tokens', allTokens)
+  console.log('inactive', inactiveTokens)
   // if they input an address, use it
   const isAddressSearch = isAddress(searchQuery)
   const searchToken = useToken(searchQuery)
