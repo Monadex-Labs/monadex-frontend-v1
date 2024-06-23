@@ -62,6 +62,7 @@ export default createReducer(initialState, (builder) =>
         listeners[chainId][callKey][localBlocksPerFetch] =
         (listeners[chainId][callKey][localBlocksPerFetch] ?? 0) + 1
       })
+      console.log('state action', state)
     })
     .addCase(
       addListenerOptions,
