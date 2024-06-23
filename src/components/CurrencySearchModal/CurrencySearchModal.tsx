@@ -8,10 +8,10 @@ import { TokenInfo } from '@uniswap/token-lists'
 interface CurrencySearchModalProps {
   isOpen: boolean
   onDismiss: () => void
-  selectedCurrency?: Token | null
+  selectedCurrency?: Token | NativeCurrency | null
   // TODO: Ignore typing to support new currency sdk
   onCurrencySelect: (currency: any) => void
-  otherSelectedCurrency?: Token | null
+  otherSelectedCurrency?: Token | NativeCurrency | null
   showCommonBases?: boolean
 }
 

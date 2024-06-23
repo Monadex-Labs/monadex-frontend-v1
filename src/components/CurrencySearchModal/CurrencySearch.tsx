@@ -27,9 +27,9 @@ import { Close, Search } from '@mui/icons-material'
 interface CurrencySearchProps {
   isOpen: boolean
   onDismiss: () => void
-  selectedCurrency?: Token | null
+  selectedCurrency?: Token | NativeCurrency | null
   onCurrencySelect: (currency: Token | NativeCurrency) => void
-  otherSelectedCurrency?: Token | null
+  otherSelectedCurrency?: Token | NativeCurrency | null
   showCommonBases?: boolean
   onChangeList: () => void
 }
@@ -57,14 +57,15 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
     handleInput
   )
 
+
   const allTokens = useAllTokens()
   const inactiveTokens = useInActiveTokens()
-  console.log('all Tokens', allTokens)
-  console.log('inactive', inactiveTokens)
+  // console.log('all Tokens', allTokens)
+  // console.log('inactive', inactiveTokens)
   // if they input an address, use it
   const isAddressSearch = isAddress(searchQuery)
   const searchToken = useToken(searchQuery)
-
+  console.log('check this fhhzf', searchToken)
   const showETH: boolean = useMemo(() => {
     const s = searchQuery.toLowerCase().trim()
     return s === '' || s === 'm' || s === 'mn' || s === 'mnd'

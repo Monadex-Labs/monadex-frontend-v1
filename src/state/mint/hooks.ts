@@ -19,7 +19,7 @@ import { wrappedCurrency, wrappedCurrencyAmount } from '@/utils/wrappedCurrency'
 import { AppDispatch, AppState } from '../store'
 import { tryParseAmount } from '@/state/swap/hooks'
 import { useCurrencyBalances } from '@/state/wallet/hooks'
-import { useCurrency } from '@/hooks/Tokens'
+import { _useCurrency } from '@/hooks/Tokens'
 import { Field, typeInput, selectCurrency } from './actions'
 
 const ZERO = JSBI.BigInt(0)
@@ -49,8 +49,8 @@ export function useDerivedMintInfo (): {
     [Field.CURRENCY_B]: { currencyId: currencyBId },
     otherTypedValue
   } = useMintState()
-  const currencyA = useCurrency(currencyAId)
-  const currencyB = useCurrency(currencyBId)
+  const currencyA = _useCurrency(currencyAId) // TODO@ useCurrency returns Undefined
+  const currencyB = _useCurrency(currencyBId)
   const dependentField = independentField === Field.CURRENCY_A ? Field.CURRENCY_B : Field.CURRENCY_A
   // *
   // tokens

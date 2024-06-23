@@ -4,7 +4,7 @@ import { CurrencyLogo, QuestionHelper } from '@/components'
 
 interface CommonBasesProps {
   chainId?: ChainId
-  selectedCurrency?: Token | null
+  selectedCurrency?: Token | NativeCurrency | null
   onSelect: (currency: Token | NativeCurrency) => void
 }
 

@@ -1,13 +1,13 @@
 import React, { useCallback, useState } from 'react'
-import { Token } from '@monadex/sdk'
+import { NativeCurrency, Token } from '@monadex/sdk'
 import { CurrencySearchModal, CurrencyLogo } from '@/components'
 import { Box } from '@mui/material'
 
 interface CurrencySelectProps {
   title?: string
   handleCurrencySelect: (currency: Token) => void
-  currency: Token | undefined
-  otherCurrency?: Token | undefined
+  currency: Token | NativeCurrency | undefined
+  otherCurrency?: Token | NativeCurrency | undefined
   id?: string
   bgClass?: string
   children?: any
@@ -24,7 +24,7 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({
   const handleOpenModal = useCallback(() => {
     setModalOpen(true)
   }, [])
-
+  console.log('currency please check this', currency)
   return (
     <Box className='px-3 py-2 rounded-full'>
       <Box
@@ -35,16 +35,14 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({
         }
         onClick={handleOpenModal}
       >
-        {(currency != null)
-          ? (
-            <Box className='flex items-center'>
-              <CurrencyLogo currency={currency} size='28px' />
-              <p className='token-symbol-container'>{currency?.symbol}</p>
-            </Box>
-            )
-          : (
-            <p>Select a token</p>
-            )}
+        {currency ? (
+          <Box className='flex items-center'>
+            <CurrencyLogo currency={currency} size={'28px'} />
+            <p className='token-symbol-container'>{currency?.symbol}</p>
+          </Box>
+        ) : (
+          <p>select token</p>
+        )}
         {children}
       </Box>
       {modalOpen && (

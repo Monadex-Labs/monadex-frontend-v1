@@ -1,4 +1,4 @@
-import { Pair, Token, Trade, ChainId, TokenAmount } from '@monadex/sdk'
+import { Pair, Token, Trade, TokenAmount, NativeCurrency } from '@monadex/sdk'
 import {
   CUSTOM_BASES,
   BASES_TO_CHECK_TRADES_AGAINST
@@ -10,8 +10,8 @@ import { PairState, usePairs } from '@/data/Reserves'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 import { useWalletData } from '@/utils'
 export function useAllCommonPairs (
-  currencyA?: Token,
-  currencyB?: Token
+  currencyA?: Token | NativeCurrency,
+  currencyB?: Token | NativeCurrency
 ): Pair[] {
   const { chainId } = useWalletData()
   const bases: Token[] = useMemo(

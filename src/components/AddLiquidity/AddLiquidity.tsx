@@ -16,7 +16,8 @@ import {
   TokenAmount,
   ChainId,
   Token,
-  CurrencyAmount
+  CurrencyAmount,
+  NativeCurrency
 } from '@monadex/sdk'
 import { useWalletData } from '@/utils/index'
 import { useConnectWallet } from '@web3-onboard/react'
@@ -115,7 +116,6 @@ const AddLiquidity: React.FC<{
     poolTokenPercentage,
     error
   } = useDerivedMintInfo()
-
   const liquidityTokenData = {
     amountA: formatTokenAmount(parsedAmounts[Field.CURRENCY_A]),
     symbolA: currencies[Field.CURRENCY_A]?.symbol,
@@ -364,7 +364,7 @@ const AddLiquidity: React.FC<{
   const buttonText = useMemo(() => {
     if (account !== undefined) {
       if (!isSupportedNetwork) return 'Switch Network'
-      return error ?? 'S  upply'
+      return error ?? 'Supply'
     }
     return 'Connect Wallet'
   }, [account, isSupportedNetwork, error])
@@ -399,7 +399,7 @@ const AddLiquidity: React.FC<{
       </Box>
     )
   }
-
+  console.log('currency On AddLiquidity', currencies[Field.CURRENCY_A])
   return (
     <Box className=''>
       {showConfirm && (
@@ -432,8 +432,8 @@ const AddLiquidity: React.FC<{
       )}
       <CurrencyInput
         id='add-liquidity-input-tokens'
-        title=''
-        currency={currencies[Field.CURRENCY_A] as Token}
+        title='token 1'
+        currency={currencies[Field.CURRENCY_A]}
         showHalfButton={Boolean(maxAmounts[Field.CURRENCY_A])}
         showMaxButton={atMaxAmounts[Field.CURRENCY_A] == null}
         onMax={() =>
@@ -451,9 +451,9 @@ const AddLiquidity: React.FC<{
       />
       <CurrencyInput
         id='add-liquidity-input-tokenb'
-        title=''
+        title='token 2'
         showHalfButton={Boolean(maxAmounts[Field.CURRENCY_B])}
-        currency={currencies[Field.CURRENCY_B] as Token}
+        currency={currencies[Field.CURRENCY_B]}
         showMaxButton={atMaxAmounts[Field.CURRENCY_B] == null}
         onHalf={() => {
           const maxAmount = maxAmounts[Field.CURRENCY_B]

@@ -1,10 +1,10 @@
-import { Price, Token, Trade } from '@monadex/sdk'
+import { NativeCurrency, Price, Token, Trade } from '@monadex/sdk'
 import { useWalletData } from './index'
 import { tryParseAmount } from '@/state/swap/hooks'
 import { USDC } from '@/constants'
 import { useMemo } from 'react'
 import { useAllCommonPairs } from '@/hooks/Trades'
-export default function useUSDCPrice (currency?: Token): Price | undefined {
+export default function useUSDCPrice (currency?: Token | NativeCurrency): Price | undefined {
   const { chainId } = useWalletData()
   const amountOut = (chainId !== undefined)
     ? tryParseAmount('1', USDC[chainId])

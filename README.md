@@ -190,3 +190,7 @@ estimated time : 1 day
 - soso: fixed some errors 
 # todo 21/06
 - soso: make addLiquidity work perfectly 
+
+# 23/06
+- soso:debugged show token on addLiquidity
+- soso: currentrly debbugging the bug where when we pass a token address we should see the token name on the currency search

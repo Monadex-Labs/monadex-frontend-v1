@@ -7,7 +7,7 @@ import useUSDCPrice from '@/utils/useUsdcPrice'
 interface CurrencyInputProps {
   title?: string
   handleCurrencySelect: (currency: NativeCurrency | Token) => void
-  currency: Token | undefined
+  currency: Token | NativeCurrency | undefined
   otherCurrency?: Token | NativeCurrency | undefined
   amount: string
   setAmount: (value: string) => void
@@ -50,25 +50,20 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
       className={`${showPrice === true ? ' priceShowBox' : ''} ${'bg-[#1F0050]/50 rounded-sm'} mb-4 p-2`}
     >
       <div className='flex justify-between mb-2'>
-        <p>{title ?? 'youPay'}</p>
+        <p className='text-[#493E5D] text-sm font-semibold p-1'>{title ?? 'you pay'}</p>
         <div className='flex'>
           {Boolean(account) && (currency != null) && showHalfButton === true && (
-            <div className='border p-2' onClick={onHalf}>
+            <div className='border p-2 text-white' onClick={onHalf}>
               <small>50%</small>
-            </div>
-          )}
-          {Boolean(account) && (currency != null) && showMaxButton === true && (
-            <div className='border p-2' onClick={onMax}>
-              <small>max</small>
             </div>
           )}
         </div>
       </div>
-      <div className='mb-2 flex justify-between p-3 items-center'>
+      <div className='flex justify-between p-1 items-center'>
         <CurrencySelect
           id={id}
           currency={currency}
-          otherCurrency={otherCurrency as Token}
+          otherCurrency={otherCurrency}
           handleCurrencySelect={handleCurrencySelect}
         />
         <div className='inputWrapper'>
@@ -83,11 +78,19 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
           />
         </div>
       </div>
-      <div className='flex justify-between px-4'>
-        <small className='text-[#C7CBD8] text-md p-1'>
-          {`Balance: ${formatTokenAmount(selectedCurrencyBalance)}`}
-        </small>
-        <small className='text-[#C7CBD8] text-md p-1'>
+      <div className='flex justify-between items-center'>
+        <div className='flex items-center p-1 gap-3'>
+          <small className='text-[#493E5D] text-md'>
+            {`Balance: ${formatTokenAmount(selectedCurrencyBalance)}`}
+          </small>
+          {Boolean(account) && (currency != null) && showMaxButton === true && (
+              <div className='' onClick={onMax}>
+                <small className='text-[#8133FF] font-lg'>Max</small>
+              </div>
+            )}
+        </div>
+        
+        <small className='text-[#493E5D] text-md p-1'>
           ${(usdPrice * Number(amount)).toLocaleString('us')}
         </small>
       </div>
