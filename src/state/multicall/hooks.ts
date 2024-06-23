@@ -14,7 +14,7 @@ import {
 
 import { useBlockNumber } from '../application/hooks'
 import { AppDispatch, AppState } from '../store'
-import { ChainId } from '@monadex/sdk'
+import { useWalletData } from '@/utils'
 export interface Result extends ReadonlyArray<any> {
   readonly [key: string]: any
 }
@@ -48,12 +48,13 @@ export const NEVER_RELOAD: ListenerOptions = {
 
 // the lowest level call for subscribing to contract data
 function useCallsData (calls: Call[] | undefined, options?: ListenerOptions): CallResult[] {
-  const chainId = ChainId.SEPOLIA
-  const callResults = useSelector<AppState, AppState['multicall']['callResults']>(
+  const { chainId } = useWalletData()
+  const callResults = useSelector<
+  AppState,
+  AppState['multicall']['callResults']>(
     (state) => state.multicall.callResults
   )
   const dispatch = useDispatch<AppDispatch>()
-
   const serializedCallKeys: string = useMemo(
     () =>
       JSON.stringify(
@@ -64,7 +65,6 @@ function useCallsData (calls: Call[] | undefined, options?: ListenerOptions): Ca
       ),
     [calls]
   )
-
   // update listeners when there is an actual change that persists for at least 100ms
   useEffect(() => {
     const callKeys: string[] = JSON.parse(serializedCallKeys)
@@ -77,7 +77,6 @@ function useCallsData (calls: Call[] | undefined, options?: ListenerOptions): Ca
         options
       })
     )
-
     return () => {
       dispatch(
         removeMulticallListeners({
@@ -93,7 +92,6 @@ function useCallsData (calls: Call[] | undefined, options?: ListenerOptions): Ca
     () =>
       calls?.map<CallResult>((call) => {
         if (chainId === undefined || call === undefined) return INVALID_RESULT
-
         const result = callResults[chainId]?.[toCallKey(call)]
         let data
         if (result?.data != null && result?.data !== '0x') {
@@ -231,8 +229,10 @@ export function useSingleCallResult (
   inputs?: OptionalMethodInputs,
   options?: ListenerOptions
 ): CallState {
-  const fragment = useMemo(() => contract?.interface?.getFunction(methodName), [contract, methodName])
-
+  const fragment = useMemo(() => contract?.interface?.getFunction(methodName), [
+    contract,
+    methodName
+  ])
   const calls = useMemo<Call[]>(() => {
     return (contract != null) && (fragment != null) && isValidMethodArgs(inputs)
       ? [
@@ -243,11 +243,15 @@ export function useSingleCallResult (
         ]
       : []
   }, [contract, fragment, inputs])
-
   const result = useCallsData(calls, options)[0]
   const latestBlockNumber = useBlockNumber()
 
   return useMemo(() => {
-    return toCallState(result, contract?.interface, fragment, latestBlockNumber)
+    return toCallState(
+      result,
+      contract?.interface,
+      fragment,
+      latestBlockNumber
+    );
   }, [result, contract, fragment, latestBlockNumber])
 }

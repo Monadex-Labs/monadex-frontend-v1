@@ -1,9 +1,10 @@
 import { createReducer } from '@reduxjs/toolkit'
-
+import { ChainId } from '@monadex/sdk'
 import {
   addMulticallListeners,
   errorFetchingMulticallResults,
   fetchingMulticallResults,
+  addListenerOptions,
   removeMulticallListeners,
   toCallKey,
   updateMulticallResults
@@ -30,29 +31,51 @@ export interface MulticallState {
       }
     }
   }
+  listenerOptions: {
+    [chainId: number]: {
+      blocksPerFetch: number
+    }
+  }
 }
 
 const initialState: MulticallState = {
-  callResults: {}
+  callResults: {},
+  listenerOptions: {
+    [ChainId.SEPOLIA]: {
+      blocksPerFetch: 7
+    }
+  }
 }
 
 export default createReducer(initialState, (builder) =>
   builder
     .addCase(addMulticallListeners, (state, { payload: { calls, chainId, options: { blocksPerFetch = 1 } = {} } }) => {
-      const listeners: MulticallState['callListeners'] = (state.callListeners != null)
+      const listeners: MulticallState['callListeners'] = state.callListeners
         ? state.callListeners
         : (state.callListeners = {})
       listeners[chainId] = listeners[chainId] ?? {}
+      const localBlocksPerFetch = state.listenerOptions[chainId].blocksPerFetch ?? 7
       calls.forEach((call) => {
         const callKey = toCallKey(call)
         listeners[chainId][callKey] = listeners[chainId][callKey] ?? {}
-        listeners[chainId][callKey][blocksPerFetch] = (listeners[chainId][callKey][blocksPerFetch] ?? 0) + 1
+        listeners[chainId][callKey][localBlocksPerFetch] =
+        (listeners[chainId][callKey][localBlocksPerFetch] ?? 0) + 1
       })
     })
     .addCase(
+      addListenerOptions,
+      (state, { payload: { chainId, blocksPerFetch = 4 } }) => {
+        const options: MulticallState['listenerOptions'] = state.listenerOptions
+          ? state.listenerOptions
+          : (state.listenerOptions = {})
+        options[chainId] = options[chainId] ?? {}
+        options[chainId].blocksPerFetch = blocksPerFetch
+      }
+    )
+    .addCase(
       removeMulticallListeners,
       (state, { payload: { chainId, calls, options: { blocksPerFetch = 1 } = {} } }) => {
-        const listeners: MulticallState['callListeners'] = (state.callListeners != null)
+        const listeners: MulticallState['callListeners'] = state.callListeners
           ? state.callListeners
           : (state.callListeners = {})
 

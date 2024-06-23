@@ -112,27 +112,35 @@ export function useToken (tokenAddress?: string): Token | undefined | null {
   const tokens = useAllTokens()
   const _isAddress: boolean = isAddress(tokenAddress as string)
   const address = _isAddress ? getAddress(tokenAddress as string) : undefined
+
   const tokenContract = useTokenContract(_isAddress ? address : undefined, false)
   const tokenContractBytes32 = useBytes32TokenContract(_isAddress ? address : undefined, false)
-  const token: Token | undefined = (address !== undefined) ? tokens[address] : undefined
-  console.log('token', token)
-  const tokenName = useSingleCallResult((token !== undefined) ? undefined : tokenContract, 'name', undefined, NEVER_RELOAD)
+
+  const token: Token | undefined = address
+    ? Object.values(tokens).find(
+      (token) => token.address.toLowerCase() === address.toLowerCase()
+    )
+    : undefined
+  const tokenName = useSingleCallResult(token ? undefined : tokenContract, 'name', undefined, NEVER_RELOAD)
+  console.log('nom du token', tokenName)
   const tokenNameBytes32 = useSingleCallResult(
     (token !== undefined) ? undefined : tokenContractBytes32,
     'name',
     undefined,
     NEVER_RELOAD
   )
-  const symbol = useSingleCallResult((token !== undefined) ? undefined : tokenContract, 'symbol', undefined, NEVER_RELOAD)
+  const symbol = useSingleCallResult(token  ? undefined : tokenContract, 'symbol', undefined, NEVER_RELOAD)
   const symbolBytes32 = useSingleCallResult((token !== undefined) ? undefined : tokenContractBytes32, 'symbol', undefined, NEVER_RELOAD)
-  const decimals = useSingleCallResult((token !== undefined) ? undefined : tokenContract, 'decimals', undefined, NEVER_RELOAD)
+
+  const decimals = useSingleCallResult(token ? undefined : tokenContract, 'decimals', undefined, NEVER_RELOAD)
+
   return useMemo(() => {
-    if (token !== undefined) return token
-    if (typeof chainId === 'undefined' || typeof address === 'undefined') return undefined
+    if (token) return token
+    if (!chainId || !address) return undefined
     if (decimals.loading || symbol.loading || tokenName.loading) return null
-    if ((decimals.result !== undefined)) {
+    if (decimals.result) {
       return new Token(
-        chainId as number,
+        chainId,
         address,
         decimals.result[0],
         parseStringOrBytes32(symbol.result?.[0], symbolBytes32.result?.[0], 'UNKNOWN'),

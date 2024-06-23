@@ -24,7 +24,6 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({
   const handleOpenModal = useCallback(() => {
     setModalOpen(true)
   }, [])
-  console.log('currency please check this', currency)
   return (
     <Box className='px-3 py-2 rounded-full'>
       <Box

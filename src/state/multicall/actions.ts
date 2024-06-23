@@ -3,6 +3,7 @@ import { createAction } from '@reduxjs/toolkit'
 export interface Call {
   address: string
   callData: string
+  gasRequired?: number
 }
 
 const ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/
@@ -54,3 +55,7 @@ export const updateMulticallResults = createAction<{
     [callKey: string]: string | null
   }
 }>('multicall/updateMulticallResults')
+export const addListenerOptions = createAction<{
+  chainId: number
+  blocksPerFetch: number
+}>('multicall/addListenerOptions')
