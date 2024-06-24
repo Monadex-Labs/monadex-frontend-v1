@@ -65,6 +65,7 @@ export function listToTokenMap (list: TokenList): TokenAddressMap {
           })
           ?.filter((x): x is TagInfo => Boolean(x)) ?? []
       const token = new WrappedTokenInfo(tokenInfo, tags)
+
       if (
         tokenMap &&
         tokenMap[token.chainId] &&
@@ -76,9 +77,7 @@ export function listToTokenMap (list: TokenList): TokenAddressMap {
         ...tokenMap,
         [token.chainId]: {
           ...tokenMap[token.chainId],
-          [token.address]: {
-            token
-          }
+          [token.address]: token
         }
       }
     },
@@ -148,8 +147,6 @@ export function useTokenList (url: string | undefined): TokenAddressMap {
   return useMemo(() => {
     if (!url) return EMPTY_LIST
     const current = lists[url]?.current
-    console.log('current ==', current)
-
     if (!current) return EMPTY_LIST
     try {
       return listToTokenMap(current)

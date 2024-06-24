@@ -121,7 +121,7 @@ export function useToken (tokenAddress?: string): Token | undefined | null {
       (token) => token.address.toLowerCase() === address.toLowerCase()
     )
     : undefined
-  console.log('tok', token)
+  console.log('tok', address)
   const tokenName = useSingleCallResult(token ? undefined : tokenContract, 'name', undefined, NEVER_RELOAD)
   // console.log('nom du token', tokenName)
   const tokenNameBytes32 = useSingleCallResult(
