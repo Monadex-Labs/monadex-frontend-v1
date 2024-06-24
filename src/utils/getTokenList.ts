@@ -25,7 +25,6 @@ export default async function getTokenList (
           tokenList: url
         }
       })
-      console.log('hehllddow', response.data)
     } catch (error) {
       console.log('Failed to fetch list', listUrl, error)
       if (isLast) throw new Error(`Failed to download list ${listUrl}`)

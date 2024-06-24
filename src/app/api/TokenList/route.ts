@@ -7,9 +7,8 @@ export async function GET (req: Request) {
     const { query } = ParseURL
     const { tokenList } = query
     console.log('tokenList', tokenList)
-    const f = await axios.get(tokenList as string)
-    const res = f.data
-    return NextResponse.json({ message: res, statut: '200' })
+    const { data } = await axios.get(tokenList as string)
+    return NextResponse.json(data)
   } catch (error: any) {
     NextResponse.json({ error })
   }
