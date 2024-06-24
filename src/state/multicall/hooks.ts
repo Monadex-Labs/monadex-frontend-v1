@@ -48,14 +48,14 @@ export const NEVER_RELOAD: ListenerOptions = {
 }
 
 // the lowest level call for subscribing to contract data
-function useCallsData (calls: Call[] | undefined, options?: ListenerOptions): CallResult[] {
+function useCallsData (calls: Array<Call | undefined>, options?: ListenerOptions, ignore?: boolean): CallResult[] {
   const { chainId } = useWalletData()
   const callResults = useSelector<
   AppState,
   AppState['multicall']['callResults']>(
     (state) => state.multicall.callResults
   )
-  console.log('call Result', callResults)
+  console.log('this one is the one we need', callResults)
   const dispatch = useDispatch<AppDispatch>()
   const serializedCallKeys: string = useMemo(
     () =>
@@ -72,22 +72,24 @@ function useCallsData (calls: Call[] | undefined, options?: ListenerOptions): Ca
     const callKeys: string[] = JSON.parse(serializedCallKeys)
     if (chainId === undefined || callKeys.length === 0) return undefined
     const calls = callKeys.map((key) => parseCallKey(key))
-    console.log('Dispatching addMulticallListeners:', { chainId, calls, options })
-    dispatch(
-      addMulticallListeners({
-        chainId,
-        calls,
-        options
-      })
-    )
-    return () => {
+    if (!ignore) {
       dispatch(
-        removeMulticallListeners({
+        addMulticallListeners({
           chainId,
           calls,
           options
         })
       )
+
+      return () => {
+        dispatch(
+          removeMulticallListeners({
+            chainId,
+            calls,
+            options
+          })
+        )
+      }
     }
   }, [chainId, dispatch, options, serializedCallKeys])
 
@@ -104,7 +106,7 @@ function useCallsData (calls: Call[] | undefined, options?: ListenerOptions): Ca
         return { valid: true, data, blockNumber: result?.blockNumber }
       }),
     [callResults, calls, chainId]
-  ) as CallResult[]
+  )
 }
 
 interface CallState {
@@ -230,7 +232,8 @@ export function useSingleCallResult (
   contract: Contract | null | undefined,
   methodName: string,
   inputs?: OptionalMethodInputs,
-  options?: ListenerOptions
+  options?: ListenerOptions,
+  ignore?: boolean
 ): CallState {
   const fragment = useMemo(() => contract?.interface?.getFunction(methodName), [
     contract,
@@ -246,7 +249,8 @@ export function useSingleCallResult (
         ]
       : []
   }, [contract, fragment, inputs])
-  const result = useCallsData(calls, options)[0]
+  const result = useCallsData(calls, options, ignore)[0]
+  console.log('res', result)
   const latestBlockNumber = useBlockNumber()
 
   return useMemo(() => {
@@ -255,6 +259,6 @@ export function useSingleCallResult (
       contract?.interface,
       fragment,
       latestBlockNumber
-    );
+    )
   }, [result, contract, fragment, latestBlockNumber])
 }

@@ -41,7 +41,7 @@ export interface MulticallState {
 const initialState: MulticallState = {
   callResults: {},
   listenerOptions: {
-    [ChainId.SEPOLIA]: {
+    [84532]: {
       blocksPerFetch: 7
     }
   }
@@ -61,7 +61,6 @@ export default createReducer(initialState, (builder) =>
         listeners[chainId][callKey][localBlocksPerFetch] =
         (listeners[chainId][callKey][localBlocksPerFetch] ?? 0) + 1
       })
-      console.log('state f', state)
     })
     .addCase(
       addListenerOptions,
@@ -112,7 +111,6 @@ export default createReducer(initialState, (builder) =>
       })
     })
     .addCase(errorFetchingMulticallResults, (state, { payload: { fetchingBlockNumber, chainId, calls } }) => {
-      console.log('call', state)
       state.callResults[chainId] = state.callResults[chainId] ?? {}
       calls.forEach((call) => {
         const callKey = toCallKey(call)

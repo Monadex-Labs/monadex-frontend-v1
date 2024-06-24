@@ -11,6 +11,7 @@ import { useBlockNumber } from '../application/hooks'
 import { AppDispatch, AppState } from '../store'
 import { Call, addListenerOptions, errorFetchingMulticallResults, fetchingMulticallResults, parseCallKey, updateMulticallResults } from './actions'
 import { getConfig } from '@/constants/config'
+import { ChainId } from '@monadex/sdk'
 
 // chunk calls so we do not exceed the gas limit
 const DEFAULT_GAS_REQUIRED = 1_000_000
@@ -142,6 +143,7 @@ export default function Updater (): null {
   // wait for listeners to settle before triggering updates
   const debouncedListeners = useDebounce(state.callListeners, 1000)
   const latestBlockNumber = useBlockNumber()
+  console.log('latest', latestBlockNumber)
   const { chainId } = useWalletData()
   const multicallContract = useMulticallContract()
 
@@ -149,32 +151,31 @@ export default function Updater (): null {
     blockNumber: number
     cancellations: Array<() => void>
   }>()
-
+  const useChain = chainId ? chainId : ChainId.SEPOLIA
+  const config = getConfig(useChain)
+  // useMemo(() => {
+  //   if (config) {
+  //     const blocksPerFetch = config.blocksPerFetch ?? 20
+  //     dispatch(
+  //       addListenerOptions({
+  //         chainId,
+  //         blocksPerFetch
+  //       })
+  //     )
+  //   } else {
+  //     console.error('No config found, skipping dispatch')
+  //   }
+  // }, [chainId, dispatch])
   useMemo(() => {
-    const config = getConfig(chainId);
-    if (config) {
-      const blocksPerFetch = config.blocksPerFetch ?? 20
-      dispatch(
-        addListenerOptions({
-          chainId,
-          blocksPerFetch: blocksPerFetch
-        })
-      );
-    } else {
-      console.error('No config found, skipping dispatch')
-    }
-  }, [chainId, dispatch])
-  /** TODO FIX THIS
-   * useMemo(() => {
-    const blocksPerFetch = config['blocksPerFetch'] ?? 20;
+    const blocksPerFetch = config['blocksPerFetch'] ?? 20
     dispatch(
       addListenerOptions({
         chainId,
-        blocksPerFetch: blocksPerFetch,
-      }),
-    );
+        blocksPerFetch
+      })
+    )
   }, [chainId])
-   */
+
   const listeningKeys: { [callKey: string]: number } = useMemo(() => {
     return activeListeningKeys(debouncedListeners, chainId)
   }, [debouncedListeners, chainId])
