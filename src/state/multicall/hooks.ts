@@ -55,6 +55,7 @@ function useCallsData (calls: Call[] | undefined, options?: ListenerOptions): Ca
   AppState['multicall']['callResults']>(
     (state) => state.multicall.callResults
   )
+  console.log('call Result', callResults)
   const dispatch = useDispatch<AppDispatch>()
   const serializedCallKeys: string = useMemo(
     () =>
@@ -71,7 +72,6 @@ function useCallsData (calls: Call[] | undefined, options?: ListenerOptions): Ca
     const callKeys: string[] = JSON.parse(serializedCallKeys)
     if (chainId === undefined || callKeys.length === 0) return undefined
     const calls = callKeys.map((key) => parseCallKey(key))
-    // const fetchingBlockNumber = provider?.getBlockNumber()
     console.log('Dispatching addMulticallListeners:', { chainId, calls, options })
     dispatch(
       addMulticallListeners({

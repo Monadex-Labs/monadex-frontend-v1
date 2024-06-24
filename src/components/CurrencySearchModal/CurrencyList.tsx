@@ -59,7 +59,6 @@ const CurrencyList: React.FC<CurrencyListProps> = ({
           currencyEquals(currency, MONAD) || currency.name === 'MONAD'
             ? WMND[chainId]
             : currency
-      console.log('token currencyList', token)
       const usdPrice = (usdPrices != null)
         ? usdPrices.find(
           (item) =>

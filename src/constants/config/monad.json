@@ -1,0 +1,24 @@
+{
+    "v2": true,
+    "rpc": "https://sepolia.base.org",
+    "blockExplorer": "https://sepolia.basescan.org/",
+    "chainId": 84532,
+    "isMainnet": false,
+    "visible": true,
+    "networkName": "base sepolia",
+    "nativeCurrencyImage": "/",
+    "nativeCurrency": {
+      "name": "ETH TOKEN",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "swap": {
+      "available": true
+    },
+    "pools": {
+      "available": true
+    },
+    "maxHops": 3,
+    "maxChunks": 400,
+    "blocksPerFetch": 30
+  }

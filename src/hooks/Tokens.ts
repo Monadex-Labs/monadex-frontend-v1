@@ -115,14 +115,13 @@ export function useToken (tokenAddress?: string): Token | undefined | null {
 
   const tokenContract = useTokenContract(_isAddress ? address : undefined, false)
   const tokenContractBytes32 = useBytes32TokenContract(_isAddress ? address : undefined, false)
-  
   const token: Token | undefined = address
     ? Object.values(tokens).find(
       (token) => token.address.toLowerCase() === address.toLowerCase()
     )
     : undefined
-  console.log('tok', address)
   const tokenName = useSingleCallResult(token ? undefined : tokenContract, 'name', undefined, NEVER_RELOAD)
+  console.log('name', tokenName)
   // console.log('nom du token', tokenName)
   const tokenNameBytes32 = useSingleCallResult(
     (token !== undefined) ? undefined : tokenContractBytes32,
@@ -170,9 +169,7 @@ export function useCurrency (currencyId: string | undefined): Token | null | und
 // FOR NATIVE CURRENCY
 export function _useCurrency (
   currencyId: string | undefined
-): NativeCurrency | null | undefined {
-  const { chainId } = useWalletData()
-  const chainIdToUse = chainId || ChainId.SEPOLIA
+): NativeCurrency | Token | null | undefined {
   const nativeCurrency = MONAD
   const isMND = currencyId?.toUpperCase() === 'MND'
   const token = useToken(isMND ? undefined : currencyId)

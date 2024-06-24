@@ -204,4 +204,5 @@ Tokens.ts | CurrencySearch.ts
 - soso: fixed getTokenList.ts with api 
 - soso: create updater logic on state list 
 - soso: imported updater.tsx hook component on layout.tsx
+- soso: created Updater for multicall, created config.json , useDebounce Hook
 # TODO:fix errors when user entrer an address of a token + show the tokenList on the currencySearch
