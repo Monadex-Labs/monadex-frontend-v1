@@ -198,4 +198,6 @@ Tokens.ts | CurrencySearch.ts
 - soso: added useFetchListCallback + some others utils files
 - soso: still tyring to debug the show token on the currencySearch
 - todo: debut the address find tokens as well
+- daniel: Update list of tokens JSON file on daniel's website endpoint (match Quickswap format).
+
 # TODO:fix errors when user entrer an address of a token + show the tokenList on the currencySearch

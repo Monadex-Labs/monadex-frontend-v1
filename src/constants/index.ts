@@ -24,7 +24,7 @@ export const DEFAULT_DEADLINE_FROM_NOW = 60 * 20
 type ChainTokenList = {
   readonly [chainId in ChainId]: Token[]
 }
-type AddressMap = { [chainId: number]: string }
+interface AddressMap { [chainId: number]: string }
 export const WMND_ONLY: ChainTokenList = {
   [ChainId.MONAD_TESTNET]: [WMND[ChainId.MONAD_TESTNET]],
   [ChainId.MONAD]: [WMND[ChainId.MONAD]],
@@ -57,7 +57,7 @@ export interface TokenData {
 
 export const UNSUPPORTED_LIST_URLS: string[] = []
 export const MONADEX_TOKEN_LIST: TokenList | TokenList[] = [] // token list = list of tokens supported offcially by monadex
-export const DEFAULT_TOKEN_LIST_URL: string = 'https://dani3.com/assets/docs/list.json' // TODO: Publish MONAD json file, extract to env and change URL
+export const DEFAULT_TOKEN_LIST_URL: string = 'http://localhost:3000/list.json' // TODO: Publish MONAD json file, extract to env and change URL
 
 // let's add some tokens in eth-sepolia for test purposes // USDC - ETH
 export const MNDX: { [chainid: number]: Token } = []
@@ -183,7 +183,6 @@ export const BASES_TO_CHECK_TRADES_AGAINST: {
 // Some tokens can only be swapped via certain pairs, so we override the list of bases that are considered for these tokens.
 export const CUSTOM_BASES: {
   [ChainId: number]: { [tokenAddress: string]: Token[] } } = {}
-
 
 export const RAFFLE_WL_TOKEN_ADDRESS = {
   [ChainId.SEPOLIA]: [

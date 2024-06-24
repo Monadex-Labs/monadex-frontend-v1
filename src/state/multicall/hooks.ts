@@ -255,6 +255,6 @@ export function useSingleCallResult (
       contract?.interface,
       fragment,
       latestBlockNumber
-    );
+    )
   }, [result, contract, fragment, latestBlockNumber])
 }
