@@ -20,8 +20,12 @@ export default async function getTokenList (
     const isLast = i === urls.length - 1
     let response
     try {
-      response = await axios.get(url)
-      console.log('redds', response)
+      response = await axios.get('api/TokenList', {
+        params: {
+          url
+        }
+      })
+      console.log('hellow', response)
     } catch (error) {
       console.debug('Failed to fetch list', listUrl, error)
       if (isLast) throw new Error(`Failed to download list ${listUrl}`)
