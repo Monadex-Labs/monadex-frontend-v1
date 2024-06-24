@@ -198,4 +198,10 @@ Tokens.ts | CurrencySearch.ts
 - soso: added useFetchListCallback + some others utils files
 - soso: still tyring to debug the show token on the currencySearch
 - todo: debut the address find tokens as well
+
+# 24/06
+- soso: created api directory for endpoint
+- soso: fixed getTokenList.ts with api 
+- soso: create updater logic on state list 
+- soso: imported updater.tsx hook component on layout.tsx
 # TODO:fix errors when user entrer an address of a token + show the tokenList on the currencySearch
