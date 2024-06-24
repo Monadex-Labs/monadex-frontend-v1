@@ -111,11 +111,11 @@ export function useToken (tokenAddress?: string): Token | undefined | null {
   const { chainId } = useWalletData()
   const tokens = useAllTokens()
   const _isAddress: boolean = isAddress(tokenAddress as string)
-  const address = _isAddress ? getAddress(tokenAddress as string) : undefined
+  const address = _isAddress ? tokenAddress : undefined
 
   const tokenContract = useTokenContract(_isAddress ? address : undefined, false)
   const tokenContractBytes32 = useBytes32TokenContract(_isAddress ? address : undefined, false)
-
+  
   const token: Token | undefined = address
     ? Object.values(tokens).find(
       (token) => token.address.toLowerCase() === address.toLowerCase()
