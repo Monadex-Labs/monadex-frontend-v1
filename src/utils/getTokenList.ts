@@ -22,12 +22,12 @@ export default async function getTokenList (
     try {
       response = await axios.get('api/TokenList', {
         params: {
-          url
+          tokenList: url
         }
       })
-      console.log('hellow', response)
+      console.log('hehllddow', response.data)
     } catch (error) {
-      console.debug('Failed to fetch list', listUrl, error)
+      console.log('Failed to fetch list', listUrl, error)
       if (isLast) throw new Error(`Failed to download list ${listUrl}`)
       continue
     }

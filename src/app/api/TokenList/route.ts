@@ -6,10 +6,11 @@ export async function GET (req: Request) {
     const ParseURL: UrlWithParsedQuery = parse(req.url, true)
     const { query } = ParseURL
     const { tokenList } = query
+    console.log('tokenList', tokenList)
     const f = await axios.get(tokenList as string)
     const res = f.data
     return NextResponse.json({ message: res, statut: '200' })
   } catch (error: any) {
-    return NextResponse.json({ error })
+    NextResponse.json({ error })
   }
 }
