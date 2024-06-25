@@ -55,6 +55,7 @@ export const updateMulticallResults = createAction<{
     [callKey: string]: string | null
   }
 }>('multicall/updateMulticallResults')
+console.log(updateMulticallResults)
 export const addListenerOptions = createAction<{
   chainId: number
   blocksPerFetch: number

@@ -98,7 +98,6 @@ function useCallsData (calls: Array<Call | undefined>, options?: ListenerOptions
       calls?.map<CallResult>((call) => {
         if (chainId === undefined || call === undefined) return INVALID_RESULT
         const result = callResults[chainId]?.[toCallKey(call)]
-        console.log('res', result)
         let data
         if (result?.data != null && result?.data !== '0x') {
           data = result.data

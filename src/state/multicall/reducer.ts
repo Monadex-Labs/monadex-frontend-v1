@@ -114,6 +114,7 @@ export default createReducer(initialState, (builder) =>
       calls.forEach((call) => {
         const callKey = toCallKey(call)
         const current = state.callResults[chainId][callKey]
+        console.log('cuVrr', current)
         if (current === undefined) return // only should be dispatched if we are already fetching
         if (current.fetchingBlockNumber === fetchingBlockNumber) {
           delete current.fetchingBlockNumber
