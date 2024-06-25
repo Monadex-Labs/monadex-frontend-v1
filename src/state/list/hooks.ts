@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux'
 import { DEFAULT_TOKEN_LIST_URL } from '@/constants/index'
 import { AppState } from '@/state/store'
 import getTokenList from '@/utils/getTokenList'
+import { CurrencyBitcoin } from '@mui/icons-material'
 type TagDetails = Tags[keyof Tags]
 export interface TagInfo extends TagDetails {
   id: string
@@ -64,6 +65,7 @@ export function listToTokenMap (list: TokenList): TokenAddressMap {
           })
           ?.filter((x): x is TagInfo => Boolean(x)) ?? []
       const token = new WrappedTokenInfo(tokenInfo, tags)
+
       if (
         tokenMap &&
         tokenMap[token.chainId] &&
@@ -75,9 +77,7 @@ export function listToTokenMap (list: TokenList): TokenAddressMap {
         ...tokenMap,
         [token.chainId]: {
           ...tokenMap[token.chainId],
-          [token.address]: {
-            token
-          }
+          [token.address]: token
         }
       }
     },
@@ -143,11 +143,11 @@ export function useTokenList (url: string | undefined): TokenAddressMap {
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(
     (state) => state.lists.byUrl
   )
-  console.log('lists', lists)
+
   return useMemo(() => {
     if (!url) return EMPTY_LIST
     const current = lists[url]?.current
-    if (current == null) return EMPTY_LIST
+    if (!current) return EMPTY_LIST
     try {
       return listToTokenMap(current)
     } catch (error) {

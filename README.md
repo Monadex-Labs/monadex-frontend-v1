@@ -200,4 +200,10 @@ Tokens.ts | CurrencySearch.ts
 - todo: debut the address find tokens as well
 - daniel: Update list of tokens JSON file on daniel's website endpoint (match Quickswap format).
 
+# 24/06
+- soso: created api directory for endpoint
+- soso: fixed getTokenList.ts with api 
+- soso: create updater logic on state list 
+- soso: imported updater.tsx hook component on layout.tsx
+- soso: created Updater for multicall, created config.json , useDebounce Hook
 # TODO:fix errors when user entrer an address of a token + show the tokenList on the currencySearch

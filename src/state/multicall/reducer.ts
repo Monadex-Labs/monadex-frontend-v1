@@ -41,7 +41,7 @@ export interface MulticallState {
 const initialState: MulticallState = {
   callResults: {},
   listenerOptions: {
-    [ChainId.SEPOLIA]: {
+    [84532]: {
       blocksPerFetch: 7
     }
   }
@@ -61,7 +61,6 @@ export default createReducer(initialState, (builder) =>
         listeners[chainId][callKey][localBlocksPerFetch] =
         (listeners[chainId][callKey][localBlocksPerFetch] ?? 0) + 1
       })
-      console.log('state action', state)
     })
     .addCase(
       addListenerOptions,

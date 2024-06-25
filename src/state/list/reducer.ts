@@ -55,8 +55,6 @@ export default createReducer(initialState, (builder) =>
       }
     })
     .addCase(fetchTokenList.fulfilled, (state, { payload: { requestId, tokenList, url } }) => {
-      console.log('tok', tokenList)
-      console.log('tokenList', tokenList)
       const current = state.byUrl[url]?.current
       const loadingRequestId = state.byUrl[url]?.loadingRequestId
 

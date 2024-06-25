@@ -399,7 +399,8 @@ const AddLiquidity: React.FC<{
       </Box>
     )
   }
-  console.log('currency On AddLiquidity', currencies[Field.CURRENCY_A])
+  console.log('currency On AddLiquidity A', currencies[Field.CURRENCY_A])
+  console.log('currency On AddLiquidity B', currencies[Field.CURRENCY_B])
   return (
     <Box className=''>
       {showConfirm && (

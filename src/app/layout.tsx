@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import QueryWrapper from '@/utils/QueryProvider'
 import ReduxProvider from '@/hooks/useReduxProvider'
 import { Inter } from 'next/font/google'
+import Updaters from '@/hooks/Updaters'
 import './globals.css'
 import Web3ProviderWrapper from '@/utils/ProviderWrapper'
 import Header from '@/components/Header'
@@ -22,10 +23,11 @@ export default function RootLayout ({
       <QueryWrapper>
         <Web3ProviderWrapper>
           <ReduxProvider>
+            <Updaters />
             <body className={`${inter.className} max-w-[95%] mx-auto`}>
-              <Header />
-              {children}
-            </body>
+                <Header />
+                {children}
+              </body>
           </ReduxProvider>
         </Web3ProviderWrapper>
       </QueryWrapper>
