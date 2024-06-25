@@ -132,7 +132,6 @@ function toCallState (
 ): CallState {
   if (callResult == null) return INVALID_CALL_STATE
   const { valid, data, blockNumber } = callResult
-  console.log('v', data)
   if (!valid) return INVALID_CALL_STATE
   if (valid && blockNumber === undefined) return LOADING_CALL_STATE
   if ((contractInterface == null) || (fragment == null) || latestBlockNumber === undefined) return LOADING_CALL_STATE
@@ -223,7 +222,6 @@ export function useMultipleContractSingleData (
     [addresses, callData, fragment]
   )
   const results = useCallsData(calls as Call[], options)
-  console.log(results)
   const latestBlockNumber = useBlockNumber()
   return useMemo(() => {
     return results.map((result) => toCallState(result, contractInterface, fragment, latestBlockNumber))
@@ -252,7 +250,6 @@ export function useSingleCallResult (
       : []
   }, [contract, fragment, inputs])
   const result = useCallsData(calls, options, ignore)[0]
-  console.log('res', result)
   const latestBlockNumber = useBlockNumber()
 
   return useMemo(() => {

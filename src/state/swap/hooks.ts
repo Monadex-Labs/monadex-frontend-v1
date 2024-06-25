@@ -111,7 +111,7 @@ export function useSwapActionHandlers (): {
 // try to parse a user entered amount for a given token
 
 export function tryParseAmount (value?: string, currency?: NativeCurrency | Token): CurrencyAmount | TokenAmount | undefined {
-  if ((value === undefined) || (currency === undefined)) {
+  if (!value || !currency) {
     return undefined
   }
   try {

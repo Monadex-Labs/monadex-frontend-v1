@@ -187,7 +187,6 @@ export default function Updater (): null {
     if (cancellations.current?.blockNumber !== latestBlockNumber) {
       cancellations.current?.cancellations?.forEach((c) => c())
     }
-
     dispatch(
       fetchingMulticallResults({
         calls,
@@ -195,7 +194,6 @@ export default function Updater (): null {
         fetchingBlockNumber: latestBlockNumber
       })
     )
-
     cancellations.current = {
       blockNumber: latestBlockNumber,
       cancellations: chunkedCalls.map((chunk, index) => {
@@ -209,6 +207,7 @@ export default function Updater (): null {
         )
         promise
           .then((returnData) => {
+            console.log('ici alors ?')
             // accumulates the length of all previous indices
             console.log(returnData)
             const firstCallKeyIndex = chunkedCalls
@@ -243,7 +242,7 @@ export default function Updater (): null {
                 updateMulticallResults({
                   chainId,
                   results,
-                  blockNumber: latestBlockNumber,
+                  blockNumber: latestBlockNumber
                 }),
               );}
 
@@ -259,14 +258,16 @@ export default function Updater (): null {
               );
             }
           })
+          
           .catch((error: any) => {
+            console.log('ici pd')
             if (error.isCancelledError) {
               console.debug(
                 'Cancelled fetch for blockNumber',
                 latestBlockNumber,
                 chunk,
                 chainId
-              );
+              )
               return
             }
             console.error(
@@ -283,6 +284,7 @@ export default function Updater (): null {
               })
             );
           })
+
         return cancel
       })
     }
