@@ -210,3 +210,5 @@ Tokens.ts | CurrencySearch.ts
 - daniel: Added application/updater.ts with important call to updateBlockNumber (might fix useBlockNumberreturning undefined). Pending fixes on imports
 # TODO:fix errors when user entrer an address of a token + show the tokenList on the currencySearch
 
+# 25/06
+- daniel: Fix URL bad contruction on token search. Pending fix on some cases where currency is not selected even if clicked.
