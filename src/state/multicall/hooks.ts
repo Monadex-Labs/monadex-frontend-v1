@@ -55,7 +55,6 @@ function useCallsData (calls: Array<Call | undefined>, options?: ListenerOptions
   AppState['multicall']['callResults']>(
     (state) => state.multicall.callResults
   )
-  console.log('this one it what we ned', callResults)
   const dispatch = useDispatch<AppDispatch>()
   const serializedCallKeys: string = useMemo(
     () =>
@@ -102,7 +101,7 @@ function useCallsData (calls: Array<Call | undefined>, options?: ListenerOptions
         if (result?.data != null && result?.data !== '0x') {
           data = result.data
         }
-
+        console.log('d', data)
         return { valid: true, data, blockNumber: result?.blockNumber }
       }),
     [callResults, calls, chainId]
@@ -221,7 +220,8 @@ export function useMultipleContractSingleData (
         : [],
     [addresses, callData, fragment]
   )
-  const results = useCallsData(calls as Call[], options)
+  const results = useCallsData(calls, options) // TODO@ WE HAVE DATA UNDEFINED BUT USECALLDATA RETURNS A DATA = CHECK THIS
+  console.log('res+++++++++D+', results )
   const latestBlockNumber = useBlockNumber()
   return useMemo(() => {
     return results.map((result) => toCallState(result, contractInterface, fragment, latestBlockNumber))

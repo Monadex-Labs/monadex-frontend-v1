@@ -42,19 +42,18 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
     account ?? undefined,
     currency
   )
-  console.log('dodod', selectedCurrencyBalance)
   const usdPriceV2 = Number(useUSDCPrice(currency)?.toSignificant() ?? 0)
   const usdPrice = usdPriceV2
   return (
     <div
       id={id}
-      className={`${showPrice === true ? ' priceShowBox' : ''} ${'bg-[#1F0050]/50 rounded-sm'} mb-4 p-2 border`}
+      className={`${showPrice === true ? ' priceShowBox' : ''} ${'bg-[#1F0050]/50 rounded-sm'} mb-4 p-2`}
     >
       <div className='flex justify-between mb-2'>
         <p className='text-[#493E5D] text-sm font-semibold p-1'>{title ?? 'you pay'}</p>
         <div className='flex'>
           {Boolean(account) && (currency != null) && showHalfButton === true && (
-            <div className='border p-2 text-white' onClick={onHalf}>
+            <div className='text-[#8133FF] font-lg' onClick={onHalf}>
               <small>50%</small>
             </div>
           )}
