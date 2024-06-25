@@ -206,4 +206,7 @@ Tokens.ts | CurrencySearch.ts
 - soso: create updater logic on state list 
 - soso: imported updater.tsx hook component on layout.tsx
 - soso: created Updater for multicall, created config.json , useDebounce Hook
+- daniel: Add useIsWindowVisible hook (checks focus on window, used by other updater files)
+- daniel: Added application/updater.ts with important call to updateBlockNumber (might fix useBlockNumberreturning undefined). Pending fixes on imports
 # TODO:fix errors when user entrer an address of a token + show the tokenList on the currencySearch
+
