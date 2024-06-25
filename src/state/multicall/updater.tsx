@@ -200,7 +200,7 @@ export default function Updater (): null {
       blockNumber: latestBlockNumber,
       cancellations: chunkedCalls.map((chunk, index) => {
         const { cancel, promise } = retry(
-          async () => await fetchChunk(multicallContract, chunk, latestBlockNumber),
+          () => fetchChunk(multicallContract, chunk, latestBlockNumber),
           {
             n: Infinity,
             minWait: 1000,
@@ -209,8 +209,8 @@ export default function Updater (): null {
         )
         promise
           .then((returnData) => {
-            console.log('regtu', returnData)
             // accumulates the length of all previous indices
+            console.log(returnData)
             const firstCallKeyIndex = chunkedCalls
               .slice(0, index)
               .reduce<number>((memo, curr) => memo + curr.length, 0)

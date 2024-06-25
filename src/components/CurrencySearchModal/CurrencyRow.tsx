@@ -170,7 +170,8 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
                         currency.address,
                         currency.symbol,
                         currency.decimals,
-                        getTokenLogoURL(currency.address)
+                        // currency.address
+                        getTokenLogoURL()  
                       )
                       event.stopPropagation()
                     }}
