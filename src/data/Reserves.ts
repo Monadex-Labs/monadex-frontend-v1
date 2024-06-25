@@ -5,6 +5,7 @@ import { Interface } from '@ethersproject/abi'
 import { useMultipleContractSingleData } from '@/state/multicall/hooks'
 import { wrappedCurrency } from '@/utils/wrappedCurrency'
 import { useConnectWallet } from '@web3-onboard/react'
+import { useWalletData } from '@/utils'
 
 const PAIR_INTERFACE = new Interface(MonadexV2Pair)
 
@@ -15,12 +16,11 @@ export enum PairState {
   INVALID,
 }
 
+// TODO@ERROR USEPAIRS WE DONT HAVE THE TOTAL LP TOKENS WE WILL GET
 export function usePairs (
   currencies: [Token | undefined , Token | undefined][] //  eslint-disable-line 
 ): Array<[PairState, Pair | null]> {
-  const ID = useConnectWallet()[0].wallet?.chains[0].id
-  const chainId: ChainId | undefined = Number(ID) as ChainId
-
+  const {chainId} = useWalletData()
   const tokens = useMemo(
     () =>
       currencies.map(([currencyA, currencyB]) => [
@@ -29,7 +29,6 @@ export function usePairs (
       ]),
     [chainId, currencies]
   )
-
   const pairAddresses = useMemo(
     () =>
       tokens.map(([tokenA, tokenB]) => {
@@ -45,6 +44,7 @@ export function usePairs (
     PAIR_INTERFACE,
     'getReserves'
   )
+  console.log('contdraect', results)
 
   return useMemo(() => {
     return results.map((result, i) => {

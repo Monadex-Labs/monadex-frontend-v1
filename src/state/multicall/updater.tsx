@@ -37,7 +37,6 @@ async function fetchChunk (
       })),
       { blockTag: blockNumber }
     )
-    console.log('rrr', returnData)
     if (process.env.NODE_ENV === 'development') {
       returnData.forEach(({ gasUsed, returnData, success }: any, i: number) => {
         if (
@@ -207,9 +206,7 @@ export default function Updater (): null {
         )
         promise
           .then((returnData) => {
-            console.log('ici alors ?')
             // accumulates the length of all previous indices
-            console.log(returnData)
             const firstCallKeyIndex = chunkedCalls
               .slice(0, index)
               .reduce<number>((memo, curr) => memo + curr.length, 0)
@@ -260,7 +257,6 @@ export default function Updater (): null {
           })
           
           .catch((error: any) => {
-            console.log('ici pd')
             if (error.isCancelledError) {
               console.debug(
                 'Cancelled fetch for blockNumber',
