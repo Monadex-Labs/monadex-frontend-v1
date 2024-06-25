@@ -25,7 +25,7 @@ export function useContract (address: string | undefined, ABI: any, withSignerIf
   return useMemo(() => {
     if (address === undefined || ABI === undefined || library === undefined) return null
     try {
-      return getContract(address, ABI, library, withSignerIfPossible && (account !== undefined) ? account : undefined)
+      return getContract(address, ABI, library, withSignerIfPossible && account ? account : undefined)
     } catch (error) {
       console.error('Failed to get contract', error)
       return null
@@ -46,7 +46,7 @@ export function useContracts (addresses: string[] | undefined, ABI: any, withSig
 
 // update to monad testnet
 export function useMulticallContract (): Contract | null | undefined {
-  const chainId = ChainId.SEPOLIA as ChainId
+  const { chainId } = useWalletData()
   return useContract(chainId === ChainId.SEPOLIA ? MULTICALL_ADDRESS : undefined, MULTICALL_ABI, false)
 }
 export function useRouterContract (): Contract | null | undefined {
@@ -56,7 +56,7 @@ export function useRouterContract (): Contract | null | undefined {
     MonadexV1RouterABI,
     Boolean(account)
   )
-}
+} // usePairContract
 export function useTokenContract (tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null | undefined {
   return useContract(tokenAddress, ERC20_ABI, withSignerIfPossible) as any | null
 }

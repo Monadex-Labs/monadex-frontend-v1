@@ -1,22 +1,17 @@
-/**
- * Retrieves the logo URLs for a given token address.
- *
- * @param {string} address - The token address.
- * @param {any} tokenList - Optional token list.
- * @return {any[]} An array of logo URLs.
- */
-export const getTokenLogoURL = (address: string, tokenList?: any): any[] => {
+export const getTokenLogoURL = (address?: string, tokenList?: any) => {
   const logoExtensions = ['.png', '.webp', '.jpeg', '.jpg', '.svg']
   return logoExtensions
     .map((ext) => {
       try {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const image = require(`../assets/tokenLogo/${address.toLowerCase()}${ext}`)
+        // TODO@ fix this later
+        // const image = require(`../assets/tokenLogo/${address.toLowerCase()}${ext}`)
+        const image = require('../static/assets/defaultToken.png')
         return image
       } catch (e) {
-        return
+
       }
     })
-    .concat([tokenList[address]?.tokenInfo?.logoURI])
-    .filter((url) => !!url)
+    // .concat([tokenList[address as string]?.tokenInfo?.logoURI])
+    // .filter((url) => !!url)
 }

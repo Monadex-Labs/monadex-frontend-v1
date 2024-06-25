@@ -55,7 +55,7 @@ function useCallsData (calls: Array<Call | undefined>, options?: ListenerOptions
   AppState['multicall']['callResults']>(
     (state) => state.multicall.callResults
   )
-  console.log('this one is the one we need', callResults)
+  console.log('this one it what we ned', callResults)
   const dispatch = useDispatch<AppDispatch>()
   const serializedCallKeys: string = useMemo(
     () =>
@@ -250,7 +250,6 @@ export function useSingleCallResult (
       : []
   }, [contract, fragment, inputs])
   const result = useCallsData(calls, options, ignore)[0]
-  console.log('res', result)
   const latestBlockNumber = useBlockNumber()
 
   return useMemo(() => {

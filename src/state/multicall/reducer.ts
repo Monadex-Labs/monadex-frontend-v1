@@ -95,12 +95,10 @@ export default createReducer(initialState, (builder) =>
     )
     .addCase(fetchingMulticallResults, (state, { payload: { chainId, fetchingBlockNumber, calls } }) => {
       state.callResults[chainId] = state.callResults[chainId] ?? {}
-      console.log('addMulticallListeners action:', { calls, chainId })
-      console.log('addMulticallListeners callresults', state.callResults)
       calls.forEach((call) => {
         const callKey = toCallKey(call)
         const current = state.callResults[chainId][callKey]
-        if (current === undefined) {
+        if (!current) {
           state.callResults[chainId][callKey] = {
             fetchingBlockNumber
           }
@@ -124,6 +122,7 @@ export default createReducer(initialState, (builder) =>
       })
     })
     .addCase(updateMulticallResults, (state, { payload: { chainId, results, blockNumber } }) => {
+      console.log('satgtssuTtl', results)
       state.callResults[chainId] = state.callResults[chainId] ?? {}
       Object.keys(results).forEach((callKey) => {
         const current = state.callResults[chainId][callKey]

@@ -18,6 +18,8 @@ export function useTokenBalancesWithLoadingIndicator (
   )
   const validatedTokenAddresses = useMemo(() => validatedTokens.map((vt) => vt.address), [validatedTokens])
   const balances = useMultipleContractSingleData(validatedTokenAddresses, ERC20_INTERFACE, 'balanceOf', [address])
+  console.log(balances)
+
   const anyLoading: boolean = useMemo(() => balances.some((callState) => callState.loading), [balances])
   return [
     useMemo(
@@ -41,6 +43,7 @@ export function useTokenBalances (
   address?: string,
   tokens?: Token [] | undefined
 ): { [tokenAddress: string]: TokenAmount | undefined } {
+  console.log('ddd', useTokenBalancesWithLoadingIndicator(address, tokens)[0])
   return useTokenBalancesWithLoadingIndicator(address, tokens)[0]
 }
 export function useTokenBalance (account?: string, token?: Token): TokenAmount | undefined {
@@ -55,7 +58,7 @@ export function useCurrencyBalances (account?: string, currencies?: NativeCurren
   )
 
   const tokenBalances = useTokenBalances(account, tokens)
-
+  console.log('balance', tokenBalances)
   return useMemo(
     () =>
       currencies?.map((currency) => {
@@ -68,14 +71,14 @@ export function useCurrencyBalances (account?: string, currencies?: NativeCurren
 }
 export function useCurrencyBalance (
   account?: string,
-  currency?: NativeCurrency
-): CurrencyAmount | undefined {
+  currency?: NativeCurrency | Token
+): CurrencyAmount | TokenAmount | undefined {
   return useCurrencyBalances(account, (currency !== undefined) ? [currency] : [])?.[0]
 }
 
 // mimics useAllBalances
 export function useAllTokenBalances(): {
-  [tokenAddress: string]: TokenAmount | undefined;
+  [tokenAddress: string]: TokenAmount | undefined
 } {
   const { account } = useWalletData();
   const allTokens = useAllTokens();

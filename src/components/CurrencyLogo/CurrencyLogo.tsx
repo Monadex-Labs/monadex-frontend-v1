@@ -42,8 +42,8 @@ const CurrencyLogo: React.FC<CurrencyLogoProps> = ({
     ) {
       return [
         ...getTokenLogoURL(
-          currency?.address ?? currency?.tokenInfo.address,
-          inactiveTokenList
+          // currency?.address ?? currency?.tokenInfo.address,
+          // inactiveTokenList
         ),
         ...uriLocations
       ]

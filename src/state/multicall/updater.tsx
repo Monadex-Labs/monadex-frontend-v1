@@ -37,7 +37,7 @@ async function fetchChunk (
       })),
       { blockTag: blockNumber }
     )
-
+    console.log('rrr', returnData)
     if (process.env.NODE_ENV === 'development') {
       returnData.forEach(({ gasUsed, returnData, success }: any, i: number) => {
         if (
@@ -143,31 +143,16 @@ export default function Updater (): null {
   // wait for listeners to settle before triggering updates
   const debouncedListeners = useDebounce(state.callListeners, 1000)
   const latestBlockNumber = useBlockNumber()
-  console.log('latest', latestBlockNumber)
   const { chainId } = useWalletData()
   const multicallContract = useMulticallContract()
-
   const cancellations = useRef<{
     blockNumber: number
     cancellations: Array<() => void>
   }>()
-  const useChain = chainId ? chainId : ChainId.SEPOLIA
+  const useChain = chainId || ChainId.SEPOLIA
   const config = getConfig(useChain)
-  // useMemo(() => {
-  //   if (config) {
-  //     const blocksPerFetch = config.blocksPerFetch ?? 20
-  //     dispatch(
-  //       addListenerOptions({
-  //         chainId,
-  //         blocksPerFetch
-  //       })
-  //     )
-  //   } else {
-  //     console.error('No config found, skipping dispatch')
-  //   }
-  // }, [chainId, dispatch])
   useMemo(() => {
-    const blocksPerFetch = config['blocksPerFetch'] ?? 20
+    const blocksPerFetch = config.blocksPerFetch ?? 20
     dispatch(
       addListenerOptions({
         chainId,
@@ -197,13 +182,11 @@ export default function Updater (): null {
     const outdatedCallKeys: string[] = JSON.parse(serializedOutdatedCallKeys)
     if (outdatedCallKeys.length === 0) return
     const calls = outdatedCallKeys.map((key) => parseCallKey(key))
-
     const chunkedCalls: Call[][] = chunkArray(calls)
 
     if (cancellations.current?.blockNumber !== latestBlockNumber) {
       cancellations.current?.cancellations?.forEach((c) => c())
     }
-
     dispatch(
       fetchingMulticallResults({
         calls,
@@ -211,12 +194,11 @@ export default function Updater (): null {
         fetchingBlockNumber: latestBlockNumber
       })
     )
-
     cancellations.current = {
       blockNumber: latestBlockNumber,
       cancellations: chunkedCalls.map((chunk, index) => {
         const { cancel, promise } = retry(
-          async () => await fetchChunk(multicallContract, chunk, latestBlockNumber),
+          () => fetchChunk(multicallContract, chunk, latestBlockNumber),
           {
             n: Infinity,
             minWait: 1000,
@@ -225,7 +207,9 @@ export default function Updater (): null {
         )
         promise
           .then((returnData) => {
+            console.log('ici alors ?')
             // accumulates the length of all previous indices
+            console.log(returnData)
             const firstCallKeyIndex = chunkedCalls
               .slice(0, index)
               .reduce<number>((memo, curr) => memo + curr.length, 0)
@@ -234,7 +218,7 @@ export default function Updater (): null {
             const slice = outdatedCallKeys.slice(
               firstCallKeyIndex,
               lastCallKeyIndex
-            )
+            );
 
             // split the returned slice into errors and success
             const { erroredCalls, results } = slice.reduce<{
@@ -250,18 +234,17 @@ export default function Updater (): null {
                 return memo
               },
               { erroredCalls: [], results: {} }
-            )
+            );
 
             // dispatch any new results
-            if (Object.keys(results).length > 0) {
-              dispatch(
+            if (Object.keys(results).length > 0)
+              {dispatch(
                 updateMulticallResults({
                   chainId,
                   results,
                   blockNumber: latestBlockNumber
-                })
-              )
-            }
+                }),
+              );}
 
             // dispatch any errored calls
             if (erroredCalls.length > 0) {
@@ -272,10 +255,12 @@ export default function Updater (): null {
                   chainId,
                   fetchingBlockNumber: latestBlockNumber
                 })
-              )
+              );
             }
           })
+          
           .catch((error: any) => {
+            console.log('ici pd')
             if (error.isCancelledError) {
               console.debug(
                 'Cancelled fetch for blockNumber',
@@ -290,15 +275,16 @@ export default function Updater (): null {
               chunk,
               chainId,
               error
-            )
+            );
             dispatch(
               errorFetchingMulticallResults({
                 calls: chunk,
                 chainId,
                 fetchingBlockNumber: latestBlockNumber
               })
-            )
+            );
           })
+
         return cancel
       })
     }

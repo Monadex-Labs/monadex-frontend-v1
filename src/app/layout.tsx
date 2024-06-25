@@ -20,17 +20,17 @@ export default function RootLayout ({
   return (
     // wrap redux provider
     <html lang='en-US'>
-      <QueryWrapper>
-        <Web3ProviderWrapper>
-          <ReduxProvider>
-            <Updaters />
-            <body className={`${inter.className} max-w-[95%] mx-auto`}>
-                <Header />
-                {children}
-              </body>
-          </ReduxProvider>
-        </Web3ProviderWrapper>
-      </QueryWrapper>
+      <body className={`${inter.className} max-w-[95%] mx-auto`}>
+        <QueryWrapper>
+          <Web3ProviderWrapper>
+            <ReduxProvider>
+              <Updaters />
+              <Header />
+              {children}
+            </ReduxProvider>
+          </Web3ProviderWrapper>
+        </QueryWrapper>
+      </body>
     </html>
   )
 }
