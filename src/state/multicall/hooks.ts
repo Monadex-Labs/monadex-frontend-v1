@@ -132,6 +132,7 @@ function toCallState (
 ): CallState {
   if (callResult == null) return INVALID_CALL_STATE
   const { valid, data, blockNumber } = callResult
+  console.log('v', data)
   if (!valid) return INVALID_CALL_STATE
   if (valid && blockNumber === undefined) return LOADING_CALL_STATE
   if ((contractInterface == null) || (fragment == null) || latestBlockNumber === undefined) return LOADING_CALL_STATE

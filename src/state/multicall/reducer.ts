@@ -109,12 +109,10 @@ export default createReducer(initialState, (builder) =>
       })
     })
     .addCase(errorFetchingMulticallResults, (state, { payload: { fetchingBlockNumber, chainId, calls } }) => {
-      console.log('ososo', state)
       state.callResults[chainId] = state.callResults[chainId] ?? {}
       calls.forEach((call) => {
         const callKey = toCallKey(call)
         const current = state.callResults[chainId][callKey]
-        console.log('cuVrr', current)
         if (current === undefined) return // only should be dispatched if we are already fetching
         if (current.fetchingBlockNumber === fetchingBlockNumber) {
           delete current.fetchingBlockNumber
@@ -124,7 +122,7 @@ export default createReducer(initialState, (builder) =>
       })
     })
     .addCase(updateMulticallResults, (state, { payload: { chainId, results, blockNumber } }) => {
-      console.log('sauTtl', results)
+      console.log('satgtssuTtl', results)
       state.callResults[chainId] = state.callResults[chainId] ?? {}
       Object.keys(results).forEach((callKey) => {
         const current = state.callResults[chainId][callKey]
