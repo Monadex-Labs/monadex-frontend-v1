@@ -21,6 +21,7 @@ const DEFAULT_GAS_REQUIRED = 1_000_000
  * @param chunk chunk of calls to make
  * @param minBlockNumber minimum block number of the result set
 */
+console.log('salut ici')
 async function fetchChunk (
   multicall: Contract,
   chunk: Call[],
@@ -37,7 +38,6 @@ async function fetchChunk (
       })),
       { blockTag: blockNumber }
     )
-
     if (process.env.NODE_ENV === 'development') {
       returnData.forEach(({ gasUsed, returnData, success }: any, i: number) => {
         if (
@@ -143,29 +143,14 @@ export default function Updater (): null {
   // wait for listeners to settle before triggering updates
   const debouncedListeners = useDebounce(state.callListeners, 1000)
   const latestBlockNumber = useBlockNumber()
-  console.log('latest', latestBlockNumber)
   const { chainId } = useWalletData()
   const multicallContract = useMulticallContract()
-
   const cancellations = useRef<{
     blockNumber: number
     cancellations: Array<() => void>
   }>()
   const useChain = chainId ? chainId : ChainId.SEPOLIA
   const config = getConfig(useChain)
-  // useMemo(() => {
-  //   if (config) {
-  //     const blocksPerFetch = config.blocksPerFetch ?? 20
-  //     dispatch(
-  //       addListenerOptions({
-  //         chainId,
-  //         blocksPerFetch
-  //       })
-  //     )
-  //   } else {
-  //     console.error('No config found, skipping dispatch')
-  //   }
-  // }, [chainId, dispatch])
   useMemo(() => {
     const blocksPerFetch = config['blocksPerFetch'] ?? 20
     dispatch(
@@ -197,7 +182,7 @@ export default function Updater (): null {
     const outdatedCallKeys: string[] = JSON.parse(serializedOutdatedCallKeys)
     if (outdatedCallKeys.length === 0) return
     const calls = outdatedCallKeys.map((key) => parseCallKey(key))
-
+    console.log('calls', calls)
     const chunkedCalls: Call[][] = chunkArray(calls)
 
     if (cancellations.current?.blockNumber !== latestBlockNumber) {
@@ -242,6 +227,7 @@ export default function Updater (): null {
               results: { [callKey: string]: string | null }
             }>(
               (memo, callKey, i) => {
+                console.log('res', results)
                 if (returnData[i].success) {
                   memo.results[callKey] = returnData[i].returnData ?? null
                 } else {
