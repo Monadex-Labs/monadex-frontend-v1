@@ -9,9 +9,10 @@ export default function usePoolsRedirects () {
   const chainIdToUse = chainId ?? ChainId.SEPOLIA
   const router = useRouter()
   const params = useParams()
-  const search = useSearchParams().toString()
+  const _search = useSearchParams().toString()
+  const search = _search === '' ? '' : `?${_search}`
   const path = usePathname()
-  const currentPath = path + '?' + search
+  const currentPath = path + search
   const parsedQs = useParsedQueryString()
   const currencyIdAParam = params ? params.currencyIdA : undefined
   const currencyIdBParam = params ? params.currencyIdB : undefined
@@ -22,7 +23,7 @@ export default function usePoolsRedirects () {
     if (parsedQs.currency) {
       redirectPath = currentPath.replace(`currency=${parsedQs.currency}`, `currency=${currencyId}`)
     } else {
-      redirectPath = `${currentPath}${search === '' ? '&' : '?'}currency=${currencyId}`
+      redirectPath = `${currentPath}${search === '' ? '?' : '&'}currency=${currencyId}`
     }
     router.push(redirectPath)
   }, [currentPath, parsedQs, router, search])
