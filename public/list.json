@@ -1,0 +1,54 @@
+{
+  "name": "Monadex Token List",
+  "timestamp": "2024-06-23T09:36:31.467Z",
+  "version": {
+    "major": 1,
+    "minor": 1,
+    "patch": 1
+  },
+  "tags": {},
+  "logoURI": "https://www.monadex.exchange/_next/static/media/mobile-logo.432b5a85.svg",
+  "keywords": ["Monadex", "default"],
+  "tokens": [
+    {
+      "chainId": 84532,
+      "address": "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
+      "name": "USD Base Coin",
+      "symbol": "USDbC",
+      "decimals": 6,
+      "logoURI": "https://ethereum-optimism.github.io/data/USDC/logo.png"
+    },
+    {
+      "chainId": 84532,
+      "address": "0xD24291BF0037f0ae0482f6757b5dFf437419bF25",
+      "name": "MONADEX",
+      "symbol": "MDX",
+      "decimals": 18,
+      "logoURI": "https://www.monadex.exchange/_next/static/media/mobile-logo.432b5a85.svg"
+    },
+    {
+      "chainId": 84532,
+      "address": "0x462a3482860aB06fc0332d640aDB971Cac388f0D",
+      "name": "Wrapped Monad",
+      "symbol": "wMND",
+      "decimals": 18,
+      "logoURI": "https://assets-global.website-files.com/64c26cc84790d118b80c38c9/6529c601763ab4f5236a0a27_monad-logo-mark-full-color-rgb-1080px-w-300ppi.png"
+    },
+    {
+      "chainId": 84532,
+      "address": "0x4200000000000000000000000000000000000006",
+      "name": "Wrapped Ether",
+      "symbol": "WMND",
+      "decimals": 18,
+      "logoURI": "https://ethereum-optimism.github.io/data/ETH/logo.png"
+    },
+    {
+      "chainId": 84532,
+      "address": "0x49D75Bb3ef83Bdd83bef36aEA14F9421e6b05603",
+      "name": "PEPE COIN",
+      "symbol": "PEPE",
+      "decimals": 18,
+      "logoURI": "https://ethereum-optimism.github.io/data/ETH/logo.png"
+    }
+  ]
+}
