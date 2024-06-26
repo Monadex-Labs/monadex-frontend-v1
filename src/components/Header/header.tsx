@@ -17,6 +17,7 @@ const Header: React.FC<any> = () => {
       path: '/'
     },
     {
+      id: 'Pools-page',
       name: 'Pools',
       path: '/pools'
     },
@@ -24,6 +25,11 @@ const Header: React.FC<any> = () => {
       id: 'Raffle-page',
       name: 'Raffle',
       path: '/raffle'
+    },
+    {
+      id: 'Portfolio-page',
+      name: 'Portfolio',
+      path: '/portfolio'
     },
     {
       id: 'Docs',

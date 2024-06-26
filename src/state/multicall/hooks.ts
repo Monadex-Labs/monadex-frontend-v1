@@ -101,7 +101,6 @@ function useCallsData (calls: Array<Call | undefined>, options?: ListenerOptions
         if (result?.data != null && result?.data !== '0x') {
           data = result.data
         }
-        console.log('{ valid: true, data, blockNumber: result?.blockNumber }', { valid: true, data, blockNumber: result?.blockNumber })
         return { valid: true, data, blockNumber: result?.blockNumber }
       }),
     [callResults, calls, chainId]
@@ -127,21 +126,24 @@ function toCallState (
   callResult: CallResult | undefined,
   contractInterface: Interface | undefined,
   fragment: FunctionFragment | undefined,
-  latestBlockNumber: number | undefined
+  latestBlockNumber: number | undefined,
+  ignore?: boolean
 ): CallState {
-  if (callResult == null) return INVALID_CALL_STATE
+  if (ignore) return INVALID_CALL_STATE
+  if (!callResult) return INVALID_CALL_STATE
   const { valid, data, blockNumber } = callResult
   if (!valid) return INVALID_CALL_STATE
-  if (valid && blockNumber === undefined) return LOADING_CALL_STATE
-  if ((contractInterface == null) || (fragment == null) || latestBlockNumber === undefined) return LOADING_CALL_STATE
-  const success = data !== undefined && data.length > 2
+  if (valid && !blockNumber) return LOADING_CALL_STATE
+  if (!contractInterface || !fragment || !latestBlockNumber)
+    return LOADING_CALL_STATE
+  const success = data && data.length > 2
   const syncing = (blockNumber ?? 0) < latestBlockNumber
-  let result: Result | undefined
-  if (success && data !== undefined) {
+  let result: Result | undefined = undefined
+  if (success && data) {
     try {
       result = contractInterface.decodeFunctionResult(fragment, data)
     } catch (error) {
-      console.debug('Result data parsing failed', fragment, data)
+      console.log('Result data parsing failed', fragment, data)
       return {
         valid: true,
         loading: false,
@@ -151,12 +153,11 @@ function toCallState (
       }
     }
   }
-  console.log('res', result)
   return {
     valid: true,
     loading: false,
     syncing,
-    result,
+    result: result,
     error: !success
   }
 }
@@ -221,9 +222,10 @@ export function useMultipleContractSingleData (
     [addresses, callData, fragment]
   )
   const results = useCallsData(calls, options) // TODO@ WE HAVE DATA UNDEFINED BUT USECALLDATA RETURNS A DATA = CHECK THIS
+  console.log('results thiss time: ', results)
   const latestBlockNumber = useBlockNumber()
   return useMemo(() => {
-    return results.map((result) => {
+    return results.map((result: CallResult) => {
       return toCallState(
         result,
         contractInterface,

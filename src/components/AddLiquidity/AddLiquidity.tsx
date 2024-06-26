@@ -173,7 +173,7 @@ const AddLiquidity: React.FC<{
     account ?? undefined,
     pair?.liquidityToken
   )
-  console.log('pjool', pair)
+   console.log('pjool', pair)
   const atMaxAmounts: { [field in Field]?: TokenAmount } = [
     Field.CURRENCY_A,
     Field.CURRENCY_B
@@ -185,6 +185,9 @@ const AddLiquidity: React.FC<{
   }, {})
 
   const { redirectWithCurrency, redirectWithSwitch } = usePoolsRedirects()
+  
+  // console.log('fieldsA', currencies[Field.CURRENCY_A])
+  // console.log('fieldsB', currencies[Field.CURRENCY_B])
 
   const handleCurrencyASelect = useCallback(
     (currencyA: any) => {
@@ -369,55 +372,55 @@ const AddLiquidity: React.FC<{
     return 'Connect Wallet'
   }, [account, isSupportedNetwork, error])
 
-  const handleButtonClick = async () => {
-    if (approvalA !== ApprovalState.APPROVED && approvalA !== ApprovalState.PENDING) {
-      setApprovingA(true)
-      try {
-        await approveACallback()
-      } catch (e) {
-        // Handle error if needed
-      } finally {
-        setApprovingA(false)
-      }
-    } else if (approvalB !== ApprovalState.APPROVED && approvalB !== ApprovalState.PENDING) {
-      setApprovingB(true)
-      try {
-        await approveBCallback()
-      } catch (e) {
-        // Handle error if needed
-      } finally {
-        setApprovingB(false)
-      }
-    } else if (account && isSupportedNetwork) {
-      onAdd()
-    } else {
-      await connect()
-    }
-  }
-  const getButtonText = () => {
-    if (approvalA === ApprovalState.PENDING) {
-      return `approving ${currencies[Field.CURRENCY_A]?.symbol}`
-    } else if (approvalB === ApprovalState.PENDING) {
-      return `approving ${currencies[Field.CURRENCY_B]?.symbol}`
-    } else if (approvalA !== ApprovalState.APPROVED) {
-      return `approve ${currencies[Field.CURRENCY_A]?.symbol}`
-    } else if (approvalB !== ApprovalState.APPROVED) {
-      return `approve ${currencies[Field.CURRENCY_B]?.symbol}`
-    } else if (!account || !isSupportedNetwork) {
-      return 'connect'
-    } else {
-      return buttonText
-    }
-  }
-  const isButtonDisabled = () => {
-    if (approvalA === ApprovalState.PENDING || approvalB === ApprovalState.PENDING) {
-      return true
-    }
-    if (Boolean(account) && isSupportedNetwork) {
-      return Boolean(error) || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED
-    }
-    return false
-  }
+  // const handleButtonClick = async () => {
+  //   if (approvalA !== ApprovalState.APPROVED && approvalA !== ApprovalState.PENDING) {
+  //     setApprovingA(true)
+  //     try {
+  //       await approveACallback()
+  //     } catch (e) {
+  //       // Handle error if needed
+  //     } finally {
+  //       setApprovingA(false)
+  //     }
+  //   } else if (approvalB !== ApprovalState.APPROVED && approvalB !== ApprovalState.PENDING) {
+  //     setApprovingB(true)
+  //     try {
+  //       await approveBCallback()
+  //     } catch (e) {
+  //       // Handle error if needed
+  //     } finally {
+  //       setApprovingB(false)
+  //     }
+  //   } else if (account && isSupportedNetwork) {
+  //     onAdd()
+  //   } else {
+  //     await connect()
+  //   }
+  // }
+  // const getButtonText = () => {
+  //   if (approvalA === ApprovalState.PENDING) {
+  //     return `approving ${currencies[Field.CURRENCY_A]?.symbol}`
+  //   } else if (approvalB === ApprovalState.PENDING) {
+  //     return `approving ${currencies[Field.CURRENCY_B]?.symbol}`
+  //   } else if (approvalA !== ApprovalState.APPROVED) {
+  //     return `approve ${currencies[Field.CURRENCY_A]?.symbol}`
+  //   } else if (approvalB !== ApprovalState.APPROVED) {
+  //     return `approve ${currencies[Field.CURRENCY_B]?.symbol}`
+  //   } else if (!account || !isSupportedNetwork) {
+  //     return 'connect'
+  //   } else {
+  //     return buttonText
+  //   }
+  // }
+  // const isButtonDisabled = () => {
+  //   if (approvalA === ApprovalState.PENDING || approvalB === ApprovalState.PENDING) {
+  //     return true
+  //   }
+  //   if (Boolean(account) && isSupportedNetwork) {
+  //     return Boolean(error) || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED
+  //   }
+  //   return false
+  // }
   const modalHeader = (): ReactElement => {
     return (
       <Box className='border'>

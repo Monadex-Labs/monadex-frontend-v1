@@ -19,8 +19,9 @@ export enum PairState {
 // TODO@ERROR USEPAIRS WE DONT HAVE THE TOTAL LP TOKENS WE WILL GET
 export function usePairs (
   currencies: [Token | undefined , Token | undefined][] //  eslint-disable-line 
-): [PairState, Pair | null][] {
+): Array<[PairState, Pair | null]> {
   const { chainId } = useWalletData()
+  const chainToUse = chainId ? chainId : ChainId.SEPOLIA
   const tokens = useMemo(
     () =>
       currencies.map(([currencyA, currencyB]) => [
@@ -32,8 +33,8 @@ export function usePairs (
   const pairAddresses = useMemo(
     () =>
       tokens.map(([tokenA, tokenB]) => {
-        return (typeof tokenA !== 'undefined' && typeof tokenB !== 'undefined') && !tokenA.equals(tokenB)
-          ? Pair.getAddress(tokenA, tokenB, chainId) // go with sepolia chainID if needed
+        return tokenA && tokenB && !tokenA.equals(tokenB)
+          ? Pair.getAddress(tokenA, tokenB, chainToUse) // go with sepolia chainID if needed
           : undefined
       }),
     [tokens]
@@ -43,17 +44,15 @@ export function usePairs (
     PAIR_INTERFACE,
     'getReserves'
   )
-
-  console.log('reserves', results)
+  console.log('results on reserves', results)
   return useMemo(() => {
     return results.map((result, i) => {
       const { result: reserves, loading } = result
       const tokenA = tokens[i][0]
       const tokenB = tokens[i][1]
-
       if (loading) return [PairState.LOADING, null]
       if (tokenA === undefined || tokenB === undefined || tokenA.equals(tokenB)) return [PairState.INVALID, null]
-      if (reserves === undefined) return [PairState.NOT_EXISTS, null]
+      if (!reserves) return [PairState.NOT_EXISTS, null]
       const { reserve0, reserve1 } = reserves
       const [token0, token1] = tokenA.sortsBefore(tokenB)
         ? [tokenA, tokenB]
