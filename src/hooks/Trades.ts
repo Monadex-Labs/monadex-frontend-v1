@@ -1,4 +1,4 @@
-import { Pair, Token, Trade, TokenAmount, NativeCurrency } from '@monadex/sdk'
+import { Pair, Token, Trade, TokenAmount, NativeCurrency, ChainId } from '@monadex/sdk'
 import {
   CUSTOM_BASES,
   BASES_TO_CHECK_TRADES_AGAINST

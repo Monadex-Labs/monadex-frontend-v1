@@ -524,7 +524,7 @@ const AddLiquidity: React.FC<{
         (currencies[Field.CURRENCY_B] != null) &&
         pairState !== PairState.INVALID &&
         (price != null) && (
-          <Box my={2} className='rounded-sm font-fira flex flex-col p-3 text-[#ABABAB]'>
+          <Box my={2} className='rounded-sm font-fira flex flex-col p-3 text-[#ABABAB] transition duration-150 ease-in-out'>
             <Box className='p-2 flex justify-between'>
               <small>
                 1 {currencies[Field.CURRENCY_A]?.symbol} ={' '}

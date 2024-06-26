@@ -101,7 +101,7 @@ function useCallsData (calls: Array<Call | undefined>, options?: ListenerOptions
         if (result?.data != null && result?.data !== '0x') {
           data = result.data
         }
-        console.log('d', data)
+        console.log('{ valid: true, data, blockNumber: result?.blockNumber }', { valid: true, data, blockNumber: result?.blockNumber })
         return { valid: true, data, blockNumber: result?.blockNumber }
       }),
     [callResults, calls, chainId]
@@ -151,6 +151,7 @@ function toCallState (
       }
     }
   }
+  console.log('res', result)
   return {
     valid: true,
     loading: false,
@@ -191,7 +192,7 @@ export function useSingleContractMultipleData<T extends Contract = Contract> (
 }
 
 export function useMultipleContractSingleData (
-  addresses: ReadonlyArray<string | undefined>,
+  addresses: Array<string | undefined>,
   contractInterface: Interface,
   methodName: string,
   callInputs?: OptionalMethodInputs,
@@ -207,24 +208,35 @@ export function useMultipleContractSingleData (
   )
   const calls = useMemo(
     () =>
-      fragment != null && addresses != null && addresses.length > 0 && callData !== undefined
+      fragment && addresses && addresses.length > 0 && callData
         ? addresses.map<Call | undefined>((address) => {
-          if (address !== undefined && callData !== undefined) {
-            return {
-              address,
-              callData
-            }
-          }
-          return undefined
+          return address && callData
+            ? {
+                address,
+                callData
+              }
+            : undefined
         })
         : [],
     [addresses, callData, fragment]
   )
   const results = useCallsData(calls, options) // TODO@ WE HAVE DATA UNDEFINED BUT USECALLDATA RETURNS A DATA = CHECK THIS
-  console.log('res+++++++++D+', results )
   const latestBlockNumber = useBlockNumber()
   return useMemo(() => {
-    return results.map((result) => toCallState(result, contractInterface, fragment, latestBlockNumber))
+    return results.map((result) => {
+      console.log('d', toCallState(
+        result,
+        contractInterface,
+        fragment,
+        latestBlockNumber
+      ))
+      return toCallState(
+        result,
+        contractInterface,
+        fragment,
+        latestBlockNumber
+      )
+    })
   }, [fragment, results, contractInterface, latestBlockNumber])
 }
 
