@@ -5,6 +5,7 @@ import Molandak from '@/static/assets/hedgehog.png'
 import { useV2LiquidityPools } from '@/hooks'
 import Image from 'next/image'
 import { useWalletData } from '@/utils'
+import PageHeader from '@/components/Swap/SwapHeader' // TODO: check if valid component to use
 
 const Portfolio: React.FC = () => {
   const { account } = useWalletData()
@@ -14,50 +15,56 @@ const Portfolio: React.FC = () => {
   } = useV2LiquidityPools(account ?? undefined)
 
   return (
-    <>
-      {/* openPoolFinder && (
-        <PoolFinderModal
-          open={openPoolFinder}
-          onClose={() => setOpenPoolFinder(false)}
-        />
-      ) */}
-      <Box className='pageHeading'>
-        <p className='weight-600'>Your Liquidity Pools</p>
-      </Box>
+    <div>
+      <PageHeader isTablet={false} pageName='Portfolio' />
+      <Box className='flex flex-col max-w-[500px] justify-center items-center p-4 mx-auto bg-[#18003E] border border-[#836EF9] rounded-md'>
+        {/* openPoolFinder && (
+          <PoolFinderModal
+            open={openPoolFinder}
+            onClose={() => setOpenPoolFinder(false)}
+          />
+        ) */}
+        <Box className='flex content-between w-100 mb-4'>
+          <p className='font-medium text-xl'>Your Liquidity Pools</p>
+        </Box>
 
-      <Box mt={3}>
-        {allV2PairsWithLiquidity.length > 0
-          ? (
-            <Box>
-              <small className='text-secondary'>
-                Don't see a pool you joined? <small className='text-primary cursor-pointer' onClick={() => setOpenPoolFinder(true)}>Import it</small>.
-                <br />
-                Unstake your LP Tokens from Farms to see them here.
-              </small>
-              {allV2PairsWithLiquidity.map((pair, index) => (
-                <Box key={index} mt={2}>
-                  {pair.liquidityToken.address}
-                </Box>
-              ))}
-            </Box>
-            )
-          : (
-            <Box textAlign='center'>
-              <Image
-                src={Molandak}
-                alt='No Liquidity'
-                width={150}
-                height={150}
-              />
-              <p className='text-secondary'>
-                Don't see a pool you joined? <small className='text-primary cursor-pointer' onClick={() => setOpenPoolFinder(true)}>Import it</small>.
-                <br />
-                Unstake your LP Tokens from Farms to see them here.
-              </p>
-            </Box>
-            )}
+        <Box mt={3}>
+          {allV2PairsWithLiquidity.length > 0
+            ? (
+              <Box>
+                <small className='text-secondary'>
+                  Don't see a pool you joined? <small className='text-primary cursor-pointer' onClick={() => setOpenPoolFinder(true)}>Import it</small>.
+                  <br />
+                  Unstake your LP Tokens from Farms to see them here.
+                </small>
+                {allV2PairsWithLiquidity.map((pair, index) => (
+                  <Box key={index} mt={2}>
+                    {pair.liquidityToken.address} {/* TODO: Add component PoolPositionCard */}
+                  </Box>
+                ))}
+              </Box>
+              )
+            : (
+              <Box className='text-center'>
+                <div className='flex flex-col items-center'>
+                  <Image
+                    src={Molandak}
+                    alt='No Liquidity'
+                    width={100}
+                    height={100}
+                    className='w-auto'
+                  />
+                </div>
+                <p className='text-secondary'>
+                  Don't see a pool you joined? <small className='text-primary cursor-pointer' onClick={() => setOpenPoolFinder(true)}>Import it</small>.
+                  <br />
+                  Unstake your LP Tokens from Farms to see them here.
+                </p>
+              </Box>
+              )}
+        </Box>
       </Box>
-    </>
+    </div>
   )
 }
 
