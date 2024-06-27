@@ -50,7 +50,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
       className={`${showPrice === true ? ' priceShowBox' : ''} ${'bg-[#1F0050]/50 rounded-sm'} mb-4 p-2`}
     >
       <div className='flex justify-between mb-2'>
-        <p className='text-[#493E5D] text-sm font-semibold p-1'>{title ?? 'you pay'}</p>
+        <p className='text-[#b4b4b4] text-sm font-semibold p-1'>{title ?? 'you pay'}</p>
         <div className='flex'>
           {Boolean(account) && (currency != null) && showHalfButton === true && (
             <div className='text-[#8133FF] font-lg' onClick={onHalf}>
@@ -80,17 +80,17 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
       </div>
       <div className='flex justify-between items-center'>
         <div className='flex items-center p-1 gap-3'>
-          <small className='text-[#493E5D] text-md'>
+          <small className='text-[#b4b4b4] text-md'>
             {`Balance: ${formatTokenAmount(selectedCurrencyBalance)}`}
           </small>
           {Boolean(account) && (currency != null) && showMaxButton === true && (
-              <div className='' onClick={onMax}>
-                <small className='text-[#8133FF] font-lg'>Max</small>
-              </div>
-            )}
+            <div className='' onClick={onMax}>
+              <small className='text-[#8133FF] font-lg'>Max</small>
+            </div>
+          )}
         </div>
-        
-        <small className='text-[#493E5D] text-md p-1'>
+
+        <small className='text-[#b4b4b4] text-md p-1'>
           ${(usdPrice * Number(amount)).toLocaleString('us')}
         </small>
       </div>

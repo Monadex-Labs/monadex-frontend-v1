@@ -173,7 +173,7 @@ const AddLiquidity: React.FC<{
     account ?? undefined,
     pair?.liquidityToken
   )
-   console.log('pjool', pair)
+  console.log('pjool', pair)
   const atMaxAmounts: { [field in Field]?: TokenAmount } = [
     Field.CURRENCY_A,
     Field.CURRENCY_B
@@ -185,7 +185,7 @@ const AddLiquidity: React.FC<{
   }, {})
 
   const { redirectWithCurrency, redirectWithSwitch } = usePoolsRedirects()
-  
+
   // console.log('fieldsA', currencies[Field.CURRENCY_A])
   // console.log('fieldsB', currencies[Field.CURRENCY_B])
 
@@ -484,7 +484,7 @@ const AddLiquidity: React.FC<{
       )}
       <CurrencyInput
         id='add-liquidity-input-tokens'
-        title='token 1'
+        title='Token 1'
         currency={currencies[Field.CURRENCY_A]}
         showHalfButton={Boolean(maxAmounts[Field.CURRENCY_A])}
         showMaxButton={atMaxAmounts[Field.CURRENCY_A] == null}
@@ -503,7 +503,7 @@ const AddLiquidity: React.FC<{
       />
       <CurrencyInput
         id='add-liquidity-input-tokenb'
-        title='token 2'
+        title='Token 2'
         showHalfButton={Boolean(maxAmounts[Field.CURRENCY_B])}
         currency={currencies[Field.CURRENCY_B]}
         showMaxButton={atMaxAmounts[Field.CURRENCY_B] == null}
@@ -619,7 +619,7 @@ const AddLiquidity: React.FC<{
             </Box>
         )}
         <Button
-          className={`w-full bg-gradient-to-r from-[#23006A] to-[#23006A]/50 py-4 px-4`}
+          className="w-full bg-gradient-to-r from-[#23006A] to-[#23006A]/50 py-4 px-4"
           disabled={
             Boolean(account) &&
             isSupportedNetwork &&

@@ -28,20 +28,22 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({
     <Box className='px-3 py-2 rounded-full'>
       <Box
         className={
-          bgClass === null
-            ? `${(currency !== null) ? 'bg-[#404557]' : 'bg-gradient-to-r from-[#18003E]'}`
+          bgClass === undefined
+            ? `flex items-center cursor-pointer p-2 rounded-full ${(currency != null) ? 'bg-[#2c0c61]' : 'bg-[#6051b8]'}`
             : bgClass
         }
         onClick={handleOpenModal}
       >
-        {currency ? (
-          <Box className='flex items-center gap-2'>
-            <CurrencyLogo currency={currency} size={'28px'} />
-            <p className='token-symbol-container'>{currency?.symbol}</p>
-          </Box>
-        ) : (
-          <p>select token</p>
-        )}
+        {(currency != null)
+          ? (
+            <Box className='flex items-center gap-2'>
+              <CurrencyLogo currency={currency} size='28px' />
+              <p className='ml-1'>{currency?.symbol}</p>
+            </Box>
+            )
+          : (
+            <p>Select a token</p>
+            )}
         {children}
       </Box>
       {modalOpen && (

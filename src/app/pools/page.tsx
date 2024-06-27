@@ -13,7 +13,7 @@ const Pool = (): JSX.Element => {
   return (
     <div>
       <PageHeader isTablet={false} pageName='Pools' />
-      <Box className='flex flex-col max-w-[500px] justify-center items-center p-4 mx-auto bg-[#18003E] border border-[#373737] rounded-md'>
+      <Box className='flex flex-col max-w-[500px] justify-center items-center p-4 mx-auto bg-[#18003E] border border-[#836EF9] rounded-md'>
         {openSettingsModal && (
           <SettingsModal
             open={openSettingsModal}
@@ -26,12 +26,12 @@ const Pool = (): JSX.Element => {
             <Box className=''>
               <QuestionHelper
                 size={25}
-                className='text-[#373737]'
+                className='text-[#b4b4b4]'
                 text='When you add liquidity, you are given pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time.'
               />
             </Box>
             <Box className=''>
-              <IoMdSettings onClick={() => setOpenSettingsModal(true)} className='text-[#373737] cursor-pointer text-[25px]' />
+              <IoMdSettings onClick={() => setOpenSettingsModal(true)} className='text-[#b4b4b4] cursor-pointer text-[25px]' />
             </Box>
           </Box>
         </Box>

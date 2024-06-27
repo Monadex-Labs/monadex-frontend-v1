@@ -193,7 +193,7 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
 
       <Divider />
 
-      <Box flex={1} className='w-full border border-[#493E5D] rounded-tl-lg rounded-tr-lg bg-[#220258]'>
+      <Box flex={1} className='w-full border border-[#b4b4b4] rounded-tl-lg rounded-tr-lg bg-[#220258]'>
         <CurrencyList
           chainId={chainIdToUse}
           showETH={showETH}
@@ -202,7 +202,7 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
           otherCurrency={otherSelectedCurrency}
           selectedCurrency={selectedCurrency}
           balances={currencyBalances}
-          usdPrices={[]} // TODO: Add USDC token prices
+          usdPrices={[]} // TODO: Add USDC token prices (Pending fn: useUSDCPricesFromAddresses)
         />
       </Box>
 
