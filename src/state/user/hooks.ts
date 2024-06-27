@@ -131,7 +131,7 @@ export function useUserSlippageTolerance (): [
 
 export function useUserAddedTokens (): Token[] {
   const { chainId } = useWalletData()
-  const chainInUse = chainId ? chainId : ChainId.SEPOLIA
+  const chainInUse = chainId ?? ChainId.SEPOLIA
   const serializedTokensMap = useSelector<AppState, AppState['user']['tokens']>(
     ({ user: { tokens } }) => tokens
   )
@@ -169,7 +169,7 @@ export function useURLWarningToggle (): () => void {
 /**
  * Returns all the pairs of tokens that are tracked by the user for the current chain ID.
  */
-export function useTrackedTokenPairs (): Array<[Token, Token] | undefined > {
+export function useTrackedTokenPairs (): Array<[Token, Token]> {
   const chainId = ChainId.SEPOLIA // update to MONAD_TESTNET
   const tokens = useAllTokens()
 
@@ -237,4 +237,19 @@ export function useTrackedTokenPairs (): Array<[Token, Token] | undefined > {
     )
     return Object.keys(keyed).map((key) => keyed[key])
   }, [combinedList])
+}
+
+/**
+ * Given two tokens return the liquidity token that represents its liquidity shares
+ * @param tokenA one of the two tokens
+ * @param tokenB the other token
+ */
+export function toV2LiquidityToken ([tokenA, tokenB]: [Token, Token]): Token {
+  return new Token(
+    tokenA.chainId,
+    Pair.getAddress(tokenA, tokenB, tokenA.chainId),
+    18,
+    'MND-V2',
+    'Monadex V2'
+  )
 }
