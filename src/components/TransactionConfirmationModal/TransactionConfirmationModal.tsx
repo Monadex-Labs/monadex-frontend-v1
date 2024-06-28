@@ -107,7 +107,7 @@ export const ConfirmationModalContent: React.FC<ConfirmationModalContentProps> =
 }) => {
   return (
     <Box padding={4}>
-      <Box className='txModalHeader'>
+      <Box className='border'>
         <h5>{title}</h5>
         <Close onClick={onDismiss} />
       </Box>
@@ -179,7 +179,7 @@ const TransactionConfirmationModal: React.FC<ConfirmationModalProps> = ({
       onClose={onDismiss}
       modalWrapper={`${modalWrapper ?? 'INVALID WRAPPER'}${isTxWrapper ? ' txModalWrapper' : ''}`}
     >
-      <Box position='relative' zIndex={2}>
+      <Box position='relative' zIndex={2} className=''>
         {attemptingTxn
           ? (
             <ConfirmationPendingContent

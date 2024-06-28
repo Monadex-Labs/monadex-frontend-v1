@@ -7,6 +7,8 @@ import ERC20_ABI from '../constants/abi/JSON/Erc20Abi.json'
 import RAFFLE_ABI from '@/constants/abi/JSON/MonadexV2Raffle.json'
 import MULTICALL_ABI from '../constants/abi/JSON/MulticallAbi.json'
 import MONADEXV1PAIR_ABI from '@/constants/abi/JSON/MonadexV1Pair.json'
+import MONADEXV1_FACTORY_ABI   from '@/constants/abi/JSON/MonadexV1Factory.json'
+import { FACTORY_ADDRESS } from '@/constants'
 import { useMemo } from 'react'
 import { useWallets } from '@web3-onboard/react'
 import { ethers } from 'ethers'
@@ -75,6 +77,9 @@ export function useWMNDContract (
 }
 export function usePairContract (pairAddress?: string, withSignerIfPossible?: boolean): Contract | null | undefined {
   return useContract(pairAddress, MONADEXV1PAIR_ABI, withSignerIfPossible)
+}
+export function useFactoryContract ():Contract | null | undefined {
+  return useContract(FACTORY_ADDRESS, MONADEXV1_FACTORY_ABI)
 }
 export function useRaffleContract (): Contract | null | undefined {
   const { chainId } = useWalletData()

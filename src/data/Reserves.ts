@@ -4,11 +4,9 @@ import MonadexV2Pair from '@/constants/abi/JSON/MonadexV1Pair.json'
 import { Interface } from '@ethersproject/abi'
 import { useMultipleContractSingleData } from '@/state/multicall/hooks'
 import { wrappedCurrency } from '@/utils/wrappedCurrency'
-import { useConnectWallet } from '@web3-onboard/react'
 import { useWalletData } from '@/utils'
 
-const PAIR_INTERFACE = new Interface(MonadexV2Pair)
-
+const MPAIR_INTERFACE = new Interface(MonadexV2Pair)
 export enum PairState {
   LOADING,
   NOT_EXISTS,
@@ -16,12 +14,10 @@ export enum PairState {
   INVALID,
 }
 
-// TODO@ERROR USEPAIRS WE DONT HAVE THE TOTAL LP TOKENS WE WILL GET
 export function usePairs (
-  currencies: [Token | undefined , Token | undefined][] //  eslint-disable-line 
-): Array<[PairState, Pair | null]> {
+  currencies: [Token | undefined , Token | undefined][] 
+): ReadonlyArray<readonly [PairState, Pair | null]> {
   const { chainId } = useWalletData()
-  const chainToUse = chainId ? chainId : ChainId.SEPOLIA
   const tokens = useMemo(
     () =>
       currencies.map(([currencyA, currencyB]) => [
@@ -34,17 +30,13 @@ export function usePairs (
     () =>
       tokens.map(([tokenA, tokenB]) => {
         return tokenA && tokenB && !tokenA.equals(tokenB)
-          ? Pair.getAddress(tokenA, tokenB, chainToUse) // go with sepolia chainID if needed
+          ? Pair.getAddress(tokenA, tokenB, chainId)
           : undefined
       }),
     [tokens]
   )
-  const results = useMultipleContractSingleData(
-    pairAddresses,
-    PAIR_INTERFACE,
-    'getReserves'
-  )
-  console.log('results on reserves', results)
+  const results = useMultipleContractSingleData(pairAddresses, MPAIR_INTERFACE, 'getReserves')
+  console.log("resu llts",results)
   return useMemo(() => {
     return results.map((result, i) => {
       const { result: reserves, loading } = result
@@ -52,7 +44,7 @@ export function usePairs (
       const tokenB = tokens[i][1]
       if (loading) return [PairState.LOADING, null]
       if (tokenA === undefined || tokenB === undefined || tokenA.equals(tokenB)) return [PairState.INVALID, null]
-      if (!reserves) return [PairState.NOT_EXISTS, null]
+      if (reserves == null) return [PairState.NOT_EXISTS, null]
       const { reserve0, reserve1 } = reserves
       const [token0, token1] = tokenA.sortsBefore(tokenB)
         ? [tokenA, tokenB]
@@ -71,6 +63,6 @@ export function usePairs (
 export function usePair (
   tokenA?: Token,
   tokenB?: Token
-): [PairState, Pair | null] {
+): readonly [PairState, Pair | null] {
   return usePairs([[tokenA, tokenB]])[0]
 }

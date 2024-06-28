@@ -3,6 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import MonadexV2Pair from '@/constants/abi/JSON/MonadexV1Pair.json'
 
 import {
   addMulticallListeners,
@@ -143,7 +144,7 @@ function toCallState (
     try {
       result = contractInterface.decodeFunctionResult(fragment, data)
     } catch (error) {
-      console.log('Result data parsing failed', fragment, data)
+      console.debug('Result data parsing failed', fragment, data)
       return {
         valid: true,
         loading: false,
@@ -157,7 +158,7 @@ function toCallState (
     valid: true,
     loading: false,
     syncing,
-    result: result,
+    result,
     error: !success
   }
 }
@@ -169,7 +170,6 @@ export function useSingleContractMultipleData<T extends Contract = Contract> (
   options?: ListenerOptions
 ): readonly CallState[] {
   const fragment = useMemo(() => contract?.interface?.getFunction(methodName), [contract, methodName])
-
   const calls = useMemo(
     () =>
       (contract != null) && (fragment != null) && (callInputs != null) && callInputs.length > 0
@@ -200,13 +200,15 @@ export function useMultipleContractSingleData (
   options?: ListenerOptions
 ): CallState[] {
   const fragment = useMemo(() => contractInterface.getFunction(methodName), [contractInterface, methodName])
+
   const callData: string | undefined = useMemo(
     () =>
-      fragment != null && isValidMethodArgs(callInputs)
+      fragment && isValidMethodArgs(callInputs)
         ? contractInterface.encodeFunctionData(fragment, callInputs)
         : undefined,
     [callInputs, contractInterface, fragment]
   )
+
   const calls = useMemo(
     () =>
       fragment && addresses && addresses.length > 0 && callData
@@ -221,19 +223,13 @@ export function useMultipleContractSingleData (
         : [],
     [addresses, callData, fragment]
   )
-  const results = useCallsData(calls, options) // TODO@ WE HAVE DATA UNDEFINED BUT USECALLDATA RETURNS A DATA = CHECK THIS
-  console.log('results thiss time: ', results)
+  const results = useCallsData(calls, options)
   const latestBlockNumber = useBlockNumber()
-  return useMemo(() => {
-    return results.map((result: CallResult) => {
-      return toCallState(
-        result,
-        contractInterface,
-        fragment,
-        latestBlockNumber
-      )
-    })
+  const value = useMemo(() => {
+    return results.map((result) => toCallState(result, contractInterface, fragment, latestBlockNumber))
   }, [fragment, results, contractInterface, latestBlockNumber])
+ console.log('this value', value)
+  return value
 }
 
 export function useSingleCallResult (

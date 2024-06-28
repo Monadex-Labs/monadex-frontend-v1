@@ -9,20 +9,23 @@ import { SwapDelay } from '@/state/swap/actions'
 import { PairState, usePairs } from '@/data/Reserves'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 import { useWalletData } from '@/utils'
+import { AiOutlineConsoleSql } from 'react-icons/ai'
 export function useAllCommonPairs (
   currencyA?: Token | NativeCurrency,
   currencyB?: Token | NativeCurrency
 ): Pair[] {
   const { chainId } = useWalletData()
+  const chainTouse = chainId || ChainId.SEPOLIA
   const bases: Token[] = useMemo(
-    () => (chainId ? BASES_TO_CHECK_TRADES_AGAINST[chainId] : []),
-    [chainId]
+    () => (chainTouse ? BASES_TO_CHECK_TRADES_AGAINST[chainTouse] : []),
+    [chainTouse]
   )
-
-  const [tokenA, tokenB] = chainId
+  // @todo: token b is always showing USDC
+  const [tokenA, tokenB] = chainId 
     ? [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)]
     : [undefined, undefined]
-
+  //  console.log('token A', tokenA)
+  // console.log('token B', tokenB)
   const basePairs: Array<[Token, Token]> = useMemo(
     () =>
       flatMap(bases, (base): Array<[Token, Token]> =>

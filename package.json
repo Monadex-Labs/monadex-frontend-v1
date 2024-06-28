@@ -30,6 +30,7 @@
     "@types/jest": "^29.5.12",
     "@types/react-redux": "^7.1.33",
     "@uniswap/token-lists": "^1.0.0-beta.34",
+    "@uniswap/v2-core": "^1.0.1",
     "@web3-onboard/coinbase": "^2.3.0",
     "@web3-onboard/core": "^2.2.12",
     "@web3-onboard/injected-wallets": "^2.11.0",

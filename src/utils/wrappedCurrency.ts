@@ -14,7 +14,7 @@ import {
  *
  */
 export function wrappedCurrency (
-  currency: NativeCurrency | undefined,
+  currency: NativeCurrency | Token | undefined,
   chainId: ChainId | undefined
 ): Token | undefined {
   return chainId && currency === MONAD
@@ -24,7 +24,7 @@ export function wrappedCurrency (
       : undefined
 }
 export function wrappedCurrencyAmount (
-  currencyAmount: CurrencyAmount | undefined,
+  currencyAmount: CurrencyAmount | TokenAmount | undefined,
   chainId: ChainId | undefined
 ): TokenAmount | undefined {
   const token =

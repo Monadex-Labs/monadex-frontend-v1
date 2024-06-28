@@ -109,7 +109,6 @@ export default createReducer(initialState, (builder) =>
       })
     })
     .addCase(errorFetchingMulticallResults, (state, { payload: { fetchingBlockNumber, chainId, calls } }) => {
-      console.log('dodod')
       state.callResults[chainId] = state.callResults[chainId] ?? {}
       calls.forEach((call) => {
         const callKey = toCallKey(call)
@@ -123,7 +122,6 @@ export default createReducer(initialState, (builder) =>
       })
     })
     .addCase(updateMulticallResults, (state, { payload: { chainId, results, blockNumber } }) => {
-      console.log('dodod', results)
       state.callResults[chainId] = state.callResults[chainId] ?? {}
       Object.keys(results).forEach((callKey) => {
         const current = state.callResults[chainId][callKey]

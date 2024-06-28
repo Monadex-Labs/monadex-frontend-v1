@@ -173,7 +173,6 @@ const AddLiquidity: React.FC<{
     account ?? undefined,
     pair?.liquidityToken
   )
-   console.log('pjool', pair)
   const atMaxAmounts: { [field in Field]?: TokenAmount } = [
     Field.CURRENCY_A,
     Field.CURRENCY_B
@@ -186,8 +185,6 @@ const AddLiquidity: React.FC<{
 
   const { redirectWithCurrency, redirectWithSwitch } = usePoolsRedirects()
   
-  // console.log('fieldsA', currencies[Field.CURRENCY_A])
-  // console.log('fieldsB', currencies[Field.CURRENCY_B])
 
   const handleCurrencyASelect = useCallback(
     (currencyA: any) => {

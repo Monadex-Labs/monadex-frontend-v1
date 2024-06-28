@@ -65,7 +65,6 @@ export function listToTokenMap (list: TokenList): TokenAddressMap {
           })
           ?.filter((x): x is TagInfo => Boolean(x)) ?? []
       const token = new WrappedTokenInfo(tokenInfo, tags)
-
       if (
         tokenMap &&
         tokenMap[token.chainId] &&

@@ -13,7 +13,7 @@ export const ONE_HUNDRED_PERCENT = new Percent('1')
 export const ROUTER_ADDRESS = '0xD80b04Ed45b12F4871d9be252dB4db7F6785AbE8' as Hash // fake address todo : update
 export const ERC20_INTERFACE = new Interface(ERC20ABI)
 export const MULTICALL_ADDRESS = '0x3F380DAf9EADB24E73855Dea67A7d2aceE04de40' as Hash // fake address todo : update
-export const FACTORY_ADDRESS = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f' as Hash // fake address todo : update
+export const FACTORY_ADDRESS =  '0x16104a43529389C139D92f3AC9EbB79Cff22694E' as Hash // fake address todo : update
 export const RAFFLE_ADDRESS = '0x6c4e7a7f6b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b' as Hash // fake address todo : update
 // default allowed slippage, in bips
 export const INITIAL_ALLOWED_SLIPPAGE = 50

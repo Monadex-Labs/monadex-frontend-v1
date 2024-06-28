@@ -62,7 +62,6 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
   // if they input an address, use it
   const isAddressSearch = isAddress(searchQuery)
   const searchToken = useToken(searchQuery)
-  console.log('search', searchToken)
   const showETH: boolean = useMemo(() => {
     const s = searchQuery.toLowerCase().trim()
     return s === '' || s === 'm' || s === 'mn' || s === 'mnd'

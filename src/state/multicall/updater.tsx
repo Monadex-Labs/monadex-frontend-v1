@@ -240,8 +240,9 @@ export default function Updater (): null {
                   chainId,
                   results,
                   blockNumber: latestBlockNumber
-                }),
-              );}
+                })
+              )
+            }
 
             // dispatch any errored calls
             if (erroredCalls.length > 0) {
