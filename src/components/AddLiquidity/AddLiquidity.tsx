@@ -15,9 +15,7 @@ import {
   MONAD,
   TokenAmount,
   ChainId,
-  Token,
-  CurrencyAmount,
-  NativeCurrency
+  Token
 } from '@monadex/sdk'
 import { useWalletData } from '@/utils/index'
 import { useConnectWallet } from '@web3-onboard/react'
@@ -47,7 +45,6 @@ import {
   halfAmountSpend
 } from '@/utils'
 import { wrappedCurrency } from '@/utils/wrappedCurrency'
-import { PiTestTubeFill } from 'react-icons/pi' // liquidity icon
 import useParsedQueryString from '@/hooks/useParseQueryString'
 import { _useCurrency } from '@/hooks/Tokens'
 import { useDerivedSwapInfo } from '@/state/swap/hooks'
@@ -84,19 +81,19 @@ const AddLiquidity: React.FC<{
   const params: any = useParams()
   const parsedQuery = useParsedQueryString()
   const currency0Id =
-    params?.currencyIdA
+    params?.currencyIdA != null
       ? params.currencyIdA.toLowerCase() === 'mnd'
         ? 'MND'
         : params.currencyIdA
-      : parsedQuery && parsedQuery.currency0
+      : parsedQuery?.currency0 != null
         ? (parsedQuery.currency0 as string)
         : undefined
   const currency1Id =
-    params?.currencyIdB
+    params?.currencyIdB != null
       ? params.currencyIdB.toLowerCase() === 'mnd'
         ? 'MND'
         : params.currencyIdB
-      : parsedQuery?.currency1
+      : parsedQuery?.currency1 != null
         ? (parsedQuery.currency1 as string)
         : undefined
   const currency0 = _useCurrency(currency0Id)
@@ -173,7 +170,7 @@ const AddLiquidity: React.FC<{
     account ?? undefined,
     pair?.liquidityToken
   )
-   console.log('pjool', pair)
+  console.log('pjool', pair)
   const atMaxAmounts: { [field in Field]?: TokenAmount } = [
     Field.CURRENCY_A,
     Field.CURRENCY_B
@@ -185,7 +182,7 @@ const AddLiquidity: React.FC<{
   }, {})
 
   const { redirectWithCurrency, redirectWithSwitch } = usePoolsRedirects()
-  
+
   // console.log('fieldsA', currencies[Field.CURRENCY_A])
   // console.log('fieldsB', currencies[Field.CURRENCY_B])
 
@@ -232,13 +229,13 @@ const AddLiquidity: React.FC<{
   const onAdd = (): void => {
     setAddLiquidityErrorMessage(null)
     setTxHash('')
-    onAddLiquidity()
+    void onAddLiquidity()
     setShowConfirm(true)
   }
 
   const router = useRouterContract()
 
-  const onAddLiquidity = async () => {
+  const onAddLiquidity = async (): Promise<void> => {
     if (chainId === undefined || provider === undefined || account === undefined || (router == null)) return
 
     const {
@@ -372,55 +369,6 @@ const AddLiquidity: React.FC<{
     return 'Connect Wallet'
   }, [account, isSupportedNetwork, error])
 
-  // const handleButtonClick = async () => {
-  //   if (approvalA !== ApprovalState.APPROVED && approvalA !== ApprovalState.PENDING) {
-  //     setApprovingA(true)
-  //     try {
-  //       await approveACallback()
-  //     } catch (e) {
-  //       // Handle error if needed
-  //     } finally {
-  //       setApprovingA(false)
-  //     }
-  //   } else if (approvalB !== ApprovalState.APPROVED && approvalB !== ApprovalState.PENDING) {
-  //     setApprovingB(true)
-  //     try {
-  //       await approveBCallback()
-  //     } catch (e) {
-  //       // Handle error if needed
-  //     } finally {
-  //       setApprovingB(false)
-  //     }
-  //   } else if (account && isSupportedNetwork) {
-  //     onAdd()
-  //   } else {
-  //     await connect()
-  //   }
-  // }
-  // const getButtonText = () => {
-  //   if (approvalA === ApprovalState.PENDING) {
-  //     return `approving ${currencies[Field.CURRENCY_A]?.symbol}`
-  //   } else if (approvalB === ApprovalState.PENDING) {
-  //     return `approving ${currencies[Field.CURRENCY_B]?.symbol}`
-  //   } else if (approvalA !== ApprovalState.APPROVED) {
-  //     return `approve ${currencies[Field.CURRENCY_A]?.symbol}`
-  //   } else if (approvalB !== ApprovalState.APPROVED) {
-  //     return `approve ${currencies[Field.CURRENCY_B]?.symbol}`
-  //   } else if (!account || !isSupportedNetwork) {
-  //     return 'connect'
-  //   } else {
-  //     return buttonText
-  //   }
-  // }
-  // const isButtonDisabled = () => {
-  //   if (approvalA === ApprovalState.PENDING || approvalB === ApprovalState.PENDING) {
-  //     return true
-  //   }
-  //   if (Boolean(account) && isSupportedNetwork) {
-  //     return Boolean(error) || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED
-  //   }
-  //   return false
-  // }
   const modalHeader = (): ReactElement => {
     return (
       <Box className='border'>
@@ -435,7 +383,9 @@ const AddLiquidity: React.FC<{
           <h6>
             {pendingText}
             <br />
-            {`You will receive ${formatTokenAmount(liquidityMinted)} ${currencies[Field.CURRENCY_A]?.symbol} / ${currencies[Field.CURRENCY_B]?.symbol} LP Tokens`}
+            {`You will receive ${formatTokenAmount(liquidityMinted)} 
+            ${currencies[Field.CURRENCY_A]?.symbol ?? 'INVALID SYMBOL'} / 
+            ${currencies[Field.CURRENCY_B]?.symbol ?? 'INVALID SYMBOL'} LP Tokens`}
           </h6>
         </Box>
         <Box mb={3} textAlign='center'>
@@ -452,6 +402,26 @@ const AddLiquidity: React.FC<{
     )
   }
 
+  const handleApproveA = async (): Promise<void> => {
+    setApprovingA(true)
+    try {
+      await approveACallback()
+      setApprovingA(false)
+    } catch (e) {
+      setApprovingA(false)
+    }
+  }
+
+  const handleApproveB = async (): Promise<void> => {
+    setApprovingB(true)
+    try {
+      await approveBCallback()
+      setApprovingB(false)
+    } catch (e) {
+      setApprovingB(false)
+    }
+  }
+
   return (
     <Box className=''>
       {showConfirm && (
@@ -462,7 +432,7 @@ const AddLiquidity: React.FC<{
           txPending={txPending}
           hash={txHash}
           content={() =>
-            addLiquidityErrorMessage
+            addLiquidityErrorMessage != null
               ? (
                 <TransactionErrorContent
                   onDismiss={handleDismissConfirmation}
@@ -560,7 +530,7 @@ const AddLiquidity: React.FC<{
           approvalA === ApprovalState.PENDING ||
           approvalB === ApprovalState.NOT_APPROVED ||
           approvalB === ApprovalState.PENDING) &&
-          !error && (
+          error === undefined && (
             <Box className='flex fullWidth justify-between mb-2'>
               {approvalA !== ApprovalState.APPROVED && (
                 <Box
@@ -568,23 +538,15 @@ const AddLiquidity: React.FC<{
                 >
                   <Button
                     className='w-full py-4 px-4 bg-gradient-to-r from-[#23006A] to-[#23006A]/50'
-                    onClick={async () => {
-                      setApprovingA(true)
-                      try {
-                        await approveACallback()
-                        setApprovingA(false)
-                      } catch (e) {
-                        setApprovingA(false)
-                      }
-                    }}
+                    onClick={handleApproveA}
                     disabled={approvingA || approvalA === ApprovalState.PENDING}
                   >
                     {approvalA === ApprovalState.PENDING
                       ? `approving ${
-                          currencies[Field.CURRENCY_A]?.symbol
+                          currencies[Field.CURRENCY_A]?.symbol ?? 'INVALID SYMBOL'
                         }`
                       : `approve ${
-                          currencies[Field.CURRENCY_A]?.symbol
+                          currencies[Field.CURRENCY_A]?.symbol ?? 'INVALID SYMBOL'
                         }`}
                   </Button>
                 </Box>
@@ -595,23 +557,15 @@ const AddLiquidity: React.FC<{
                 >
                   <Button
                     className='w-full py-4 px-4 bg-gradient-to-r from-[#23006A] to-[#23006A]/50'
-                    onClick={async () => {
-                      setApprovingB(true)
-                      try {
-                        await approveBCallback()
-                        setApprovingB(false)
-                      } catch (e) {
-                        setApprovingB(false)
-                      }
-                    }}
+                    onClick={handleApproveB}
                     disabled={approvingB || approvalB === ApprovalState.PENDING}
                   >
                     {approvalB === ApprovalState.PENDING
                       ? `approving ${
-                          currencies[Field.CURRENCY_B]?.symbol
+                          currencies[Field.CURRENCY_B]?.symbol ?? 'INVALID SYMBOL'
                         }`
                       : `approve ${
-                          currencies[Field.CURRENCY_B]?.symbol
+                          currencies[Field.CURRENCY_B]?.symbol ?? 'INVALID SYMBOL'
                         }`}
                   </Button>
                 </Box>
@@ -619,7 +573,7 @@ const AddLiquidity: React.FC<{
             </Box>
         )}
         <Button
-          className={`w-full bg-gradient-to-r from-[#23006A] to-[#23006A]/50 py-4 px-4`}
+          className='w-full bg-gradient-to-r from-[#23006A] to-[#23006A]/50 py-4 px-4'
           disabled={
             Boolean(account) &&
             isSupportedNetwork &&
@@ -627,7 +581,7 @@ const AddLiquidity: React.FC<{
               approvalA !== ApprovalState.APPROVED ||
               approvalB !== ApprovalState.APPROVED)
           }
-          onClick={account && isSupportedNetwork ? onAdd : async () => await connect()}
+          onClick={account !== '' && isSupportedNetwork ? onAdd : async () => await connect()}
         >
           {buttonText}
         </Button>
