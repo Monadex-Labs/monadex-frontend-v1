@@ -49,7 +49,7 @@ export function useDerivedMintInfo (): {
     [Field.CURRENCY_B]: { currencyId: currencyBId },
     otherTypedValue
   } = useMintState()
-  const currencyA = _useCurrency(currencyAId) // TODO@ useCurrency returns Undefined
+  const currencyA = _useCurrency(currencyAId)
   const currencyB = _useCurrency(currencyBId)
   const dependentField = independentField === Field.CURRENCY_A ? Field.CURRENCY_B : Field.CURRENCY_A
   // *

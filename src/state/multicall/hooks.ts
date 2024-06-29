@@ -209,26 +209,25 @@ export function useMultipleContractSingleData (
     [callInputs, contractInterface, fragment]
   )
 
-  const calls = useMemo(
-    () =>
-      fragment && addresses && addresses.length > 0 && callData
-        ? addresses.map<Call | undefined>((address) => {
-          return address && callData
-            ? {
-                address,
-                callData
-              }
-            : undefined
-        })
-        : [],
-    [addresses, callData, fragment]
-  )
+  const calls = useMemo(() => {
+  if (fragment && addresses.length > 0 && callData) {
+    return addresses.map<Call | undefined>((address) => {
+      return address && callData
+        ? {
+            address,
+            callData,
+          }
+        : undefined;
+    });
+  } else {
+    return [];
+  }
+}, [fragment, addresses, callData])
   const results = useCallsData(calls, options)
   const latestBlockNumber = useBlockNumber()
   const value = useMemo(() => {
     return results.map((result) => toCallState(result, contractInterface, fragment, latestBlockNumber))
   }, [fragment, results, contractInterface, latestBlockNumber])
- console.log('this value', value)
   return value
 }
 
