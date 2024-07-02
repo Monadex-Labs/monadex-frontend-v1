@@ -3,7 +3,6 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import MonadexV2Pair from '@/constants/abi/JSON/MonadexV1Pair.json'
 
 import {
   addMulticallListeners,
@@ -131,15 +130,15 @@ function toCallState (
   ignore?: boolean
 ): CallState {
   if (ignore) return INVALID_CALL_STATE
-  if (!callResult) return INVALID_CALL_STATE
+  if (callResult == null) return INVALID_CALL_STATE
+
   const { valid, data, blockNumber } = callResult
   if (!valid) return INVALID_CALL_STATE
   if (valid && !blockNumber) return LOADING_CALL_STATE
-  if (!contractInterface || !fragment || !latestBlockNumber)
-    return LOADING_CALL_STATE
+  if ((contractInterface == null) || (fragment == null) || !latestBlockNumber) { return LOADING_CALL_STATE }
   const success = data && data.length > 2
   const syncing = (blockNumber ?? 0) < latestBlockNumber
-  let result: Result | undefined = undefined
+  let result: Result | undefined
   if (success && data) {
     try {
       result = contractInterface.decodeFunctionResult(fragment, data)
@@ -200,7 +199,6 @@ export function useMultipleContractSingleData (
   options?: ListenerOptions
 ): CallState[] {
   const fragment = useMemo(() => contractInterface.getFunction(methodName), [contractInterface, methodName])
-
   const callData: string | undefined = useMemo(
     () =>
       fragment && isValidMethodArgs(callInputs)
@@ -208,26 +206,30 @@ export function useMultipleContractSingleData (
         : undefined,
     [callInputs, contractInterface, fragment]
   )
-
-  const calls = useMemo(() => {
-  if (fragment && addresses.length > 0 && callData) {
-    return addresses.map<Call | undefined>((address) => {
-      return address && callData
-        ? {
-            address,
-            callData,
-          }
-        : undefined;
-    });
-  } else {
-    return [];
-  }
-}, [fragment, addresses, callData])
+  const calls = useMemo(
+    () =>
+      fragment && addresses && addresses.length > 0 && callData
+        ? addresses.map<Call | undefined>((address) => {
+          return address && callData
+            ? {
+                address,
+                callData
+              }
+            : undefined
+        })
+        : [],
+    [addresses, callData, fragment]
+  )
   const results = useCallsData(calls, options)
   const latestBlockNumber = useBlockNumber()
   const value = useMemo(() => {
     return results.map((result) => toCallState(result, contractInterface, fragment, latestBlockNumber))
   }, [fragment, results, contractInterface, latestBlockNumber])
+  for (let i = 0; i < value.length; i++) {
+    if (value[i].result !== undefined) {
+      return value
+    }
+  }
   return value
 }
 

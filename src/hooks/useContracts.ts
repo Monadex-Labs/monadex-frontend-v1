@@ -78,8 +78,8 @@ export function useWMNDContract (
 export function usePairContract (pairAddress?: string, withSignerIfPossible?: boolean): Contract | null | undefined {
   return useContract(pairAddress, MONADEXV1PAIR_ABI, withSignerIfPossible)
 }
-export function useFactoryContract (withSignerIfPossible?: boolean):Contract | null | undefined {
-  return useContract(FACTORY_ADDRESS, MONADEXV1_FACTORY_ABI, withSignerIfPossible)
+export function useFactoryContract (): Contract | null | undefined {
+  return useContract(FACTORY_ADDRESS, MONADEXV1_FACTORY_ABI)
 }
 export function useRaffleContract (): Contract | null | undefined {
   const { chainId } = useWalletData()

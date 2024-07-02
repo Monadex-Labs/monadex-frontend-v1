@@ -151,7 +151,7 @@ export default function Updater (): null {
   const useChain = chainId || ChainId.SEPOLIA
   const config = getConfig(useChain)
   useMemo(() => {
-    const blocksPerFetch = config.blocksPerFetch ?? 20
+    const blocksPerFetch = config['blocksPerFetch'] ?? 20
     dispatch(
       addListenerOptions({
         chainId,

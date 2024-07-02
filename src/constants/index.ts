@@ -10,11 +10,12 @@ export const ONE = JSBI.BigInt(1)
 
 export const ZERO_PERCENT = new Percent('0')
 export const ONE_HUNDRED_PERCENT = new Percent('1')
-export const ROUTER_ADDRESS = '0xD80b04Ed45b12F4871d9be252dB4db7F6785AbE8' as Hash // fake address todo : update
+export const ROUTER_ADDRESS = '0x1Ec333E4683937F7daD712f91D5890A873eD2D66' as Hash // fake address todo : update
 export const ERC20_INTERFACE = new Interface(ERC20ABI)
 export const MULTICALL_ADDRESS = '0x3F380DAf9EADB24E73855Dea67A7d2aceE04de40' as Hash // fake address todo : update
-export const FACTORY_ADDRESS =  '0x16104a43529389C139D92f3AC9EbB79Cff22694E' as Hash // fake address todo : update
-export const RAFFLE_ADDRESS = '0x6c4e7a7f6b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b' as Hash // fake address todo : update
+export const FACTORY_ADDRESS = '0xea93c19E6A6CBff75d96430769251096c8951347' as Hash // fake address todo : update
+export const RAFFLE_ADDRESS = '0x73cBBF43F28848603cf12bb19818e0e8aF8226D6' as Hash // fake address todo : update
+export const INIT_CODE_HASH = '0xf130ca4979df53136a41811ef0b8decc310e4c76e9d791be1dfd5add9d89ac35'
 // default allowed slippage, in bips
 export const INITIAL_ALLOWED_SLIPPAGE = 50
 export const SLIPPAGE_AUTO = 0
