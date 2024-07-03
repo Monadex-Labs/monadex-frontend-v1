@@ -55,6 +55,12 @@ function useCallsData (calls: Array<Call | undefined>, options?: ListenerOptions
   AppState['multicall']['callResults']>(
     (state) => state.multicall.callResults
   )
+  // calls.filter((c) => {
+  //   if(c?.callData === '0x70a082310000000000000000000000005fb78054f1547dc1cd5f5de18415546201466f84') {
+  //     console.log('callResultss', callResults)
+  //   }
+  // })
+  
   const dispatch = useDispatch<AppDispatch>()
   const serializedCallKeys: string = useMemo(
     () =>
@@ -69,8 +75,10 @@ function useCallsData (calls: Array<Call | undefined>, options?: ListenerOptions
   // update listeners when there is an actual change that persists for at least 100ms
   useEffect(() => {
     const callKeys: string[] = JSON.parse(serializedCallKeys)
+
     if (chainId === undefined || callKeys.length === 0) return undefined
     const calls = callKeys.map((key) => parseCallKey(key))
+
     if (!ignore) {
       dispatch(
         addMulticallListeners({
@@ -97,6 +105,11 @@ function useCallsData (calls: Array<Call | undefined>, options?: ListenerOptions
       calls?.map<CallResult>((call) => {
         if (chainId === undefined || call === undefined) return INVALID_RESULT
         const result = callResults[chainId]?.[toCallKey(call)]
+        // calls.filter((c) => {
+        //   if(c?.callData === '0x0902f1ac') {
+        //     console.log('result', callResults[chainId])
+        //   }
+        // })
         let data
         if (result?.data != null && result?.data !== '0x') {
           data = result.data
@@ -206,6 +219,8 @@ export function useMultipleContractSingleData (
         : undefined,
     [callInputs, contractInterface, fragment]
   )
+// 0x0902f1ac
+// 0x70a082310000000000000000000000005fb78054f1547dc1cd5f5de18415546201466f84
   const calls = useMemo(
     () =>
       fragment && addresses && addresses.length > 0 && callData
@@ -220,7 +235,11 @@ export function useMultipleContractSingleData (
         : [],
     [addresses, callData, fragment]
   )
+
   const results = useCallsData(calls, options)
+  // if(methodName === 'getReserves') {
+  //   console.log(results)
+  // }
   const latestBlockNumber = useBlockNumber()
   const value = useMemo(() => {
     return results.map((result) => toCallState(result, contractInterface, fragment, latestBlockNumber))

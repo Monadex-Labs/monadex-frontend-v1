@@ -38,9 +38,6 @@ export function usePairs (
     [tokens]
   )
   const results = useMultipleContractSingleData(pairAddresses, PAIR_INTERFACE, 'getReserves')
-  for (let i = 0; i < results.length; i++) {
-    console.log(results[i])
-  }
   return useMemo(() => {
     return results.map((result, i) => {
       const { result: reserves, loading } = result

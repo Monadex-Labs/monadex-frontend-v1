@@ -56,13 +56,14 @@ import { V1_ROUTER_ADDRESS } from '@/constants/index'
 import usePoolsRedirects from '@/hooks/usePoolsRedirect'
 import { SLIPPAGE_AUTO } from '@/state/user/reducer'
 
+console.log('"ododo')
+
 const AddLiquidity: React.FC<{
   currencyBgClass?: string
 }> = ({ currencyBgClass }) => {
   const [addLiquidityErrorMessage, setAddLiquidityErrorMessage] = useState<
   string | null
   >(null)
-
   const isSupportedNetwork = useIsSupportedNetwork()
   const { account, chainId, provider } = useWalletData()
   const chainIdToUse = chainId ?? ChainId.MONAD
@@ -184,8 +185,6 @@ const AddLiquidity: React.FC<{
   }, {})
 
   const { redirectWithCurrency, redirectWithSwitch } = usePoolsRedirects()
-  
-
   const handleCurrencyASelect = useCallback(
     (currencyA: any) => {
       const isSwichRedirect = currencyEquals(currencyA, MONAD)
@@ -251,7 +250,7 @@ const AddLiquidity: React.FC<{
     ) {
       return
     }
-
+    console.log('je suis ici!')
     const amountsMin = {
       [Field.CURRENCY_A]: calculateSlippageAmount(
         parsedAmountA as TokenAmount,
@@ -272,8 +271,8 @@ const AddLiquidity: React.FC<{
       currencies[Field.CURRENCY_B] === nativeCurrency
     ) {
       const tokenBIsETH = currencies[Field.CURRENCY_B] === nativeCurrency
-      estimate = router.estimateGas.addLiquidityETH
-      method = router.addLiquidityETH
+      estimate = router.estimateGas.addLiquidityNative
+      method = router.addLiquidityNative
       args = [
         wrappedCurrency(
           tokenBIsETH
@@ -309,7 +308,7 @@ const AddLiquidity: React.FC<{
       ]
       value = null
     }
-
+    console.log('Router', router)
     setAttemptingTxn(true)
     await estimate(...args, (value != null) ? { value } : {})
       .then(async (estimatedGasLimit: BigNumber): Promise<any> =>
@@ -616,7 +615,7 @@ const AddLiquidity: React.FC<{
             </Box>
         )}
         <Button
-          className={`w-full bg-gradient-to-r from-[#23006A] to-[#23006A]/50 py-4 px-4`}
+          className="w-full bg-gradient-to-r from-[#23006A] to-[#23006A]/50 py-4 px-4"
           disabled={
             Boolean(account) &&
             isSupportedNetwork &&

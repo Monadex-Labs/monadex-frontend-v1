@@ -26,17 +26,29 @@ async function fetchChunk (
   chunk: Call[],
   blockNumber: number
 ): Promise<Array<{ success: boolean, returnData: string }>> {
-  // console.debug('Fetching chunk', chunk, blockNumber);
+  
   try {
+    // @todo: error from returnData returning 0x for '0x0902f1ac' getReserves
+    // It can come from the pairAddress it's an idea but if they are not generate correctly it may explain the 0x for getData we receive
     const { returnData } = await multicall.callStatic.tryBlockAndAggregate(
       false,
-      chunk.map((obj) => ({
+      chunk.map((obj: Call) => (
+        {
         target: obj.address,
         callData: obj.callData,
         gasLimit: obj.gasRequired ?? 1_000_000
-      })),
+        }
+    )),
       { blockTag: blockNumber }
     )
+ 
+    console.log(chunk.map((obj: Call) => (
+      {
+      target: obj.address,
+      callData: obj.callData,
+      gasLimit: obj.gasRequired ?? 1_000_000
+      }
+  )))
     if (process.env.NODE_ENV === 'development') {
       returnData.forEach(({ gasUsed, returnData, success }: any, i: number) => {
         if (
@@ -151,7 +163,7 @@ export default function Updater (): null {
   const useChain = chainId || ChainId.SEPOLIA
   const config = getConfig(useChain)
   useMemo(() => {
-    const blocksPerFetch = config['blocksPerFetch'] ?? 20
+    const blocksPerFetch = config.blocksPerFetch ?? 20
     dispatch(
       addListenerOptions({
         chainId,
@@ -240,9 +252,8 @@ export default function Updater (): null {
                   chainId,
                   results,
                   blockNumber: latestBlockNumber
-                })
-              )
-            }
+                }),
+              );}
 
             // dispatch any errored calls
             if (erroredCalls.length > 0) {

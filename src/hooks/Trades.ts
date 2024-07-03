@@ -20,12 +20,10 @@ export function useAllCommonPairs (
     () => (chainTouse ? BASES_TO_CHECK_TRADES_AGAINST[chainTouse] : []),
     [chainTouse]
   )
-  // @todo: token b is always showing USDC
   const [tokenA, tokenB] = chainId 
     ? [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)]
     : [undefined, undefined]
-  //  console.log('token A', tokenA)
-  // console.log('token B', tokenB)
+
   const basePairs: Array<[Token, Token]> = useMemo(
     () =>
       flatMap(bases, (base): Array<[Token, Token]> =>

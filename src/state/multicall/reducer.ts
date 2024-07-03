@@ -122,6 +122,7 @@ export default createReducer(initialState, (builder) =>
       })
     })
     .addCase(updateMulticallResults, (state, { payload: { chainId, results, blockNumber } }) => {
+      // console.log('datas 0x', results)
       state.callResults[chainId] = state.callResults[chainId] ?? {}
       Object.keys(results).forEach((callKey) => {
         const current = state.callResults[chainId][callKey]
