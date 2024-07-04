@@ -26,7 +26,6 @@ async function fetchChunk (
   chunk: Call[],
   blockNumber: number
 ): Promise<Array<{ success: boolean, returnData: string }>> {
-  
   try {
     // @todo: error from returnData returning 0x for '0x0902f1ac' getReserves
     // It can come from the pairAddress it's an idea but if they are not generate correctly it may explain the 0x for getData we receive
@@ -34,21 +33,13 @@ async function fetchChunk (
       false,
       chunk.map((obj: Call) => (
         {
-        target: obj.address,
-        callData: obj.callData,
-        gasLimit: obj.gasRequired ?? 1_000_000
+          target: obj.address,
+          callData: obj.callData,
+          gasLimit: obj.gasRequired ?? 1_000_000
         }
-    )),
+      )),
       { blockTag: blockNumber }
     )
- 
-    console.log(chunk.map((obj: Call) => (
-      {
-      target: obj.address,
-      callData: obj.callData,
-      gasLimit: obj.gasRequired ?? 1_000_000
-      }
-  )))
     if (process.env.NODE_ENV === 'development') {
       returnData.forEach(({ gasUsed, returnData, success }: any, i: number) => {
         if (
@@ -209,7 +200,7 @@ export default function Updater (): null {
       blockNumber: latestBlockNumber,
       cancellations: chunkedCalls.map((chunk, index) => {
         const { cancel, promise } = retry(
-          () => fetchChunk(multicallContract, chunk, latestBlockNumber),
+          async () => fetchChunk(multicallContract, chunk, latestBlockNumber),
           {
             n: Infinity,
             minWait: 1000,
@@ -227,14 +218,12 @@ export default function Updater (): null {
             const slice = outdatedCallKeys.slice(
               firstCallKeyIndex,
               lastCallKeyIndex
-            );
-
+            )
             // split the returned slice into errors and success
             const { erroredCalls, results } = slice.reduce<{
               erroredCalls: Call[]
               results: { [callKey: string]: string | null }
-            }>(
-              (memo, callKey, i) => {
+            }>((memo, callKey, i) => {
                 if (returnData[i].success) {
                   memo.results[callKey] = returnData[i].returnData ?? null
                 } else {
@@ -243,17 +232,19 @@ export default function Updater (): null {
                 return memo
               },
               { erroredCalls: [], results: {} }
-            );
+            )
 
             // dispatch any new results
             if (Object.keys(results).length > 0)
-              {dispatch(
-                updateMulticallResults({
-                  chainId,
-                  results,
-                  blockNumber: latestBlockNumber
-                }),
-              );}
+            {
+ dispatch(
+              updateMulticallResults({
+                chainId,
+                results,
+                blockNumber: latestBlockNumber
+              })
+              );
+ }
 
             // dispatch any errored calls
             if (erroredCalls.length > 0) {
@@ -264,10 +255,10 @@ export default function Updater (): null {
                   chainId,
                   fetchingBlockNumber: latestBlockNumber
                 })
-              );
+              )
             }
           })
-          
+
           .catch((error: any) => {
             if (error.isCancelledError) {
               console.debug(
@@ -283,14 +274,14 @@ export default function Updater (): null {
               chunk,
               chainId,
               error
-            );
+            )
             dispatch(
               errorFetchingMulticallResults({
                 calls: chunk,
                 chainId,
                 fetchingBlockNumber: latestBlockNumber
               })
-            );
+            )
           })
 
         return cancel

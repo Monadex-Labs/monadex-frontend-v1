@@ -32,7 +32,7 @@ export function usePairs (
     () =>
       tokens.map(([tokenA, tokenB]) => {
         return (tokenA != null) && (tokenB != null) && !tokenA.equals(tokenB)
-          ? Pair.getAddress(tokenA, tokenB, chainId)
+          ? Pair.getAddress(tokenA, tokenB)
           : undefined
       }),
     [tokens]
