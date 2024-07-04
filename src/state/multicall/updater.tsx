@@ -40,6 +40,7 @@ async function fetchChunk (
       )),
       { blockTag: blockNumber }
     )
+
     if (process.env.NODE_ENV === 'development') {
       returnData.forEach(({ gasUsed, returnData, success }: any, i: number) => {
         if (
@@ -233,18 +234,17 @@ export default function Updater (): null {
               },
               { erroredCalls: [], results: {} }
             )
-
             // dispatch any new results
             if (Object.keys(results).length > 0)
             {
- dispatch(
-              updateMulticallResults({
-                chainId,
-                results,
-                blockNumber: latestBlockNumber
-              })
-              );
- }
+              dispatch(
+                updateMulticallResults({
+                  chainId,
+                  results,
+                  blockNumber: latestBlockNumber
+                })
+              )
+            }
 
             // dispatch any errored calls
             if (erroredCalls.length > 0) {
