@@ -231,10 +231,8 @@ const AddLiquidity: React.FC<{
   }
 
   const router = useRouterContract()
-  console.log('parse', parsedAmounts)
   const onAddLiquidity = async (): Promise<void> => {
-    if (chainId === undefined || provider === undefined || account === undefined || (router == null)) return
-
+    if (!chainId || !provider || !account || !router) return
     const {
       [Field.CURRENCY_A]: parsedAmountA,
       [Field.CURRENCY_B]: parsedAmountB
@@ -248,7 +246,6 @@ const AddLiquidity: React.FC<{
     ) {
       return
     }
-    console.log('ICICICICI! line 253')
     const amountsMin = {
       [Field.CURRENCY_A]: calculateSlippageAmount(
         parsedAmountA as TokenAmount,
@@ -259,7 +256,6 @@ const AddLiquidity: React.FC<{
         noLiquidity != null ? 0 : allowedSlippage
       )[0]
     }
-
     let estimate,
       method: (...args: any) => Promise<TransactionResponse>,
       args: Array<string | string[] | number>,
