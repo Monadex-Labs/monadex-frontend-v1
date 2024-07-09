@@ -56,8 +56,6 @@ import { V1_ROUTER_ADDRESS } from '@/constants/index'
 import usePoolsRedirects from '@/hooks/usePoolsRedirect'
 import { SLIPPAGE_AUTO } from '@/state/user/reducer'
 
-console.log('"ododo')
-
 const AddLiquidity: React.FC<{
   currencyBgClass?: string
 }> = ({ currencyBgClass }) => {
@@ -233,8 +231,8 @@ const AddLiquidity: React.FC<{
   }
 
   const router = useRouterContract()
-
-  const onAddLiquidity = async () => {
+  console.log('parse', parsedAmounts)
+  const onAddLiquidity = async (): Promise<void> => {
     if (chainId === undefined || provider === undefined || account === undefined || (router == null)) return
 
     const {
@@ -250,7 +248,7 @@ const AddLiquidity: React.FC<{
     ) {
       return
     }
-    console.log('je suis ici!')
+    console.log('ICICICICI! line 253')
     const amountsMin = {
       [Field.CURRENCY_A]: calculateSlippageAmount(
         parsedAmountA as TokenAmount,
@@ -447,7 +445,6 @@ const AddLiquidity: React.FC<{
       </Box>
     )
   }
-
   return (
     <Box className=''>
       {showConfirm && (
@@ -483,12 +480,12 @@ const AddLiquidity: React.FC<{
         title='token 1'
         currency={currencies[Field.CURRENCY_A]}
         showHalfButton={Boolean(maxAmounts[Field.CURRENCY_A])}
-        showMaxButton={atMaxAmounts[Field.CURRENCY_A] == null}
+        showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
         onMax={() =>
           onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')}
         onHalf={() => {
           const halfAmount = halfAmounts[Field.CURRENCY_A]
-          if (halfAmount != null) {
+          if (halfAmount) {
             onFieldAInput(halfAmount.toExact())
           }
         }}
@@ -502,10 +499,10 @@ const AddLiquidity: React.FC<{
         title='token 2'
         showHalfButton={Boolean(maxAmounts[Field.CURRENCY_B])}
         currency={currencies[Field.CURRENCY_B]}
-        showMaxButton={atMaxAmounts[Field.CURRENCY_B] == null}
+        showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
         onHalf={() => {
           const maxAmount = maxAmounts[Field.CURRENCY_B]
-          if (maxAmount != null) {
+          if (maxAmount) {
             onFieldBInput(
               maxAmount.divide('2').toFixed(maxAmount.currency.decimals)
             )

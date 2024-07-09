@@ -2,7 +2,7 @@
 import Image from 'next/image'
 import Monadex from '@/static/assets/mona_logo.svg'
 import Monadex_mobile from '@/static/assets/Dex_logo_Mobile.svg'
-import { ConnectButton } from '@/components/common'
+import { ConnectButton, Discord2Oauth } from '@/components/common'
 import { useMediaQuery, useTheme, Box } from '@mui/material'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -60,7 +60,8 @@ const Header: React.FC<any> = () => {
           )
         })}
       </div>
-      <div>
+      <div className='flex gap-4 p-2'>
+        {/* <Discord2Oauth /> */}
         <ConnectButton />
       </div>
     </Box>

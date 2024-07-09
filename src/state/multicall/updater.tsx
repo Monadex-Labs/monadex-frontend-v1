@@ -12,7 +12,7 @@ import { AppDispatch, AppState } from '../store'
 import { Call, addListenerOptions, errorFetchingMulticallResults, fetchingMulticallResults, parseCallKey, updateMulticallResults } from './actions'
 import { getConfig } from '@/constants/config'
 import { ChainId } from '@monadex/sdk'
-
+import { SwitchChainPopUp } from '@/components/Popup/switchChainPopup'
 // chunk calls so we do not exceed the gas limit
 const DEFAULT_GAS_REQUIRED = 1_000_000
 /**
@@ -152,14 +152,14 @@ export default function Updater (): null {
     blockNumber: number
     cancellations: Array<() => void>
   }>()
-  const useChain = chainId || ChainId.SEPOLIA
+  const useChain = ChainId.SEPOLIA
   const config = getConfig(useChain)
   useMemo(() => {
-    const blocksPerFetch = config.blocksPerFetch ?? 20
+    const BlocksPerFetch = config.blocksPerFetch ?? 20
     dispatch(
       addListenerOptions({
         chainId,
-        blocksPerFetch
+        blocksPerFetch: BlocksPerFetch
       })
     )
   }, [chainId])
@@ -201,7 +201,7 @@ export default function Updater (): null {
       blockNumber: latestBlockNumber,
       cancellations: chunkedCalls.map((chunk, index) => {
         const { cancel, promise } = retry(
-          async () => fetchChunk(multicallContract, chunk, latestBlockNumber),
+          async () => await fetchChunk(multicallContract, chunk, latestBlockNumber),
           {
             n: Infinity,
             minWait: 1000,
@@ -225,18 +225,17 @@ export default function Updater (): null {
               erroredCalls: Call[]
               results: { [callKey: string]: string | null }
             }>((memo, callKey, i) => {
-                if (returnData[i].success) {
-                  memo.results[callKey] = returnData[i].returnData ?? null
-                } else {
-                  memo.erroredCalls.push(parseCallKey(callKey))
-                }
-                return memo
-              },
-              { erroredCalls: [], results: {} }
+              if (returnData[i].success) {
+                memo.results[callKey] = returnData[i].returnData ?? null
+              } else {
+                memo.erroredCalls.push(parseCallKey(callKey))
+              }
+              return memo
+            },
+            { erroredCalls: [], results: {} }
             )
             // dispatch any new results
-            if (Object.keys(results).length > 0)
-            {
+            if (Object.keys(results).length > 0) {
               dispatch(
                 updateMulticallResults({
                   chainId,
