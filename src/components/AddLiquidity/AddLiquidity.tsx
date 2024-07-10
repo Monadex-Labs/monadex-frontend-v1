@@ -56,6 +56,28 @@ import { V1_ROUTER_ADDRESS } from '@/constants/index'
 import usePoolsRedirects from '@/hooks/usePoolsRedirect'
 import { SLIPPAGE_AUTO } from '@/state/user/reducer'
 
+/* TODO: Check if this is the correct place for this */
+interface AddLiquidityParams {
+  tokenA: string
+  tokenB: string
+  amountADesired: BigNumber
+  amountBDesired: BigNumber
+  amountAMin: BigNumber
+  amountBMin: BigNumber
+  receiver: string
+  deadline: BigNumber
+}
+
+// TODO: use BigNumber to match uint256 (pending confirmation)
+interface AddLiquidityNative {
+  token: string
+  amountTokenDesired: string
+  amountTokenMin: string
+  amountNativeTokenMin: string
+  receiver: string
+  deadline: string
+}
+
 const AddLiquidity: React.FC<{
   currencyBgClass?: string
 }> = ({ currencyBgClass }) => {
@@ -232,7 +254,7 @@ const AddLiquidity: React.FC<{
 
   const router = useRouterContract()
   const onAddLiquidity = async (): Promise<void> => {
-    if (!chainId || !provider || !account || !router) return
+    if (!chainId || (provider == null) || !account || (router == null)) return
     const {
       [Field.CURRENCY_A]: parsedAmountA,
       [Field.CURRENCY_B]: parsedAmountB
@@ -258,7 +280,7 @@ const AddLiquidity: React.FC<{
     }
     let estimate,
       method: (...args: any) => Promise<TransactionResponse>,
-      args: Array<string | string[] | number>,
+      args: AddLiquidityParams | AddLiquidityNative,
       value: BigNumber | null
     if (
       currencies[Field.CURRENCY_A] === nativeCurrency ||
@@ -267,46 +289,45 @@ const AddLiquidity: React.FC<{
       const tokenBIsETH = currencies[Field.CURRENCY_B] === nativeCurrency
       estimate = router.estimateGas.addLiquidityNative
       method = router.addLiquidityNative
-      args = [
-        wrappedCurrency(
+      args = {
+        token: wrappedCurrency(
           tokenBIsETH
             ? currencies[Field.CURRENCY_A]
             : currencies[Field.CURRENCY_B],
           chainId
         )?.address ?? '', // token
-        (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
-        amountsMin[
+        amountTokenDesired: (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
+        amountTokenMin: amountsMin[
           tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B
         ].toString(), // token min
-        amountsMin[
+        amountNativeTokenMin: amountsMin[
           tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A
         ].toString(), // eth min
-        account,
-        deadline.toHexString()
-      ]
+        receiver: account,
+        deadline: deadline.toHexString()
+      }
       value = BigNumber.from(
         (tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString()
       )
     } else {
       estimate = router.estimateGas.addLiquidity
       method = router.addLiquidity
-      args = [
-        wrappedCurrency(currencies[Field.CURRENCY_A], chainId)?.address ?? '',
-        wrappedCurrency(currencies[Field.CURRENCY_B], chainId)?.address ?? '',
-        parsedAmountA.raw.toString(),
-        parsedAmountB.raw.toString(),
-        amountsMin[Field.CURRENCY_A].toString(),
-        amountsMin[Field.CURRENCY_B].toString(),
-        account,
-        deadline.toHexString()
-      ]
+      args = {
+        tokenA: wrappedCurrency(currencies[Field.CURRENCY_A], chainId)?.address ?? '',
+        tokenB: wrappedCurrency(currencies[Field.CURRENCY_B], chainId)?.address ?? '',
+        amountADesired: BigNumber.from(parsedAmountA.raw.toString()),
+        amountBDesired: BigNumber.from(parsedAmountB.raw.toString()),
+        amountAMin: BigNumber.from(amountsMin[Field.CURRENCY_A].toString()),
+        amountBMin: BigNumber.from(amountsMin[Field.CURRENCY_B].toString()),
+        receiver: account,
+        deadline
+      }
       value = null
     }
-    console.log('Router', router)
     setAttemptingTxn(true)
-    await estimate(...args, (value != null) ? { value } : {})
+    await estimate(args, (value != null) ? { value } : {})
       .then(async (estimatedGasLimit: BigNumber): Promise<any> =>
-        await method(...args, {
+        await method(args, {
           ...((value != null) ? { value } : {}),
           gasLimit: calculateGasMargin(estimatedGasLimit)
         }).then(async (response) => {
@@ -476,12 +497,12 @@ const AddLiquidity: React.FC<{
         title='token 1'
         currency={currencies[Field.CURRENCY_A]}
         showHalfButton={Boolean(maxAmounts[Field.CURRENCY_A])}
-        showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
+        showMaxButton={atMaxAmounts[Field.CURRENCY_A] == null}
         onMax={() =>
           onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')}
         onHalf={() => {
           const halfAmount = halfAmounts[Field.CURRENCY_A]
-          if (halfAmount) {
+          if (halfAmount != null) {
             onFieldAInput(halfAmount.toExact())
           }
         }}
@@ -495,10 +516,10 @@ const AddLiquidity: React.FC<{
         title='token 2'
         showHalfButton={Boolean(maxAmounts[Field.CURRENCY_B])}
         currency={currencies[Field.CURRENCY_B]}
-        showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
+        showMaxButton={atMaxAmounts[Field.CURRENCY_B] == null}
         onHalf={() => {
           const maxAmount = maxAmounts[Field.CURRENCY_B]
-          if (maxAmount) {
+          if (maxAmount != null) {
             onFieldBInput(
               maxAmount.divide('2').toFixed(maxAmount.currency.decimals)
             )
@@ -608,7 +629,7 @@ const AddLiquidity: React.FC<{
             </Box>
         )}
         <Button
-          className="w-full bg-gradient-to-r from-[#23006A] to-[#23006A]/50 py-4 px-4"
+          className='w-full bg-gradient-to-r from-[#23006A] to-[#23006A]/50 py-4 px-4'
           disabled={
             Boolean(account) &&
             isSupportedNetwork &&
