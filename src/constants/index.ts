@@ -1,7 +1,7 @@
 import { TokenList } from '@uniswap/token-lists'
 import { Percent, ERC20ABI, ChainId, Token, WMND, JSBI } from '@monadex/sdk'
 import { Interface } from '@ethersproject/abi'
-import { Hash } from 'viem'
+// import { Hash } from 'viem'
 
 // constants used internally but not expected to be used externally
 export const NEGATIVE_ONE = JSBI.BigInt(-1)
@@ -10,12 +10,16 @@ export const ONE = JSBI.BigInt(1)
 
 export const ZERO_PERCENT = new Percent('0')
 export const ONE_HUNDRED_PERCENT = new Percent('1')
-export const ROUTER_ADDRESS = '0x1Ec333E4683937F7daD712f91D5890A873eD2D66' as Hash // fake address todo : update
+
 export const ERC20_INTERFACE = new Interface(ERC20ABI)
-export const MULTICALL_ADDRESS = '0x3F380DAf9EADB24E73855Dea67A7d2aceE04de40' as Hash // fake address todo : update
-export const FACTORY_ADDRESS = '0xea93c19E6A6CBff75d96430769251096c8951347' as Hash // fake address todo : update
-export const RAFFLE_ADDRESS = '0x73cBBF43F28848603cf12bb19818e0e8aF8226D6' as Hash // fake address todo : update
-export const INIT_CODE_HASH = '0xf130ca4979df53136a41811ef0b8decc310e4c76e9d791be1dfd5add9d89ac35'
+
+export const MULTICALL_ADDRESS = '0x3F380DAf9EADB24E73855Dea67A7d2aceE04de40'
+export const FACTORY_ADDRESS = '0x34AAAeA646c8B95D86FdbD5F04023f9304BA78F4'
+export const ROUTER_ADDRESS = '0x0165ef489a48135909ea9babc9b263ad78af04c8'
+export const RAFFLE_ADDRESS = '0xe6ddcc5353d6d67bdcef42430f1e3c11335823b8'
+
+export const INIT_CODE_HASH = '0x8009c475872d4440952067a3d491713f4a820605f565f899d722ca2b3e196d05'
+
 // default allowed slippage, in bips
 export const INITIAL_ALLOWED_SLIPPAGE = 50
 export const SLIPPAGE_AUTO = 0
@@ -65,7 +69,7 @@ export const MNDX: { [chainid: number]: Token } = {
   [ChainId.SEPOLIA]: new Token(
     ChainId.SEPOLIA,
     '0xD24291BF0037f0ae0482f6757b5dFf437419bF25',
-     6,
+    6,
     'MXD',
     'Monadex token'
   )
@@ -193,7 +197,6 @@ export const BASES_TO_CHECK_TRADES_AGAINST: {
 // Some tokens can only be swapped via certain pairs, so we override the list of bases that are considered for these tokens.
 export const CUSTOM_BASES: {
   [ChainId: number]: { [tokenAddress: string]: Token[] } } = {}
-
 
 export const RAFFLE_WL_TOKEN_ADDRESS = {
   [ChainId.SEPOLIA]: [

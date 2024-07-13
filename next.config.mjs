@@ -1,4 +1,13 @@
 /** @type {import('next').NextConfig} */
+import withBundleAnalyzer from '@next/bundle-analyzer'
+
+const bundleAnalyzerConfig = {
+  enabled: process.env.ANALYZE === 'true'
+}
+
+const withBundleAnalyzerConfigured = withBundleAnalyzer(bundleAnalyzerConfig)
+
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   async headers () {
     return [
@@ -16,4 +25,4 @@ const nextConfig = {
   }
 }
 
-export default nextConfig
+export default withBundleAnalyzerConfigured(nextConfig)
