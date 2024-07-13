@@ -60,15 +60,15 @@ import { SLIPPAGE_AUTO } from '@/state/user/reducer'
 interface AddLiquidityParams {
   tokenA: string
   tokenB: string
-  amountADesired: BigNumber
-  amountBDesired: BigNumber
-  amountAMin: BigNumber
-  amountBMin: BigNumber
+  amountADesired: string
+  amountBDesired: string
+  amountAMin: string
+  amountBMin: string
   receiver: string
-  deadline: BigNumber
+  deadline: string
 }
 
-// TODO: use BigNumber to match uint256 (pending confirmation)
+// TODO: use string to match uint256 (pending confirmation)
 interface AddLiquidityNative {
   token: string
   amountTokenDesired: string
@@ -315,16 +315,30 @@ const AddLiquidity: React.FC<{
       args = {
         tokenA: wrappedCurrency(currencies[Field.CURRENCY_A], chainId)?.address ?? '',
         tokenB: wrappedCurrency(currencies[Field.CURRENCY_B], chainId)?.address ?? '',
-        amountADesired: BigNumber.from(parsedAmountA.raw.toString()),
-        amountBDesired: BigNumber.from(parsedAmountB.raw.toString()),
-        amountAMin: BigNumber.from(amountsMin[Field.CURRENCY_A].toString()),
-        amountBMin: BigNumber.from(amountsMin[Field.CURRENCY_B].toString()),
+        amountADesired: parsedAmountA.raw.toString(),
+        amountBDesired: parsedAmountB.raw.toString(),
+        amountAMin: amountsMin[Field.CURRENCY_A].toString(),
+        amountBMin: amountsMin[Field.CURRENCY_B].toString(),
         receiver: account,
-        deadline
+        deadline: deadline.toHexString()
       }
       value = null
     }
     setAttemptingTxn(true)
+    /* Test for receipt error message (not really useful, but removes estimateGas call)
+    try {
+      const gasLimit = 500000
+      const tx = await method(args, { gasLimit })
+      console.log('Transaction sent:', tx)
+      const receipt = await tx.wait()
+      console.log('Transaction mined:', receipt)
+    } catch (error: any) {
+      console.error('Error sending transaction:', error)
+      if (error?.data?.message != null) {
+        console.error('Revert reason:', error.data.message)
+      }
+    }
+    */
     await estimate(args, (value != null) ? { value } : {})
       .then(async (estimatedGasLimit: BigNumber): Promise<any> =>
         await method(args, {
