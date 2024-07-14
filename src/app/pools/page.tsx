@@ -12,11 +12,11 @@ const Pool = (): JSX.Element => {
     <div>
       <PageHeader isTablet={false} pageName='Pools' />
       <Box className='flex justify-between w-full p-3 items-center max-w-[500px] mx-auto'>
-          <p className='font-medium text-xl'>Add Liquidity</p>
-          <Box className='flex items-center gap-3 p-2'>
-            <Box className=''>
-              <QuestionHelper
-                size={25}
+        <p className='font-medium text-xl'>Add Liquidity</p>
+        <Box className='flex items-center gap-3 p-2'>
+          <Box className=''>
+            <QuestionHelper
+              size={25}
                 className='text-[#373737]'
                 text='When you add liquidity, you are given pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time.'
               />
