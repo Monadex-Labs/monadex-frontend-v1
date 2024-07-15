@@ -91,14 +91,14 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
   const addToken = useAddUserToken()
   const isMetamask = getIsMetaMaskWallet() && isOnSelectedList
 
-  const addTokenToMetamask = async (
+  const addTokenToMetamask = (
     tokenAddress: any,
     tokenSymbol: any,
     tokenDecimals: any,
     tokenImage: any
-  ): Promise<void> => {
+  ): void => {
     if (provider && provider.provider && provider.provider.request) {
-      await provider.provider.request({
+       provider.provider.request({
         method: 'wallet_watchAsset',
         params: [{
           type: 'ERC20',
@@ -165,12 +165,12 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
                   <Box
                     ml='4px'
                     onClick={(event: any) => {
-                      console.log('ov', currency)
-                      addTokenToMetamask(
+                       addTokenToMetamask(
                         currency.address,
                         currency.symbol,
                         currency.decimals,
-                        getTokenLogoURL(currency.address)  
+                        // CURRENCY.ADDRESS
+                        getTokenLogoURL()  
                       )
                       event.stopPropagation()
                     }}
@@ -179,18 +179,18 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
                   </Box>
               )}
             </Box>
-            {isOnSelectedList != null
+            {isOnSelectedList
               ? (
                 <span className='text-[#C6CACF]'>{currency.name}</span>
                 )
               : (
                 <Box className='flex items-center'>
-                  <span>
+                  <span className='text-sm font-semibold'>
                     {customAdded ? 'Added by user' : 'Found by address'}
                   </span>
                   <Box
-                    ml={0.5}
-                    className='text-primary'
+                    ml={2}
+                    className='text-xs font-medium bg-[#8133FF] px-3 py-1 rounded-full '
                     onClick={(event) => {
                       event.stopPropagation()
                       if (customAdded) {
@@ -225,7 +225,7 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
                 )
               : account != null
                 ? (
-                  <CircularProgress size={24} color='secondary' />
+                  <CircularProgress size={15} color='secondary' />
                   )
                 : null}
           </Box>

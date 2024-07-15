@@ -61,7 +61,6 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
   // if they input an address, use it
   const isAddressSearch = isAddress(searchQuery)
   const searchToken = useToken(searchQuery)
-  console.log('this token:!',searchToken)
 
   const showETH: boolean = useMemo(() => {
     const s = searchQuery.toLowerCase().trim()
@@ -163,7 +162,6 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
     dispatch(selectList(DEFAULT_TOKEN_LIST_URL))
   }
   selectedListInfo = useSelectedListInfo()
-  console.log(searchQueryInput)
   return (
     <Box className='pt-5 px-6 h-[80vh] flex flex-col'>
       <Box className='flex justify-between items-center m-[6px]'>
