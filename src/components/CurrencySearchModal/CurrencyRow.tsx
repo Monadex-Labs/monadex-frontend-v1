@@ -97,7 +97,7 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
     tokenDecimals: any,
     tokenImage: any
   ): Promise<void> => {
-    if (provider?.provider?.request != null) {
+    if (provider && provider.provider && provider.provider.request) {
       await provider.provider.request({
         method: 'wallet_watchAsset',
         params: [{
@@ -163,15 +163,14 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
                 currency !== nativeCurrency &&
                 !(currency.name === 'MONAD') && (
                   <Box
-                    className='border bg-red-300'
-                    ml='2px'
+                    ml='4px'
                     onClick={(event: any) => {
-                      addTokenToMetamask( // eslint-disable-line
+                      console.log('ov', currency)
+                      addTokenToMetamask(
                         currency.address,
                         currency.symbol,
                         currency.decimals,
-                        // currency.address
-                        getTokenLogoURL()  
+                        getTokenLogoURL(currency.address)  
                       )
                       event.stopPropagation()
                     }}

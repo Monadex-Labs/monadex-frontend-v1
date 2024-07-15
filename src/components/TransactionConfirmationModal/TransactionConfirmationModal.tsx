@@ -3,7 +3,8 @@ import { Box, Button } from '@mui/material'
 import { CustomModal } from '@/components'
 import { Close, CheckCircleOutline } from '@mui/icons-material'
 import { useWalletData } from '@/utils'
-
+import Image from 'next/image'
+import Molandak from '@/static/assets/hedgehog.png'
 interface useConfirmationPendingContentProps {
   title: string
   pending?: string
@@ -29,15 +30,19 @@ export const ConfirmationPendingContent: React.FC<ConfirmationPendingContentProp
 
   return (
     <Box padding={4} overflow='hidden'>
-      <Box className='txModalHeader'>
+      <Box className='mb-6 flex justify-between'>
+      <h5 className='text-lg font-medium'>{confirmationPendingContent.title}</h5>
+
         <Close onClick={onDismiss} />
       </Box>
-      <Box className='txModalContent'>
-        <h5>{confirmationPendingContent.title}</h5>
+      <Box className='flex justify-center'>
+        <Image className='animate-spin' src={Molandak} width={200} alt='molandak'/>
+      </Box>
+      <Box className='p-2 text-center'>
         {confirmationPendingContent.pending && (
-          <p>{confirmationPendingContent.pending}</p>
+          <p className='font-base'>{confirmationPendingContent.pending}</p>
         )}
-        <p>{confirmationPendingContent.confirm || ''}</p>
+        <p className='text-sm mt-2'>{confirmationPendingContent.confirm || ''}</p>
       </Box>
     </Box>
   )
@@ -175,6 +180,7 @@ const TransactionConfirmationModal: React.FC<ConfirmationModalProps> = ({
   // confirmation screen
   return (
     <CustomModal
+    classname='max-w-[500px]'
       open={isOpen}
       onClose={onDismiss}
       modalWrapper={`${modalWrapper ?? 'INVALID WRAPPER'}${isTxWrapper ? ' txModalWrapper' : ''}`}

@@ -16,13 +16,13 @@ const Pool = (): JSX.Element => {
         <Box className='flex items-center gap-3 p-2'>
           <Box className=''>
             <QuestionHelper
-              size={25}
-                className='text-[#373737]'
+              size={23}
+                className='text-white'
                 text='When you add liquidity, you are given pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time.'
               />
             </Box>
             <Box className=''>
-              <IoMdSettings onClick={() => setOpenSettingsModal(true)} className='text-[#373737] cursor-pointer text-[25px]' />
+              <IoMdSettings onClick={() => setOpenSettingsModal(true)} className='text-white cursor-pointer text-[23px]' />
             </Box>
           </Box>
       </Box>

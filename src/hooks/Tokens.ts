@@ -120,6 +120,7 @@ export function useToken (tokenAddress?: string): Token | undefined | null {
       (token) => token.address.toLowerCase() === address.toLowerCase()
     )
     : undefined
+
   const tokenName = useSingleCallResult(token ? undefined : tokenContract, 'name', undefined, NEVER_RELOAD)
   const tokenNameBytes32 = useSingleCallResult(
     (token !== undefined) ? undefined : tokenContractBytes32,
@@ -131,7 +132,7 @@ export function useToken (tokenAddress?: string): Token | undefined | null {
   const symbolBytes32 = useSingleCallResult((token !== undefined) ? undefined : tokenContractBytes32, 'symbol', undefined, NEVER_RELOAD)
 
   const decimals = useSingleCallResult(token ? undefined : tokenContract, 'decimals', undefined, NEVER_RELOAD)
-
+console.log('chain', decimals)
   return useMemo(() => {
     if (token) return token
     if (!chainId || !address) return undefined
