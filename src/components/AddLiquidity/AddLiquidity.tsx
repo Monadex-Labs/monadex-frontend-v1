@@ -254,7 +254,6 @@ const AddLiquidity: React.FC<{
 
   const router = useRouterContract()
   const onAddLiquidity = async (): Promise<void> => {
-
     if (!chainId || (provider == null) || !account || (router == null)) return
     const {
       [Field.CURRENCY_A]: parsedAmountA,
@@ -313,7 +312,6 @@ const AddLiquidity: React.FC<{
         (tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString()
       )
     } else {
-
       estimate = router.estimateGas.addLiquidity
       method = router.addLiquidity
       args = {
@@ -329,57 +327,43 @@ const AddLiquidity: React.FC<{
       value = null
     }
     setAttemptingTxn(true)
-   /**
-    *  try {
-      const gasLimit = 500000
-      const tx = await method(args, { gasLimit })
-      console.log('Transaction sent:', tx)
-      const receipt = await tx.wait()
-      console.log('Transaction mined:', receipt)
-    } catch (error: any) {
-      console.error('Error sending transaction:', error)
-      if (error?.data?.message != null) {
-        console.error('Revert reason:', error.data.message)
-      }
-    }
-    */
-      await estimate(args, value ? { value } : {})
-        .then(async (estimatedGasLimit: BigNumber): Promise<any> => {
-          console.log('Estimated Gas Limit:', estimatedGasLimit); // Log the estimated gas limit
-    
-          return await method(args, {
-            ...(value ? { value } : {}),
-            gasLimit: calculateGasMargin(estimatedGasLimit)
-          })
+    await estimate(args, (value != null) ? { value } : {})
+      .then(async (estimatedGasLimit: BigNumber): Promise<any> => {
+        console.log('Estimated Gas Limit:', estimatedGasLimit) // Log the estimated gas limit
+
+        return await method(args, {
+          ...((value != null) ? { value } : {}),
+          gasLimit: calculateGasMargin(estimatedGasLimit)
+        })
           .then(async (response) => {
-            console.log('Method Response:', response); // Log the response from method
-    
-            setAttemptingTxn(false);
-            setTxPending(true);
-    
-            const summary = `Add ${liquidityTokenData.amountA} ${liquidityTokenData.symbolA ?? 'INVALID SYMBOL'} and ${liquidityTokenData.amountB} ${liquidityTokenData.symbolB ?? 'INVALID SYMBOL'}`;
-            console.log('Transaction Summary:', summary); // Log the transaction summary
-    
-            addTransaction(response, { summary });
-    
-            setTxHash(response.hash);
-            console.log('Transaction Hash:', response.hash); // Log the transaction hash
-    
+            console.log('Method Response:', response) // Log the response from method
+
+            setAttemptingTxn(false)
+            setTxPending(true)
+
+            const summary = `Add ${liquidityTokenData.amountA} ${liquidityTokenData.symbolA ?? 'INVALID SYMBOL'} and ${liquidityTokenData.amountB} ${liquidityTokenData.symbolB ?? 'INVALID SYMBOL'}`
+            console.log('Transaction Summary:', summary) // Log the transaction summary
+
+            addTransaction(response, { summary })
+
+            setTxHash(response.hash)
+            console.log('Transaction Hash:', response.hash) // Log the transaction hash
+
             try {
-              const receipt = await response.wait();
-              console.log('Transaction Receipt:', receipt); // Log the transaction receipt
-    
-              finalizedTransaction(receipt, { summary });
-              setTxPending(false);
+              const receipt = await response.wait()
+              console.log('Transaction Receipt:', receipt) // Log the transaction receipt
+
+              finalizedTransaction(receipt, { summary })
+              setTxPending(false)
             } catch (error) {
-              console.error('Error waiting for transaction receipt:', error); // Log the error
-              setTxPending(false);
-              setAddLiquidityErrorMessage('There is an error in transaction.');
+              console.error('Error waiting for transaction receipt:', error) // Log the error
+              setTxPending(false)
+              setAddLiquidityErrorMessage('There is an error in transaction.')
             }
-          });
+          })
       })
       .catch((error: any) => {
-        console.log('error',)
+        console.log('error')
         setAttemptingTxn(false)
         setAddLiquidityErrorMessage(
           error?.code === 'ACTION_REJECTED' ? 'Transaction rejected' : error?.message
