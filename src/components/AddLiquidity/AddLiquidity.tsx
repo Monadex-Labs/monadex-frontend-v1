@@ -342,12 +342,10 @@ const AddLiquidity: React.FC<{
             setTxPending(true)
 
             const summary = `Add ${liquidityTokenData.amountA} ${liquidityTokenData.symbolA ?? 'INVALID SYMBOL'} and ${liquidityTokenData.amountB} ${liquidityTokenData.symbolB ?? 'INVALID SYMBOL'}`
-            console.log('Transaction Summary:', summary) // Log the transaction summary
 
             addTransaction(response, { summary })
 
             setTxHash(response.hash)
-            console.log('Transaction Hash:', response.hash) // Log the transaction hash
 
             try {
               const receipt = await response.wait()
@@ -464,7 +462,7 @@ const AddLiquidity: React.FC<{
             {`Output is estimated. If the price changes by more than ${allowedSlippage / 100}% your transaction will revert.`}
           </small>
         </Box>
-        <Box className='swapButtonWrapper'>
+        <Box className='border'>
           <Button className='w-full' onClick={onAddLiquidity}>
             Confirm Supply
           </Button>

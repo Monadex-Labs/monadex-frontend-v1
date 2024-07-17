@@ -31,16 +31,18 @@ export function usePairs (
   const pairAddresses = useMemo(
     () =>
       tokens.map(([tokenA, tokenB]) => {
-        // console.log('this is the pair pool names', [tokenA?.name, tokenB?.name])
-        // console.log('the pool addresses:', Pair.getAddress(tokenA as Token, tokenB as Token))
-        // console.log('----------------------------------')
-        return (tokenA != null) && (tokenB != null) && !tokenA.equals(tokenB)
+        console.log('this is the pair pool names', [tokenA?.name, tokenB?.name])
+        console.log('the pool addresses:', Pair.getAddress(tokenA as Token, tokenB as Token))
+        console.log('----------------------------------')
+        return tokenA && tokenB && !tokenA.equals(tokenB)
           ? Pair.getAddress(tokenA, tokenB)
           : undefined
       }),
     [tokens]
   )
+
   const results = useMultipleContractSingleData(pairAddresses, PAIR_INTERFACE, 'getReserves')
+  console.log('res', results)
   return useMemo(() => {
     return results.map((result, i) => {
       const { result: reserves, loading } = result

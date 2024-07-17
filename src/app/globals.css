@@ -9,9 +9,9 @@
 }
 
  body {
-  background: #1F0051;
+  background-color: hsl(262, 83%, 14%);
+  background-image: radial-gradient(circle farthest-side at center, hsl(263, 91%, 22%) 0%, hsl(262, 83%, 14%) 100%);;
   color: white;
-  background-image: url("../static/assets/img.png");
   background-repeat: no-repeat;
   background-position: center;
   background-attachment: fixed;

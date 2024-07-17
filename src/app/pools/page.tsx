@@ -26,7 +26,7 @@ const Pool = (): JSX.Element => {
             </Box>
           </Box>
       </Box>
-      <Box className='flex flex-col max-w-[500px] justify-center items-center p-4 mx-auto bg-[#18003E] border border-[#373737] rounded-md'>
+      <Box className='flex flex-col max-w-[500px] justify-center items-center p-4 mx-auto bg-[#18003E] rounded-sm'>
         {openSettingsModal && (
           <SettingsModal
             open={openSettingsModal}
