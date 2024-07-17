@@ -56,13 +56,12 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
     searchQuery,
     handleInput
   )
-
   const allTokens = useAllTokens()
   const inactiveTokens = useInActiveTokens()
   // if they input an address, use it
   const isAddressSearch = isAddress(searchQuery)
   const searchToken = useToken(searchQuery)
-  console.log('search', searchToken)
+
   const showETH: boolean = useMemo(() => {
     const s = searchQuery.toLowerCase().trim()
     return s === '' || s === 'm' || s === 'mn' || s === 'mnd'
@@ -71,7 +70,7 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
   const tokenComparator = useTokenComparator(false)
 
   const filteredTokens: Token[] = useMemo(() => {
-    if (isAddressSearch) return (searchToken != null) ? [searchToken] : []
+    if (isAddressSearch) return (searchToken) ? [searchToken] : []
     const filteredResult = filterTokens(Object.values(allTokens), searchQuery)
     let filteredInactiveResult: Token[] = []
     // search in inactive token list.
@@ -163,7 +162,6 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
     dispatch(selectList(DEFAULT_TOKEN_LIST_URL))
   }
   selectedListInfo = useSelectedListInfo()
-
   return (
     <Box className='pt-5 px-6 h-[80vh] flex flex-col'>
       <Box className='flex justify-between items-center m-[6px]'>

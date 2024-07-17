@@ -1,7 +1,7 @@
 import { TokenList } from '@uniswap/token-lists'
 import { Percent, ERC20ABI, ChainId, Token, WMND, JSBI } from '@monadex/sdk'
 import { Interface } from '@ethersproject/abi'
-import { Hash } from 'viem'
+// import { Hash } from 'viem'
 
 // constants used internally but not expected to be used externally
 export const NEGATIVE_ONE = JSBI.BigInt(-1)
@@ -10,11 +10,18 @@ export const ONE = JSBI.BigInt(1)
 
 export const ZERO_PERCENT = new Percent('0')
 export const ONE_HUNDRED_PERCENT = new Percent('1')
-export const ROUTER_ADDRESS = '0xD80b04Ed45b12F4871d9be252dB4db7F6785AbE8' as Hash // fake address todo : update
+
 export const ERC20_INTERFACE = new Interface(ERC20ABI)
-export const MULTICALL_ADDRESS = '0x3F380DAf9EADB24E73855Dea67A7d2aceE04de40' as Hash // fake address todo : update
-export const FACTORY_ADDRESS = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f' as Hash // fake address todo : update
-export const RAFFLE_ADDRESS = '0x6c4e7a7f6b5b5b5b5b5b5b5b5b5b5b5b5b5b5b5b' as Hash // fake address todo : update
+// test tokenA on sepolia : 0xeBB73A78C5969Fd6C2ABCA93bd4C1e6f336da196
+// test tokenB on sepolia : 0xdd9ec86EC9563D4bae8c7AcA55f4814cbF41c464
+// test wMonad on sepolia 0x3f2509FE1523ce1c8735d76f5E9ACa9BD6c62C19
+export const MULTICALL_ADDRESS = '0x5C36F9f347293e0c7ad2106F5c15303911ffd71b' // eth sepolia address
+export const FACTORY_ADDRESS = '0x3FB48a9b88685Fb14DcfBE65553200b1790964E1' // eth sepolia address
+export const ROUTER_ADDRESS = '0x6BDC96BD77b5ee7112aeaE8841EF15B733C9cE98' // eth sepolia address
+export const RAFFLE_ADDRESS = '0xe6ddcc5353d6d67bdcef42430f1e3c11335823b8'
+
+export const INIT_CODE_HASH = '0x8009c475872d4440952067a3d491713f4a820605f565f899d722ca2b3e196d05'
+
 // default allowed slippage, in bips
 export const INITIAL_ALLOWED_SLIPPAGE = 50
 export const SLIPPAGE_AUTO = 0
@@ -24,7 +31,7 @@ export const DEFAULT_DEADLINE_FROM_NOW = 60 * 20
 type ChainTokenList = {
   readonly [chainId in ChainId]: Token[]
 }
-type AddressMap = { [chainId: number]: string }
+interface AddressMap { [chainId: number]: string }
 export const WMND_ONLY: ChainTokenList = {
   [ChainId.MONAD_TESTNET]: [WMND[ChainId.MONAD_TESTNET]],
   [ChainId.MONAD]: [WMND[ChainId.MONAD]],
@@ -33,7 +40,7 @@ export const WMND_ONLY: ChainTokenList = {
 
 }
 export const V1_ROUTER_ADDRESS: AddressMap = {
-  [ChainId.SEPOLIA]: '0xD80b04Ed45b12F4871d9be252dB4db7F6785AbE8'
+  [ChainId.SEPOLIA]: '0x6BDC96BD77b5ee7112aeaE8841EF15B733C9cE98'
   // add chain.monad testnet and monad here
 }
 // one basis point
@@ -60,7 +67,15 @@ export const MONADEX_TOKEN_LIST: TokenList | TokenList[] = [] // token list = li
 export const DEFAULT_TOKEN_LIST_URL: string = 'https://dani3.com/assets/docs/list.json' // TODO: Publish MONAD json file, extract to env and change URL
 
 // let's add some tokens in eth-sepolia for test purposes // USDC - ETH
-export const MNDX: { [chainid: number]: Token } = []
+export const MNDX: { [chainid: number]: Token } = {
+  [ChainId.SEPOLIA]: new Token(
+    ChainId.SEPOLIA,
+    '0xD24291BF0037f0ae0482f6757b5dFf437419bF25',
+    6,
+    'MXD',
+    'Monadex token'
+  )
+}
 export const USDC: { [chainid: number]: Token } = {
   [ChainId.SEPOLIA]: new Token(
     ChainId.SEPOLIA,
@@ -176,14 +191,14 @@ export const BASES_TO_CHECK_TRADES_AGAINST: {
     USDC[ChainId.MONAD]
   ],
   [ChainId.SEPOLIA]: [
-    USDC[ChainId.SEPOLIA]
+    USDC[ChainId.SEPOLIA],
+    MNDX[ChainId.SEPOLIA]
   ]
 }
 
 // Some tokens can only be swapped via certain pairs, so we override the list of bases that are considered for these tokens.
 export const CUSTOM_BASES: {
   [ChainId: number]: { [tokenAddress: string]: Token[] } } = {}
-
 
 export const RAFFLE_WL_TOKEN_ADDRESS = {
   [ChainId.SEPOLIA]: [

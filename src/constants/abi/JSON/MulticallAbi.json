@@ -1,5 +1,6 @@
+
 [
-			{
+	{
 				"inputs": [
 					{
 						"components": [
@@ -310,4 +311,4 @@
 				"stateMutability": "nonpayable",
 				"type": "function"
 			}
-		]
+]

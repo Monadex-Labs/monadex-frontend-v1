@@ -4,6 +4,10 @@ import { cn } from '@/utils/cn'
 import { useEffect, useState } from 'react'
 import { supportedChainId } from '@/utils/supportedChain'
 import { SwitchChainPopUp } from '../Popup/switchChainPopup'
+import { FaDiscord } from 'react-icons/fa6'
+import { logIn, logOut } from '@/discord/buttonFns'
+import { useSession } from 'next-auth/react'
+
 interface ButtonProps {
   classNames?: string
   children?: React.ReactNode
@@ -27,7 +31,7 @@ export const ButtonPrimary: React.FC<any> = ({ classNames, children, ...rest }: 
     <Base {...rest} />
   )
 }
-export const PrimaryButton: React.FC<any> = ({children, classNames, onClick }: ButtonProps) => {
+export const PrimaryButton: React.FC<any> = ({ children, classNames, onClick }: ButtonProps) => {
   return (
     <button
       onClick={onClick}
@@ -73,9 +77,23 @@ export const ConnectButton: React.FC<any> = ({ classNames, children, ...rest }: 
               0,
               4
             )}...${wallet.accounts[0].address.slice(-4)}`
-              : (hover && wallet != null ? 'Disconnect' : 'Connect')}
+              : (hover && wallet != null ? 'Disconnect' : 'Connect wallet')}
       </button>
     </>
 
+  )
+}
+
+export const Discord2Oauth: React.FC<any> = ({ classNames, children, ...rest }: ButtonProps) => {
+  const { data: session, status } = useSession()
+  return (
+    <button
+      onClick={status === 'authenticated' ?  logOut : logIn}
+      className='justify-center gap-3 text-white bg-[#836EF9] hover:bg-[#8133FF]/90 focus:ring-4 focus:outline-none focus:ring-[#1da1f2]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#1da1f2]/55'>
+      <FaDiscord />
+      {
+        status === 'authenticated' ? `connected as : ${session?.user?.name}` : 'Connect Discord'
+      }
+    </button>
   )
 }

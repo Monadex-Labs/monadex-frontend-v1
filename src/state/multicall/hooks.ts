@@ -55,6 +55,12 @@ function useCallsData (calls: Array<Call | undefined>, options?: ListenerOptions
   AppState['multicall']['callResults']>(
     (state) => state.multicall.callResults
   )
+  // calls.filter((c) => {
+  //   if(c?.callData === '0x70a082310000000000000000000000005fb78054f1547dc1cd5f5de18415546201466f84') {
+  //     console.log('callResultss', callResults)
+  //   }
+  // })
+  
   const dispatch = useDispatch<AppDispatch>()
   const serializedCallKeys: string = useMemo(
     () =>
@@ -69,8 +75,10 @@ function useCallsData (calls: Array<Call | undefined>, options?: ListenerOptions
   // update listeners when there is an actual change that persists for at least 100ms
   useEffect(() => {
     const callKeys: string[] = JSON.parse(serializedCallKeys)
+
     if (chainId === undefined || callKeys.length === 0) return undefined
     const calls = callKeys.map((key) => parseCallKey(key))
+
     if (!ignore) {
       dispatch(
         addMulticallListeners({
@@ -97,6 +105,11 @@ function useCallsData (calls: Array<Call | undefined>, options?: ListenerOptions
       calls?.map<CallResult>((call) => {
         if (chainId === undefined || call === undefined) return INVALID_RESULT
         const result = callResults[chainId]?.[toCallKey(call)]
+        // calls.filter((c) => {
+        //   if(c?.callData === '0x0902f1ac') {
+        //     console.log('result', callResults[chainId])
+        //   }
+        // })
         let data
         if (result?.data != null && result?.data !== '0x') {
           data = result.data
@@ -130,20 +143,20 @@ function toCallState (
   ignore?: boolean
 ): CallState {
   if (ignore) return INVALID_CALL_STATE
-  if (!callResult) return INVALID_CALL_STATE
+  if (callResult == null) return INVALID_CALL_STATE
+
   const { valid, data, blockNumber } = callResult
   if (!valid) return INVALID_CALL_STATE
   if (valid && !blockNumber) return LOADING_CALL_STATE
-  if (!contractInterface || !fragment || !latestBlockNumber)
-    return LOADING_CALL_STATE
+  if ((contractInterface == null) || (fragment == null) || !latestBlockNumber) { return LOADING_CALL_STATE }
   const success = data && data.length > 2
   const syncing = (blockNumber ?? 0) < latestBlockNumber
-  let result: Result | undefined = undefined
+  let result: Result | undefined
   if (success && data) {
     try {
       result = contractInterface.decodeFunctionResult(fragment, data)
     } catch (error) {
-      console.log('Result data parsing failed', fragment, data)
+      console.debug('Result data parsing failed', fragment, data)
       return {
         valid: true,
         loading: false,
@@ -157,7 +170,7 @@ function toCallState (
     valid: true,
     loading: false,
     syncing,
-    result: result,
+    result,
     error: !success
   }
 }
@@ -169,7 +182,6 @@ export function useSingleContractMultipleData<T extends Contract = Contract> (
   options?: ListenerOptions
 ): readonly CallState[] {
   const fragment = useMemo(() => contract?.interface?.getFunction(methodName), [contract, methodName])
-
   const calls = useMemo(
     () =>
       (contract != null) && (fragment != null) && (callInputs != null) && callInputs.length > 0
@@ -202,11 +214,13 @@ export function useMultipleContractSingleData (
   const fragment = useMemo(() => contractInterface.getFunction(methodName), [contractInterface, methodName])
   const callData: string | undefined = useMemo(
     () =>
-      fragment != null && isValidMethodArgs(callInputs)
+      fragment && isValidMethodArgs(callInputs)
         ? contractInterface.encodeFunctionData(fragment, callInputs)
         : undefined,
     [callInputs, contractInterface, fragment]
   )
+// 0x0902f1ac
+// 0x70a082310000000000000000000000005fb78054f1547dc1cd5f5de18415546201466f84
   const calls = useMemo(
     () =>
       fragment && addresses && addresses.length > 0 && callData
@@ -221,19 +235,21 @@ export function useMultipleContractSingleData (
         : [],
     [addresses, callData, fragment]
   )
-  const results = useCallsData(calls, options) // TODO@ WE HAVE DATA UNDEFINED BUT USECALLDATA RETURNS A DATA = CHECK THIS
-  console.log('results thiss time: ', results)
+
+  const results = useCallsData(calls, options)
+  // if(methodName === 'getReserves') {
+  //   console.log(results)
+  // }
   const latestBlockNumber = useBlockNumber()
-  return useMemo(() => {
-    return results.map((result: CallResult) => {
-      return toCallState(
-        result,
-        contractInterface,
-        fragment,
-        latestBlockNumber
-      )
-    })
+  const value = useMemo(() => {
+    return results.map((result) => toCallState(result, contractInterface, fragment, latestBlockNumber))
   }, [fragment, results, contractInterface, latestBlockNumber])
+  for (let i = 0; i < value.length; i++) {
+    if (value[i].result !== undefined) {
+      return value
+    }
+  }
+  return value
 }
 
 export function useSingleCallResult (
