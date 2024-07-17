@@ -329,8 +329,9 @@ const AddLiquidity: React.FC<{
       value = null
     }
     setAttemptingTxn(true)
-    try {
-      const gasLimit = 5000000
+   /**
+    *  try {
+      const gasLimit = 500000
       const tx = await method(args, { gasLimit })
       console.log('Transaction sent:', tx)
       const receipt = await tx.wait()
@@ -341,6 +342,7 @@ const AddLiquidity: React.FC<{
         console.error('Revert reason:', error.data.message)
       }
     }
+    */
       await estimate(args, value ? { value } : {})
         .then(async (estimatedGasLimit: BigNumber): Promise<any> => {
           console.log('Estimated Gas Limit:', estimatedGasLimit); // Log the estimated gas limit
