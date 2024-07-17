@@ -49,7 +49,7 @@ export function useDerivedMintInfo (): {
     [Field.CURRENCY_B]: { currencyId: currencyBId },
     otherTypedValue
   } = useMintState()
-  const currencyA = _useCurrency(currencyAId) // TODO@ useCurrency returns Undefined
+  const currencyA = _useCurrency(currencyAId)
   const currencyB = _useCurrency(currencyBId)
   const dependentField = independentField === Field.CURRENCY_A ? Field.CURRENCY_B : Field.CURRENCY_A
   // *
@@ -66,7 +66,6 @@ export function useDerivedMintInfo (): {
     currencies[Field.CURRENCY_A] as Token,
     currencies[Field.CURRENCY_B] as Token
   )
-  console.log('hello safoan', pair)
   const totalSupply = useTotalSupply(pair?.liquidityToken)
   const noLiquidity: boolean =
     pairState === PairState.NOT_EXISTS ||
@@ -80,11 +79,13 @@ export function useDerivedMintInfo (): {
     [Field.CURRENCY_A]: balances?.[0] as TokenAmount,
     [Field.CURRENCY_B]: balances?.[1] as TokenAmount
   }
+
   // amounts
   const independentAmount: CurrencyAmount | TokenAmount | undefined = tryParseAmount(
     typedValue,
     currencies[independentField]
   )
+
   const dependentAmount: CurrencyAmount | undefined = useMemo(() => {
     if (noLiquidity) {
       if (otherTypedValue && currencies[dependentField]) { // eslint-disable-line
@@ -139,6 +140,7 @@ export function useDerivedMintInfo (): {
     pair,
     nativeCurrency
   ])
+
   const parsedAmounts: {
     [field in Field]: CurrencyAmount | TokenAmount | undefined;
   } = useMemo(() => {
@@ -153,6 +155,7 @@ export function useDerivedMintInfo (): {
           : independentAmount
     }
   }, [dependentAmount, independentAmount, independentField])
+
   const price = useMemo(() => {
     if (noLiquidity) {
       const {
@@ -175,7 +178,6 @@ export function useDerivedMintInfo (): {
         : undefined
     }
   }, [chainId, currencyA, noLiquidity, pair, parsedAmounts])
-
   // liquidity minted
   const liquidityMinted = useMemo(() => {
     const {
@@ -183,8 +185,8 @@ export function useDerivedMintInfo (): {
       [Field.CURRENCY_B]: currencyBAmount
     } = parsedAmounts
     const [tokenAmountA, tokenAmountB] = [
-      wrappedCurrencyAmount(currencyAAmount as CurrencyAmount, chainId),
-      wrappedCurrencyAmount(currencyBAmount as CurrencyAmount, chainId)
+      wrappedCurrencyAmount(currencyAAmount, chainId),
+      wrappedCurrencyAmount(currencyBAmount, chainId)
     ]
     if (pair && totalSupply && tokenAmountA && tokenAmountB) { // eslint-disable-line
       return pair.getLiquidityMinted(totalSupply, tokenAmountA, tokenAmountB)

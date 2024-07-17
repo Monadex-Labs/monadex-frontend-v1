@@ -15,9 +15,7 @@ import {
   MONAD,
   TokenAmount,
   ChainId,
-  Token,
-  CurrencyAmount,
-  NativeCurrency
+  Token
 } from '@monadex/sdk'
 import { useWalletData } from '@/utils/index'
 import { useConnectWallet } from '@web3-onboard/react'
@@ -47,7 +45,6 @@ import {
   halfAmountSpend
 } from '@/utils'
 import { wrappedCurrency } from '@/utils/wrappedCurrency'
-import { PiTestTubeFill } from 'react-icons/pi' // liquidity icon
 import useParsedQueryString from '@/hooks/useParseQueryString'
 import { _useCurrency } from '@/hooks/Tokens'
 import { useDerivedSwapInfo } from '@/state/swap/hooks'
@@ -56,13 +53,34 @@ import { V1_ROUTER_ADDRESS } from '@/constants/index'
 import usePoolsRedirects from '@/hooks/usePoolsRedirect'
 import { SLIPPAGE_AUTO } from '@/state/user/reducer'
 
+/* TODO: Check if this is the correct place for this */
+interface AddLiquidityParams {
+  tokenA: string
+  tokenB: string
+  amountADesired: string
+  amountBDesired: string
+  amountAMin: string
+  amountBMin: string
+  receiver: string
+  deadline: string
+}
+
+// TODO: use string to match uint256 (pending confirmation)
+interface AddLiquidityNative {
+  token: string
+  amountTokenDesired: string
+  amountTokenMin: string
+  amountNativeTokenMin: string
+  receiver: string
+  deadline: string
+}
+
 const AddLiquidity: React.FC<{
   currencyBgClass?: string
 }> = ({ currencyBgClass }) => {
   const [addLiquidityErrorMessage, setAddLiquidityErrorMessage] = useState<
   string | null
   >(null)
-
   const isSupportedNetwork = useIsSupportedNetwork()
   const { account, chainId, provider } = useWalletData()
   const chainIdToUse = chainId ?? ChainId.MONAD
@@ -84,19 +102,19 @@ const AddLiquidity: React.FC<{
   const params: any = useParams()
   const parsedQuery = useParsedQueryString()
   const currency0Id =
-    params?.currencyIdA
+    params?.currencyIdA != null
       ? params.currencyIdA.toLowerCase() === 'mnd'
         ? 'MND'
         : params.currencyIdA
-      : parsedQuery && parsedQuery.currency0
+      : parsedQuery?.currency0 != null
         ? (parsedQuery.currency0 as string)
         : undefined
   const currency1Id =
-    params?.currencyIdB
+    params?.currencyIdB != null
       ? params.currencyIdB.toLowerCase() === 'mnd'
         ? 'MND'
         : params.currencyIdB
-      : parsedQuery?.currency1
+      : parsedQuery?.currency1 != null
         ? (parsedQuery.currency1 as string)
         : undefined
   const currency0 = _useCurrency(currency0Id)
@@ -173,7 +191,6 @@ const AddLiquidity: React.FC<{
     account ?? undefined,
     pair?.liquidityToken
   )
-  console.log('pjool', pair)
   const atMaxAmounts: { [field in Field]?: TokenAmount } = [
     Field.CURRENCY_A,
     Field.CURRENCY_B
@@ -185,10 +202,6 @@ const AddLiquidity: React.FC<{
   }, {})
 
   const { redirectWithCurrency, redirectWithSwitch } = usePoolsRedirects()
-
-  // console.log('fieldsA', currencies[Field.CURRENCY_A])
-  // console.log('fieldsB', currencies[Field.CURRENCY_B])
-
   const handleCurrencyASelect = useCallback(
     (currencyA: any) => {
       const isSwichRedirect = currencyEquals(currencyA, MONAD)
@@ -232,15 +245,13 @@ const AddLiquidity: React.FC<{
   const onAdd = (): void => {
     setAddLiquidityErrorMessage(null)
     setTxHash('')
-    onAddLiquidity()
+    void onAddLiquidity()
     setShowConfirm(true)
   }
 
   const router = useRouterContract()
-
-  const onAddLiquidity = async () => {
-    if (chainId === undefined || provider === undefined || account === undefined || (router == null)) return
-
+  const onAddLiquidity = async (): Promise<void> => {
+    if (!chainId || (provider == null) || !account || (router == null)) return
     const {
       [Field.CURRENCY_A]: parsedAmountA,
       [Field.CURRENCY_B]: parsedAmountB
@@ -268,81 +279,88 @@ const AddLiquidity: React.FC<{
 
     let estimate,
       method: (...args: any) => Promise<TransactionResponse>,
-      args: Array<string | string[] | number>,
+      args: AddLiquidityParams | AddLiquidityNative,
       value: BigNumber | null
     if (
       currencies[Field.CURRENCY_A] === nativeCurrency ||
       currencies[Field.CURRENCY_B] === nativeCurrency
     ) {
       const tokenBIsETH = currencies[Field.CURRENCY_B] === nativeCurrency
-      estimate = router.estimateGas.addLiquidityETH
-      method = router.addLiquidityETH
-      args = [
-        wrappedCurrency(
+      estimate = router.estimateGas.addLiquidityNative
+      method = router.addLiquidityNative
+      args = {
+        token: wrappedCurrency(
           tokenBIsETH
             ? currencies[Field.CURRENCY_A]
             : currencies[Field.CURRENCY_B],
           chainId
         )?.address ?? '', // token
-        (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
-        amountsMin[
+        amountTokenDesired: (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
+        amountTokenMin: amountsMin[
           tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B
         ].toString(), // token min
-        amountsMin[
+        amountNativeTokenMin: amountsMin[
           tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A
         ].toString(), // eth min
-        account,
-        deadline.toHexString()
-      ]
+        receiver: account,
+        deadline: deadline.toHexString()
+      }
       value = BigNumber.from(
         (tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString()
       )
     } else {
       estimate = router.estimateGas.addLiquidity
       method = router.addLiquidity
-      args = [
-        wrappedCurrency(currencies[Field.CURRENCY_A], chainId)?.address ?? '',
-        wrappedCurrency(currencies[Field.CURRENCY_B], chainId)?.address ?? '',
-        parsedAmountA.raw.toString(),
-        parsedAmountB.raw.toString(),
-        amountsMin[Field.CURRENCY_A].toString(),
-        amountsMin[Field.CURRENCY_B].toString(),
-        account,
-        deadline.toHexString()
-      ]
+      args = {
+        tokenA: wrappedCurrency(currencies[Field.CURRENCY_A], chainId)?.address ?? '',
+        tokenB: wrappedCurrency(currencies[Field.CURRENCY_B], chainId)?.address ?? '',
+        amountADesired: parsedAmountA.raw.toString(),
+        amountBDesired: parsedAmountB.raw.toString(),
+        amountAMin: amountsMin[Field.CURRENCY_A].toString(),
+        amountBMin: amountsMin[Field.CURRENCY_B].toString(),
+        receiver: account,
+        deadline: deadline.toHexString()
+      }
       value = null
     }
-
     setAttemptingTxn(true)
-    await estimate(...args, (value != null) ? { value } : {})
-      .then(async (estimatedGasLimit: BigNumber): Promise<any> =>
-        await method(...args, {
+    await estimate(args, (value != null) ? { value } : {})
+      .then(async (estimatedGasLimit: BigNumber): Promise<any> => {
+        console.log('Estimated Gas Limit:', estimatedGasLimit) // Log the estimated gas limit
+
+        return await method(args, {
           ...((value != null) ? { value } : {}),
           gasLimit: calculateGasMargin(estimatedGasLimit)
-        }).then(async (response) => {
-          setAttemptingTxn(false)
-          setTxPending(true)
-          const summary = `Add ${liquidityTokenData.amountA} ${liquidityTokenData.symbolA ?? 'INVALID SYMBOL'} and ${liquidityTokenData.amountB} ${liquidityTokenData.symbolB ?? 'INVALID SYMBOL'}`
-
-          addTransaction(response, {
-            summary
-          })
-
-          setTxHash(response.hash)
-
-          try {
-            const receipt = await response.wait()
-            finalizedTransaction(receipt, {
-              summary
-            })
-            setTxPending(false)
-          } catch (error) {
-            setTxPending(false)
-            setAddLiquidityErrorMessage('There is an error in transaction.')
-          }
         })
-      )
+          .then(async (response) => {
+            console.log('Method Response:', response) // Log the response from method
+
+            setAttemptingTxn(false)
+            setTxPending(true)
+
+            const summary = `Add ${liquidityTokenData.amountA} ${liquidityTokenData.symbolA ?? 'INVALID SYMBOL'} and ${liquidityTokenData.amountB} ${liquidityTokenData.symbolB ?? 'INVALID SYMBOL'}`
+            console.log('Transaction Summary:', summary) // Log the transaction summary
+
+            addTransaction(response, { summary })
+
+            setTxHash(response.hash)
+            console.log('Transaction Hash:', response.hash) // Log the transaction hash
+
+            try {
+              const receipt = await response.wait()
+              console.log('Transaction Receipt:', receipt) // Log the transaction receipt
+
+              finalizedTransaction(receipt, { summary })
+              setTxPending(false)
+            } catch (error) {
+              console.error('Error waiting for transaction receipt:', error) // Log the error
+              setTxPending(false)
+              setAddLiquidityErrorMessage('There is an error in transaction.')
+            }
+          })
+      })
       .catch((error: any) => {
+        console.log('error')
         setAttemptingTxn(false)
         setAddLiquidityErrorMessage(
           error?.code === 'ACTION_REJECTED' ? 'Transaction rejected' : error?.message
@@ -372,55 +390,6 @@ const AddLiquidity: React.FC<{
     return 'Connect Wallet'
   }, [account, isSupportedNetwork, error])
 
-  // const handleButtonClick = async () => {
-  //   if (approvalA !== ApprovalState.APPROVED && approvalA !== ApprovalState.PENDING) {
-  //     setApprovingA(true)
-  //     try {
-  //       await approveACallback()
-  //     } catch (e) {
-  //       // Handle error if needed
-  //     } finally {
-  //       setApprovingA(false)
-  //     }
-  //   } else if (approvalB !== ApprovalState.APPROVED && approvalB !== ApprovalState.PENDING) {
-  //     setApprovingB(true)
-  //     try {
-  //       await approveBCallback()
-  //     } catch (e) {
-  //       // Handle error if needed
-  //     } finally {
-  //       setApprovingB(false)
-  //     }
-  //   } else if (account && isSupportedNetwork) {
-  //     onAdd()
-  //   } else {
-  //     await connect()
-  //   }
-  // }
-  // const getButtonText = () => {
-  //   if (approvalA === ApprovalState.PENDING) {
-  //     return `approving ${currencies[Field.CURRENCY_A]?.symbol}`
-  //   } else if (approvalB === ApprovalState.PENDING) {
-  //     return `approving ${currencies[Field.CURRENCY_B]?.symbol}`
-  //   } else if (approvalA !== ApprovalState.APPROVED) {
-  //     return `approve ${currencies[Field.CURRENCY_A]?.symbol}`
-  //   } else if (approvalB !== ApprovalState.APPROVED) {
-  //     return `approve ${currencies[Field.CURRENCY_B]?.symbol}`
-  //   } else if (!account || !isSupportedNetwork) {
-  //     return 'connect'
-  //   } else {
-  //     return buttonText
-  //   }
-  // }
-  // const isButtonDisabled = () => {
-  //   if (approvalA === ApprovalState.PENDING || approvalB === ApprovalState.PENDING) {
-  //     return true
-  //   }
-  //   if (Boolean(account) && isSupportedNetwork) {
-  //     return Boolean(error) || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED
-  //   }
-  //   return false
-  // }
   const modalHeader = (): ReactElement => {
     return (
       <Box className='border'>
@@ -435,7 +404,9 @@ const AddLiquidity: React.FC<{
           <h6>
             {pendingText}
             <br />
-            {`You will receive ${formatTokenAmount(liquidityMinted)} ${currencies[Field.CURRENCY_A]?.symbol} / ${currencies[Field.CURRENCY_B]?.symbol} LP Tokens`}
+            {`You will receive ${formatTokenAmount(liquidityMinted)} 
+            ${currencies[Field.CURRENCY_A]?.symbol ?? 'INVALID SYMBOL'} / 
+            ${currencies[Field.CURRENCY_B]?.symbol ?? 'INVALID SYMBOL'} LP Tokens`}
           </h6>
         </Box>
         <Box mb={3} textAlign='center'>
@@ -452,6 +423,26 @@ const AddLiquidity: React.FC<{
     )
   }
 
+  const handleApproveA = async (): Promise<void> => {
+    setApprovingA(true)
+    try {
+      await approveACallback()
+      setApprovingA(false)
+    } catch (e) {
+      setApprovingA(false)
+    }
+  }
+
+  const handleApproveB = async (): Promise<void> => {
+    setApprovingB(true)
+    try {
+      await approveBCallback()
+      setApprovingB(false)
+    } catch (e) {
+      setApprovingB(false)
+    }
+  }
+
   return (
     <Box className=''>
       {showConfirm && (
@@ -462,7 +453,7 @@ const AddLiquidity: React.FC<{
           txPending={txPending}
           hash={txHash}
           content={() =>
-            addLiquidityErrorMessage
+            addLiquidityErrorMessage != null
               ? (
                 <TransactionErrorContent
                   onDismiss={handleDismissConfirmation}
@@ -560,7 +551,7 @@ const AddLiquidity: React.FC<{
           approvalA === ApprovalState.PENDING ||
           approvalB === ApprovalState.NOT_APPROVED ||
           approvalB === ApprovalState.PENDING) &&
-          !error && (
+          error === undefined && (
             <Box className='flex fullWidth justify-between mb-2'>
               {approvalA !== ApprovalState.APPROVED && (
                 <Box
@@ -568,23 +559,15 @@ const AddLiquidity: React.FC<{
                 >
                   <Button
                     className='w-full py-4 px-4 bg-gradient-to-r from-[#23006A] to-[#23006A]/50'
-                    onClick={async () => {
-                      setApprovingA(true)
-                      try {
-                        await approveACallback()
-                        setApprovingA(false)
-                      } catch (e) {
-                        setApprovingA(false)
-                      }
-                    }}
+                    onClick={handleApproveA}
                     disabled={approvingA || approvalA === ApprovalState.PENDING}
                   >
                     {approvalA === ApprovalState.PENDING
                       ? `approving ${
-                          currencies[Field.CURRENCY_A]?.symbol
+                          currencies[Field.CURRENCY_A]?.symbol ?? 'INVALID SYMBOL'
                         }`
                       : `approve ${
-                          currencies[Field.CURRENCY_A]?.symbol
+                          currencies[Field.CURRENCY_A]?.symbol ?? 'INVALID SYMBOL'
                         }`}
                   </Button>
                 </Box>
@@ -595,23 +578,15 @@ const AddLiquidity: React.FC<{
                 >
                   <Button
                     className='w-full py-4 px-4 bg-gradient-to-r from-[#23006A] to-[#23006A]/50'
-                    onClick={async () => {
-                      setApprovingB(true)
-                      try {
-                        await approveBCallback()
-                        setApprovingB(false)
-                      } catch (e) {
-                        setApprovingB(false)
-                      }
-                    }}
+                    onClick={handleApproveB}
                     disabled={approvingB || approvalB === ApprovalState.PENDING}
                   >
                     {approvalB === ApprovalState.PENDING
                       ? `approving ${
-                          currencies[Field.CURRENCY_B]?.symbol
+                          currencies[Field.CURRENCY_B]?.symbol ?? 'INVALID SYMBOL'
                         }`
                       : `approve ${
-                          currencies[Field.CURRENCY_B]?.symbol
+                          currencies[Field.CURRENCY_B]?.symbol ?? 'INVALID SYMBOL'
                         }`}
                   </Button>
                 </Box>
@@ -619,7 +594,7 @@ const AddLiquidity: React.FC<{
             </Box>
         )}
         <Button
-          className="w-full bg-gradient-to-r from-[#23006A] to-[#23006A]/50 py-4 px-4"
+          className='w-full bg-gradient-to-r from-[#23006A] to-[#23006A]/50 py-4 px-4'
           disabled={
             Boolean(account) &&
             isSupportedNetwork &&
@@ -627,7 +602,7 @@ const AddLiquidity: React.FC<{
               approvalA !== ApprovalState.APPROVED ||
               approvalB !== ApprovalState.APPROVED)
           }
-          onClick={account && isSupportedNetwork ? onAdd : async () => await connect()}
+          onClick={account !== '' && isSupportedNetwork ? onAdd : async () => await connect()}
         >
           {buttonText}
         </Button>

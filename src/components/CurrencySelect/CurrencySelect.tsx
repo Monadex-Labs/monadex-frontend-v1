@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react'
 import { NativeCurrency, Token } from '@monadex/sdk'
 import { CurrencySearchModal, CurrencyLogo } from '@/components'
 import { Box } from '@mui/material'
-
+import { IoIosArrowDown } from 'react-icons/io'
 interface CurrencySelectProps {
   title?: string
   handleCurrencySelect: (currency: Token) => void
@@ -25,7 +25,7 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({
     setModalOpen(true)
   }, [])
   return (
-    <Box className='px-3 py-2 rounded-full'>
+    <Box className='px-3 py-2 rounded-md border border-[#414141] flex justify-between items-center gap-3'>
       <Box
         className={
           bgClass === undefined
@@ -58,6 +58,7 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({
           otherSelectedCurrency={otherCurrency}
         />
       )}
+      <IoIosArrowDown />
     </Box>
   )
 }

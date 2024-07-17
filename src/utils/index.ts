@@ -162,8 +162,8 @@ export function formatNumber (
 export function formatTokenAmount (
   amount?: TokenAmount | CurrencyAmount,
   digits = 3
-): string | 0 {
-  if (amount === undefined) return 0
+): string {
+  if (amount === undefined) return '-'
   const amountStr = amount.toExact()
   if (Math.abs(Number(amountStr)) > 1) {
     return Number(amountStr).toLocaleString('us')

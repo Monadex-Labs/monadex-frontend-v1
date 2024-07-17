@@ -11,13 +11,20 @@ import {
   formatTokenAmount,
   useWalletData
 } from '@/utils'
-import { OptimalRate, SwapSide } from '@paraswap/sdk'
 import { ONE } from '@/constants'
 import { wrappedCurrency } from '@/utils/wrappedCurrency'
-
+/**
+ * 
+ * (${(
+            (usdPrice ?? 0) *
+            (trade != null
+              ? Number(trade.inputAmount.toSignificant())
+              : 0)
+          ).toLocaleString('us')}
+    )
+ */
 interface SwapModalHeaderProps {
   trade?: Trade
-  optimalRate?: OptimalRate | null
   inputCurrency?: Token
   outputCurrency?: Token
   allowedSlippage: number
@@ -28,7 +35,6 @@ interface SwapModalHeaderProps {
 
 const SwapModalHeader: React.FC<SwapModalHeaderProps> = ({
   trade,
-  optimalRate,
   inputCurrency,
   outputCurrency,
   allowedSlippage,
@@ -45,17 +51,13 @@ const SwapModalHeader: React.FC<SwapModalHeaderProps> = ({
     trade != null ? trade.inputAmount.currency : inputCurrency,
     chainId
   )
-
-
   const pct = basisPointsToPercent(allowedSlippage)
 
-  const bestTradeAmount =
-    optimalRate != null
-      ? optimalRate.side === SwapSide.SELL
-        ? new Fraction(ONE).add(pct).invert().multiply(optimalRate.destAmount)
-          .quotient
-        : new Fraction(ONE).add(pct).multiply(optimalRate.srcAmount).quotient
-      : undefined
+  const bestTradeAmount = trade
+    ? trade.tradeType === TradeType.EXACT_INPUT
+      ? new Fraction(ONE).add(pct).invert().multiply(trade.outputAmount).quotient
+      : new Fraction(ONE).add(pct).multiply(trade.inputAmount).quotient
+    : undefined
 
   return (
     <Box>
@@ -71,38 +73,18 @@ const SwapModalHeader: React.FC<SwapModalHeaderProps> = ({
       <Box className='swapContent'>
         <p>
           Swap{' '}
-          {optimalRate != null
-            ? (
-                Number(optimalRate.srcAmount) /
-                10 ** optimalRate.srcDecimals
-              ).toLocaleString('us')
-            : trade != null
-              ? formatTokenAmount(trade.inputAmount)
-              : ''}{' '}
+          {trade != null
+            ? formatTokenAmount(trade.inputAmount)
+            : ''}{' '}
           {trade != null
             ? trade.inputAmount.currency.symbol
             : inputCurrency?.symbol}{' '}
-          ($
-          {(
-            (usdPrice ?? 0) *
-            (optimalRate != null
-              ? Number(optimalRate.srcAmount) / 10 ** optimalRate.srcDecimals
-              : trade != null
-                ? Number(trade.inputAmount.toSignificant())
-                : 0)
-          ).toLocaleString('us')}
-          )
         </p>
         <ArrowDownward />
         <p>
-          {optimalRate != null
-            ? (
-                Number(optimalRate.destAmount) /
-                10 ** optimalRate.destDecimals
-              ).toLocaleString('us')
-            : trade != null
-              ? formatTokenAmount(trade.outputAmount)
-              : ''}{' '}
+          {trade != null
+            ? formatTokenAmount(trade.outputAmount)
+            : ''}{' '}
           {trade != null
             ? trade.outputAmount.currency.symbol
             : outputCurrency?.symbol}
@@ -118,8 +100,7 @@ const SwapModalHeader: React.FC<SwapModalHeaderProps> = ({
         </Box>
       )}
       <Box className='transactionText'>
-        {trade?.tradeType === TradeType.EXACT_INPUT ||
-        optimalRate?.side === SwapSide.SELL
+        {trade?.tradeType === TradeType.EXACT_INPUT
           ? (
             <p className='small'>
               {`Output is estimated. You will receive at least ${
@@ -138,8 +119,7 @@ const SwapModalHeader: React.FC<SwapModalHeaderProps> = ({
             } or the transaction will revert.`}
             </p>
             )
-          : trade?.tradeType === TradeType.EXACT_OUTPUT ||
-          optimalRate?.side === SwapSide.BUY
+          : trade?.tradeType === TradeType.EXACT_OUTPUT
             ? (
               <p className='small'>
                 {`Input is estimated. You will sell at most ${

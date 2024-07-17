@@ -29,6 +29,7 @@ export function useTotalSupplys (tokens: Token[]): Array<TokenAmount | undefined
     tokenInterface,
     'totalSupply'
   )
+  console.log('results', results)
   return results.map((result, i) => {
     const { result: reserves } = result
     const totalSupply: BigNumber = reserves?.[0]

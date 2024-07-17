@@ -6,6 +6,7 @@ import Updaters from '@/hooks/Updaters'
 import './globals.css'
 import Web3ProviderWrapper from '@/utils/ProviderWrapper'
 import Header from '@/components/Header'
+import NextAuthSessionProvider from '@/discord/SessionProvider'
 const inter = Inter({ subsets: ['latin'] })
 const fira_code = Fira_Code({ subsets: ['latin'], variable: '--font-fira-code' })
 export const metadata: Metadata = {
@@ -22,15 +23,17 @@ export default function RootLayout ({
     // wrap redux provider
     <html lang='en-US'>
       <body className={`${inter.className} ${fira_code.variable} max-w-[95%] mx-auto`}>
-        <QueryWrapper>
-          <Web3ProviderWrapper>
-            <ReduxProvider>
-              <Updaters />
-              <Header />
-              {children}
-            </ReduxProvider>
-          </Web3ProviderWrapper>
-        </QueryWrapper>
+        <NextAuthSessionProvider>
+          <QueryWrapper>
+            <Web3ProviderWrapper>
+              <ReduxProvider>
+                <Updaters />
+                <Header />
+                {children}
+              </ReduxProvider>
+            </Web3ProviderWrapper>
+          </QueryWrapper>
+        </NextAuthSessionProvider>
       </body>
     </html>
   )

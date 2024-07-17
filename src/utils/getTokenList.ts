@@ -42,7 +42,6 @@ export default async function getTokenList (
       const list = skipValidation ? response.data : tokenListValidator(response.data)
 
       if (!list) {
-        console.log(tokenListValidator.errors)
         const validationErrors: string =
             tokenListValidator.errors?.reduce<string>((memo, error) => {
               const add = `${error.dataPath} ${error.message ?? ''}`

@@ -13,12 +13,11 @@ export function useTokenBalancesWithLoadingIndicator (
   tokens?: Token [] | undefined
 ): [{ [tokenAddress: string]: TokenAmount | undefined }, boolean] {
   const validatedTokens: Token[] = useMemo(
-    () => tokens?.filter((t?: Token): t is Token => isAddress(t?.address as string) !== false) ?? [], // eslint-disable-line @typescript-eslint/no-unnecessary-boolean-literal-compare
+    () => tokens?.filter((t?: Token): t is Token => t?.address !== undefined ? isAddress(t?.address) : false) ?? [],
     [tokens]
   )
   const validatedTokenAddresses = useMemo(() => validatedTokens.map((vt) => vt.address), [validatedTokens])
   const balances = useMultipleContractSingleData(validatedTokenAddresses, ERC20_INTERFACE, 'balanceOf', [address])
-  console.log(balances)
 
   const anyLoading: boolean = useMemo(() => balances.some((callState) => callState.loading), [balances])
   return [
@@ -43,22 +42,20 @@ export function useTokenBalances (
   address?: string,
   tokens?: Token [] | undefined
 ): { [tokenAddress: string]: TokenAmount | undefined } {
-  console.log('ddd', useTokenBalancesWithLoadingIndicator(address, tokens)[0])
   return useTokenBalancesWithLoadingIndicator(address, tokens)[0]
 }
 export function useTokenBalance (account?: string, token?: Token): TokenAmount | undefined {
   const tokenBalances = useTokenBalances(account, [token as Token])
-  if ((token === undefined)) return undefined
+  if (token === undefined) return undefined
   return tokenBalances[token.address]
 }
-export function useCurrencyBalances (account?: string, currencies?: NativeCurrency[] | undefined): (CurrencyAmount | undefined)[] {
+export function useCurrencyBalances (account?: string, currencies?: NativeCurrency[] | undefined): Array<CurrencyAmount | undefined> {
   const tokens = useMemo(
     () => currencies?.filter((currency): currency is Token => currency instanceof Token) ?? [],
     [currencies]
   )
 
   const tokenBalances = useTokenBalances(account, tokens)
-  console.log('balance', tokenBalances)
   return useMemo(
     () =>
       currencies?.map((currency) => {
@@ -77,15 +74,14 @@ export function useCurrencyBalance (
 }
 
 // mimics useAllBalances
-export function useAllTokenBalances(): {
+export function useAllTokenBalances (): {
   [tokenAddress: string]: TokenAmount | undefined
 } {
-  const { account } = useWalletData();
-  const allTokens = useAllTokens();
+  const { account } = useWalletData()
+  const allTokens = useAllTokens()
   const allTokensArray = useMemo(() => Object.values(allTokens ?? {}), [
-    allTokens,
-  ]);
-  const balances = useTokenBalances(account ?? undefined, allTokensArray);
-  return balances ?? {};
+    allTokens
+  ])
+  const balances = useTokenBalances(account ?? undefined, allTokensArray)
+  return balances ?? {}
 }
-

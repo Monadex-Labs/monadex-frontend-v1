@@ -4,8 +4,6 @@ import { AddLiquidity, QuestionHelper, SettingsModal } from '@/components'
 import { Box } from '@mui/material'
 import { IoMdSettings } from 'react-icons/io'
 import { useState } from 'react'
-import Image from 'next/image'
-import Marketing from '@/static/assets/marketing.png'
 
 const Pool = (): JSX.Element => {
   const [openSettingsModal, setOpenSettingsModal] = useState(false)
@@ -35,9 +33,7 @@ const Pool = (): JSX.Element => {
             </Box>
           </Box>
         </Box>
-        <Box className='border-md'>
-          <Image src={Marketing} width={450} height={200} alt='monadex marketing' />
-        </Box>
+        <Box className='border-md' />
         <Box mt={2.5} className='w-full p-2'>
           <p className='mb-3 font-light text-medium'>supply Amount</p>
           <AddLiquidity />
