@@ -183,11 +183,11 @@ const AddLiquidity: React.FC<{
   const [approvingB, setApprovingB] = useState(false)
   const [approvalA, approveACallback] = useApproveCallback(
     parsedAmounts[Field.CURRENCY_A],
-    chainId != null ? V1_ROUTER_ADDRESS[chainId] : undefined
+    chainId ? V1_ROUTER_ADDRESS[chainId] : undefined
   )
   const [approvalB, approveBCallback] = useApproveCallback(
     parsedAmounts[Field.CURRENCY_B],
-    chainId != null ? V1_ROUTER_ADDRESS[chainId] : undefined
+    chainId ? V1_ROUTER_ADDRESS[chainId] : undefined
   )
 
   const userPoolBalance = useTokenBalance(
@@ -220,7 +220,7 @@ const AddLiquidity: React.FC<{
   )
 
   useEffect(() => {
-    if (currency0 != null) {
+    if (currency0) {
       onCurrencySelection(Field.CURRENCY_A, currency0)
     }
   }, [currency0Id])
@@ -240,7 +240,7 @@ const AddLiquidity: React.FC<{
   )
 
   useEffect(() => {
-    if (currency1 != null) {
+    if (currency1) {
       onCurrencySelection(Field.CURRENCY_B, currency1)
     }
   }, [currency1Id])
@@ -260,11 +260,11 @@ const AddLiquidity: React.FC<{
       [Field.CURRENCY_B]: parsedAmountB
     } = parsedAmounts
     if (
-      (parsedAmountA == null) ||
-      (parsedAmountB == null) ||
-      (currencies[Field.CURRENCY_A] == null) ||
-      (currencies[Field.CURRENCY_B] == null) ||
-      (deadline == null)
+      !parsedAmountA ||
+      !parsedAmountB ||
+      !currencies[Field.CURRENCY_A] ||
+      !currencies[Field.CURRENCY_B] ||
+      !deadline
     ) {
       return
     }
@@ -272,11 +272,11 @@ const AddLiquidity: React.FC<{
     const amountsMin = {
       [Field.CURRENCY_A]: calculateSlippageAmount(
         parsedAmountA as TokenAmount,
-        noLiquidity != null ? 0 : allowedSlippage
+        noLiquidity ? 0 : allowedSlippage
       )[0],
       [Field.CURRENCY_B]: calculateSlippageAmount(
         parsedAmountB as TokenAmount,
-        noLiquidity != null ? 0 : allowedSlippage
+        noLiquidity ? 0 : allowedSlippage
       )[0]
     }
 
@@ -327,12 +327,12 @@ const AddLiquidity: React.FC<{
       value = null
     }
     setAttemptingTxn(true)
-    await estimate(args, (value != null) ? { value } : {})
+    await estimate(args, value ? { value } : {})
       .then(async (estimatedGasLimit: BigNumber): Promise<any> => {
         console.log('Estimated Gas Limit:', estimatedGasLimit) // Log the estimated gas limit
 
         return await method(args, {
-          ...((value != null) ? { value } : {}),
+          ...(value  ? { value } : {}),
           gasLimit: calculateGasMargin(estimatedGasLimit)
         })
           .then(async (response) => {
@@ -637,7 +637,7 @@ const AddLiquidity: React.FC<{
             </Box>
         )}
         <Button
-          className='w-full bg-gradient-to-r from-[#23006A] to-[#23006A]/50 py-4 px-4'
+          className='w-full bg-gradient-to-r from-[#23006A] to-[#23006A]/50 py-4 px-4 rounded-md'
           disabled={
             Boolean(account) &&
             isSupportedNetwork &&

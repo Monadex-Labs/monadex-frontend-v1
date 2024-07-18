@@ -31,9 +31,6 @@ export function usePairs (
   const pairAddresses = useMemo(
     () =>
       tokens.map(([tokenA, tokenB]) => {
-        console.log('this is the pair pool names', [tokenA?.name, tokenB?.name])
-        console.log('the pool addresses:', Pair.getAddress(tokenA as Token, tokenB as Token))
-        console.log('----------------------------------')
         return tokenA && tokenB && !tokenA.equals(tokenB)
           ? Pair.getAddress(tokenA, tokenB)
           : undefined
@@ -48,14 +45,19 @@ export function usePairs (
       const { result: reserves, loading } = result
       const tokenA = tokens[i][0]
       const tokenB = tokens[i][1]
-
+ 
       if (loading) return [PairState.LOADING, null]
       if ((tokenA == null) || (tokenB == null) || tokenA.equals(tokenB)) { return [PairState.INVALID, null] }
       if (reserves == null) return [PairState.NOT_EXISTS, null]
-      const { reserve0, reserve1 } = reserves
+      const { 0:reserve0, 1:reserve1 } = reserves
+   
       const [token0, token1] = tokenA.sortsBefore(tokenB)
         ? [tokenA, tokenB]
         : [tokenB, tokenA]
+        console.log("oso",new Pair(
+          new TokenAmount(token0, reserve0.toString()),
+          new TokenAmount(token1, reserve1.toString())
+        ))
       return [
         PairState.EXISTS,
         new Pair(

@@ -1,17 +1,17 @@
 'use client'
+
+'use client'
 import PageHeader from '@/components/Swap/SwapHeader'
 import { AddLiquidity, QuestionHelper, SettingsModal } from '@/components'
 import { Box } from '@mui/material'
 import { IoMdSettings } from 'react-icons/io'
 import { useState } from 'react'
-import Link from 'next/link'
+
 const Pool = (): JSX.Element => {
   const [openSettingsModal, setOpenSettingsModal] = useState(false)
+
   return (
     <div>
-      <PageHeader isTablet={false} pageName='Pools' />
-
-      <Link href={'/pools/add'}>create new position</Link>
       <Box className='flex justify-between w-full p-3 items-center max-w-[500px] mx-auto'>
         <p className='font-medium text-xl'>Add Liquidity</p>
         <Box className='flex items-center gap-3 p-2'>
