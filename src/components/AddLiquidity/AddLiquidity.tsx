@@ -471,8 +471,9 @@ const AddLiquidity: React.FC<{
       </Box>
     )
   }
+  console.log('fodo', formatTokenAmount(userPoolBalance))
   return (
-    <Box className=''>
+    <Box>
       {showConfirm && (
         <TransactionConfirmationModal
           isOpen={showConfirm}
@@ -490,14 +491,14 @@ const AddLiquidity: React.FC<{
                 )
               : (
                 <ConfirmationModalContent
-                  title='supplyingliquidity'
+                  title='supplying liquidity'
                   onDismiss={handleDismissConfirmation}
                   content={modalHeader}
                 />
                 )}
           pendingText={pendingText}
           modalContent={
-            txPending ? 'submittedTxLiquidity' : 'successAddedliquidity'
+            txPending ? 'submitted tx' : 'liquidity successfully added'
           }
         />
       )}
@@ -542,10 +543,10 @@ const AddLiquidity: React.FC<{
         bgClass={currencyBgClass}
         showPrice
       />
-      {(currencies[Field.CURRENCY_A] != null) &&
-        (currencies[Field.CURRENCY_B] != null) &&
+      {(currencies[Field.CURRENCY_A]) &&
+        (currencies[Field.CURRENCY_B]) &&
         pairState !== PairState.INVALID &&
-        (price != null) && (
+        (price) && (
           <Box my={2} className='rounded-sm font-fira flex flex-col p-3 text-[#ABABAB] transition duration-150 ease-in-out'>
             <Box className='p-2 flex justify-between'>
               <small>
@@ -561,7 +562,7 @@ const AddLiquidity: React.FC<{
             <Box className='p-2 flex justify-between'>
               <small>Your Pool Share</small>
               <small>
-                {(poolTokenPercentage != null)
+                {(poolTokenPercentage)
                   ? poolTokenPercentage.toSignificant(6) + '%'
                   : '-'}
               </small>

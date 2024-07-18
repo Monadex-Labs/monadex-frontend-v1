@@ -31,12 +31,14 @@ export function usePairs (
   const pairAddresses = useMemo(
     () =>
       tokens.map(([tokenA, tokenB]) => {
+        
         return tokenA && tokenB && !tokenA.equals(tokenB)
           ? Pair.getAddress(tokenA, tokenB)
-          : undefined
+          : undefined;
       }),
-    [tokens]
-  )
+    [tokens],
+  );
+
 
   const results = useMultipleContractSingleData(pairAddresses, PAIR_INTERFACE, 'getReserves')
   return useMemo(() => {
@@ -49,6 +51,7 @@ export function usePairs (
       if (!tokenA || !tokenB || tokenA.equals(tokenB)) { return [PairState.INVALID, null] }
       if (reserves == null) return [PairState.NOT_EXISTS, null]
       const { 0:reserve0, 1:reserve1 } = reserves
+      console.log('oxfo', reserve0)
       const [token0, token1] = tokenA.sortsBefore(tokenB)
         ? [tokenA, tokenB]
         : [tokenB, tokenA]

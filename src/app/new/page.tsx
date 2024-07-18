@@ -4,15 +4,20 @@ import { AddLiquidity, QuestionHelper, SettingsModal } from '@/components'
 import { Box } from '@mui/material'
 import { IoMdSettings } from 'react-icons/io'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 const New = (): JSX.Element => {
   const [openSettingsModal, setOpenSettingsModal] = useState(false)
-
+  const router = useRouter()
   return (
     <div>
       <Box className='flex justify-between w-full p-3 items-center max-w-[500px] mx-auto'>
-        <p className='font-medium text-xl'>Add Liquidity</p>
-        <Box className='flex items-center gap-3 p-2'>
+        <div>
+          <small onClick={() => router.push('/pools')} className='mb-3 opacity-40 hover:opacity-none transition-all cursor-pointer'>go to pools</small>
+          <p className='font-medium text-xl'>Add Liquidity</p>
+        </div>
+
+        <Box className='flex items-center gap-3 '>
           <Box className=''>
             <QuestionHelper
               size={23}
