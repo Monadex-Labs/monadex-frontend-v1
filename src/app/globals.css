@@ -10,7 +10,9 @@
 
  body {
   background-color: hsl(262, 83%, 14%);
-  background-image: radial-gradient(circle farthest-side at center, hsl(263, 91%, 22%) 0%, hsl(262, 83%, 14%) 100%);;
+  background-image: radial-gradient(circle farthest-side at center, hsl(263, 89%, 26%) 0%, hsl(262, 83%, 14%) 100%);;
+  animation: gradient-animation 10s ease infinite;
+
   color: white;
   background-repeat: no-repeat;
   background-position: center;
@@ -20,3 +22,15 @@
   
 }
 
+
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

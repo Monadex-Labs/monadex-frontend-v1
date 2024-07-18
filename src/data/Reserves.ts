@@ -49,7 +49,7 @@ export function usePairs (
       if (loading) return [PairState.LOADING, null]
       if ((tokenA == null) || (tokenB == null) || tokenA.equals(tokenB)) { return [PairState.INVALID, null] }
       if (reserves == null) return [PairState.NOT_EXISTS, null]
-      const { reserve0, reserve1 } = reserves
+      const { 0:reserve0, 1:reserve1 } = reserves
       const [token0, token1] = tokenA.sortsBefore(tokenB)
         ? [tokenA, tokenB]
         : [tokenB, tokenA]

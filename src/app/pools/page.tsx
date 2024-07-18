@@ -26,7 +26,7 @@ const Pool = (): JSX.Element => {
             </Box>
           </Box>
       </Box>
-      <Box className='flex flex-col max-w-[500px] justify-center items-center p-4 mx-auto bg-[#18003E] rounded-sm'>
+      <Box className='flex flex-col max-w-[500px] justify-center items-center p-4 mx-auto bg-[#18003E] rounded-md'>
         {openSettingsModal && (
           <SettingsModal
             open={openSettingsModal}
@@ -36,7 +36,6 @@ const Pool = (): JSX.Element => {
         <Box className='border-md'>
         </Box>
         <Box mt={2.5} className='w-full p-2'>
-          <p className='mb-3 font-light text-medium'>supply Amount</p>
           <AddLiquidity />
         </Box>
       </Box>

@@ -505,12 +505,12 @@ const AddLiquidity: React.FC<{
         title='token 1'
         currency={currencies[Field.CURRENCY_A]}
         showHalfButton={Boolean(maxAmounts[Field.CURRENCY_A])}
-        showMaxButton={atMaxAmounts[Field.CURRENCY_A] == null}
+        showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
         onMax={() =>
           onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')}
         onHalf={() => {
           const halfAmount = halfAmounts[Field.CURRENCY_A]
-          if (halfAmount != null) {
+          if (halfAmount) {
             onFieldAInput(halfAmount.toExact())
           }
         }}
@@ -524,10 +524,10 @@ const AddLiquidity: React.FC<{
         title='token 2'
         showHalfButton={Boolean(maxAmounts[Field.CURRENCY_B])}
         currency={currencies[Field.CURRENCY_B]}
-        showMaxButton={atMaxAmounts[Field.CURRENCY_B] == null}
+        showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
         onHalf={() => {
           const maxAmount = maxAmounts[Field.CURRENCY_B]
-          if (maxAmount != null) {
+          if (maxAmount) {
             onFieldBInput(
               maxAmount.divide('2').toFixed(maxAmount.currency.decimals)
             )
@@ -637,7 +637,7 @@ const AddLiquidity: React.FC<{
             </Box>
         )}
         <Button
-          className='w-full bg-gradient-to-r from-[#23006A] to-[#23006A]/50 py-4 px-4'
+          className='w-full bg-gradient-to-r from-[#23006A] to-[#23006A]/50 py-4 px-4 rounded-md'
           disabled={
             Boolean(account) &&
             isSupportedNetwork &&
