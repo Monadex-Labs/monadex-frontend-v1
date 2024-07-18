@@ -112,7 +112,7 @@ const AddLiquidity: React.FC<{
       : parsedQuery && parsedQuery.currency0
         ? (parsedQuery.currency0 as string)
         : undefined
-  const currency1Id =
+        const currency1Id =
     params?.currencyIdB
       ? params.currencyIdB.toLowerCase() === 'mnd'
         ? 'MND'
@@ -143,7 +143,7 @@ const AddLiquidity: React.FC<{
     amountB: formatTokenAmount(parsedAmounts[Field.CURRENCY_B]),
     symbolB: currencies[Field.CURRENCY_B]?.symbol
   }
-
+  console.log('dfodo', liquidityTokenData)
   const pendingText = `Supplying ${liquidityTokenData.amountA} ${liquidityTokenData.symbolA ?? 'INVALID SYMBOL'} and ${liquidityTokenData.amountB} ${liquidityTokenData.symbolB ?? 'INVALID SYMBOL'}`
 
   const {
@@ -161,7 +161,7 @@ const AddLiquidity: React.FC<{
       [field]: maxAmountSpend(chainIdToUse, currencyBalances[field])
     }
   }, {})
-
+  console.log('maxAmount', maxAmounts)
   const halfAmounts: { [field in Field]?: TokenAmount } = [
     Field.CURRENCY_A,
     Field.CURRENCY_B
@@ -171,10 +171,11 @@ const AddLiquidity: React.FC<{
       [field]: halfAmountSpend(chainIdToUse, currencyBalances[field])
     }
   }, {})
+  console.log('halfAmounts', halfAmounts)
 
   const formattedAmounts = {
     [independentField]: typedValue,
-    [dependentField]: noLiquidity != null
+    [dependentField]: noLiquidity
       ? otherTypedValue
       : parsedAmounts[dependentField]?.toExact() ?? ''
   }
@@ -183,11 +184,11 @@ const AddLiquidity: React.FC<{
   const [approvingB, setApprovingB] = useState(false)
   const [approvalA, approveACallback] = useApproveCallback(
     parsedAmounts[Field.CURRENCY_A],
-    chainId != null ? V1_ROUTER_ADDRESS[chainId] : undefined
+    chainId ? V1_ROUTER_ADDRESS[chainId] : undefined
   )
   const [approvalB, approveBCallback] = useApproveCallback(
     parsedAmounts[Field.CURRENCY_B],
-    chainId != null ? V1_ROUTER_ADDRESS[chainId] : undefined
+    chainId ? V1_ROUTER_ADDRESS[chainId] : undefined
   )
 
   const userPoolBalance = useTokenBalance(
@@ -220,7 +221,7 @@ const AddLiquidity: React.FC<{
   )
 
   useEffect(() => {
-    if (currency0 != null) {
+    if (currency0) {
       onCurrencySelection(Field.CURRENCY_A, currency0)
     }
   }, [currency0Id])
@@ -240,7 +241,7 @@ const AddLiquidity: React.FC<{
   )
 
   useEffect(() => {
-    if (currency1 != null) {
+    if (currency1) {
       onCurrencySelection(Field.CURRENCY_B, currency1)
     }
   }, [currency1Id])
@@ -254,17 +255,17 @@ const AddLiquidity: React.FC<{
 
   const router = useRouterContract()
   const onAddLiquidity = async (): Promise<void> => {
-    if (!chainId || (provider == null) || !account || (router == null)) return
+    if (!chainId || !provider || !account || !router) return
     const {
       [Field.CURRENCY_A]: parsedAmountA,
       [Field.CURRENCY_B]: parsedAmountB
     } = parsedAmounts
     if (
-      (parsedAmountA == null) ||
-      (parsedAmountB == null) ||
-      (currencies[Field.CURRENCY_A] == null) ||
-      (currencies[Field.CURRENCY_B] == null) ||
-      (deadline == null)
+      !parsedAmountA ||
+      !parsedAmountB ||
+      !currencies[Field.CURRENCY_A] ||
+      !currencies[Field.CURRENCY_B] ||
+      !deadline
     ) {
       return
     }
@@ -272,11 +273,11 @@ const AddLiquidity: React.FC<{
     const amountsMin = {
       [Field.CURRENCY_A]: calculateSlippageAmount(
         parsedAmountA as TokenAmount,
-        noLiquidity != null ? 0 : allowedSlippage
+        noLiquidity ? 0 : allowedSlippage
       )[0],
       [Field.CURRENCY_B]: calculateSlippageAmount(
         parsedAmountB as TokenAmount,
-        noLiquidity != null ? 0 : allowedSlippage
+        noLiquidity ? 0 : allowedSlippage
       )[0]
     }
 
@@ -327,12 +328,12 @@ const AddLiquidity: React.FC<{
       value = null
     }
     setAttemptingTxn(true)
-    await estimate(args, (value != null) ? { value } : {})
+    await estimate(args, value ? { value } : {})
       .then(async (estimatedGasLimit: BigNumber): Promise<any> => {
         console.log('Estimated Gas Limit:', estimatedGasLimit) // Log the estimated gas limit
 
         return await method(args, {
-          ...((value != null) ? { value } : {}),
+          ...(value ? { value } : {}),
           gasLimit: calculateGasMargin(estimatedGasLimit)
         })
           .then(async (response) => {
@@ -384,7 +385,7 @@ const AddLiquidity: React.FC<{
   }, [onFieldAInput, txHash])
 
   const buttonText = useMemo(() => {
-    if (account !== undefined) {
+    if (account) {
       if (!isSupportedNetwork) return 'Switch Network'
       return error ?? 'Supply'
     }
