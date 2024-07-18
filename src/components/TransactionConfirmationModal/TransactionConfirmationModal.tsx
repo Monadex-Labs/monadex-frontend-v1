@@ -178,9 +178,9 @@ const TransactionConfirmationModal: React.FC<ConfirmationModalProps> = ({
   if (chainId === undefined) return null
 
   // confirmation screen
-  return (
+   return (
     <CustomModal
-    classname='max-w-[500px]'
+    classname='max-w-[500px] border border-orange-300'
       open={isOpen}
       onClose={onDismiss}
       modalWrapper={`${modalWrapper ?? 'INVALID WRAPPER'}${isTxWrapper ? ' txModalWrapper' : ''}`}
@@ -193,7 +193,7 @@ const TransactionConfirmationModal: React.FC<ConfirmationModalProps> = ({
               pendingText={pendingText}
             />
             )
-          : hash != null
+          : hash
             ? (
               <TransactionSubmittedContent
                 chainId={chainId}
