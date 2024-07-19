@@ -110,7 +110,7 @@ const AddLiquidity: React.FC<{
         ? (parsedQuery.currency0 as string)
         : undefined
   const currency1Id =
-    params?.currencyIdB != null
+    params?.currencyIdB
       ? params.currencyIdB.toLowerCase() === 'mnd'
         ? 'MND'
         : params.currencyIdB
@@ -140,7 +140,7 @@ const AddLiquidity: React.FC<{
     amountB: formatTokenAmount(parsedAmounts[Field.CURRENCY_B]),
     symbolB: currencies[Field.CURRENCY_B]?.symbol
   }
-
+  console.log('dfodo', liquidityTokenData)
   const pendingText = `Supplying ${liquidityTokenData.amountA} ${liquidityTokenData.symbolA ?? 'INVALID SYMBOL'} and ${liquidityTokenData.amountB} ${liquidityTokenData.symbolB ?? 'INVALID SYMBOL'}`
 
   const {
@@ -158,7 +158,7 @@ const AddLiquidity: React.FC<{
       [field]: maxAmountSpend(chainIdToUse, currencyBalances[field])
     }
   }, {})
-
+  console.log('maxAmount', maxAmounts)
   const halfAmounts: { [field in Field]?: TokenAmount } = [
     Field.CURRENCY_A,
     Field.CURRENCY_B
@@ -168,10 +168,11 @@ const AddLiquidity: React.FC<{
       [field]: halfAmountSpend(chainIdToUse, currencyBalances[field])
     }
   }, {})
+  console.log('halfAmounts', halfAmounts)
 
   const formattedAmounts = {
     [independentField]: typedValue,
-    [dependentField]: noLiquidity != null
+    [dependentField]: noLiquidity
       ? otherTypedValue
       : parsedAmounts[dependentField]?.toExact() ?? ''
   }
@@ -217,7 +218,7 @@ const AddLiquidity: React.FC<{
   )
 
   useEffect(() => {
-    if (currency0) {
+    if (currency0 != null) {
       onCurrencySelection(Field.CURRENCY_A, currency0)
     }
   }, [currency0Id])
@@ -237,7 +238,7 @@ const AddLiquidity: React.FC<{
   )
 
   useEffect(() => {
-    if (currency1) {
+    if (currency1 != null) {
       onCurrencySelection(Field.CURRENCY_B, currency1)
     }
   }, [currency1Id])
@@ -257,11 +258,11 @@ const AddLiquidity: React.FC<{
       [Field.CURRENCY_B]: parsedAmountB
     } = parsedAmounts
     if (
-      !parsedAmountA ||
-      !parsedAmountB ||
-      !currencies[Field.CURRENCY_A] ||
-      !currencies[Field.CURRENCY_B] ||
-      !deadline
+      (parsedAmountA == null) ||
+      (parsedAmountB == null) ||
+      (currencies[Field.CURRENCY_A] == null) ||
+      (currencies[Field.CURRENCY_B] == null) ||
+      (deadline == null)
     ) {
       return
     }
@@ -324,12 +325,12 @@ const AddLiquidity: React.FC<{
       value = null
     }
     setAttemptingTxn(true)
-    await estimate(args, value ? { value } : {})
+    await estimate(args, (value != null) ? { value } : {})
       .then(async (estimatedGasLimit: BigNumber): Promise<any> => {
         console.log('Estimated Gas Limit:', estimatedGasLimit) // Log the estimated gas limit
 
         return await method(args, {
-          ...(value  ? { value } : {}),
+          ...((value != null) ? { value } : {}),
           gasLimit: calculateGasMargin(estimatedGasLimit)
         })
           .then(async (response) => {
@@ -381,7 +382,7 @@ const AddLiquidity: React.FC<{
   }, [onFieldAInput, txHash])
 
   const buttonText = useMemo(() => {
-    if (account !== undefined) {
+    if (account) {
       if (!isSupportedNetwork) return 'Switch Network'
       return error ?? 'Supply'
     }
@@ -442,7 +443,7 @@ const AddLiquidity: React.FC<{
   }
 
   return (
-    <Box className=''>
+    <Box>
       {showConfirm && (
         <TransactionConfirmationModal
           isOpen={showConfirm}
@@ -460,14 +461,14 @@ const AddLiquidity: React.FC<{
                 )
               : (
                 <ConfirmationModalContent
-                  title='supplyingliquidity'
+                  title='supplying liquidity'
                   onDismiss={handleDismissConfirmation}
                   content={modalHeader}
                 />
                 )}
           pendingText={pendingText}
           modalContent={
-            txPending ? 'submittedTxLiquidity' : 'successAddedliquidity'
+            txPending ? 'submitted tx' : 'liquidity successfully added'
           }
         />
       )}

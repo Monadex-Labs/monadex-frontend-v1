@@ -4,7 +4,11 @@ import { CustomModal } from '@/components'
 import { Close, CheckCircleOutline } from '@mui/icons-material'
 import { useWalletData } from '@/utils'
 import Image from 'next/image'
+import rejected from '@/static/assets/rejected.webp'
 import Molandak from '@/static/assets/hedgehog.png'
+import checkMark from '@/static/assets/checkmark.svg'
+import { TailSpin } from 'react-loader-spinner'
+
 interface useConfirmationPendingContentProps {
   title: string
   pending?: string
@@ -33,10 +37,10 @@ export const ConfirmationPendingContent: React.FC<ConfirmationPendingContentProp
       <Box className='mb-6 flex justify-between'>
       <h5 className='text-lg font-medium'>{confirmationPendingContent.title}</h5>
 
-        <Close onClick={onDismiss} />
+        <Close onClick={onDismiss} className='text-sm' />
       </Box>
       <Box className='flex justify-center'>
-        <Image className='animate-spin' src={Molandak} width={200} alt='molandak'/>
+        <Image className='animate-spin' src={Molandak} width={150} alt='molandak'/>
       </Box>
       <Box className='p-2 text-center'>
         {confirmationPendingContent.pending && (
@@ -64,19 +68,19 @@ export const TransactionSubmittedContent: React.FC<TransactionSubmittedContentPr
   modalContent
 }) => {
   return (
-    <Box padding={4}>
-      <Box className='txModalHeader'>
-        <h5>{txPending != null ? 'Transaction Submitted' : 'Transaction Completed'}</h5>
+    <Box padding={2}>
+      <Box className='text-end p-2'>
         <Close onClick={onDismiss} />
       </Box>
-      <Box className='txModalContent txModalContentSuccess'>
+      <Box className='border' mt={3}>
         <p>
-          {txPending === null && <CheckCircleOutline />}
+          {!txPending && <CheckCircleOutline />}
           {modalContent}
+          <Image src={checkMark} width={200} alt='ok'></Image>
         </p>
       </Box>
-      <Box className='flex justify-between' mt={2}>
-        {chainId != null && hash != null && (
+      <Box className='flex justify-between border' mt={3}>
+        {chainId && hash && (
           <a
             href='' // TODO: Add Etherscan link with address
             target='_blank'
@@ -131,18 +135,23 @@ export const TransactionErrorContent: React.FC<TransactionErrorContentProps> = (
   onDismiss
 }) => {
   return (
-    <Box padding={4}>
+    <Box padding={2} >
       <Box>
-        <Box className='txModalHeader'>
-          <h5 className='text-error'>Error!</h5>
+        <Box className='flex justify-between'>
+          <h5 className='text-lg font-medium'>error</h5>
           <Close onClick={onDismiss} />
         </Box>
-        <Box className='txModalContent flex items-center flex-col'>
-          <p>{message}</p>
+        <Box className='flex justify-center items-center flex-col mb-3 mt-3'>
+          <p className='text-lg font-medium'>{message}</p>
+          <Image src={rejected} width={200} alt='rejected'></Image>
         </Box>
       </Box>
-      <Button className='txSubmitButton' onClick={onDismiss}>
-        Close
+      <Button 
+      className=' text-white bg-gradient-to-r from-[#23006A] to-[#23006A]/50 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center w-full'
+      onClick={onDismiss}
+
+      >
+        dismiss
       </Button>
     </Box>
   )
@@ -180,7 +189,7 @@ const TransactionConfirmationModal: React.FC<ConfirmationModalProps> = ({
   // confirmation screen
    return (
     <CustomModal
-    classname='max-w-[500px] border border-orange-300'
+    classname='max-w-[400px] border-none'
       open={isOpen}
       onClose={onDismiss}
       modalWrapper={`${modalWrapper ?? 'INVALID WRAPPER'}${isTxWrapper ? ' txModalWrapper' : ''}`}

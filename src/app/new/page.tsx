@@ -1,0 +1,50 @@
+'use client'
+import PageHeader from '@/components/Swap/SwapHeader'
+import { AddLiquidity, QuestionHelper, SettingsModal } from '@/components'
+import { Box } from '@mui/material'
+import { IoMdSettings } from 'react-icons/io'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+
+const New = (): JSX.Element => {
+  const [openSettingsModal, setOpenSettingsModal] = useState(false)
+  const router = useRouter()
+  return (
+    <div>
+      <Box className='flex justify-between w-full p-3 items-center max-w-[500px] mx-auto'>
+        <div>
+          <small onClick={() => router.push('/pools')} className='mb-3 opacity-40 hover:opacity-none transition-all cursor-pointer'>go to pools</small>
+          <p className='font-medium text-xl'>Add Liquidity</p>
+        </div>
+
+        <Box className='flex items-center gap-3 '>
+          <Box className=''>
+            <QuestionHelper
+              size={23}
+                className='text-white'
+                text='When you add liquidity, you are given pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time.'
+              />
+            </Box>
+            <Box className=''>
+              <IoMdSettings onClick={() => setOpenSettingsModal(true)} className='text-white cursor-pointer text-[23px]' />
+            </Box>
+          </Box>
+      </Box>
+      <Box className='flex flex-col max-w-[500px] justify-center items-center p-4 mx-auto bg-[#18003E] rounded-md'>
+        {openSettingsModal && (
+          <SettingsModal
+            open={openSettingsModal}
+            onClose={() => setOpenSettingsModal(false)}
+          />
+        )}
+        <Box className='border-md'>
+        </Box>
+        <Box mt={2.5} className='w-full p-2'>
+          <AddLiquidity />
+        </Box>
+      </Box>
+    </div>
+  )
+}
+
+export default New
