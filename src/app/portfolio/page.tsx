@@ -6,6 +6,7 @@ import { useV2LiquidityPools } from '@/hooks'
 import Image from 'next/image'
 import { useWalletData } from '@/utils'
 import PageHeader from '@/components/Swap/SwapHeader' // TODO: check if valid component to use
+import { PoolFinderModal } from '@/components'
 
 const Portfolio: React.FC = () => {
   const { account } = useWalletData()
@@ -18,12 +19,12 @@ const Portfolio: React.FC = () => {
     <div>
       <PageHeader isTablet={false} pageName='Portfolio' />
       <Box className='flex flex-col max-w-[500px] justify-center items-center p-4 mx-auto bg-[#18003E] border border-[#836EF9] rounded-md'>
-        {/* openPoolFinder && (
+        {openPoolFinder && (
           <PoolFinderModal
             open={openPoolFinder}
             onClose={() => setOpenPoolFinder(false)}
           />
-        ) */}
+        )}
         <Box className='flex content-between w-100 mb-4'>
           <p className='font-medium text-xl'>Your Liquidity Pools</p>
         </Box>

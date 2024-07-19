@@ -20,3 +20,4 @@ export {
   TransactionErrorContent
 } from './TransactionConfirmationModal'
 export * from './common'
+export { default as PoolFinderModal } from './PoolFinderModal'
