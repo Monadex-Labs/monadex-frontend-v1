@@ -1,6 +1,5 @@
 import { Contract } from '@ethersproject/contracts'
 import { getContract, useWalletData } from '@/utils'
-// import { Web3Provider } from '@ethersproject/providers'
 import { MULTICALL_ADDRESS, ROUTER_ADDRESS, RAFFLE_ADDRESS } from '@/constants'
 import MonadexV1RouterABI from '../constants/abi/JSON/MonadexV1Router.json'
 import ERC20_ABI from '../constants/abi/JSON/Erc20Abi.json'
@@ -10,8 +9,6 @@ import MONADEXV1PAIR_ABI from '@/constants/abi/JSON/MonadexV1Pair.json'
 import MONADEXV1_FACTORY_ABI   from '@/constants/abi/JSON/MonadexV1Factory.json'
 import { FACTORY_ADDRESS } from '@/constants'
 import { useMemo } from 'react'
-import { useWallets } from '@web3-onboard/react'
-import { ethers } from 'ethers'
 import { erc20Abi_bytes32 } from 'viem'
 import { ChainId, WMND } from '@monadex/sdk'
 
@@ -70,7 +67,7 @@ export function useWMNDContract (
 ): Contract | null {
   const { chainId } = useWalletData()
   return useContract(
-    (chainId != null) ? WMND[chainId].address : undefined,
+    chainId ? WMND[chainId].address : undefined,
     ERC20_ABI, // change the abi to WMND_ABI
     withSignerIfPossible
   ) as Contract

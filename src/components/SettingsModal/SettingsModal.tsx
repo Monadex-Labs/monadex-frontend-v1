@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { Box, Divider } from '@mui/material'
 import { FiAlertTriangle } from 'react-icons/fi'
 import { QuestionHelper, CustomModal, NumericalInput } from '@/components'
@@ -21,15 +21,22 @@ enum DeadlineError {
 interface SettingsModalProps {
   open: boolean
   onClose: () => void
+  defaultSlippage?: number
 }
-const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose }) => {
+const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, defaultSlippage = 0 }) => {
   const [userSlippageTolerance, setUserSlippageTolerance] = useUserSlippageTolerance()
   const [slippageManuallySet, setSlippageManuallySet] = useSlippageManuallySet()
   const [ttl, setTtl] = useUserTransactionTTL()
   const { onRecipientChange } = useSwapActionHandlers()
   const [slippageInput, setSlippageInput] = useState('')
   const [deadlineInput, setDeadlineInput] = useState('')
-
+  const userSlippageIsSet = !!userSlippageTolerance
+  useEffect(() => {
+    if (!userSlippageIsSet && defaultSlippage > 0) {
+      setUserSlippageTolerance(defaultSlippage);
+    }
+  }, [defaultSlippage, setUserSlippageTolerance, userSlippageIsSet])
+  
   const slippageInputIsValid =
   slippageInput === '' ||
   (userSlippageTolerance / 100).toFixed(2) ===

@@ -149,8 +149,8 @@ const Swap: React.FC<{
   }, [independentField, typedValue, dependentField, showWrap, parsedAmounts])
   const route = trade?.route
   const userHasSpecifiedInputOutput = Boolean(
-    (currencies[Field.INPUT] != null) &&
-      (currencies[Field.OUTPUT] != null) &&
+    (currencies[Field.INPUT]) &&
+      (currencies[Field.OUTPUT]) &&
       parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0))
   )
   const noRoute = route == null
@@ -251,10 +251,10 @@ const Swap: React.FC<{
     ) {
       redirectWithCurrency(MONAD, true)
     } else {
-      if (parsedCurrency0 != null) {
+      if (parsedCurrency0) {
         onCurrencySelection(Field.INPUT, parsedCurrency0)
       }
-      if (parsedCurrency1 != null) {
+      if (parsedCurrency1) {
         onCurrencySelection(Field.OUTPUT, parsedCurrency1)
       }
     }
@@ -295,7 +295,7 @@ const Swap: React.FC<{
       ) {
         return 'Enter Amount'
       } else if (showWrap) {
-        if (wrapInputError != null) return wrapInputError
+        if (wrapInputError) return wrapInputError
         return wrapType === WrapType.WRAP
           ? `Wrap ${MONAD.symbol ?? '[INVALID SYMBOL]'}`
           : wrapType === WrapType.UNWRAP
@@ -339,7 +339,7 @@ const Swap: React.FC<{
 
   const swapButtonDisabled = useMemo(() => {
     const inputCurrency = currencies[Field.INPUT]
-    if (account != null) {
+    if (account) {
       if (!isSupportedNetwork) return false
       if (showWrap) {
         return (
@@ -357,7 +357,7 @@ const Swap: React.FC<{
         )
       } else {
         return (
-          ((inputCurrency != null) &&
+          ((inputCurrency) &&
             chainId !== undefined &&
             currencyEquals(inputCurrency, MONAD) &&
             approval === ApprovalState.UNKNOWN) ||
@@ -436,7 +436,7 @@ const Swap: React.FC<{
   )
 
   const handleMaxInput = useCallback(() => {
-    (maxAmountInput != null) && onUserInput(Field.INPUT, maxAmountInput.toExact())
+    (maxAmountInput) && onUserInput(Field.INPUT, maxAmountInput.toExact())
   }, [maxAmountInput, onUserInput])
 
   const handleHalfInput = useCallback(() => {
@@ -448,11 +448,11 @@ const Swap: React.FC<{
   }, [halfAmountInput, onUserInput])
 
   const atMaxAmountInput = Boolean(
-    (maxAmountInput != null) && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput)
+    (maxAmountInput) && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput)
   )
 
   const onSwap = (): void => {
-    if (showWrap && (onWrap != null)) {
+    if (showWrap && (onWrap)) {
       void onWrap()
     } else {
       setSwapState({
@@ -484,7 +484,7 @@ const Swap: React.FC<{
       txHash
     })
     // if there was a tx hash, we want to clear the input
-    if (txHash != null) {
+    if (txHash) {
       onUserInput(Field.INPUT, '')
     }
   }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
@@ -501,7 +501,7 @@ const Swap: React.FC<{
   const handleSwap = useCallback(() => {
     // onV2TradeAnalytics(trade)
     if (
-      (priceImpactWithoutFee != null) &&
+      (priceImpactWithoutFee) &&
       !confirmPriceImpactWithoutFee(priceImpactWithoutFee)
     ) {
       return
@@ -640,7 +640,7 @@ const Swap: React.FC<{
         color='secondary'
         bgClass={currencyBgClass}
       />
-      {((trade?.executionPrice) != null) && (
+      {((trade?.executionPrice)) && (
         <Box className='swapPrice'>
           <small>Price:</small>
           <small>
@@ -669,7 +669,7 @@ const Swap: React.FC<{
       {!showWrap && (
         <Box className='recipientInput'>
           <Box className='recipientInputHeader'>
-            {recipient !== null
+            {recipient
               ? (
                 <ArrowDownward />
                 )
@@ -677,14 +677,14 @@ const Swap: React.FC<{
                 <Box />
                 )}
             <Button
-              onClick={() => onRecipientChange(recipient !== null ? null : '')}
+              onClick={() => onRecipientChange(recipient ? null : '')}
             >
-              {recipient !== null
+              {recipient
                 ? '- Remove send'
                 : '+ Add a send (optional)'}
             </Button>
           </Box>
-          {recipient !== null && (
+          {recipient && (
             <AddressInput
               label='Recipient'
               placeholder='Wallet Address or ENS name'
@@ -703,7 +703,7 @@ const Swap: React.FC<{
         : (
           <AdvancedSwapDetails trade={trade} />
           )}
-      <Box className='swapButtonWrapper'>
+      <Box className=''>
         {showApproveFlow && (
           <Box width='48%'>
             <Button
@@ -731,7 +731,7 @@ const Swap: React.FC<{
         )}
         <Box width={showApproveFlow ? '48%' : '100%'}>
           <Button
-            className='w-full'
+            className='w-full bg-gradient-to-r from-[#23006A] to-[#23006A]/50 py-4 px-4 rounded-md'
             disabled={showApproveFlow || (swapButtonDisabled)}
             onClick={isConnected && isSupportedNetwork ? onSwap : async () => (await connect())}
 
