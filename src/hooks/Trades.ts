@@ -9,7 +9,6 @@ import { SwapDelay } from '@/state/swap/actions'
 import { PairState, usePairs } from '@/data/Reserves'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 import { useWalletData } from '@/utils'
-import { AiOutlineConsoleSql } from 'react-icons/ai'
 export function useAllCommonPairs (
   currencyA?: Token | NativeCurrency,
   currencyB?: Token | NativeCurrency
@@ -33,7 +32,7 @@ export function useAllCommonPairs (
   )
   const allPairCombinations: Array<[Token, Token]> = useMemo(
     () =>
-      (tokenA != null) && (tokenB != null)
+      tokenA && tokenB
         ? [
             // the direct pair
             [tokenA, tokenB],
@@ -104,12 +103,13 @@ export function useTradeExactIn (
   swapDelay?: SwapDelay,
   onSetSwapDelay?: (swapDelay: SwapDelay) => void
 ): Trade | null {
+  console.log(swapDelay)
   const allowedPairs = useAllCommonPairs(
     currencyAmountIn?.token,
     currencyOut
   )
   bestTradeExactIn = useMemo(() => {
-    if (currencyAmountIn == null) {
+    if (currencyAmountIn) {
       return null
     }
     if (
@@ -118,10 +118,10 @@ export function useTradeExactIn (
     ) {
       return bestTradeExactIn
     }
-    if (swapDelay !== SwapDelay.SWAP_REFRESH && (onSetSwapDelay != null)) {
+    if (swapDelay !== SwapDelay.SWAP_REFRESH && onSetSwapDelay) {
       onSetSwapDelay(SwapDelay.SWAP_COMPLETE)
     }
-    if (currencyAmountIn !== undefined && currencyOut !== undefined && allowedPairs.length > 0) {
+    if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
       return (
         Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, {
           maxHops: 3,
@@ -158,7 +158,7 @@ export function useTradeExactOut (
     ) {
       return bestTradeExactOut
     }
-    if (swapDelay !== SwapDelay.SWAP_REFRESH && (onSetSwapDelay != null)) {
+    if (swapDelay !== SwapDelay.SWAP_REFRESH && onSetSwapDelay) {
       onSetSwapDelay(SwapDelay.SWAP_COMPLETE)
     }
     if (currencyIn !== undefined && currencyAmountOut !== undefined && allowedPairs.length > 0) {

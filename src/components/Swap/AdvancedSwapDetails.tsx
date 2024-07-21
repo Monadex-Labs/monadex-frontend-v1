@@ -31,31 +31,33 @@ export const TradeSummary: React.FC<TradeSummaryProps> = ({
   const tradeAmount = isExactIn ? trade.outputAmount : trade.inputAmount
 
   return (
-    <Box mt={1.5}>
+    <Box mt={1.5}className='rounded-sm font-fira flex flex-col p-3 text-[#ABABAB] transition duration-150 ease-in-out'>
       {openSettingsModal && (
         <SettingsModal
           open={openSettingsModal}
           onClose={() => setOpenSettingsModal(false)}
         />
       )}
-      <Box className='summaryRow'>
-        <Box>
-          <small>max slippage :</small>
+      <Box className='flex justify-between items-center'>
+        <Box className='flex gap-2'>
           <QuestionHelper text='slippage helper' />
+          <small>max slippage :</small>
         </Box>
         <Box
           onClick={() => setOpenSettingsModal(true)}
-          className='swapSlippage'
+          className='flex gap-2'
         >
           <small>{allowedSlippage / 100}%</small>
           <MdEdit />
         </Box>
       </Box>
-      <Box className='summaryRow'>
-        <Box>
-          <small>{isExactIn ? 'min received' : 'max sold'}:</small>
+      <Box className=''>
+        <Box className='py-2 flex justify-between items-center'>
+          <div className='flex gap-2'>
           <QuestionHelper text='tx limit Helper' />
-          <Box>
+          <small>{isExactIn ? 'min received' : 'max sold'}:</small>
+          </div>
+          <Box className='flex gap-2'>
             <small>
               {formatTokenAmount(
                 slippageAdjustedAmounts[isExactIn ? Field.OUTPUT : Field.INPUT]
@@ -65,26 +67,26 @@ export const TradeSummary: React.FC<TradeSummaryProps> = ({
             <CurrencyLogo currency={tradeAmount.currency} size='16px' />
           </Box>
         </Box>
-        <Box className='summaryRow'>
-          <Box>
-            <small>priceimpact :</small>
+        <Box className='py-2 flex justify-between'>
+          <Box className='flex gap-2'>
             <QuestionHelper text='priceImpactHelper' />
+            <small>price impact :</small>
           </Box>
           <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
         </Box>
-        <Box className='summaryRow'>
-          <Box>
-            <small>liquidityProviderFee :</small>
+        <Box className='py-2 flex justify-between'>
+          <Box className='flex gap-2'>
             <QuestionHelper text='liquidityProviderFeeHelper' />
+            <small>liquidity Provider Fee :</small>
           </Box>
           <small>
             {formatTokenAmount(realizedLPFee as CurrencyAmount)} {trade.inputAmount.currency.symbol}
           </small>
         </Box>
-        <Box className='summaryRow'>
-          <Box>
-            <small>route :</small>
-            <QuestionHelper text='swapRouteHelper' />
+        <Box className='py-2 flex justify-between'>
+          <Box className='flex gap-2'>
+          <QuestionHelper text='swapRouteHelper' />
+          <small>route :</small>
           </Box>
           <Box>
             {trade.route.path.map((token, i, path) => {
@@ -116,7 +118,7 @@ export const AdvancedSwapDetails: React.FC<AdvancedSwapDetailsProps> = ({
 
   return (
     <>
-      {(trade != null) && (
+      {trade && (
         <TradeSummary
           trade={trade}
           allowedSlippage={

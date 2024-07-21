@@ -2,6 +2,7 @@ import { createReducer } from '@reduxjs/toolkit'
 import {
   Field,
   replaceSwapState,
+  setSwapDelay,
   typeInput,
   selectCurrency,
   switchCurrencies,
@@ -96,7 +97,12 @@ export default createReducer<SwapState>(initialState, (builder) => {
     .addCase(setRecipient, (state, { payload: { recipient } }) => {
       state.recipient = recipient
     })
+    .addCase(setSwapDelay, (state, { payload: { swapDelay } }) => {
+      state.swapDelay = swapDelay;
+    })
+
     .addCase(purchasedTicketsOnSwap, (state, { payload: { raffle } }) => {
+      console.log('ic', state)
       return {
         ...state,
         raffle: {

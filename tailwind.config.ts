@@ -19,7 +19,7 @@ const config: Config = {
         'spin-fast': 'spin 0.5s linear infinite', // Faster spin
         'spin-slow': 'spin 2s linear infinite',   // Slower spin
       },
-
+      // add all colors vars used here and refactor the dapp style color 
       colors: {
         'primary-button': 'bg-gradient-to-r from-[#2E0485] via-[#3A0A9C] to-[#310093]',
         'warning-button': 'bg-[#826FF9]',

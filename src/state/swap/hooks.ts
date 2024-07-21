@@ -71,7 +71,7 @@ export function useSwapActionHandlers (): {
   const onUserInput = useCallback(
     (field: Field, typedValue: string) => {
       dispatch(typeInput({ field, typedValue }))
-      if (typedValue === undefined) {
+      if (!typedValue) {
         onSwapDelay(SwapDelay.INIT)
         return
       }

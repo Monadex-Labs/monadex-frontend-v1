@@ -42,7 +42,6 @@ export function useTokenBalances (
   address?: string,
   tokens?: Token [] | undefined
 ): { [tokenAddress: string]: TokenAmount | undefined } {
-  console.log('here',useTokenBalancesWithLoadingIndicator(address, tokens)[0])
   return useTokenBalancesWithLoadingIndicator(address, tokens)[0]
 }
 export function useTokenBalance (account?: string, token?: Token): TokenAmount | undefined {

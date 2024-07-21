@@ -12,7 +12,7 @@ const SwapDefaultMode:React.FC<{
 }) => {
   return (
       <>
-       <Box className=''>
+       <Box className='py-4'>
             <SwapMain />
         </Box>
       </>

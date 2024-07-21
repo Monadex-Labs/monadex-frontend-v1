@@ -12,7 +12,6 @@ import { useRouterContract } from './useContracts'
 import { purchasedTicketsOnSwap } from '@/state/swap/actions'
 import { useSelector } from 'react-redux'
 import { useWalletData } from '../utils/index'
-
 export enum SwapCallbackState {
   INVALID,
   LOADING,
@@ -47,44 +46,49 @@ export function useSwapCallArguments (
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
   recipientAddressOrName: string | null // address of the recipient of the trade, or null if swap should be returned to sender
 ): SwapCall[] {
+  const recipientAddress = isAddress(recipientAddressOrName)
   const { account: address, chainId, provider: wallet } = useWalletData()
-  const recipient = recipientAddressOrName === null && address
+  const recipient = recipientAddressOrName === null ? address : recipientAddress
   const deadline = useTransactionDeadline()
   const contract = useRouterContract() as Contract
   const ticketsState = useSelector(purchasedTicketsOnSwap)
+  console.log('f', ticketsState)
+  // handle raffle state 
   const ticketsPurchased = ticketsState.payload.raffle?.ticketsPurchased as boolean
   const multiplier = ticketsState.payload.raffle?.multiplier as number
   return useMemo(() => {
     // checking
-    if (!trade || !recipient || !wallet  || !chainId || !deadline || !ticketsPurchased || !multiplier) return [] // eslint-disable-line
-    if (contract === undefined) return []
+    if (!trade || !recipient || !wallet  || !chainId || !deadline ) return [] // eslint-disable-line
+
+    if (!contract) return []
+
     const swapMethods = [] as any[]
 
-    const swapCallParameters =
-      Router.swapCallParameters(trade, {
+    const swapCallParameters = Router.swapCallParameters(trade, {
         feeOnTransfer: false,
         allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
         recipient,
         ttl: deadline.toNumber()
       }, {
-        purchaseTickets: ticketsPurchased,
-        multiplier
-      })
+        // fake data to test before creation of the raffle component
+        purchaseTickets: Boolean(false),
+        multiplier : Number(0)
+    })
     const swapCallParametersOnInput = Router.swapCallParameters(trade, {
-      feeOnTransfer: true,
+      feeOnTransfer: false,
       allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
       recipient,
       ttl: deadline.toNumber()
     },
     {
-      purchaseTickets: ticketsPurchased,
-      multiplier
+      // fake data to test before creation of the raffle component
+      purchaseTickets: Boolean(false),
+      multiplier : Number(0)
     })
-
+    // populate swapMethods[]
+    swapMethods.push(swapCallParameters)
     if (trade.tradeType === TradeType.EXACT_INPUT) {
       swapMethods.push(swapCallParametersOnInput)
-    } else {
-      swapMethods.push(swapCallParameters)
     }
     return swapMethods.map((parameters) => ({ parameters, contract }))
   }, [address, allowedSlippage, chainId, deadline, wallet, recipient, trade, contract, ticketsState])
@@ -99,8 +103,11 @@ export function useSwapCallback (
 ): { state: SwapCallbackState, callback: null | (() => Promise<{ response: TransactionResponse, summary: string }>), error: string | null } {
   const { account: address, chainId, provider: library } = useWalletData()
   const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName)
+  console.log('useSwapCallback',swapCalls)
+
   const addTransaction = useTransactionAdder()
   const recipient = recipientAddressOrName === null && address
+
   // const contract = useRouterContract() as Contract
 
   return useMemo(() => {
