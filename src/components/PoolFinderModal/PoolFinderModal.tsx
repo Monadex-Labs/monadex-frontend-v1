@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { Currency, TokenAmount, MONAD, JSBI, ChainId } from '@monadex/sdk'
+import { Token, NativeCurrency, TokenAmount, MONAD, JSBI } from '@monadex/sdk'
 import { IoIosArrowBack, IoMdAdd, IoMdClose } from 'react-icons/io'
 import { Box } from '@mui/material'
 import {
@@ -26,14 +26,13 @@ interface PoolFinderModalProps {
 }
 
 const PoolFinderModal: React.FC<PoolFinderModalProps> = ({ open, onClose }) => {
-  const { account, chainId } = useWalletData()
+  const { account } = useWalletData()
 
   const [showSearch, setShowSearch] = useState<boolean>(false)
   const [activeField, setActiveField] = useState<number>(Fields.TOKEN1)
-  const chainIdToUse = chainId || ChainId.MATIC
-  const nativeCurrency = MONAD[chainIdToUse]
-  const [currency0, setCurrency0] = useState<Currency | null>(nativeCurrency)
-  const [currency1, setCurrency1] = useState<Currency | null>(null)
+  const nativeCurrency = MONAD
+  const [currency0, setCurrency0] = useState<Token | NativeCurrency | null>(nativeCurrency)
+  const [currency1, setCurrency1] = useState<Token | NativeCurrency | null>(null)
 
   const [pairState, pair] = usePair(
     currency0 ?? undefined,
@@ -65,7 +64,7 @@ const PoolFinderModal: React.FC<PoolFinderModalProps> = ({ open, onClose }) => {
   )
 
   const handleCurrencySelect = useCallback(
-    (currency: Currency) => {
+    (currency: Token | NativeCurrency) => {
       if (activeField === Fields.TOKEN0) {
         setCurrency0(currency)
       } else {
@@ -98,7 +97,7 @@ const PoolFinderModal: React.FC<PoolFinderModalProps> = ({ open, onClose }) => {
             setActiveField(Fields.TOKEN0)
           }}
         >
-          {currency0
+          {(currency0 != null)
             ? (
               <Box className='flex items-center'>
                 <CurrencyLogo currency={currency0} size='20px' />
@@ -121,7 +120,7 @@ const PoolFinderModal: React.FC<PoolFinderModalProps> = ({ open, onClose }) => {
             setActiveField(Fields.TOKEN1)
           }}
         >
-          {currency1
+          {(currency1 != null)
             ? (
               <Box display='flex'>
                 <CurrencyLogo currency={currency1} />
@@ -143,7 +142,7 @@ const PoolFinderModal: React.FC<PoolFinderModalProps> = ({ open, onClose }) => {
           </Box>
         )}
         <Box className='poolFinderInfo border'>
-          {currency0 && currency1
+          {(currency0 != null) && (currency1 != null)
             ? (
                 pairState === PairState.EXISTS
                   ? (
@@ -155,13 +154,7 @@ const PoolFinderModal: React.FC<PoolFinderModalProps> = ({ open, onClose }) => {
                           <Box textAlign='center'>
                             <p>You don't have liquidity in this pool yet.</p>
                             <Link
-                              href={`/new?currency0=${currencyId(
-                      currency0,
-                      chainId || ChainId.MATIC
-                    )}&currency1=${currencyId(
-                      currency1,
-                      chainId || ChainId.MATIC
-                    )}`}
+                              href={`/new?currency0=${currencyId(currency0)}&currency1=${currencyId(currency1)}`}
                               className='text-primary no-decoration'
                               onClick={onClose}
                             >
@@ -175,13 +168,7 @@ const PoolFinderModal: React.FC<PoolFinderModalProps> = ({ open, onClose }) => {
                       <Box textAlign='center'>
                         <p>No pool found.</p>
                         <Link
-                          href={`/new?currency0=${currencyId(
-                    currency0,
-                    chainId || ChainId.MATIC
-                  )}&currency1=${currencyId(
-                    currency1,
-                    chainId || ChainId.MATIC
-                  )}`}
+                          href={`/new?currency0=${currencyId(currency0)}&currency1=${currencyId(currency1)}`}
                           className='text-primary no-decoration'
                           onClick={onClose}
                         >
