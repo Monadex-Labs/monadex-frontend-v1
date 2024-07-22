@@ -13,7 +13,6 @@ import { usePair, PairState } from '@/data/Reserves'
 import { usePairAdder } from '@/state/user/hooks'
 import { useWalletData, currencyId } from '@/utils'
 import Link from 'next/link'
-import 'components/styles/PoolFinderModal.scss'
 
 enum Fields {
   TOKEN0 = 0,
@@ -43,7 +42,6 @@ const PoolFinderModal: React.FC<PoolFinderModalProps> = ({ open, onClose }) => {
     if (pair != null) {
       addPair(pair)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pair?.liquidityToken.address])
 
   const validPairNoLiquidity: boolean =
@@ -91,7 +89,7 @@ const PoolFinderModal: React.FC<PoolFinderModalProps> = ({ open, onClose }) => {
         </Box>
         <Box
           mt={2}
-          className='borderedCard'
+          className='border p-3 rounded-md cursor-pointer'
           onClick={() => {
             setShowSearch(true)
             setActiveField(Fields.TOKEN0)
@@ -114,7 +112,7 @@ const PoolFinderModal: React.FC<PoolFinderModalProps> = ({ open, onClose }) => {
           <IoMdAdd size='20' className='text-secondary' />
         </Box>
         <Box
-          className='borderedCard'
+          className='border p-3 rounded-md cursor-pointer'
           onClick={() => {
             setShowSearch(true)
             setActiveField(Fields.TOKEN1)
@@ -141,7 +139,7 @@ const PoolFinderModal: React.FC<PoolFinderModalProps> = ({ open, onClose }) => {
             </p>
           </Box>
         )}
-        <Box className='poolFinderInfo border'>
+        <Box className='mt-4 p-2 rounded-md flex content-center border'>
           {(currency0 != null) && (currency1 != null)
             ? (
                 pairState === PairState.EXISTS
