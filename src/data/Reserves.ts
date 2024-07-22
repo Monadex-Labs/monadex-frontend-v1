@@ -36,7 +36,7 @@ export function usePairs (
           : undefined
       }),
     [tokens]
-  );
+  )
 
   const results = useMultipleContractSingleData(pairAddresses, PAIR_INTERFACE, 'getReserves')
   return useMemo(() => {
@@ -46,7 +46,7 @@ export function usePairs (
       const tokenB = tokens[i][1]
 
       if (loading) return [PairState.LOADING, null]
-      if ((tokenA == null) || (tokenB == null) || tokenA.equals(tokenB)) { return [PairState.INVALID, null] }
+      if (!tokenA || !tokenB || tokenA.equals(tokenB)) { return [PairState.INVALID, null] }
       if (reserves == null) return [PairState.NOT_EXISTS, null]
       const { 0: reserve0, 1: reserve1 } = reserves
 

@@ -65,7 +65,6 @@ interface AddLiquidityParams {
   deadline: string
 }
 
-// TODO: use string to match uint256 (pending confirmation)
 interface AddLiquidityNative {
   token: string
   amountTokenDesired: string
@@ -218,7 +217,7 @@ const AddLiquidity: React.FC<{
   )
 
   useEffect(() => {
-    if (currency0 != null) {
+    if (currency0) {
       onCurrencySelection(Field.CURRENCY_A, currency0)
     }
   }, [currency0Id])
@@ -238,7 +237,7 @@ const AddLiquidity: React.FC<{
   )
 
   useEffect(() => {
-    if (currency1 != null) {
+    if (currency1) {
       onCurrencySelection(Field.CURRENCY_B, currency1)
     }
   }, [currency1Id])
@@ -252,17 +251,17 @@ const AddLiquidity: React.FC<{
 
   const router = useRouterContract()
   const onAddLiquidity = async (): Promise<void> => {
-    if (!chainId || (provider == null) || !account || (router == null)) return
+    if (!chainId || !provider || !account || !router) return
     const {
       [Field.CURRENCY_A]: parsedAmountA,
       [Field.CURRENCY_B]: parsedAmountB
     } = parsedAmounts
     if (
-      (parsedAmountA == null) ||
-      (parsedAmountB == null) ||
-      (currencies[Field.CURRENCY_A] == null) ||
-      (currencies[Field.CURRENCY_B] == null) ||
-      (deadline == null)
+      !parsedAmountA ||
+      !parsedAmountB ||
+      !currencies[Field.CURRENCY_A] ||
+      !currencies[Field.CURRENCY_B] ||
+      !deadline
     ) {
       return
     }
@@ -325,12 +324,12 @@ const AddLiquidity: React.FC<{
       value = null
     }
     setAttemptingTxn(true)
-    await estimate(args, (value != null) ? { value } : {})
+    await estimate(args, value ? { value } : {})
       .then(async (estimatedGasLimit: BigNumber): Promise<any> => {
         console.log('Estimated Gas Limit:', estimatedGasLimit) // Log the estimated gas limit
 
         return await method(args, {
-          ...((value != null) ? { value } : {}),
+          ...(value ? { value } : {}),
           gasLimit: calculateGasMargin(estimatedGasLimit)
         })
           .then(async (response) => {
