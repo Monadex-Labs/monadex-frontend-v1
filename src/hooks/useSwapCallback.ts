@@ -75,7 +75,7 @@ export function useSwapCallArguments (
         multiplier : Number(0)
     })
     const swapCallParametersOnInput = Router.swapCallParameters(trade, {
-      feeOnTransfer: false,
+      feeOnTransfer: true,
       allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
       recipient,
       ttl: deadline.toNumber()

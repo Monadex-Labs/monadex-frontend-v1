@@ -22,7 +22,7 @@ export default function RootLayout ({
   return (
     // wrap redux provider
     <html lang='en-US'>
-      <body className={`${inter.className} ${fira_code.variable} max-w-[95%] mx-auto h-screen`}>
+      <body className={`${inter.className} ${fira_code.variable} max-w-[95%] mx-auto`}>
         <NextAuthSessionProvider>
           <QueryWrapper>
             <Web3ProviderWrapper>
