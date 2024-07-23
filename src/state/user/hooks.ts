@@ -15,7 +15,6 @@ import flatMap from 'lodash.flatmap'
 import { AppDispatch, AppState } from '../store'
 import { useAllTokens } from '@/hooks/Tokens'
 import { useSelector, useDispatch } from 'react-redux'
-// import { useWallets } from '@web3-onboard/react' // check if its works
 import { BASES_TO_TRACK_LIQUIDITY_FOR, MONADEX_PINNED_PAIRS } from '@/constants'
 import { useWalletData } from '@/utils'
 export function serializeToken (token: Token): SerializedToken {
@@ -223,6 +222,7 @@ export function useTrackedTokenPairs (): Array<[Token, Token]> {
   )
   return useMemo(() => {
     // dedupes pairs of tokens in the combined list
+    // TODO: FIX THIS, not showing full list of pairs
     const keyed = combinedList.reduce<{ [key: string]: [Token, Token] }>(
       (memo, [tokenA, tokenB]) => {
         const sorted = tokenA.sortsBefore(tokenB)
@@ -247,7 +247,7 @@ export function useTrackedTokenPairs (): Array<[Token, Token]> {
 export function toV2LiquidityToken ([tokenA, tokenB]: [Token, Token]): Token {
   return new Token(
     tokenA.chainId,
-    Pair.getAddress(tokenA, tokenB, tokenA.chainId),
+    Pair.getAddress(tokenA, tokenB),
     18,
     'MND-V2',
     'Monadex V2'
