@@ -8,6 +8,7 @@ import rejected from '@/static/assets/rejected.webp'
 import Molandak from '@/static/assets/hedgehog.png'
 import checkMark from '@/static/assets/checkmark.svg'
 import { TailSpin } from 'react-loader-spinner'
+import CircularProgress from '@mui/material'
 
 interface useConfirmationPendingContentProps {
   title: string
@@ -74,7 +75,7 @@ export const TransactionSubmittedContent: React.FC<TransactionSubmittedContentPr
       </Box>
       <Box className='border' mt={3}>
         <p>
-          {!txPending && <CheckCircleOutline />}
+          {!txPending && <CircularProgress size={16} />}
           {modalContent}
           <Image src={checkMark} width={200} alt='ok'></Image>
         </p>
