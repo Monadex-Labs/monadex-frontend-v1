@@ -61,15 +61,15 @@ const ConfirmSwapModal: React.FC<ConfirmSwapModalProps> = ({
   const showAcceptChanges = useMemo(
     () =>
       Boolean(
-        (trade != null) &&
-          (originalTrade != null) &&
+        trade &&
+          originalTrade &&
           tradeMeaningfullyDiffers(trade, originalTrade)
       ),
     [originalTrade, trade]
   )
 
   const modalHeader = useCallback(() => {
-    return ((trade) != null)
+    return trade
       ? (
         <SwapModalHeader
           trade={trade}
@@ -102,10 +102,10 @@ const ConfirmSwapModal: React.FC<ConfirmSwapModalProps> = ({
     : outputCurrency?.symbol
   // text to show while loading
   const pendingText = `Swapping ${amount1} ${symbol1 ?? 'INVALID SYMBOL'} for ${amount2} ${symbol2 ?? 'INVALID SYMBOL'}`
-
+  console.log('pending', pendingText)
   const confirmationContent = useCallback(
     () =>
-      swapErrorMessage != null
+      swapErrorMessage
         ? (
           <TransactionErrorContent
             onDismiss={onDismiss}
@@ -121,7 +121,6 @@ const ConfirmSwapModal: React.FC<ConfirmSwapModalProps> = ({
           ),
     [onDismiss, modalHeader, swapErrorMessage]
   )
-  // add how much tickets raffle user will receive on swap previewPurchase()
   return (
     <TransactionConfirmationModal
       isOpen={isOpen}
@@ -131,7 +130,7 @@ const ConfirmSwapModal: React.FC<ConfirmSwapModalProps> = ({
       txPending={txPending}
       content={confirmationContent}
       pendingText={pendingText}
-      modalContent={txPending != null && txPending ? 'Submitted transaction to swap your tokens' : 'Successfully swapped your tokens'}
+      modalContent={txPending ? 'Submitted transaction to swap your tokens' : 'Successfully swapped your tokens'}
     />
   )
 }

@@ -1,6 +1,6 @@
 import { Token, Fraction, Trade, TradeType } from '@monadex/sdk'
 import React, { useMemo } from 'react'
-import { Box } from '@mui/material'
+import { Box, CircularProgress} from '@mui/material'
 import { Button } from '@mui/base'
 import { Field } from '@/state/swap/actions'
 import { DoubleCurrencyLogo } from '@/components'
@@ -48,7 +48,7 @@ const SwapModalHeader: React.FC<SwapModalHeaderProps> = ({
     [trade, allowedSlippage]
   )
   const wrappedToken = wrappedCurrency(
-    trade != null ? trade.inputAmount.currency : inputCurrency,
+    trade ? trade.inputAmount.currency : inputCurrency,
     chainId
   )
   const pct = basisPointsToPercent(allowedSlippage)
@@ -61,59 +61,62 @@ const SwapModalHeader: React.FC<SwapModalHeaderProps> = ({
 
   return (
     <Box>
-      <Box mt={10} className='flex justify-center'>
+      <Box mt={5} className='flex justify-center'>
         <DoubleCurrencyLogo
-          currency0={trade != null ? trade.inputAmount.currency : inputCurrency as Token}
+          currency0={trade ? trade.inputAmount.currency : inputCurrency as Token}
           currency1={
-            trade != null ? trade.outputAmount.currency : outputCurrency as Token
+            trade ? trade.outputAmount.currency : outputCurrency as Token
           }
-          size={48}
+          size={38}
         />
       </Box>
-      <Box className='swapContent'>
+      <Box className='text-center text-sm'>
         <p>
-          Swap{' '}
-          {trade != null
+          Swap {' '}
+          {trade
             ? formatTokenAmount(trade.inputAmount)
             : ''}{' '}
-          {trade != null
+          {trade
             ? trade.inputAmount.currency.symbol
             : inputCurrency?.symbol}{' '}
         </p>
         <ArrowDownward />
         <p>
-          {trade != null
+          {trade
             ? formatTokenAmount(trade.outputAmount)
             : ''}{' '}
-          {trade != null
+          {trade
             ? trade.outputAmount.currency.symbol
             : outputCurrency?.symbol}
         </p>
       </Box>
       {showAcceptChanges && (
-        <Box className='priceUpdate'>
+        <Box className='p-1 '>
           <Box>
             <WarningAmber />
-            <p>Price Updated</p>
+            <p className='text-sm font-medium'>Price Updated</p>
           </Box>
-          <Button onClick={onAcceptChanges}>Accept</Button>
+          <Button onClick={onAcceptChanges}
+            className=' w-full bg-gradient-to-r from-[#23006A] to-[#23006A]/50 py-4 px-4 rounded-md disabled:opacity-40'>
+            Accept
+          </Button>
         </Box>
       )}
-      <Box className='transactionText'>
+      <Box className='text-sm text-center'>
         {trade?.tradeType === TradeType.EXACT_INPUT
           ? (
-            <p className='small'>
+            <p className='font-medium p-1 opacity-40 mt-4'>
               {`Output is estimated. You will receive at least ${
-              trade != null
+              trade
                 ? formatTokenAmount(slippageAdjustedAmounts[Field.OUTPUT])
-                : bestTradeAmount != null && outputCurrency != null
+                : bestTradeAmount && outputCurrency 
                 ? (
                     Number(bestTradeAmount.toString()) /
                     10 ** outputCurrency.decimals
                   ).toLocaleString()
                 : ''
             } ${
-              trade != null
+              trade
                 ? trade.outputAmount.currency.symbol ?? 'INVALID SYMBOL'
                 : outputCurrency?.symbol ?? 'INVALID SYMBOL'
             } or the transaction will revert.`}
@@ -121,18 +124,18 @@ const SwapModalHeader: React.FC<SwapModalHeaderProps> = ({
             )
           : trade?.tradeType === TradeType.EXACT_OUTPUT
             ? (
-              <p className='small'>
+              <p className='font-medium p-1 opacity-40 mt-4'>
                 {`Input is estimated. You will sell at most ${
-              trade != null
+              trade 
                 ? formatTokenAmount(slippageAdjustedAmounts[Field.INPUT])
-                : bestTradeAmount != null && inputCurrency != null
+                : bestTradeAmount && inputCurrency 
                 ? (
                     Number(bestTradeAmount.toString()) /
                     10 ** inputCurrency.decimals
                   ).toLocaleString()
                 : ''
             } ${
-              trade != null
+              trade
                 ? trade.inputAmount.currency.symbol ?? 'INVALID SYMBOL'
                 : inputCurrency?.symbol ?? 'INVALID SYMBOL'
             }  or the transaction will revert.`}
@@ -141,7 +144,7 @@ const SwapModalHeader: React.FC<SwapModalHeaderProps> = ({
             : (
               <></>
               )}
-        <Button onClick={onConfirm} className='swapButton'>
+        <Button onClick={onConfirm} className='mt-4 w-full bg-gradient-to-r from-[#23006A] to-[#23006A]/50 py-4 px-4 rounded-md disabled:opacity-40'>
           Confirm Swap
         </Button>
       </Box>

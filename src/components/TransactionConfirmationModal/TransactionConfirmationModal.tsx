@@ -1,5 +1,5 @@
 import { ChainId } from '@monadex/sdk'
-import { Box, Button } from '@mui/material'
+import { Box, Button, CircularProgress } from '@mui/material'
 import { CustomModal } from '@/components'
 import { Close, CheckCircleOutline } from '@mui/icons-material'
 import { useWalletData } from '@/utils'
@@ -8,7 +8,6 @@ import rejected from '@/static/assets/rejected.webp'
 import Molandak from '@/static/assets/hedgehog.png'
 import checkMark from '@/static/assets/checkmark.svg'
 import { TailSpin } from 'react-loader-spinner'
-import CircularProgress from '@mui/material'
 
 interface useConfirmationPendingContentProps {
   title: string
@@ -47,7 +46,7 @@ export const ConfirmationPendingContent: React.FC<ConfirmationPendingContentProp
         {confirmationPendingContent.pending && (
           <p className='font-base'>{confirmationPendingContent.pending}</p>
         )}
-        <p className='text-sm mt-2'>{confirmationPendingContent.confirm || ''}</p>
+        <p className='text-sm mt-2 font-medium opacity-40'>{confirmationPendingContent.confirm || ''}</p>
       </Box>
     </Box>
   )
@@ -117,7 +116,7 @@ export const ConfirmationModalContent: React.FC<ConfirmationModalContentProps> =
 }) => {
   return (
     <Box padding={4}>
-      <Box className='border'>
+      <Box className='flex items-center justify-between'>
         <h5>{title}</h5>
         <Close onClick={onDismiss} />
       </Box>

@@ -148,15 +148,17 @@ export function useSwapCallback (
               contract
             } = call
             const options = !value || isZero(value) ? {} : { value } // eslint-disable-line
-
+            console.log('args' ,...args)
             return await contract.estimateGas[methodName](...args, options)
               .then((gasEstimate) => {
+                
                 return {
                   call,
                   gasEstimate
                 }
               })
               .catch(async (gasError) => {
+                console.log('erreur',gasError)
                 console.debug('Gas estimate failed, trying eth_call to extract error', call)
 
                 return await contract.callStatic[methodName](...args, options)

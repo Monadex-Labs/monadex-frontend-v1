@@ -152,14 +152,14 @@ const Swap: React.FC<{
       (currencies[Field.OUTPUT]) &&
       parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0))
   )
-  const noRoute = route == null
+  const noRoute = !route
   const { priceImpactWithoutFee } = computeTradePriceBreakdown(trade)
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
   const [mainPrice, setMainPrice] = useState(true)
   const priceImpactSeverity = warningSeverity(priceImpactWithoutFee)
-  const isValid = swapInputError === undefined
+  const isValid = !swapInputError
   const showApproveFlow =
-    swapInputError === undefined &&
+    !swapInputError &&
     (approval === ApprovalState.NOT_APPROVED ||
       approval === ApprovalState.PENDING ||
       (approvalSubmitted && approval === ApprovalState.APPROVED)) &&
@@ -332,13 +332,14 @@ const Swap: React.FC<{
         swapInputError,
         swapCallbackError
       ])
-    
       const swapButtonDisabled = useMemo(() => {
         const inputCurrency = currencies[Field.INPUT]
+
         if (account) {
           if (!isSupportedNetwork) return false
           if (showWrap) {
             return (
+
               Boolean(wrapInputError) ||
               wrapType === WrapType.WRAPPING ||
               wrapType === WrapType.UNWRAPPING
@@ -353,13 +354,13 @@ const Swap: React.FC<{
             )
           } else {
             return (
-              ((inputCurrency) &&
+              (inputCurrency &&
                 chainId &&
                 currencyEquals(inputCurrency, MONAD) &&
                 approval === ApprovalState.UNKNOWN) ||
               !isValid ||
               (priceImpactSeverity > 3) ||
-              swapCallbackError !== ''
+              !!swapCallbackError
             )
           }
         } else {
@@ -381,6 +382,7 @@ const Swap: React.FC<{
         chainId,
         swapCallbackError
       ])
+
     
       const [
         {
@@ -448,7 +450,6 @@ const Swap: React.FC<{
       )
     
       const onSwap = () => {
-        console.log('here my friend')
         if (showWrap && onWrap) {
           void onWrap()
         } else {
@@ -504,7 +505,6 @@ const Swap: React.FC<{
         if (!swapCallback) {
           return
         }
-    
         setSwapState({
           attemptingTxn: true,
           tradeToConfirm,
@@ -556,6 +556,7 @@ const Swap: React.FC<{
               txHash: undefined
             })
           })
+
       }, [
         // onV2TradeAnalytics,
         trade,
@@ -584,9 +585,6 @@ const Swap: React.FC<{
         } catch (err) {
           setApproving(false)
         }
-      }
-      function test(){
-        console.log('here my friend')
       }
   return (
     <Box>
@@ -732,7 +730,7 @@ const Swap: React.FC<{
       )}
       <Box width={showApproveFlow ? '48%' : '100%'}>
         <Button
-          className='w-full bg-gradient-to-r from-[#23006A] to-[#23006A]/50 py-4 px-4 rounded-md'
+          className='w-full bg-gradient-to-r from-[#23006A] to-[#23006A]/50 py-4 px-4 rounded-md disabled:opacity-40'
           disabled={showApproveFlow || (swapButtonDisabled as boolean)}
           onClick={isConnected && isSupportedNetwork ? onSwap : async () => await connect()}
 
