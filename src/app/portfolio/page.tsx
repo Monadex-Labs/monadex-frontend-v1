@@ -6,7 +6,7 @@ import { useV2LiquidityPools } from '@/hooks'
 import Image from 'next/image'
 import { useWalletData } from '@/utils'
 import PageHeader from '@/components/Swap/SwapHeader' // TODO: check if valid component to use
-import { PoolFinderModal } from '@/components'
+import { PoolFinderModal, PoolPositionCard } from '@/components'
 
 const Portfolio: React.FC = () => {
   const { account } = useWalletData()
@@ -40,7 +40,10 @@ const Portfolio: React.FC = () => {
                 </small>
                 {allV2PairsWithLiquidity.map((pair, index) => (
                   <Box key={index} mt={2}>
-                    {pair.liquidityToken.address} {/* TODO: Add component PoolPositionCard */}
+                    <PoolPositionCard
+                      key={pair.liquidityToken.address}
+                      pair={pair}
+                    />
                   </Box>
                 ))}
               </Box>
@@ -58,8 +61,6 @@ const Portfolio: React.FC = () => {
                 </div>
                 <p className='text-secondary'>
                   Don't see a pool you joined? <small className='text-primary cursor-pointer' onClick={() => setOpenPoolFinder(true)}>Import it</small>.
-                  <br />
-                  Unstake your LP Tokens from Farms to see them here.
                 </p>
               </Box>
               )}
