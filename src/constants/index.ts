@@ -130,6 +130,9 @@ export const GlobalData = {
       JSBI.BigInt(1500),
       BIPS_BASE
     ) // 15%
+  },
+  utils  :  {
+    DEFAULT_DEADLINE_FROM_NOW: 60 * 20, // 20 minutes, denominated in seconds
   }
 }
 

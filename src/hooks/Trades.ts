@@ -103,7 +103,6 @@ export function useTradeExactIn (
   swapDelay?: SwapDelay,
   onSetSwapDelay?: (swapDelay: SwapDelay) => void
 ): Trade | null {
-  console.log(swapDelay)
   const allowedPairs = useAllCommonPairs(
     currencyAmountIn?.token,
     currencyOut

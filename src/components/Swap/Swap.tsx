@@ -283,7 +283,7 @@ const Swap: React.FC<{
       const swapButtonText = useMemo(() => {
         if (account) {
           if (!isSupportedNetwork) return 'Switch Network'
-          if ((currencies[Field.INPUT] == null) || (currencies[Field.OUTPUT] == null)) {
+          if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) {
             return 'Select a token'
           } else if (
             formattedAmounts[Field.INPUT] === '' &&
@@ -293,13 +293,13 @@ const Swap: React.FC<{
           } else if (showWrap) {
             if (wrapInputError) return wrapInputError
             return wrapType === WrapType.WRAP
-              ? `Wrap ${MONAD.symbol ?? '[INVALID SYMBOL]'}`
+              ? `Wrap Monad ${MONAD.symbol ?? '[INVALID SYMBOL]'}`
               : wrapType === WrapType.UNWRAP
-                ? `Unwrap ${WMND[chainId].symbol ?? '[INVALID SYMBOL]'}`
+                ? `Unwrap Monad ${WMND[chainId].symbol ?? '[INVALID SYMBOL]'}`
                 : wrapType === WrapType.WRAPPING
-                  ? `Wrapping ${MONAD.symbol ?? '[INVALID SYMBOL]'}`
+                  ? `Wrapping Monad ${MONAD.symbol ?? '[INVALID SYMBOL]'}`
                   : wrapType === WrapType.UNWRAPPING
-                    ? `Unwrapping ${WMND[chainId].symbol ?? '[INVALID SYMBOL]'}`
+                    ? `Unwrapping Monad ${WMND[chainId].symbol ?? '[INVALID SYMBOL]'}`
                     : ''
           } else if (noRoute && userHasSpecifiedInputOutput) {
             return 'Insufficient liquidity for this trade.'
@@ -447,8 +447,9 @@ const Swap: React.FC<{
         (maxAmountInput) && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput)
       )
     
-      const onSwap = (): void => {
-        if (showWrap && (onWrap)) {
+      const onSwap = () => {
+        console.log('here my friend')
+        if (showWrap && onWrap) {
           void onWrap()
         } else {
           setSwapState({
@@ -584,7 +585,9 @@ const Swap: React.FC<{
           setApproving(false)
         }
       }
-    
+      function test(){
+        console.log('here my friend')
+      }
   return (
     <Box>
     {showConfirm && (
@@ -693,14 +696,15 @@ const Swap: React.FC<{
     )}
     {!showWrap && fetchingBestRoute
       ? (
-        <Box mt={2} className='flex justify-center'>
-          <p>Fetching Best Route...</p>
+        <Box mt={2} className='flex justify-center gap-2 items-center flex-col'>
+          <CircularProgress size={16} />
+          <p className='text-xs mb-2'>Fetching Best Route...</p>
         </Box>
         )
       : (
         <AdvancedSwapDetails trade={trade} />
         )}
-    <Box className='borde'>
+    <Box className=''>
       {showApproveFlow && (
         <Box width='48%'>
           <Button
@@ -729,16 +733,15 @@ const Swap: React.FC<{
       <Box width={showApproveFlow ? '48%' : '100%'}>
         <Button
           className='w-full bg-gradient-to-r from-[#23006A] to-[#23006A]/50 py-4 px-4 rounded-md'
-          disabled={showApproveFlow || (swapButtonDisabled)}
-          onClick={isConnected && isSupportedNetwork ? onSwap : async () => (await connect())}
+          disabled={showApproveFlow || (swapButtonDisabled as boolean)}
+          onClick={isConnected && isSupportedNetwork ? onSwap : async () => await connect()}
 
         >
-          {isConnected ? swapButtonText : 'Connect Wallet'}
+          {swapButtonText}
         </Button>
       </Box>
     </Box>
   </Box>
   )
 }
-
 export default Swap

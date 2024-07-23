@@ -66,8 +66,6 @@ const useFindBestRoute = (): {
     }
   }, [bestTradeExactIn, bestTradeExactOut, isExactIn, swapDelay, inputCurrency, outputCurrency])
  
-  console.log('bestTradeExactIn v2Trade', bestTradeExactIn)
-  console.log('bestTradeExactOut v2Trade', bestTradeExactOut)
   const swapCalls = useSwapCallArguments(
     v2Trade ?? undefined,
     allowedSlippage,

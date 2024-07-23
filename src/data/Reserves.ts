@@ -51,7 +51,6 @@ export function usePairs (
       if (!tokenA || !tokenB || tokenA.equals(tokenB)) { return [PairState.INVALID, null] }
       if (reserves == null) return [PairState.NOT_EXISTS, null]
       const { 0:reserve0, 1:reserve1 } = reserves
-      console.log('oxfo', reserve0)
       const [token0, token1] = tokenA.sortsBefore(tokenB)
         ? [tokenA, tokenB]
         : [tokenB, tokenA]
