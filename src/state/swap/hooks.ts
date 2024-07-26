@@ -83,7 +83,6 @@ export function useSwapActionHandlers (): {
     },
     [dispatch, onSwapDelay]
   )
-
   const onRecipientChange = useCallback(
     (recipient: string | null) => {
       dispatch(setRecipient({ recipient }))

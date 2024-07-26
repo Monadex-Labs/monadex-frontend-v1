@@ -102,7 +102,6 @@ const ConfirmSwapModal: React.FC<ConfirmSwapModalProps> = ({
     : outputCurrency?.symbol
   // text to show while loading
   const pendingText = `Swapping ${amount1} ${symbol1 ?? 'INVALID SYMBOL'} for ${amount2} ${symbol2 ?? 'INVALID SYMBOL'}`
-  console.log('pending', pendingText)
   const confirmationContent = useCallback(
     () =>
       swapErrorMessage

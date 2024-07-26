@@ -58,15 +58,15 @@ export function useSwapCallArguments (
   const recipient = recipientAddressOrName === null ? address : recipientAddress
   const deadline = useTransactionDeadline()
   const contract = useRouterContract() as Contract
-  const ticketsState = useSelector(purchasedTicketsOnSwap)
+  //const ticketsState = useSelector(purchasedTicketsOnSwap)
   // grab raffle state 
-  const ticketsPurchased = ticketsState.payload.raffle?.ticketsPurchased as boolean
-  const multiplier = ticketsState.payload.raffle?.multiplier as number
+  // const ticketsPurchased = ticketsState.payload.raffle?.ticketsPurchased as boolean
+  // const multiplier = ticketsState.payload.raffle?.multiplier as number
   return useMemo(() => {
     // checking
     if (!trade || !recipient || !wallet  || !chainId || !deadline ) return [] // eslint-disable-line
     if (!contract) return []
-
+  //  Trade type always equal ot 1
     const swapMethods = [] as any[]
     switch(tradeVersion) {
       case version.v2 : 
@@ -85,6 +85,7 @@ export function useSwapCallArguments (
         })
         )
         if(trade.tradeType === TradeType.EXACT_INPUT) {
+          console.log('jamax appelax')
           swapMethods.push(
             Router.swapCallParameters(trade, 
               {
@@ -148,7 +149,7 @@ export function useSwapCallback (
               contract
             } = call
             const options = !value || isZero(value) ? {} : { value } // eslint-disable-line
-            console.log('args' ,...args)
+
             return await contract.estimateGas[methodName](...args, options)
               .then((gasEstimate) => {
                 

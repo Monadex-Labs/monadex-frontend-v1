@@ -224,7 +224,7 @@ export function confirmPriceImpactWithoutFee (
   ) {
     return (
       window.prompt(
-        `typeConfirmSwapPriceImpact : ${GlobalData.percents.PRICE_IMPACT_WITHOUT_FEE_CONFIRM_MIN.toFixed(0)}`
+        `This swap has a price impact of at least {{ priceImpact }}%. Please type the word 'confirm' to continue with this swap : ${GlobalData.percents.PRICE_IMPACT_WITHOUT_FEE_CONFIRM_MIN.toFixed(0)}`
       ) === 'confirm'
     )
   } else if (
@@ -233,7 +233,7 @@ export function confirmPriceImpactWithoutFee (
     )
   ) {
     return window.confirm(
-     `confirmSwapPriceImpact : ${GlobalData.percents.PRICE_IMPACT_WITHOUT_FEE_CONFIRM_MIN.toFixed(0)}`
+     `confirm SwapPrice Impact : ${GlobalData.percents.PRICE_IMPACT_WITHOUT_FEE_CONFIRM_MIN.toFixed(0)}`
     )
   }
   return true
@@ -242,7 +242,7 @@ export function maxAmountSpend (
   chainId: ChainId,
   currencyAmount?: CurrencyAmount
 ): CurrencyAmount | undefined {
-  if (currencyAmount === null) return undefined
+  if (!currencyAmount) return undefined
   if (currencyAmount?.currency === MONAD) {
     if (
       JSBI.greaterThan(currencyAmount.raw, MIN_NATIVE_CURRENCY_FOR_GAS[chainId])
@@ -277,7 +277,7 @@ export function useSwitchNetwork (): {
 } {
   const { provider, chainId } = useWalletData()
   const switchNetwork = useCallback(async () => {
-    if ((provider == null) || !chainId) {
+    if (!provider || !chainId) {
       console.log('Provider or chainId is missing')
       return
     }

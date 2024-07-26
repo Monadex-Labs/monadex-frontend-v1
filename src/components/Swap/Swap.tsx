@@ -86,7 +86,7 @@ const Swap: React.FC<{
   const dispatch = useAppDispatch()
   const { independentField, typedValue, recipient, swapDelay } = useSwapState()
   const {
-    v2Trade,
+    v2Trade,  // eeror potential here on input
     currencyBalances,
     parsedAmount,
     currencies,
@@ -137,7 +137,6 @@ const Swap: React.FC<{
                 : trade?.outputAmount
           }
     }, [parsedAmount, independentField, trade, showWrap])
-    
   const formattedAmounts = useMemo(() => {
       return {
         [independentField]: typedValue,
@@ -438,7 +437,7 @@ const Swap: React.FC<{
       }, [maxAmountInput, onUserInput])
     
       const handleHalfInput = useCallback(() => {
-        if (halfAmountInput == null) {
+        if (!halfAmountInput) {
           return
         }
     
@@ -486,7 +485,6 @@ const Swap: React.FC<{
           onUserInput(Field.INPUT, '')
         }
       }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
-    
       const fromTokenWrapped = wrappedCurrency(currencies[Field.INPUT], chainId)
     // ADD REACT GA FOR ANALYTICS LATER ON
     
@@ -584,7 +582,7 @@ const Swap: React.FC<{
           setApproving(false)
         } catch (err) {
           setApproving(false)
-        }
+       }
       }
   return (
     <Box>
@@ -696,7 +694,7 @@ const Swap: React.FC<{
       ? (
         <Box mt={2} className='flex justify-center gap-2 items-center flex-col'>
           <CircularProgress size={16} />
-          <p className='text-xs mb-2'>Fetching Best Route...</p>
+          <p className='text-xs mb-2'>Fetching Best Route</p>
         </Box>
         )
       : (
@@ -716,7 +714,7 @@ const Swap: React.FC<{
           >
             {approvalSubmitted && approval !== ApprovalState.APPROVED
               ? (
-                <Box className='content'>
+                <Box className='border'>
                   Approving <CircularProgress size={16} />
                 </Box>
                 )

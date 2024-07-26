@@ -97,7 +97,7 @@ export function useAllCommonPairs (
  * Returns the best trade for the exact amount of tokens in to the given token out
 */
 let bestTradeExactIn: Trade | null = null
-export function useTradeExactIn (
+export function useTradeExactIn ( 
   currencyAmountIn?: TokenAmount,
   currencyOut?: Token,
   swapDelay?: SwapDelay,
@@ -108,7 +108,7 @@ export function useTradeExactIn (
     currencyOut
   )
   bestTradeExactIn = useMemo(() => {
-    if (currencyAmountIn) {
+    if (!currencyAmountIn) {
       return null
     }
     if (

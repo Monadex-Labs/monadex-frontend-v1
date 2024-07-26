@@ -13,7 +13,6 @@ import { useCurrency } from './Tokens'
 import { useTradeExactIn, useTradeExactOut } from '@/hooks/Trades'
 import { useSwapCallArguments, SwapCall } from './useSwapCallback'
 // import useParsedQueryString from './useParseQueryString'
-import { useConnectWallet } from '@web3-onboard/react'
 import { ChainId, TokenAmount, Trade } from '@monadex/sdk'
 import { useMemo } from 'react'
 const useFindBestRoute = (): {
@@ -46,25 +45,21 @@ const useFindBestRoute = (): {
     ) as TokenAmount
     : undefined
 
-  const bestTradeExactIn = useTradeExactIn(
+  const bestTradeExactIn = useTradeExactIn( // returning null on bestTradeExactIn
     isExactIn ? parsedAmount : undefined,
     outputCurrency ?? undefined,
     swapDelay,
     onSwapDelay
   )
-  const bestTradeExactOut = useTradeExactOut(
-    inputCurrency ?? undefined,
+
+
+  const bestTradeExactOut = useTradeExactOut(  
+    inputCurrency ?? undefined,  
     !isExactIn ? parsedAmount : undefined,
     swapDelay,
     onSwapDelay
   )
-  const v2Trade = useMemo(() => {
-    if (isExactIn) {
-      return bestTradeExactIn
-    } else {
-      return bestTradeExactOut
-    }
-  }, [bestTradeExactIn, bestTradeExactOut, isExactIn, swapDelay, inputCurrency, outputCurrency])
+  const v2Trade = isExactIn ? bestTradeExactIn : bestTradeExactOut
  
   const swapCalls = useSwapCallArguments(
     v2Trade ?? undefined,

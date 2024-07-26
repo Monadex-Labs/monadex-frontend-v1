@@ -35,9 +35,12 @@ importers:
       '@ethersproject/strings':
         specifier: ^5.7.0
         version: 5.7.0
+      '@ethersproject/units':
+        specifier: ^5.7.0
+        version: 5.7.0
       '@monadex/sdk':
-        specifier: ^0.1.7
-        version: 0.1.7(bufferutil@4.0.8)(utf-8-validate@5.0.10)(viem@2.13.7(bufferutil@4.0.8)(typescript@5.1.6)(utf-8-validate@5.0.10))
+        specifier: ^0.1.8
+        version: 0.1.8(bufferutil@4.0.8)(utf-8-validate@5.0.10)(viem@2.13.7(bufferutil@4.0.8)(typescript@5.1.6)(utf-8-validate@5.0.10))
       '@mui/base':
         specifier: ^5.0.0-beta.40
         version: 5.0.0-beta.40(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -725,8 +728,8 @@ packages:
     resolution: {integrity: sha512-dbIc3C7alOe0agCuBHM1h71UaEaEqOk2W8rAtEn8QGz4haH2Qq7MoK6i7v2guzvkJVVh79c+QCzIqphC3KvrJg==}
     engines: {node: '>=16.0.0'}
 
-  '@monadex/sdk@0.1.7':
-    resolution: {integrity: sha512-VX3yCwS4Yo9rqrFQBwuN2ikYtOrTUzlMVgvGhtH+wdwmCwkE12qJifQglanU/pxrgdJk27h9rmk2YdjHj+8mOQ==}
+  '@monadex/sdk@0.1.8':
+    resolution: {integrity: sha512-07Fpc20qjOsAZ1sNsJyndX9RRUW03oKe8jZ1sLwQWW1z3mtFqrHrGac6oaNP+8k/hnsiglCiFHtshsXVY05ugg==}
     engines: {node: '>=10'}
     peerDependencies:
       viem: '>=0.3.35'
@@ -5284,7 +5287,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@monadex/sdk@0.1.7(bufferutil@4.0.8)(utf-8-validate@5.0.10)(viem@2.13.7(bufferutil@4.0.8)(typescript@5.1.6)(utf-8-validate@5.0.10))':
+  '@monadex/sdk@0.1.8(bufferutil@4.0.8)(utf-8-validate@5.0.10)(viem@2.13.7(bufferutil@4.0.8)(typescript@5.1.6)(utf-8-validate@5.0.10))':
     dependencies:
       '@ethersproject/abi': 5.7.0
       '@ethersproject/address': 5.7.0

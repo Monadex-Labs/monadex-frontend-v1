@@ -7,8 +7,7 @@ import Image from 'next/image'
 import rejected from '@/static/assets/rejected.webp'
 import Molandak from '@/static/assets/hedgehog.png'
 import checkMark from '@/static/assets/checkmark.svg'
-import { TailSpin } from 'react-loader-spinner'
-
+import { IoCheckmarkCircleOutline } from "react-icons/io5"
 interface useConfirmationPendingContentProps {
   title: string
   pending?: string
@@ -73,13 +72,19 @@ export const TransactionSubmittedContent: React.FC<TransactionSubmittedContentPr
         <Close onClick={onDismiss} />
       </Box>
       <Box className='border' mt={3}>
-        <p>
-          {!txPending && <CircularProgress size={16} />}
-          {modalContent}
-          <Image src={checkMark} width={200} alt='ok'></Image>
-        </p>
+        {txPending ? (
+          <Box className='border' mt={3}>
+            <p>{modalContent}</p>
+            <CircularProgress size={60} />
+          </Box>
+        ) : (
+          <Box className='border' mt={3}>
+            <p>{modalContent}</p>
+            <IoCheckmarkCircleOutline className='text-white text-7xl'/>
+          </Box>
+        )}
       </Box>
-      <Box className='flex justify-between border' mt={3}>
+      <Box className='flex justify-between' mt={3}>
         {chainId && hash && (
           <a
             href='' // TODO: Add Etherscan link with address
@@ -87,11 +92,11 @@ export const TransactionSubmittedContent: React.FC<TransactionSubmittedContentPr
             rel='noopener noreferrer'
             style={{ width: '48%', textDecoration: 'none' }}
           >
-            <Button className='txSubmitButton'>View Transaction</Button>
+            <Button className='bg-gradient-to-r from-[#23006A] to-[#23006A]/50 py-4 px-4 rounded-md disabled:opacity-40'>View Transaction</Button>
           </a>
         )}
         <Button
-          className='txSubmitButton'
+          className='text-white font-medium text-sm'
           style={{ width: '48%' }}
           onClick={onDismiss}
         >
@@ -142,7 +147,7 @@ export const TransactionErrorContent: React.FC<TransactionErrorContentProps> = (
           <Close onClick={onDismiss} />
         </Box>
         <Box className='flex justify-center items-center flex-col mb-3 mt-3'>
-          <p className='text-lg font-medium'>{message}</p>
+          <p className='text-sm font-medium'>{message}</p>
           <Image src={rejected} width={200} alt='rejected'></Image>
         </Box>
       </Box>
