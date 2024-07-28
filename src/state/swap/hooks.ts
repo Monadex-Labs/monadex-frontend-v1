@@ -173,8 +173,8 @@ export function useDerivedSwapInfo (): {
   const receiver: string | null = (recipient === null ? address : recipient) ?? null
 
   const relevantTokenBalances = useCurrencyBalances(address ?? undefined, [
-    inputCurrency as Token ?? undefined,
-    outputCurrency as Token ?? undefined
+    inputCurrency ?? undefined,
+    outputCurrency ?? undefined
   ])
   const isExactIn: boolean = independentField === Field.INPUT
   const parsedAmount = tryParseAmount(
