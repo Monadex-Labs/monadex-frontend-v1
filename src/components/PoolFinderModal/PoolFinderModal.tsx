@@ -84,12 +84,12 @@ const PoolFinderModal: React.FC<PoolFinderModalProps> = ({ open, onClose }) => {
             className='text-secondary cursor-pointer'
             onClick={onClose}
           />
-          <h6>Import Pool</h6>
+          <h6 className='font-semibold'>Import Pool</h6>
           <IoMdClose className='cursor-pointer' onClick={onClose} />
         </Box>
         <Box
           mt={2}
-          className='border p-3 rounded-md cursor-pointer'
+          className='border border-secondary2 p-3 rounded-md cursor-pointer'
           onClick={() => {
             setShowSearch(true)
             setActiveField(Fields.TOKEN0)
@@ -112,7 +112,7 @@ const PoolFinderModal: React.FC<PoolFinderModalProps> = ({ open, onClose }) => {
           <IoMdAdd size='20' className='text-secondary' />
         </Box>
         <Box
-          className='border p-3 rounded-md cursor-pointer'
+          className='border border-secondary2 rounded-md cursor-pointer'
           onClick={() => {
             setShowSearch(true)
             setActiveField(Fields.TOKEN1)
@@ -139,7 +139,7 @@ const PoolFinderModal: React.FC<PoolFinderModalProps> = ({ open, onClose }) => {
             </p>
           </Box>
         )}
-        <Box className='mt-4 p-2 rounded-md flex content-center border'>
+        <Box className='mt-4 p-2 rounded-md flex content-center border border-secondary2 justify-center'>
           {(currency0 != null) && (currency1 != null)
             ? (
                 pairState === PairState.EXISTS

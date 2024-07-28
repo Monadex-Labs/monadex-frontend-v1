@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Box, Button } from '@mui/material'
+import { Box } from '@mui/material'
+import { Button } from '@mui/base'
 import { Pair, JSBI, Percent } from '@monadex/sdk'
 import { unwrappedToken } from '@/utils/wrappedCurrency'
 import { useTokenBalance } from '@/state/wallet/hooks'
@@ -54,32 +55,32 @@ const PoolPositionCardDetails: React.FC<{ pair: Pair }> = ({ pair }) => {
 
   return (
     <>
-      <Box className='p-3 md:p-6 mb-6'>
-        <Box className='flex items-center content-between mb-4'>
+      <Box className='p-3 md:p-6 mb-3'>
+        <Box className='flex items-center justify-between mb-4'>
           <small>Your Pool Tokens:</small>
           <small>{formatTokenAmount(userPoolBalance)}</small>
         </Box>
-        <Box className='flex items-center content-between mb-4'>
+        <Box className='flex items-center justify-between mb-4'>
           <small>
             Pooled {currency0.symbol}:
           </small>
-          <Box>
-            <small>{formatTokenAmount(token0Deposited)}</small>
+          <Box className='flex items-center'>
+            <small className='mr-2'>{formatTokenAmount(token0Deposited)}</small>
             <CurrencyLogo size='20px' currency={currency0} />
           </Box>
         </Box>
 
-        <Box className='flex items-center content-between mb-4'>
+        <Box className='flex items-center justify-between mb-4'>
           <small>
             Pooled {currency1.symbol}:
           </small>
-          <Box>
-            <small>{formatTokenAmount(token1Deposited)}</small>
+          <Box className='flex items-center'>
+            <small className='mr-2'>{formatTokenAmount(token1Deposited)}</small>
             <CurrencyLogo size='20px' currency={currency1} />
           </Box>
         </Box>
 
-        <Box className='flex items-center content-between mb-4'>
+        <Box className='flex items-center justify-between mb-4'>
           <small>Your Pool Share:</small>
           <small>
             {poolTokenPercentage
@@ -88,18 +89,16 @@ const PoolPositionCardDetails: React.FC<{ pair: Pair }> = ({ pair }) => {
           </small>
         </Box>
 
-        <Box className='flex items-center content-between'>
+        <Box className='flex items-center justify-between gap-3'>
           <Button
-            variant='outlined'
-            className='h-9 flex items-center content-center rounded-md border bg-transparent'
+            className='h-9 flex items-center justify-center rounded-md border border-primary text-primary hover:border-primary2 hover:text-primary2 p-4 bg-transparent w-1/2'
             onClick={() =>
               router.push(`/analytics/v2/pair/${pair.liquidityToken.address}`)}
           >
             <small>View Analytics</small>
           </Button>
           <Button
-            variant='contained'
-            className='h-9 flex items-center content-center rounded-md border border-transparent bg-transparent'
+            className='h-9 flex items-center justify-center rounded-md bg-primary hover:bg-primary2 transition w-1/4'
             onClick={() => {
               router.push(
                 `/pools/v2?currency0=${currencyId(
@@ -113,7 +112,7 @@ const PoolPositionCardDetails: React.FC<{ pair: Pair }> = ({ pair }) => {
             <small>Add</small>
           </Button>
           <Button
-            variant='contained'
+            className='h-9 flex items-center justify-center rounded-md bg-primary hover:bg-primary2 transition w-1/4'
             onClick={() => {
               setOpenRemoveModal(true)
             }}

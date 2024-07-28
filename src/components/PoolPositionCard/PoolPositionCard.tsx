@@ -14,18 +14,18 @@ const PoolPositionCard: React.FC<{ pair: Pair }> = ({ pair }) => {
 
   return (
     <Box
-      className={`flex items-center content-between ${
+      className={`w-100 border border-secondary2 rounded-md overflow-hidden ${
         showMore ? 'bg-secondary2' : 'bg-transparent'
       }`}
     >
-      <Box className='flex items-center content-between px-4 py-3 md:p-7'>
+      <Box className='flex items-center justify-between px-4 py-3 md:p-7'>
         <Box className='flex items-center'>
           <DoubleCurrencyLogo
             currency0={currency0}
             currency1={currency1}
             size={28}
           />
-          <p className='weight-600' style={{ marginLeft: 16 }}>
+          <p className='font-semibold' style={{ marginLeft: 16 }}>
             {!currency0 || !currency1
               ? 'Loading'
               : `${currency0.symbol ?? 'INVALID SYMBOl'}/${currency1.symbol ?? 'INVALID SYMBOl'}`}

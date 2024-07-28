@@ -13,13 +13,15 @@ interface CurrencyLogoProps {
   size?: string
   style?: React.CSSProperties
   withoutBg?: boolean
+  className?: string
 }
 
 const CurrencyLogo: React.FC<CurrencyLogoProps> = ({
   currency,
   size = '24px', // TODO: Refactor size to be a number
   style,
-  withoutBg
+  withoutBg,
+  className
 }) => {
   const nativeCurrency = MONAD
   const nativeCurrencyImage = currency?.symbol !== undefined ? '/' + currency?.symbol + '.png' : '/.png'
@@ -65,10 +67,10 @@ const CurrencyLogo: React.FC<CurrencyLogoProps> = ({
         width={size}
         height={size}
         borderRadius={size}
-        className='currencyLogo'
+        className={`${className ?? ''} flex content-center items-center overflow-hidden`}
       >
         <Image
-          className='monad logo'
+          className='w-100 h-100'
           src={nativeCurrencyImage}
           alt='Native Currency Logo'
           width={24} // TODO: use prop size here
@@ -83,7 +85,7 @@ const CurrencyLogo: React.FC<CurrencyLogoProps> = ({
       width={size}
       height={size}
       borderRadius={withoutBg != null ? 0 : size}
-      className={`currencyLogo${withoutBg != null ? '' : ' bg-white'}`}
+      className={`${className ?? ''} flex content-center items-center overflow-hidden ${withoutBg != null ? '' : ' bg-white'}`}
     >
       <Logo
         srcs={srcs}
