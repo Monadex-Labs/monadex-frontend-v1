@@ -220,7 +220,8 @@ export function useTrackedTokenPairs (): Array<[Token, Token]> {
     () => userPairs.concat(generatedPairs).concat(pinnedPairs),
     [generatedPairs, pinnedPairs, userPairs]
   )
-  return useMemo(() => {
+
+  const filteredList = useMemo(() => {
     // dedupes pairs of tokens in the combined list
     // TODO: FIX THIS, not showing full list of pairs
     const keyed = combinedList.reduce<{ [key: string]: [Token, Token] }>(
@@ -229,7 +230,7 @@ export function useTrackedTokenPairs (): Array<[Token, Token]> {
         const key = sorted
           ? `${tokenA.address}:${tokenB.address}`
           : `${tokenB.address}:${tokenA.address}`
-        if ((memo[key] === undefined)) return memo
+        if (memo[key] != null) return memo
         memo[key] = sorted ? [tokenA, tokenB] : [tokenB, tokenA]
         return memo
       },
@@ -237,6 +238,8 @@ export function useTrackedTokenPairs (): Array<[Token, Token]> {
     )
     return Object.keys(keyed).map((key) => keyed[key])
   }, [combinedList])
+
+  return filteredList
 }
 
 /**

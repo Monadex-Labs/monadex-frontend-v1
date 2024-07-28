@@ -35,8 +35,6 @@ const Portfolio: React.FC = () => {
               <Box>
                 <small className='text-secondary'>
                   Don't see a pool you joined? <small className='text-primary cursor-pointer' onClick={() => setOpenPoolFinder(true)}>Import it</small>.
-                  <br />
-                  Unstake your LP Tokens from Farms to see them here.
                 </small>
                 {allV2PairsWithLiquidity.map((pair, index) => (
                   <Box key={index} mt={2}>
