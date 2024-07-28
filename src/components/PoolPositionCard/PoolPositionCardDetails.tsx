@@ -5,7 +5,7 @@ import { Pair, JSBI, Percent } from '@monadex/sdk'
 import { unwrappedToken } from '@/utils/wrappedCurrency'
 import { useTokenBalance } from '@/state/wallet/hooks'
 import { useTotalSupply } from '@/data/TotalSupply'
-import { CurrencyLogo } from '@/components'
+import { CurrencyLogo, RemoveLiquidityModal } from '@/components'
 import { useWalletData, currencyId, formatTokenAmount } from '@/utils'
 import { useRouter } from 'next/navigation'
 
@@ -122,12 +122,12 @@ const PoolPositionCardDetails: React.FC<{ pair: Pair }> = ({ pair }) => {
         </Box>
       </Box>
       {openRemoveModal && (
-        {/* <RemoveLiquidityModal
+        <RemoveLiquidityModal
           currency0={currency0}
           currency1={currency1}
           open={openRemoveModal}
           onClose={() => setOpenRemoveModal(false)}
-      /> */}
+        />
       )}
     </>
   )
