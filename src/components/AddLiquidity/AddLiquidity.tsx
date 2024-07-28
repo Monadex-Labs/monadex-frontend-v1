@@ -21,7 +21,7 @@ import { useWalletData } from '@/utils/index'
 import { useConnectWallet } from '@web3-onboard/react'
 import { useRouterContract } from '@/hooks/useContracts'
 import useTransactionDeadline from '@/hooks/useTransactionDeadline'
-import { ApprovalState, useApproveCallback } from '@/hooks/useApprouveCallback'
+import { ApprovalState, useApproveCallback } from '@/hooks/useApproveCallback'
 import { Field } from '@/state/mint/actions'
 import { PairState } from '@/data/Reserves'
 import {

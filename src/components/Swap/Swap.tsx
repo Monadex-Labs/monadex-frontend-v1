@@ -25,7 +25,7 @@ import {
 import {
   ApprovalState,
   useApproveCallbackFromTrade
-} from '@/hooks/useApprouveCallback'
+} from '@/hooks/useApproveCallback'
 
 import {
   CurrencyAmount,
