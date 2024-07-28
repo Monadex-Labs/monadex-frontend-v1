@@ -70,9 +70,9 @@ export const DEFAULT_TOKEN_LIST_URL: string = 'https://dani3.com/assets/docs/lis
 export const MNDX: { [chainid: number]: Token } = {
   [ChainId.SEPOLIA]: new Token(
     ChainId.SEPOLIA,
-    '0xD24291BF0037f0ae0482f6757b5dFf437419bF25',
-    6,
-    'MXD',
+    '0xc53109678A0c78326282700132640FC1C06D6A26',
+    18,
+    'MDX',
     'Monadex token'
   )
 }

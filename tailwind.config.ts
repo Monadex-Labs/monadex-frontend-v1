@@ -23,7 +23,11 @@ const config: Config = {
       colors: {
         'primary-button': 'bg-gradient-to-r from-[#2E0485] via-[#3A0A9C] to-[#310093]',
         'warning-button': 'bg-[#826FF9]',
-        'secondary-color': 'text-[#C6CACF]'
+        'secondary-color': 'text-[#C6CACF]',
+        'primary': '#836EF9',
+        'primary2': '#6453c6',
+        'secondary2': '#1F0050',
+        'textSecondary': '#696c80'
       },
       fontFamily: {
         fira: ['var(--font-fira-code)']

@@ -10,7 +10,7 @@ import { useAllTokens } from '@/hooks/Tokens'
 */
 export function useTokenBalancesWithLoadingIndicator (
   address?: string,
-  tokens?: Token [] | undefined
+  tokens?: Array<Token | undefined>
 ): [{ [tokenAddress: string]: TokenAmount | undefined }, boolean] {
   const validatedTokens: Token[] = useMemo(
     () => tokens?.filter((t?: Token): t is Token => t?.address !== undefined ? isAddress(t?.address) : false) ?? [],
@@ -40,17 +40,17 @@ export function useTokenBalancesWithLoadingIndicator (
 }
 export function useTokenBalances (
   address?: string,
-  tokens?: Token [] | undefined
+  tokens?: Array<Token | undefined>
 ): { [tokenAddress: string]: TokenAmount | undefined } {
   console.log('here', useTokenBalancesWithLoadingIndicator(address, tokens)[0])
   return useTokenBalancesWithLoadingIndicator(address, tokens)[0]
 }
 export function useTokenBalance (account?: string, token?: Token): TokenAmount | undefined {
-  const tokenBalances = useTokenBalances(account, [token as Token])
+  const tokenBalances = useTokenBalances(account, [token])
   if (token == null || token === undefined) return undefined
   return tokenBalances[token.address]
 }
-export function useCurrencyBalances (account?: string, currencies?: NativeCurrency[] | undefined): Array<CurrencyAmount | undefined> {
+export function useCurrencyBalances (account?: string, currencies?: Array<NativeCurrency | Token | undefined>): Array<CurrencyAmount | undefined> {
   const tokens = useMemo(
     () => currencies?.filter((currency): currency is Token => currency instanceof Token) ?? [],
     [currencies]

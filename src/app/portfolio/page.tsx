@@ -6,6 +6,7 @@ import { useV2LiquidityPools } from '@/hooks'
 import Image from 'next/image'
 import { useWalletData } from '@/utils'
 import PageHeader from '@/components/Swap/SwapHeader' // TODO: check if valid component to use
+import { PoolFinderModal, PoolPositionCard } from '@/components'
 
 const Portfolio: React.FC = () => {
   const { account } = useWalletData()
@@ -17,35 +18,36 @@ const Portfolio: React.FC = () => {
   return (
     <div>
       <PageHeader isTablet={false} pageName='Portfolio' />
-      <Box className='flex flex-col max-w-[500px] justify-center items-center p-4 mx-auto bg-[#18003E] border border-[#836EF9] rounded-md'>
-        {/* openPoolFinder && (
+      <Box className='max-w-[500px] justify-center items-center p-4 mx-auto bg-[#18003E] border border-[#836EF9] rounded-md'>
+        {openPoolFinder && (
           <PoolFinderModal
             open={openPoolFinder}
             onClose={() => setOpenPoolFinder(false)}
           />
-        ) */}
-        <Box className='flex content-between w-100 mb-4'>
+        )}
+        <Box className='flex w-100 mb-2 justify-center'>
           <p className='font-medium text-xl'>Your Liquidity Pools</p>
         </Box>
 
-        <Box mt={3}>
+        <Box mt={3} className='text-center'>
           {allV2PairsWithLiquidity.length > 0
             ? (
               <Box>
-                <small className='text-secondary'>
+                <small className='text-textSecondary'>
                   Don't see a pool you joined? <small className='text-primary cursor-pointer' onClick={() => setOpenPoolFinder(true)}>Import it</small>.
-                  <br />
-                  Unstake your LP Tokens from Farms to see them here.
                 </small>
                 {allV2PairsWithLiquidity.map((pair, index) => (
                   <Box key={index} mt={2}>
-                    {pair.liquidityToken.address} {/* TODO: Add component PoolPositionCard */}
+                    <PoolPositionCard
+                      key={pair.liquidityToken.address}
+                      pair={pair}
+                    />
                   </Box>
                 ))}
               </Box>
               )
             : (
-              <Box className='text-center'>
+              <Box>
                 <div className='flex flex-col items-center'>
                   <Image
                     src={Molandak}
@@ -57,8 +59,6 @@ const Portfolio: React.FC = () => {
                 </div>
                 <p className='text-secondary'>
                   Don't see a pool you joined? <small className='text-primary cursor-pointer' onClick={() => setOpenPoolFinder(true)}>Import it</small>.
-                  <br />
-                  Unstake your LP Tokens from Farms to see them here.
                 </p>
               </Box>
               )}

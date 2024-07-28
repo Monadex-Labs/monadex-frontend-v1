@@ -63,8 +63,8 @@ export function useDerivedMintInfo (): {
   )
   // pair
   const [pairState, pair] = usePair(
-    currencies[Field.CURRENCY_A] as Token,
-    currencies[Field.CURRENCY_B] as Token
+    currencies[Field.CURRENCY_A],
+    currencies[Field.CURRENCY_B]
   )
   const totalSupply = useTotalSupply(pair?.liquidityToken)
   const noLiquidity: boolean =
@@ -72,8 +72,8 @@ export function useDerivedMintInfo (): {
     Boolean((totalSupply !== undefined) && JSBI.equal(totalSupply.raw, ZERO))
   // balances
   const balances = useCurrencyBalances(account ?? undefined, [
-    currencies[Field.CURRENCY_A] as Token,
-    currencies[Field.CURRENCY_B] as Token
+    currencies[Field.CURRENCY_A],
+    currencies[Field.CURRENCY_B]
   ])
   const currencyBalances: { [field in Field]?: CurrencyAmount | TokenAmount } = {
     [Field.CURRENCY_A]: balances?.[0] as TokenAmount,

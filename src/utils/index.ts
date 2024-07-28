@@ -43,6 +43,12 @@ export function basisPointsToPercent (num: number): Percent {
   return new Percent(JSBI.BigInt(num), JSBI.BigInt(10000))
 }
 
+export function currencyId (currency: Token | NativeCurrency): string {
+  if (currency === MONAD) return 'MND'
+  if (currency instanceof Token) return currency.address
+  throw new Error('invalid currency')
+}
+
 export function calculateSlippageAmount (value: TokenAmount, slippage: number): [JSBI, JSBI] {
   if (slippage < 0 || slippage > 10000) {
     throw Error(`Unexpected slippage value: ${slippage}`)
@@ -261,7 +267,7 @@ export function halfAmountSpend (
   chainId: ChainId,
   currencyAmount?: CurrencyAmount | TokenAmount
 ): CurrencyAmount | TokenAmount | undefined {
-  if (!currencyAmount) return undefined
+  if (currencyAmount == null) return undefined
   const halfAmount = JSBI.divide(currencyAmount?.raw, JSBI.BigInt(2))
   if (currencyAmount?.currency === MONAD) {
     if (JSBI.greaterThan(halfAmount, MIN_NATIVE_CURRENCY_FOR_GAS[chainId])) {
