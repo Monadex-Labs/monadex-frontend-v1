@@ -1,5 +1,6 @@
 import {
   JSBI,
+  NativeCurrency,
   Pair,
   Percent,
   Token,
@@ -21,8 +22,8 @@ export function useBurnState (): AppState['burn'] {
 }
 
 export function useDerivedBurnInfo (
-  currencyA: Token | undefined,
-  currencyB: Token | undefined
+  currencyA: Token | NativeCurrency | undefined,
+  currencyB: Token | NativeCurrency | undefined
 ): {
     pair?: Pair | null
     parsedAmounts: {
@@ -56,8 +57,8 @@ export function useDerivedBurnInfo (
     (userLiquidity !== undefined) &&
     (tokenA != null) &&
     // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
-    JSBI.greaterThanOrEqual(totalSupply?.raw , userLiquidity?.raw )
-      ? new TokenAmount(tokenA, pair.getLiquidityValue(tokenA, totalSupply , userLiquidity , false).raw)
+    JSBI.greaterThanOrEqual(totalSupply?.raw, userLiquidity?.raw)
+      ? new TokenAmount(tokenA, pair.getLiquidityValue(tokenA, totalSupply, userLiquidity, false).raw)
       : undefined
   const liquidityValueB =
       (pair !== null) &&
@@ -65,8 +66,8 @@ export function useDerivedBurnInfo (
       (userLiquidity !== undefined) &&
       (tokenB != null) &&
       // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
-      JSBI.greaterThanOrEqual(totalSupply?.raw as JSBI, userLiquidity?.raw as JSBI)
-        ? new TokenAmount(tokenB, pair.getLiquidityValue(tokenB, totalSupply as TokenAmount, userLiquidity as TokenAmount, false).raw)
+      JSBI.greaterThanOrEqual(totalSupply?.raw, userLiquidity?.raw)
+        ? new TokenAmount(tokenB, pair.getLiquidityValue(tokenB, totalSupply, userLiquidity, false).raw)
         : undefined
   const liquidityValues: {
     [Field.CURRENCY_A]?: TokenAmount

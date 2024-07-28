@@ -1,17 +1,14 @@
 import { Contract } from '@ethersproject/contracts'
 import { getContract, useWalletData } from '@/utils'
 // import { Web3Provider } from '@ethersproject/providers'
-import { MULTICALL_ADDRESS, ROUTER_ADDRESS, RAFFLE_ADDRESS } from '@/constants'
+import { MULTICALL_ADDRESS, ROUTER_ADDRESS, RAFFLE_ADDRESS, FACTORY_ADDRESS } from '@/constants'
 import MonadexV1RouterABI from '../constants/abi/JSON/MonadexV1Router.json'
 import ERC20_ABI from '../constants/abi/JSON/Erc20Abi.json'
 import RAFFLE_ABI from '@/constants/abi/JSON/MonadexV2Raffle.json'
 import MULTICALL_ABI from '../constants/abi/JSON/MulticallAbi.json'
 import MONADEXV1PAIR_ABI from '@/constants/abi/JSON/MonadexV1Pair.json'
-import MONADEXV1_FACTORY_ABI   from '@/constants/abi/JSON/MonadexV1Factory.json'
-import { FACTORY_ADDRESS } from '@/constants'
+import MONADEXV1_FACTORY_ABI from '@/constants/abi/JSON/MonadexV1Factory.json'
 import { useMemo } from 'react'
-import { useWallets } from '@web3-onboard/react'
-import { ethers } from 'ethers'
 import { erc20Abi_bytes32 } from 'viem'
 import { ChainId, WMND } from '@monadex/sdk'
 
@@ -22,8 +19,8 @@ import { ChainId, WMND } from '@monadex/sdk'
  * @param withSignerIfPossible
  * @returns Contract Refactored to sync function instead of async with useWallet instead of connectWallet
  */
-export function useContract (address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null | undefined {
-  const { account, chainId, provider: library } = useWalletData()
+export function useContract (address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
+  const { account, provider: library } = useWalletData()
   return useMemo(() => {
     if (address === undefined || ABI === undefined || library === undefined) return null
     try {
@@ -36,7 +33,7 @@ export function useContract (address: string | undefined, ABI: any, withSignerIf
 }
 
 export function useContracts (addresses: string[] | undefined, ABI: any, withSignerIfPossible = true): Contract[] | null | undefined {
-  const { account, chainId, provider: library } = useWalletData()
+  const { account, provider: library } = useWalletData()
   return useMemo(() => {
     if (addresses === undefined || ABI === undefined || library === undefined) return null
     return addresses.map((address) => {
@@ -75,7 +72,7 @@ export function useWMNDContract (
     withSignerIfPossible
   ) as Contract
 }
-export function usePairContract (pairAddress?: string, withSignerIfPossible?: boolean): Contract | null | undefined {
+export function usePairContract (pairAddress?: string, withSignerIfPossible?: boolean): Contract | null {
   return useContract(pairAddress, MONADEXV1PAIR_ABI, withSignerIfPossible)
 }
 export function useFactoryContract (): Contract | null | undefined {
