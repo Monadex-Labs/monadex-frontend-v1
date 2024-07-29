@@ -343,12 +343,12 @@ const RemoveLiquidityModal: React.FC<RemoveLiquidityModalProps> = ({
           </p>
         </Box>
         <Box mb={3} textAlign='center'>
-          <small className='text-secondary'>
+          <small className='text-textSecondary'>
             {`Output is estimated. If the price changes by more than ${allowedSlippage / 100}% your transaction will revert.`}
           </small>
         </Box>
         <Box mt={2}>
-          <Button className='bg-primary hover:bg-primary2 transition w-100 rounded-md h-12' onClick={onRemove}>
+          <Button className='bg-primary hover:bg-primary2 transition w-full rounded-md h-12' onClick={onRemove}>
             Confirm
           </Button>
         </Box>
