@@ -1,7 +1,8 @@
 import React, { useState, useMemo, useCallback } from 'react'
 import { Contract } from '@ethersproject/contracts'
-import { IoIosArrowDown, IoIosArrowUp, IoMdCloseCircle } from 'react-icons/io'
-import { Box, Button } from '@mui/material'
+import { IoIosArrowDown, IoIosArrowBack, IoMdCloseCircleOutline } from 'react-icons/io'
+import { Box } from '@mui/material'
+import { Button } from '@mui/base'
 import { Token, NativeCurrency, JSBI, Percent } from '@monadex/sdk'
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
@@ -143,7 +144,7 @@ const RemoveLiquidityModal: React.FC<RemoveLiquidityModalProps> = ({
     [Field.CURRENCY_B]:
       independentField === Field.CURRENCY_B
         ? typedValue
-        : parsedAmounts[Field.CURRENCY_B]?.toExact() ?? '',
+        : parsedAmounts[Field.CURRENCY_B]?.toExact() ?? ''
   }
 
   const [token0Deposited, token1Deposited] =
@@ -347,7 +348,7 @@ const RemoveLiquidityModal: React.FC<RemoveLiquidityModalProps> = ({
           </small>
         </Box>
         <Box mt={2}>
-          <Button fullWidth className='removeButton' onClick={onRemove}>
+          <Button className='bg-primary hover:bg-primary2 transition w-100 rounded-md h-12' onClick={onRemove}>
             Confirm
           </Button>
         </Box>
@@ -387,14 +388,15 @@ const RemoveLiquidityModal: React.FC<RemoveLiquidityModalProps> = ({
           />
         )}
         <Box className='flex items-center justify-between'>
-          <IoIosArrowUp
+          <IoIosArrowBack
             className='text-secondary cursor-pointer'
+            size={24}
             onClick={onClose}
           />
-          <h6>Remove Liquidity</h6>
-          <IoMdCloseCircle className='cursor-pointer' onClick={onClose} />
+          <h6 className='font-semibold'>Remove Liquidity</h6>
+          <IoMdCloseCircleOutline size={24} className='cursor-pointer' onClick={onClose} />
         </Box>
-        <Box className='removeLiquidityInput'>
+        <Box className='mt-6 rounded-md p-4 bg-bgColor border border-secondary1'>
           <Box className='flex items-center justify-between'>
             <small>
               {currency0.symbol} / {currency1.symbol} LP
@@ -430,38 +432,38 @@ const RemoveLiquidityModal: React.FC<RemoveLiquidityModalProps> = ({
         <Box className='flex justify-center' my={3}>
           <IoIosArrowDown className='text-secondary' />
         </Box>
-        <Box className='removeLiquidityInfo bg-secondary1'>
-          <Box>
+        <Box className='p-4 rounded-md bg-secondary1'>
+          <Box className='flex justify-between items-center'>
             <p>
               Pooled {currency0.symbol}
             </p>
-            <Box>
+            <Box className='flex items-center gap-2'>
               <p>{formatTokenAmount(token0Deposited)}</p>
               <CurrencyLogo currency={currency0} />
             </Box>
           </Box>
-          <Box>
+          <Box className='flex justify-between items-center mt-4'>
             <p className='text-blue7'>
               - Withdraw {currency0.symbol}
             </p>
             <p className='text-blue7'>{formattedAmounts[Field.CURRENCY_A]}</p>
           </Box>
-          <Box>
+          <Box className='flex justify-between items-center mt-4'>
             <p>
               Pooled {currency1.symbol}
             </p>
-            <Box>
+            <Box className='flex items-center gap-2'>
               <p>{formatTokenAmount(token1Deposited)}</p>
               <CurrencyLogo currency={currency1} />
             </Box>
           </Box>
-          <Box>
+          <Box className='flex justify-between items-center mt-4'>
             <p className='text-blue7'>
               - Withdraw {currency1.symbol}
             </p>
             <p className='text-blue7'>{formattedAmounts[Field.CURRENCY_B]}</p>
           </Box>
-          <Box>
+          <Box className='flex justify-between items-center mt-4'>
             <p>Your Pool Share</p>
             <p>
               {poolTokenPercentage
@@ -484,9 +486,9 @@ const RemoveLiquidityModal: React.FC<RemoveLiquidityModalProps> = ({
             </small>
           </Box>
         )}
-        <Box mt={2} className='flex justify-between items-center'>
+        <Box mt={2} className='flex justify-between items-center items-center gap-3'>
           <Button
-            className='removeButton'
+            className='disabled:bg-transparent disabled:text-textSecondary bg-primary hover:bg-primary2 transition w-1/2 rounded-md h-12'
             onClick={onAttemptToApprove}
             disabled={approving || approval !== ApprovalState.NOT_APPROVED}
           >
@@ -497,7 +499,7 @@ const RemoveLiquidityModal: React.FC<RemoveLiquidityModalProps> = ({
                 : 'Approve'}
           </Button>
           <Button
-            className='removeButton'
+            className='disabled:bg-transparent disabled:text-textSecondary bg-primary hover:bg-primary2 transition w-1/2 rounded-md h-12'
             onClick={() => {
               setRemoveErrorMessage('')
               setShowConfirm(true)
