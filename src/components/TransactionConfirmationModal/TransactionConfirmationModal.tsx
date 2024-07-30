@@ -1,13 +1,12 @@
 import { ChainId } from '@monadex/sdk'
 import { Box, Button, CircularProgress } from '@mui/material'
 import { CustomModal } from '@/components'
-import { Close, CheckCircleOutline } from '@mui/icons-material'
+import { Close } from '@mui/icons-material'
 import { useWalletData } from '@/utils'
 import Image from 'next/image'
 import rejected from '@/static/assets/rejected.webp'
 import Molandak from '@/static/assets/hedgehog.png'
-import checkMark from '@/static/assets/checkmark.svg'
-import { IoCheckmarkCircleOutline } from "react-icons/io5"
+import checkMark from '@/static/assets/checkMark.png'
 interface useConfirmationPendingContentProps {
   title: string
   pending?: string
@@ -68,22 +67,29 @@ export const TransactionSubmittedContent: React.FC<TransactionSubmittedContentPr
 }) => {
   return (
     <Box padding={2}>
+      
       <Box className='text-end p-2'>
         <Close onClick={onDismiss} />
       </Box>
-      <Box className='border' mt={3}>
         {txPending ? (
-          <Box className='border' mt={3}>
-            <p>{modalContent}</p>
+          
+            <>
+            <p className='text-sm font-medium'>{modalContent}</p>
+            <Box className='flex flex-col items-center' mt={3}>
             <CircularProgress size={60} />
-          </Box>
+            </Box>
+            </>
+            
+          
         ) : (
-          <Box className='border' mt={3}>
-            <p>{modalContent}</p>
-            <IoCheckmarkCircleOutline className='text-white text-7xl'/>
+          <>
+          <p className='text-sm font-medium'>{modalContent}</p>
+          <Box className='flex flex-col items-center' mt={3}>
+          <Image src={checkMark} width={200} alt='ok'></Image>
           </Box>
+          </>
+          
         )}
-      </Box>
       <Box className='flex justify-between' mt={3}>
         {chainId && hash && (
           <a

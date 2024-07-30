@@ -16,13 +16,13 @@ export const SlippageWrapper: React.FC = () => {
   ] = useUserSlippageTolerance()
 
   useEffect(() => {
-    if (swapSlippage !== undefined) {
+    if (swapSlippage) {
       setUserSlippageTolerance(Number(swapSlippage))
     }
   }, [swapSlippage])
 
   return (
-    <small className='text-secondary'>
+    <small className='text-xs font-medium'>
       {`${allowedSlippage === SLIPPAGE_AUTO ? 'Auto' : allowedSlippage / 100} %`}{' '}
       slippage
     </small>
