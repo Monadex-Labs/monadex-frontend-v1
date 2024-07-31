@@ -6,7 +6,7 @@ import { useWalletData } from '@/utils'
 import Image from 'next/image'
 import rejected from '@/static/assets/rejected.webp'
 import Molandak from '@/static/assets/hedgehog.png'
-import checkMark from '@/static/assets/checkmark.svg'
+import jimCheers from '@/static/assets/jim_cheers.png'
 import { IoMdCloseCircleOutline, IoMdCheckmark } from 'react-icons/io'
 
 interface useConfirmationPendingContentProps {
@@ -68,17 +68,19 @@ export const TransactionSubmittedContent: React.FC<TransactionSubmittedContentPr
 }) => {
   return (
     <Box padding={2}>
-      <Box className='text-end p-2'>
+      <Box className='flex items-center justify-flex-end relative mb-5'>
         <IoMdCloseCircleOutline className='cursor-pointer' size={24} onClick={onDismiss} />
       </Box>
-      <Box className='border' mt={3}>
-        <p>
+      <Box className='mt-5 p-4 text-textPrimary text-center text-successMain mr-1 top-2 relative items-center'>
+        <p className='mx-4 my-0 break-words'>
           {!txPending && <IoMdCheckmark />}
           {modalContent}
-          <Image src={checkMark} width={200} alt='ok' />
         </p>
       </Box>
-      <Box className='flex justify-between border' mt={3}>
+      <Box className='flex justify-center' mt={3}>
+        <Image src={jimCheers} width={200} alt='ok' />
+      </Box>
+      <Box className='flex justify-between' mt={3}>
         {chainId && hash && (
           <a
             href='' // TODO: Add Etherscan link with address
