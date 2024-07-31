@@ -40,7 +40,7 @@ const Header: React.FC<any> = () => {
           <Image src={Monadex_mobile} priority alt='MonadexLogo' className='cursor-pointer' onClick={() => router.push('/')} width={50} height={50} />
         )}
         {!tabletWindowSize && (
-          <Image src={Monadex} priority alt='MonadexLogo' className='cursor-pointer' onClick={() => router.push('/')} width={230} height={230} />
+          <Image src={Monadex} priority alt='MonadexLogo' className='cursor-pointer' onClick={() => router.push('/')} width={180} height={180} />
         )}
       </Box>
       <div className='flex gap-6 p-2'>

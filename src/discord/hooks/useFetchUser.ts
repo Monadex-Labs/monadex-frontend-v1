@@ -33,7 +33,7 @@ export const useFetchUserXP = (session: Session | null): {
         setUserXP(data.data.data)
         setIsLoading(false)
       } catch (error) {
-        console.log('ERROR: ', error)
+        console.debug('ERROR: ', error)
       }
     }
     fetchUserXP()
