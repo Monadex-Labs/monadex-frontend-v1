@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { save, load } from 'redux-localstorage-simple'
+import { useDispatch } from 'react-redux'
 import user from './user/reducer'
 import lists from './list/reducer'
 import swap from './swap/reducer'
@@ -8,6 +9,7 @@ import multicall from './multicall/reducer'
 import application from './application/reducer'
 import burn from './burn/reducer'
 import mint from './mint/reducer'
+
 const PERSISTED_KEYS: string[] = ['user', 'transaction', 'lists']
 
 const store = configureStore({
@@ -28,3 +30,4 @@ const store = configureStore({
 export default store
 export type AppState = ReturnType<typeof store.getState> // @typescript-eslint/no-unused-vars
 export type AppDispatch = typeof store.dispatch
+export const useAppDispatch = () => useDispatch<AppDispatch>()

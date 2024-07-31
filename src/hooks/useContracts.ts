@@ -8,6 +8,7 @@ import RAFFLE_ABI from '@/constants/abi/JSON/MonadexV2Raffle.json'
 import MULTICALL_ABI from '../constants/abi/JSON/MulticallAbi.json'
 import MONADEXV1PAIR_ABI from '@/constants/abi/JSON/MonadexV1Pair.json'
 import MONADEXV1_FACTORY_ABI from '@/constants/abi/JSON/MonadexV1Factory.json'
+import WMND_ABI from '@/constants/abi/JSON/Wmnd_abi.json'
 import { useMemo } from 'react'
 import { erc20Abi_bytes32 } from 'viem'
 import { ChainId, WMND } from '@monadex/sdk'
@@ -62,13 +63,14 @@ export function useTokenContract (tokenAddress?: string, withSignerIfPossible?: 
 export function useBytes32TokenContract (tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null | undefined {
   return useContract(tokenAddress, erc20Abi_bytes32, withSignerIfPossible)
 }
+// 0xdCE3334000dc51a68198A4Af980AFE69c551F2D7
 export function useWMNDContract (
   withSignerIfPossible?: boolean
 ): Contract | null {
   const { chainId } = useWalletData()
   return useContract(
-    (chainId != null) ? WMND[chainId].address : undefined,
-    ERC20_ABI, // change the abi to WMND_ABI
+    chainId ? WMND[chainId].address : undefined,
+    WMND_ABI, 
     withSignerIfPossible
   ) as Contract
 }

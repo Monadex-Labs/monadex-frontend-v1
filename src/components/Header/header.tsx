@@ -2,10 +2,11 @@
 import Image from 'next/image'
 import Monadex from '@/static/assets/mona_logo.svg'
 import Monadex_mobile from '@/static/assets/Dex_logo_Mobile.svg'
-import { ConnectButton, Discord2Oauth } from '@/components/common'
+import { ConnectButton } from '@/components/common'
 import { useMediaQuery, useTheme, Box } from '@mui/material'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import DropdownMenu from '../common/DropDownMenu'
 const Header: React.FC<any> = () => {
   const theme = useTheme()
   const tabletWindowSize = useMediaQuery(theme.breakpoints.down('md'))
@@ -30,21 +31,16 @@ const Header: React.FC<any> = () => {
       id: 'Portfolio-page',
       name: 'Portfolio',
       path: '/portfolio'
-    },
-    {
-      id: 'Docs',
-      name: 'docs',
-      path: 'https://monadex.gitbook.io/monadex'
     }
   ]
   return (
     <Box className='flex justify-between items-center p-4'>
       <Box>
         {tabletWindowSize && (
-          <Image src={Monadex_mobile} priority alt='MonadexLogo' className='cursor-pointer' onClick={() => router.push('/')} width={80} height={80} />
+          <Image src={Monadex_mobile} priority alt='MonadexLogo' className='cursor-pointer' onClick={() => router.push('/')} width={50} height={50} />
         )}
         {!tabletWindowSize && (
-          <Image src={Monadex} priority alt='MonadexLogo' className='cursor-pointer' onClick={() => router.push('/')} width={230} height={230} />
+          <Image src={Monadex} priority alt='MonadexLogo' className='cursor-pointer' onClick={() => router.push('/')} width={180} height={180} />
         )}
       </Box>
       <div className='flex gap-6 p-2'>
@@ -60,8 +56,8 @@ const Header: React.FC<any> = () => {
           )
         })}
       </div>
-      <div className='flex gap-4 p-2'>
-        {/* <Discord2Oauth /> */}
+      <div className='flex gap-6 p-2  items-center'>
+        <DropdownMenu />
         <ConnectButton />
       </div>
     </Box>

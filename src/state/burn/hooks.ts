@@ -52,7 +52,7 @@ export function useDerivedBurnInfo (
   }
   const totalSupply = useTotalSupply(pair?.liquidityToken)
   const liquidityValueA =
-    (pair !== null) &&
+    pair &&
     (totalSupply !== undefined) &&
     (userLiquidity !== undefined) &&
     (tokenA != null) &&
@@ -61,7 +61,7 @@ export function useDerivedBurnInfo (
       ? new TokenAmount(tokenA, pair.getLiquidityValue(tokenA, totalSupply, userLiquidity, false).raw)
       : undefined
   const liquidityValueB =
-      (pair !== null) &&
+      pair &&
       (totalSupply !== undefined) &&
       (userLiquidity !== undefined) &&
       (tokenB != null) &&

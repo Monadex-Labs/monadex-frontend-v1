@@ -1,5 +1,5 @@
 import { ChainId } from '@monadex/sdk'
-import { Box } from '@mui/material'
+import { Box, CircularProgress } from '@mui/material'
 import { Button } from '@mui/base'
 import { CustomModal } from '@/components'
 import { useWalletData } from '@/utils'
@@ -7,7 +7,7 @@ import Image from 'next/image'
 import rejected from '@/static/assets/rejected.webp'
 import Molandak from '@/static/assets/hedgehog.png'
 import jimCheers from '@/static/assets/jim_cheers.png'
-import { IoMdCloseCircleOutline, IoMdCheckmark } from 'react-icons/io'
+import { IoMdCloseCircleOutline } from 'react-icons/io'
 
 interface useConfirmationPendingContentProps {
   title: string
@@ -45,7 +45,7 @@ export const ConfirmationPendingContent: React.FC<ConfirmationPendingContentProp
         {confirmationPendingContent.pending && (
           <p className='font-base'>{confirmationPendingContent.pending}</p>
         )}
-        <p className='text-sm mt-2'>{confirmationPendingContent.confirm || ''}</p>
+        <p className='text-sm mt-2 font-medium opacity-40'>{confirmationPendingContent.confirm || ''}</p>
       </Box>
     </Box>
   )
@@ -71,15 +71,23 @@ export const TransactionSubmittedContent: React.FC<TransactionSubmittedContentPr
       <Box className='flex items-center justify-flex-end relative mb-5'>
         <IoMdCloseCircleOutline className='cursor-pointer' size={24} onClick={onDismiss} />
       </Box>
-      <Box className='mt-5 p-4 text-textPrimary text-center text-successMain mr-1 top-2 relative items-center'>
-        <p className='mx-4 my-0 break-words'>
-          {!txPending && <IoMdCheckmark />}
-          {modalContent}
-        </p>
-      </Box>
-      <Box className='flex justify-center' mt={3}>
-        <Image src={jimCheers} width={200} alt='ok' />
-      </Box>
+      {txPending ? (
+          
+          <>
+          <p className='text-sm font-medium'>{modalContent}</p>
+          <Box className='flex flex-col items-center' mt={3}>
+            <CircularProgress size={60} />
+          </Box>
+          </>  
+      ) : (
+        <>
+        <p className='text-sm font-medium'>{modalContent}</p>
+        <Box className='flex flex-col items-center' mt={3}>
+          <Image src={jimCheers} width={200} alt='ok' />
+        </Box>
+        </>
+        
+      )}
       <Box className='flex justify-between' mt={3}>
         {chainId && hash && (
           <a

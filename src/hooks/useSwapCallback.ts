@@ -10,6 +10,7 @@ import isZero from '../utils/isZero'
 import useTransactionDeadline from './useTransactionDeadline'
 import { useRouterContract } from './useContracts'
 import { purchasedTicketsOnSwap } from '@/state/swap/actions'
+import { GlobalData } from '../constants'
 import { useSelector } from 'react-redux'
 import { useWalletData } from '../utils/index'
 
@@ -19,6 +20,11 @@ export enum SwapCallbackState {
   VALID,
 }
 
+enum version {
+  v1 = 'v1',
+  v2 = 'v2'
+}
+const tradeVersion = version.v2
 export interface SwapCall {
   contract: Contract
   parameters: SwapParameters
@@ -47,47 +53,61 @@ export function useSwapCallArguments (
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
   recipientAddressOrName: string | null // address of the recipient of the trade, or null if swap should be returned to sender
 ): SwapCall[] {
+  const recipientAddress = isAddress(recipientAddressOrName)
   const { account: address, chainId, provider: wallet } = useWalletData()
-  const recipient = recipientAddressOrName === null && address
+  const recipient = recipientAddressOrName === null ? address : recipientAddress
   const deadline = useTransactionDeadline()
   const contract = useRouterContract() as Contract
-  const ticketsState = useSelector(purchasedTicketsOnSwap)
-  const ticketsPurchased = ticketsState.payload.raffle?.ticketsPurchased as boolean
-  const multiplier = ticketsState.payload.raffle?.multiplier as number
+  //const ticketsState = useSelector(purchasedTicketsOnSwap)
+  // grab raffle state 
+  // const ticketsPurchased = ticketsState.payload.raffle?.ticketsPurchased as boolean
+  // const multiplier = ticketsState.payload.raffle?.multiplier as number
   return useMemo(() => {
     // checking
-    if (!trade || !recipient || !wallet  || !chainId || !deadline || !ticketsPurchased || !multiplier) return [] // eslint-disable-line
-    if (contract === undefined) return []
+    if (!trade || !recipient || !wallet  || !chainId || !deadline ) return [] // eslint-disable-line
+    if (!contract) return []
+  //  Trade type always equal ot 1
     const swapMethods = [] as any[]
-
-    const swapCallParameters =
-      Router.swapCallParameters(trade, {
-        feeOnTransfer: false,
-        allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
-        recipient,
-        ttl: deadline.toNumber()
-      }, {
-        purchaseTickets: ticketsPurchased,
-        multiplier
-      })
-    const swapCallParametersOnInput = Router.swapCallParameters(trade, {
-      feeOnTransfer: true,
-      allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
-      recipient,
-      ttl: deadline.toNumber()
-    },
-    {
-      purchaseTickets: ticketsPurchased,
-      multiplier
-    })
-
-    if (trade.tradeType === TradeType.EXACT_INPUT) {
-      swapMethods.push(swapCallParametersOnInput)
-    } else {
-      swapMethods.push(swapCallParameters)
+    switch(tradeVersion) {
+      case version.v2 : 
+        swapMethods.push(
+          Router.swapCallParameters(trade, {
+            feeOnTransfer: false,
+            allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+            recipient,
+            ttl: 
+            deadline ? deadline.toNumber() :
+            GlobalData.utils.DEFAULT_DEADLINE_FROM_NOW
+          }, {
+            // fake data to test before creation of the raffle component
+            purchaseTickets: Boolean(false),
+            multiplier : Number(0)
+        })
+        )
+        if(trade.tradeType === TradeType.EXACT_INPUT) {
+          console.log('jamax appelax')
+          swapMethods.push(
+            Router.swapCallParameters(trade, 
+              {
+              feeOnTransfer: false,
+              allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+              recipient,
+              ttl: 
+                deadline ? deadline.toNumber() : 
+                GlobalData.utils.DEFAULT_DEADLINE_FROM_NOW
+              },{
+              // fake data to test before creation of the raffle component
+              purchaseTickets: Boolean(false),
+              multiplier : 0
+              }
+            )
+          )
+        }
+        break
     }
+    // check if address is WL for raffles
     return swapMethods.map((parameters) => ({ parameters, contract }))
-  }, [address, allowedSlippage, chainId, deadline, wallet, recipient, trade, contract, ticketsState])
+  }, [address, allowedSlippage, chainId, deadline, wallet, recipient, trade, contract])
 }
 
 // returns a function that will execute a swap, if the parameters are all valid
@@ -101,7 +121,7 @@ export function useSwapCallback (
   const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName)
   const addTransaction = useTransactionAdder()
   const recipient = recipientAddressOrName === null && address
-  // const contract = useRouterContract() as Contract
+    // const contract = useRouterContract() as Contract
 
   return useMemo(() => {
     if (!trade || !address || !chainId) { // eslint-disable-line
@@ -114,12 +134,12 @@ export function useSwapCallback (
         return { state: SwapCallbackState.LOADING, callback: null, error: null }
       }
     }
-
+    // core swap sm calls here
     return {
       state: SwapCallbackState.VALID,
       callback: async function onSwap (): Promise<{ response: TransactionResponse, summary: string }> {
         const estimatedCalls: EstimatedSwapCall[] = await Promise.all(
-          swapCalls.map(async (call) => {
+          swapCalls.map(async (call:SwapCall) => {
             const {
               parameters: {
                 methodName,
@@ -132,12 +152,14 @@ export function useSwapCallback (
 
             return await contract.estimateGas[methodName](...args, options)
               .then((gasEstimate) => {
+                
                 return {
                   call,
                   gasEstimate
                 }
               })
               .catch(async (gasError) => {
+                console.log('erreur',gasError)
                 console.debug('Gas estimate failed, trying eth_call to extract error', call)
 
                 return await contract.callStatic[methodName](...args, options)
@@ -162,7 +184,6 @@ export function useSwapCallback (
               })
           })
         )
-
         // a successful estimation is a bignumber gas estimate and the next call is also a bignumber gas estimate
         const successfulEstimation = estimatedCalls.find(
           (el): el is SuccessfulCall => 'gasEstimate' in el
