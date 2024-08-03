@@ -139,7 +139,6 @@ const AddLiquidity: React.FC<{
     amountB: formatTokenAmount(parsedAmounts[Field.CURRENCY_B]),
     symbolB: currencies[Field.CURRENCY_B]?.symbol
   }
-  console.log('dfodo', liquidityTokenData)
   const pendingText = `Supplying ${liquidityTokenData.amountA} ${liquidityTokenData.symbolA ?? 'INVALID SYMBOL'} and ${liquidityTokenData.amountB} ${liquidityTokenData.symbolB ?? 'INVALID SYMBOL'}`
 
   const {
@@ -157,7 +156,6 @@ const AddLiquidity: React.FC<{
       [field]: maxAmountSpend(chainIdToUse, currencyBalances[field])
     }
   }, {})
-  console.log('maxAmount', maxAmounts)
   const halfAmounts: { [field in Field]?: TokenAmount } = [
     Field.CURRENCY_A,
     Field.CURRENCY_B
@@ -167,7 +165,6 @@ const AddLiquidity: React.FC<{
       [field]: halfAmountSpend(chainIdToUse, currencyBalances[field])
     }
   }, {})
-  console.log('halfAmounts', halfAmounts)
 
   const formattedAmounts = {
     [independentField]: typedValue,
@@ -358,7 +355,6 @@ const AddLiquidity: React.FC<{
           })
       })
       .catch((error: any) => {
-        console.log('error')
         setAttemptingTxn(false)
         setAddLiquidityErrorMessage(
           error?.code === 'ACTION_REJECTED' ? 'Transaction rejected' : error?.message
@@ -476,7 +472,7 @@ const AddLiquidity: React.FC<{
         title='Token 1'
         currency={currencies[Field.CURRENCY_A]}
         showHalfButton={Boolean(maxAmounts[Field.CURRENCY_A])}
-        showMaxButton={atMaxAmounts[Field.CURRENCY_A] == null}
+        showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
         onMax={() =>
           onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')}
         onHalf={() => {
@@ -495,7 +491,7 @@ const AddLiquidity: React.FC<{
         title='Token 2'
         showHalfButton={Boolean(maxAmounts[Field.CURRENCY_B])}
         currency={currencies[Field.CURRENCY_B]}
-        showMaxButton={atMaxAmounts[Field.CURRENCY_B] == null}
+        showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
         onHalf={() => {
           const maxAmount = maxAmounts[Field.CURRENCY_B]
           if (maxAmount != null) {
