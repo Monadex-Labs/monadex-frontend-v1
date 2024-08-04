@@ -256,7 +256,6 @@ const RemoveLiquidityModal: React.FC<RemoveLiquidityModalProps> = ({
       setRemoveErrorMessage('Attempting to confirm without approval. Please contact support.')
       throw new Error('confirmWithoutApproval')
     }
-
     const safeGasEstimates: Array<BigNumber | undefined> = await Promise.all(
       methodNames.map((methodName) =>
         router.estimateGas[methodName](...args)
@@ -268,7 +267,6 @@ const RemoveLiquidityModal: React.FC<RemoveLiquidityModalProps> = ({
           })
       )
     )
-
     const indexOfSuccessfulEstimation = safeGasEstimates.findIndex(
       (safeGasEstimate) => BigNumber.isBigNumber(safeGasEstimate)
     )
@@ -324,7 +322,7 @@ const RemoveLiquidityModal: React.FC<RemoveLiquidityModalProps> = ({
   const modalHeader = () => {
     return (
       <Box>
-        <Box className='flex justify-center' mt={10} mb={3}>
+        <Box className='flex justify-center' mt={10} mb={3}> 
           <DoubleCurrencyLogo
             currency0={currency0}
             currency1={currency1}

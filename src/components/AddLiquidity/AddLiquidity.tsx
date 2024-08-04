@@ -323,8 +323,6 @@ const AddLiquidity: React.FC<{
     setAttemptingTxn(true)
     await estimate(args, value ? { value } : {})
       .then(async (estimatedGasLimit: BigNumber): Promise<any> => {
-        console.log('Estimated Gas Limit:', estimatedGasLimit) // Log the estimated gas limit
-
         return await method(args, {
           ...(value ? { value } : {}),
           gasLimit: calculateGasMargin(estimatedGasLimit)
@@ -365,12 +363,11 @@ const AddLiquidity: React.FC<{
         }
       })
   }
-
   const [, connect] = useConnectWallet()
   const handleDismissConfirmation = useCallback(() => {
     setShowConfirm(false)
     // if there was a tx hash, we want to clear the input
-    if (txHash !== undefined) {
+    if (txHash) {
       onFieldAInput('')
     }
     setTxHash('')
@@ -447,7 +444,7 @@ const AddLiquidity: React.FC<{
           txPending={txPending}
           hash={txHash}
           content={() =>
-            addLiquidityErrorMessage != null
+            addLiquidityErrorMessage
               ? (
                 <TransactionErrorContent
                   onDismiss={handleDismissConfirmation}
@@ -494,7 +491,7 @@ const AddLiquidity: React.FC<{
         showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
         onHalf={() => {
           const maxAmount = maxAmounts[Field.CURRENCY_B]
-          if (maxAmount != null) {
+          if (maxAmount) {
             onFieldBInput(
               maxAmount.divide('2').toFixed(maxAmount.currency.decimals)
             )
@@ -527,7 +524,7 @@ const AddLiquidity: React.FC<{
             <Box className='p-2 flex justify-between'>
               <small>Your Pool Share</small>
               <small>
-                {(poolTokenPercentage != null)
+                {(poolTokenPercentage)
                   ? poolTokenPercentage.toSignificant(6) + '%'
                   : '-'}
               </small>
@@ -535,7 +532,7 @@ const AddLiquidity: React.FC<{
             <Box className='p-2 flex justify-between'>
               <small>LP Tokens Received</small>
               <small>
-                {formatTokenAmount(userPoolBalance)} LP Tokens
+                {formatTokenAmount(liquidityMinted)} LP Tokens
               </small>
             </Box>
           </Box>
