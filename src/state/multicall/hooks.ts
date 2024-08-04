@@ -55,11 +55,6 @@ function useCallsData (calls: Array<Call | undefined>, options?: ListenerOptions
   AppState['multicall']['callResults']>(
     (state) => state.multicall.callResults
   )
-  // calls.filter((c) => {
-  //   if(c?.callData === '0x70a082310000000000000000000000005fb78054f1547dc1cd5f5de18415546201466f84') {
-  //     console.log('callResultss', callResults)
-  //   }
-  // })
   
   const dispatch = useDispatch<AppDispatch>()
   const serializedCallKeys: string = useMemo(
@@ -239,11 +234,6 @@ export function useMultipleContractSingleData (
   const value = useMemo(() => {
     return results.map((result) => toCallState(result, contractInterface, fragment, latestBlockNumber))
   }, [fragment, results, contractInterface, latestBlockNumber])
-  for (let i = 0; i < value.length; i++) {
-    if (value[i].result) {
-      return value
-    }
-  }
   return value
 }
 

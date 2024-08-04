@@ -20,10 +20,10 @@ interface CurrencyListProps {
   otherCurrency?: NativeCurrency | Token | null
   showETH: boolean
   chainId: ChainId
-  balances: Array<CurrencyAmount | undefined>
+  balances: (CurrencyAmount | undefined)[]
   usdPrices?: Array<{ address: string, price: number }>
 }
-
+  
 const CurrencyList: React.FC<CurrencyListProps> = ({
   currencies,
   selectedCurrency,
@@ -49,17 +49,17 @@ const CurrencyList: React.FC<CurrencyListProps> = ({
     ({ data, index, style }: { data: any[], index: number, style?: any }) => {
       const currency = data[index]
       const isSelected = Boolean(
-        (selectedCurrency != null) && currencyEquals(selectedCurrency, currency)
+        selectedCurrency  && currencyEquals(selectedCurrency, currency)
       )
       const otherSelected = Boolean(
-        (otherCurrency != null) && currencyEquals(otherCurrency, currency)
+        otherCurrency  && currencyEquals(otherCurrency, currency)
       )
       const handleSelect = (): void => onCurrencySelect(currency)
       const token =
           currencyEquals(currency, MONAD) || currency.name === 'MONAD'
             ? WMND[chainId]
             : currency
-      const usdPrice = (usdPrices != null)
+      const usdPrice = usdPrices
         ? usdPrices.find(
           (item) =>
             item.address.toLowerCase() === token?.address.toLowerCase()
@@ -74,7 +74,7 @@ const CurrencyList: React.FC<CurrencyListProps> = ({
           otherSelected={otherSelected}
           isOnSelectedList={isOnSelectedList[index]}
           balance={balances[index]}
-          usdPrice={(usdPrice != null) ? usdPrice.price : 0}
+          usdPrice={usdPrice ? usdPrice.price : 0}
         />
       )
     },

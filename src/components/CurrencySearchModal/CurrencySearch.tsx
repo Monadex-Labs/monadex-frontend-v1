@@ -158,9 +158,12 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
 
   let selectedListInfo = useSelectedListInfo()
 
-  if (selectedListInfo.current === null) {
-    dispatch(selectList(DEFAULT_TOKEN_LIST_URL))
-  }
+  useEffect(() => {
+    if (selectedListInfo.current === null) {
+      dispatch(selectList(DEFAULT_TOKEN_LIST_URL))
+    }
+  }, [selectedListInfo, dispatch])
+  
   selectedListInfo = useSelectedListInfo()
   return (
     <Box className='pt-5 px-6 h-[80vh] flex flex-col'>
@@ -181,7 +184,7 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
           autoFocus
         />
       </Box>
-      {showCommonBases != null && (
+      {showCommonBases && (
         <CommonBases
           chainId={chainIdToUse}
           onSelect={handleCurrencySelect}
@@ -191,7 +194,7 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
 
       <Divider />
 
-      <Box flex={1} className='w-full border border-[#b4b4b4] rounded-tl-lg rounded-tr-lg bg-[#220258]'>
+      <Box flex={1} className='w-full rounded-tl-lg rounded-tr-lg bg-[#220258] '>
         <CurrencyList
           chainId={chainIdToUse}
           showETH={showETH}

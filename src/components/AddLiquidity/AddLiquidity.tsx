@@ -133,6 +133,7 @@ const AddLiquidity: React.FC<{
     poolTokenPercentage,
     error
   } = useDerivedMintInfo()
+  console.log('currencies',currencies)
   const liquidityTokenData = {
     amountA: formatTokenAmount(parsedAmounts[Field.CURRENCY_A]),
     symbolA: currencies[Field.CURRENCY_A]?.symbol,
@@ -433,7 +434,6 @@ const AddLiquidity: React.FC<{
       setApprovingB(false)
     }
   }
-
   return (
     <Box>
       {showConfirm && (
@@ -505,10 +505,10 @@ const AddLiquidity: React.FC<{
         bgClass={currencyBgClass}
         showPrice
       />
-      {(currencies[Field.CURRENCY_A] != null) &&
-        (currencies[Field.CURRENCY_B] != null) &&
+      {currencies[Field.CURRENCY_A]  &&
+        currencies[Field.CURRENCY_B] &&
         pairState !== PairState.INVALID &&
-        (price != null) && (
+        price && (
           <Box my={2} className='rounded-sm font-fira flex flex-col p-3 text-[#ABABAB] transition duration-150 ease-in-out'>
             <Box className='p-2 flex justify-between'>
               <small>

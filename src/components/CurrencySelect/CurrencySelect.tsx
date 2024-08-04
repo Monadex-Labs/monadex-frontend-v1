@@ -3,6 +3,7 @@ import { NativeCurrency, Token } from '@monadex/sdk'
 import { CurrencySearchModal, CurrencyLogo } from '@/components'
 import { Box } from '@mui/material'
 import { IoIosArrowDown } from 'react-icons/io'
+
 interface CurrencySelectProps {
   title?: string
   handleCurrencySelect: (currency: Token) => void
@@ -24,17 +25,18 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({
   const handleOpenModal = useCallback(() => {
     setModalOpen(true)
   }, [])
+  console.log('currency Here', currency)
   return (
     <Box className='px-3 py-2 rounded-md flex justify-between items-center gap-3'>
       <Box
         className={
           bgClass === undefined
-            ? `flex items-center gap-3 cursor-pointer p-3 rounded-md border ${(currency != null) ? 'border-[#2c0c61]' : 'border-[#6051b8]'}`
+            ? `flex items-center gap-3 cursor-pointer p-3 rounded-md border ${(currency) ? 'border-[#2c0c61]' : 'border-[#6051b8]'}`
             : bgClass
         }
         onClick={handleOpenModal}
       >
-        {(currency != null)
+        {currency
           ? (
             <Box className='flex items-center gap-2'>
               <CurrencyLogo currency={currency} size='28px' />

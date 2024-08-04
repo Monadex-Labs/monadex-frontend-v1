@@ -154,7 +154,7 @@ export default function Updater (): null {
   }>()
   const useChain = ChainId.SEPOLIA
   const config = getConfig(useChain)
-  useMemo(() => {
+  useEffect(() => {
     const BlocksPerFetch = config.blocksPerFetch ?? 20
     dispatch(
       addListenerOptions({
@@ -162,8 +162,7 @@ export default function Updater (): null {
         blocksPerFetch: BlocksPerFetch
       })
     )
-  }, [chainId])
-
+  }, [chainId, dispatch, config.blocksPerFetch])
   const listeningKeys: { [callKey: string]: number } = useMemo(() => {
     return activeListeningKeys(debouncedListeners, chainId)
   }, [debouncedListeners, chainId])
@@ -179,9 +178,9 @@ export default function Updater (): null {
     () => JSON.stringify(unserializedOutdatedCallKeys.sort()),
     [unserializedOutdatedCallKeys]
   )
+
   useEffect(() => {
     if (!latestBlockNumber || !chainId || (multicallContract == null)) return
-
     const outdatedCallKeys: string[] = JSON.parse(serializedOutdatedCallKeys)
     if (outdatedCallKeys.length === 0) return
     const calls = outdatedCallKeys.map((key) => parseCallKey(key))

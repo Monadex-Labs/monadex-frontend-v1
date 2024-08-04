@@ -123,7 +123,6 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
     () => [selectedToken]?.filter((c): c is Token => c instanceof Token) ?? [],
     [selectedToken]
   )
-
   const selectedTokensNotInDefault = selectedTokens
 
   const handleConfirmTokenWarning = useCallback(() => {
@@ -194,7 +193,7 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
                     onClick={(event) => {
                       event.stopPropagation()
                       if (customAdded) {
-                        if (chainId != null && currency instanceof Token) { removeToken(chainId, currency.address) }
+                        if (chainId && currency instanceof Token) { removeToken(chainId, currency.address) }
                       } else {
                         if (currency instanceof Token) {
                           addToken(currency)
@@ -214,7 +213,7 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
           <Box flex={1} />
           <TokenTags currency={currency} />
           <Box textAlign='right'>
-            {(balance != null)
+            {balance
               ? (
                 <>
                   <Balance balance={balance} />
@@ -223,7 +222,7 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
                   </span>
                 </>
                 )
-              : account != null
+              : account
                 ? (
                   <CircularProgress size={15} color='secondary' />
                   )

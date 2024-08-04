@@ -7,11 +7,8 @@ import { updateBlockNumber } from './actions'
 import { useWalletData } from '@/utils'
 import { ChainId } from '@monadex/sdk'
 
-export default function Updater (): null {
-  const {
-    findProvider: library,
-    chainId
-  } = useWalletData()
+export default function Updater(): null {
+  const { findProvider: library, chainId } = useWalletData()
   const currentChain = chainId ? chainId : ChainId.SEPOLIA
   const dispatch = useDispatch()
 
@@ -20,22 +17,18 @@ export default function Updater (): null {
   const [state, setState] = useState<{
     chainId: number | undefined
     blockNumber: number | null
+    loading: boolean
   }>({
-    chainId,
-    blockNumber: null
+    chainId: currentChain,
+    blockNumber: null,
+    loading: true
   })
-
-  const [currentTime, setCurrentTime] = useState(Math.floor(Date.now() / 1000))
 
   const blockNumberCallback = useCallback(
     (blockNumber: number) => {
       setState((state) => {
         if (chainId === state.chainId) {
-          if (typeof state.blockNumber !== 'number') { return { chainId, blockNumber } }
-          return {
-            chainId,
-            blockNumber
-          }
+          return { chainId, blockNumber, loading: false }
         }
         return state
       })
@@ -43,75 +36,73 @@ export default function Updater (): null {
     [chainId, setState]
   )
 
-  // this is for refreshing eth price every 10 mins
+  // Initial fetch of block number
   useEffect(() => {
-    const interval = setInterval(() => {
-      const _currentTime = Math.floor(Date.now() / 1000)
-      setCurrentTime(_currentTime)
-    }, 600000)
-    return () => clearInterval(interval)
-  }, [])
+    if (!library || !windowVisible) return
 
-  // attach/detach listeners
-  useEffect(() => {
-    setState({ chainId, blockNumber: null })
-    if (library === undefined || !windowVisible) return undefined
-
+    let stale = false
     library
       .getBlockNumber()
-      .then(blockNumberCallback)
-      .catch((error) =>
-        console.error(
-          `Failed to get block number for chainId: ${chainId}`,
-          error
-        )
-      )
+      .then((blockNumber) => {
+        if (!stale) {
+          p(blockNumber)
+        }
+      })
+      .catch((error) => {
+        console.error(`Failed to get initial block number for chainId: ${chainId}`, error)
+      })
+
+    return () => {
+      stale = true
+    }
+  }, [library, windowVisible, chainId, blockNumberCallback])
+
+  // Listener for block updates
+  useEffect(() => {
+    if (!library || !windowVisible) return
 
     library.on('block', blockNumberCallback)
 
-    if (library !== undefined) {
-      library.on('network', (newNetwork) => {
-        if (state.chainId != null && newNetwork.chainId !== state.chainId) {
-          setTimeout(() => {
-            document.location.reload()
-          }, 1500)
-        }
-      })
-    }
-
     return () => {
       library.removeListener('block', blockNumberCallback)
-      if (library != null) {
-        library.removeListener('network', (newNetwork) => {
-          if (state.chainId != null && newNetwork.chainId !== state.chainId) {
-            setTimeout(() => {
-              document.location.reload()
-            }, 1500)
-          }
-        })
+    }
+  }, [library, windowVisible, blockNumberCallback])
+
+  // Network change listener
+  useEffect(() => {
+    if (!library) return
+
+    const handleNetworkChange = (newNetwork: { chainId: number }) => {
+      if (state.chainId && newNetwork.chainId !== state.chainId) {
+        setTimeout(() => {
+          document.location.reload()
+        }, 1500)
       }
     }
-  }, [currentChain, chainId, windowVisible])
+
+    library.on('network', handleNetworkChange)
+
+    return () => {
+      library.removeListener('network', handleNetworkChange)
+    }
+  }, [library, state.chainId])
 
   const debouncedState = useDebounce(state, 100)
 
   useEffect(() => {
-    if (
-      debouncedState.chainId == null ||
-      debouncedState.blockNumber == null ||
-      !windowVisible
-    ) { return }
+    if (!chainId || debouncedState.loading || !windowVisible) return
     dispatch(
       updateBlockNumber({
-        chainId: debouncedState.chainId,
-        blockNumber: debouncedState.blockNumber
+        chainId,
+        blockNumber: debouncedState.blockNumber as number,
       })
     )
   }, [
     windowVisible,
     dispatch,
     debouncedState.blockNumber,
-    debouncedState.chainId
+    debouncedState.loading,
+    chainId
   ])
 
   return null
