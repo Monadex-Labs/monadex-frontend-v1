@@ -31,12 +31,12 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({
       <Box
         className={
           bgClass === undefined
-            ? `flex items-center gap-3 cursor-pointer p-3 rounded-md border ${(currency) ? 'border-[#2c0c61]' : 'border-[#6051b8]'}`
+            ? `flex items-center gap-3 cursor-pointer p-3 rounded-md border ${currency != null ? 'border-[#2c0c61]' : 'border-[#6051b8]'}`
             : bgClass
         }
         onClick={handleOpenModal}
       >
-        {currency
+        {currency != null
           ? (
             <Box className='flex items-center gap-2'>
               <CurrencyLogo currency={currency} size='28px' />

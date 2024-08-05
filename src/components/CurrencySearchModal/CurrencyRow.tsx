@@ -97,8 +97,8 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
     tokenDecimals: any,
     tokenImage: any
   ): void => {
-    if (provider && provider.provider && provider.provider.request) {
-       provider.provider.request({
+    if (provider?.provider?.request != null) {
+      void provider.provider.request({
         method: 'wallet_watchAsset',
         params: [{
           type: 'ERC20',
@@ -164,12 +164,12 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
                   <Box
                     ml='4px'
                     onClick={(event: any) => {
-                       addTokenToMetamask(
+                      addTokenToMetamask(
                         currency.address,
                         currency.symbol,
                         currency.decimals,
                         // CURRENCY.ADDRESS
-                        getTokenLogoURL()  
+                        getTokenLogoURL()
                       )
                       event.stopPropagation()
                     }}
@@ -178,7 +178,7 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
                   </Box>
               )}
             </Box>
-            {isOnSelectedList
+            {isOnSelectedList != null && isOnSelectedList
               ? (
                 <span className='text-[#C6CACF]'>{currency.name}</span>
                 )
@@ -193,7 +193,7 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
                     onClick={(event) => {
                       event.stopPropagation()
                       if (customAdded) {
-                        if (chainId && currency instanceof Token) { removeToken(chainId, currency.address) }
+                        if (chainId != null && currency instanceof Token) { removeToken(chainId, currency.address) }
                       } else {
                         if (currency instanceof Token) {
                           addToken(currency)
@@ -213,7 +213,7 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
           <Box flex={1} />
           <TokenTags currency={currency} />
           <Box textAlign='right'>
-            {balance
+            {balance != null
               ? (
                 <>
                   <Balance balance={balance} />
@@ -222,7 +222,7 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
                   </span>
                 </>
                 )
-              : account
+              : account != null
                 ? (
                   <CircularProgress size={15} color='secondary' />
                   )

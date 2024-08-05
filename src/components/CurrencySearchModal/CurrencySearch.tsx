@@ -48,7 +48,7 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
   const nativeCurrency = MONAD
   const handleInput = useCallback((input: string) => {
     const checksummedInput = isAddress(input)
-    setSearchQuery(checksummedInput || input)
+    setSearchQuery(checksummedInput || input) // TODO: isAddress returns boolean, and setSearchQuery accepts string
   }, [])
 
   const [searchQuery, setSearchQuery] = useState<string>('')
@@ -70,11 +70,11 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
   const tokenComparator = useTokenComparator(false)
 
   const filteredTokens: Token[] = useMemo(() => {
-    if (isAddressSearch) return (searchToken) ? [searchToken] : []
+    if (isAddressSearch) return searchToken != null ? [searchToken] : [] // TODO: check for type string or true value on isAddressSearch
     const filteredResult = filterTokens(Object.values(allTokens), searchQuery)
     let filteredInactiveResult: Token[] = []
     // search in inactive token list.
-    if (searchQuery) {
+    if (searchQuery != null) {
       filteredInactiveResult = filterTokens(
         Object.values(inactiveTokens),
         searchQuery
@@ -100,7 +100,7 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
     if (symbolMatch.length > 1) return sorted
 
     return [
-      ...(searchToken ? [searchToken] : []),
+      ...(searchToken != null ? [searchToken] : []),
       // sort any exact symbol matches first
       ...sorted.filter(
         (token) => token.symbol?.toLowerCase() === symbolMatch[0]
@@ -116,7 +116,7 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
     : filteredSortedTokens
 
   const currencyBalances = useCurrencyBalances(
-    account || undefined,
+    account ?? undefined,
     allCurrencies
   )
 
@@ -163,7 +163,7 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
       dispatch(selectList(DEFAULT_TOKEN_LIST_URL))
     }
   }, [selectedListInfo, dispatch])
-  
+
   selectedListInfo = useSelectedListInfo()
   return (
     <Box className='pt-5 px-6 h-[80vh] flex flex-col'>
@@ -184,7 +184,7 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
           autoFocus
         />
       </Box>
-      {showCommonBases && (
+      {showCommonBases != null && showCommonBases && (
         <CommonBases
           chainId={chainIdToUse}
           onSelect={handleCurrencySelect}
