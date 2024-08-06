@@ -7,7 +7,7 @@ import Image from 'next/image'
 import rejected from '@/static/assets/rejected.webp'
 import Molandak from '@/static/assets/hedgehog.png'
 import jimCheers from '@/static/assets/jim_cheers.png'
-import { IoMdCloseCircleOutline } from 'react-icons/io'
+import { IoMdClose } from 'react-icons/io'
 
 interface useConfirmationPendingContentProps {
   title: string
@@ -36,7 +36,7 @@ export const ConfirmationPendingContent: React.FC<ConfirmationPendingContentProp
     <Box padding={4} overflow='hidden'>
       <Box className='mb-6 flex justify-between'>
         <h5 className='text-lg font-medium'>{confirmationPendingContent.title}</h5>
-        <IoMdCloseCircleOutline className='cursor-pointer' size={24} onClick={onDismiss} />
+        <IoMdClose className='cursor-pointer' size={24} onClick={onDismiss} />
       </Box>
       <Box className='flex justify-center my-5'>
         <Image className='animate-spin' src={Molandak} width={100} alt='molandak' />
@@ -69,7 +69,7 @@ export const TransactionSubmittedContent: React.FC<TransactionSubmittedContentPr
   return (
     <Box padding={2}>
       <Box className='flex items-center justify-flex-end relative mb-5'>
-        <IoMdCloseCircleOutline className='cursor-pointer' size={24} onClick={onDismiss} />
+        <IoMdClose className='cursor-pointer' size={24} onClick={onDismiss} />
       </Box>
       {txPending ? (
           
@@ -127,7 +127,7 @@ export const ConfirmationModalContent: React.FC<ConfirmationModalContentProps> =
     <Box padding={4}>
       <Box className='flex items-center justify-flex-end relative mb-5'>
         <h5 className='absolute w-full text-center'>{title}</h5>
-        <IoMdCloseCircleOutline className='cursor-pointer' size={24} onClick={onDismiss} />
+        <IoMdClose className='cursor-pointer' size={24} onClick={onDismiss} />
       </Box>
       {content()}
     </Box>
@@ -148,7 +148,7 @@ export const TransactionErrorContent: React.FC<TransactionErrorContentProps> = (
       <Box>
         <Box className='flex justify-between'>
           <h5 className='text-lg font-medium'>Error</h5>
-          <IoMdCloseCircleOutline className='cursor-pointer' size={24} onClick={onDismiss} />
+          <IoMdClose className='cursor-pointer' size={24} onClick={onDismiss} />
         </Box>
         <Box className='flex justify-center items-center flex-col mb-3 mt-3'>
           <p className='text-lg font-medium'>{message}</p>

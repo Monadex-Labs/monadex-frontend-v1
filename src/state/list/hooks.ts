@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import { DEFAULT_TOKEN_LIST_URL } from '@/constants/index'
 import { AppState } from '@/state/store'
 import getTokenList from '@/utils/getTokenList'
-import { CurrencyBitcoin } from '@mui/icons-material'
+
 type TagDetails = Tags[keyof Tags]
 export interface TagInfo extends TagDetails {
   id: string

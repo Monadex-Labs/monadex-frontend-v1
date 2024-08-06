@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react'
 import { Contract } from '@ethersproject/contracts'
-import { IoIosArrowDown, IoIosArrowBack, IoMdCloseCircleOutline } from 'react-icons/io'
+import { IoIosArrowDown, IoIosArrowBack, IoMdClose } from 'react-icons/io'
 import { Box } from '@mui/material'
 import { Button } from '@mui/base'
 import { Token, NativeCurrency, JSBI, Percent } from '@monadex/sdk'
@@ -392,7 +392,7 @@ const RemoveLiquidityModal: React.FC<RemoveLiquidityModalProps> = ({
             onClick={onClose}
           />
           <h6 className='font-semibold'>Remove Liquidity</h6>
-          <IoMdCloseCircleOutline size={24} className='cursor-pointer' onClick={onClose} />
+          <IoMdClose size={24} className='cursor-pointer' onClick={onClose} />
         </Box>
         <Box className='mt-6 rounded-md p-4 bg-bgColor border border-secondary1'>
           <Box className='flex items-center justify-between'>

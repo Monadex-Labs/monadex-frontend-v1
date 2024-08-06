@@ -5,7 +5,7 @@ import { FiAlertTriangle } from 'react-icons/fi'
 import { QuestionHelper, CustomModal, NumericalInput } from '@/components'
 import { useSwapActionHandlers } from '@/state/swap/hooks'
 import { useUserSlippageTolerance, useSlippageManuallySet, useUserTransactionTTL } from '@/state/user/hooks'
-import { IoMdCloseCircleOutline } from 'react-icons/io'
+import { IoMdClose } from 'react-icons/io'
 import { SLIPPAGE_AUTO } from '@/constants'
 
 enum SlippageError {
@@ -102,7 +102,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, defaultSli
     <CustomModal open={open} onClose={onClose} background='bg-primary'>
       <Box mb={3} className='flex items-center justify-between p-4'>
         <h5 className='text-xl '>Settings</h5>
-        <IoMdCloseCircleOutline onClick={onClose} />
+        <IoMdClose onClick={onClose} />
       </Box>
       <Divider />
       <Box my={2.5} className='flex items-center p-4'>

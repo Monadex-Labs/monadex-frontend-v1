@@ -1,11 +1,10 @@
 import { Token, Fraction, Trade, TradeType } from '@monadex/sdk'
 import React, { useMemo } from 'react'
-import { Box, CircularProgress} from '@mui/material'
+import { Box } from '@mui/material'
 import { Button } from '@mui/base'
 import { Field } from '@/state/swap/actions'
 import { DoubleCurrencyLogo } from '@/components'
 import { computeSlippageAdjustedAmounts } from '@/utils/price'
-import { ArrowDownward, WarningAmber } from '@mui/icons-material'
 import {
   basisPointsToPercent,
   formatTokenAmount,
@@ -13,6 +12,7 @@ import {
 } from '@/utils'
 import { ONE } from '@/constants'
 import { wrappedCurrency } from '@/utils/wrappedCurrency'
+import { IoMdArrowDown, IoMdWarning } from 'react-icons/io'
 /**
  * 
  * (${(
@@ -80,7 +80,7 @@ const SwapModalHeader: React.FC<SwapModalHeaderProps> = ({
             ? trade.inputAmount.currency.symbol
             : inputCurrency?.symbol}{' '}
         </p>
-        <ArrowDownward />
+        <IoMdArrowDown />
         <p>
           {trade
             ? formatTokenAmount(trade.outputAmount)
@@ -93,7 +93,7 @@ const SwapModalHeader: React.FC<SwapModalHeaderProps> = ({
       {showAcceptChanges && (
         <Box className='p-1 '>
           <Box>
-            <WarningAmber />
+            <IoMdWarning />
             <p className='text-sm font-medium'>Price Updated</p>
           </Box>
           <Button onClick={onAcceptChanges}

@@ -10,7 +10,6 @@ import {
   useUserSlippageTolerance
 } from '@/state/user/hooks'
 import { Field, SwapDelay } from '@/state/swap/actions'
-import { IoRepeatOutline } from 'react-icons/io5'
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
 import CurrencyInput from '@/components/CurrencyInput/CurrencyInput'
 import ConfirmSwapModal from './ConfirmSwapModal'
@@ -38,7 +37,6 @@ import {
   WMND,
   NativeCurrency
 } from '@monadex/sdk'
-import { ArrowDownward, CurrencyExchange } from '@mui/icons-material'
 import { Box, CircularProgress } from '@mui/material'
 import { Button } from '@mui/base'
 import { useTransactionFinalizer } from '@/state/transactions/hooks'
@@ -53,6 +51,8 @@ import useParsedQueryString from '@/hooks/useParseQueryString'
 import { usePathname } from 'next/navigation'
 import useSwapRedirects from '@/hooks/useSwapRedirect'
 import { updateUserBalance } from '@/state/balance/action'
+import { IoMdArrowDown, IoMdRepeat } from 'react-icons/io'
+
 const Swap: React.FC<{
   currencyBgClass?: string
 }> = ({ currencyBgClass }) => {
@@ -618,7 +618,7 @@ const Swap: React.FC<{
       bgClass={currencyBgClass}
     />
     <Box className='cursor-pointer flex justify-center items-center z-10 relative'>
-      <IoRepeatOutline onClick={redirectWithSwitch} className='text-xl opacity-40'/>
+      <IoMdRepeat onClick={redirectWithSwitch} className='text-xl opacity-40'/>
     </Box>
     <CurrencyInput
       title='To'
@@ -651,7 +651,7 @@ const Swap: React.FC<{
             (mainPrice ? currencies[Field.OUTPUT] : currencies[Field.INPUT])
               ?.symbol
           }{' '}
-          <IoRepeatOutline
+          <IoMdRepeat
            className='text-lg cursor-pointer'
             onClick={() => {
               setMainPrice(!mainPrice)
@@ -665,7 +665,7 @@ const Swap: React.FC<{
         <Box className='flex space-between items-center p-3 gap-2 '>
           {recipient !== null
             ? (
-              <ArrowDownward className='text-sm opacity-40' />
+              <IoMdArrowDown className='text-sm opacity-40' />
               )
             : (
               <Box />
@@ -728,7 +728,7 @@ const Swap: React.FC<{
       )}
       <Box width={showApproveFlow ? '48%' : '100%'}>
         <Button
-          className='w-full bg-gradient-to-r from-[#23006A] to-[#23006A]/50 py-4 px-4 rounded-md disabled:opacity-40'
+          className='w-full bg-primary py-4 px-4 rounded-md disabled:opacity-40'
           disabled={showApproveFlow || (swapButtonDisabled as boolean)}
           onClick={isConnected && isSupportedNetwork ? onSwap : async () => await connect()}
 

@@ -22,7 +22,7 @@ import { filterTokens } from '@/utils/filtering'
 import { useTokenComparator } from '@/utils/sorting'
 import useDebouncedChangeHandler from '@/utils/useDebouncedChangeHandler'
 import { useCurrencyBalances } from '@/state/wallet/hooks'
-import { Close, Search } from '@mui/icons-material'
+import { IoMdClose, IoMdSearch } from 'react-icons/io'
 
 interface CurrencySearchProps {
   isOpen: boolean
@@ -169,10 +169,10 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
     <Box className='pt-5 px-6 h-[80vh] flex flex-col'>
       <Box className='flex justify-between items-center m-[6px]'>
         <h6 className='text-lg'>Select a token</h6>
-        <Close onClick={onDismiss} />
+        <IoMdClose onClick={onDismiss} />
       </Box>
       <Box className='w-full h-12 gap-3 flex items-center px-3 my-3 rounded-lg outline-none border border-primary bg-transparent'>
-        <Search className='text-neutral-200' />
+        <IoMdSearch className='text-neutral-200' />
         <input
           type='text'
           placeholder='Search by name, Symbol or Address'
