@@ -9,7 +9,7 @@ import Header from '@/components/Header'
 import NextAuthSessionProvider from '@/discord/SessionProvider'
 import Footer from '@/components/Footer/footer'
 const inter = Inter({ subsets: ['latin'] })
-const fira_code = Fira_Code({ subsets: ['latin'], variable: '--font-fira-code' })
+const firaCode = Fira_Code({ subsets: ['latin'], variable: '--font-fira-code' })
 export const metadata: Metadata = {
   title: 'Monadex',
   description: 'The liquidity factory on Monad'
@@ -22,8 +22,8 @@ export default function RootLayout ({
   return (
     // wrap redux provider
     <html lang='en-US'>
-      <body className={`${inter.className} ${fira_code.variable} max-w-[95%] mx-auto`}>
-      <NextAuthSessionProvider>
+      <body className={`${inter.className} ${firaCode.variable} max-w-[95%] mx-auto`}>
+        <NextAuthSessionProvider>
           <QueryWrapper>
             <Web3ProviderWrapper>
               <ReduxProvider>
