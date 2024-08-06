@@ -617,7 +617,7 @@ const Swap: React.FC<{
       color='secondary'
       bgClass={currencyBgClass}
     />
-    <Box className='cursor-pointer flex justify-center items-center z-20 relative'>
+    <Box className='cursor-pointer flex justify-center items-center z-10 relative'>
       <IoRepeatOutline onClick={redirectWithSwitch} className='text-xl opacity-40'/>
     </Box>
     <CurrencyInput
