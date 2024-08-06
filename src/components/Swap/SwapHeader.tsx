@@ -18,7 +18,7 @@ const PageHeader: React.FC<{ isTablet: boolean, pageName: string }> = ({
         <h1 className='text-2xl font-medium opacity-60'>{pageName}</h1>
         {Boolean(helpURL) && (
           <Box
-            className='border  rounded-md p-2 px-4 flex items-center justify-center opacity-60 gap-2 hover:bg-indigo-500 hover:text-white cursor-pointer'
+            className='border rounded-md p-2 px-4 flex items-center justify-center opacity-60 gap-2 hover:bg-primary hover:text-white cursor-pointer'
             onClick={() => window.open(helpURL, '_blank')}
           >
             <small>Help</small>

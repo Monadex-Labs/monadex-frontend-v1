@@ -23,11 +23,11 @@ const Pool = (): JSX.Element => {
               />
             </Box>
             <Box className=''>
-              <IoMdSettings onClick={() => setOpenSettingsModal(true)} className='text-white cursor-pointer text-[23px]' />
+              <IoMdSettings onClick={() => setOpenSettingsModal(true)} className='text-white cursor-pointer text-2xl' />
             </Box>
           </Box>
       </Box>
-      <Box className='flex flex-col max-w-[500px] justify-center items-center p-4 mx-auto bg-[#18003E] rounded-md shadow-lg'>
+      <Box className='flex flex-col max-w-[500px] justify-center items-center p-4 mx-auto bg-bgColor rounded-md shadow-lg'>
         {openSettingsModal && (
           <SettingsModal
             open={openSettingsModal}

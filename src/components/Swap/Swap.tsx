@@ -672,7 +672,7 @@ const Swap: React.FC<{
               )}
           <Button
             onClick={() => onRecipientChange(recipient !== null ? null : '')}
-            className='w-full text-xs py-2 my-4 rounded-sm text-xl font-medium opacity-40 bg-gradient-to-b from-[#1E0349] border border-[#2D1653]'
+            className='w-full text-xs py-2 my-4 rounded-sm text-xl font-medium opacity-40 bg-gradient-to-b from-[#1E0349] border border-secondary3'
           >
             
             {recipient !== null

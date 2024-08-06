@@ -99,7 +99,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, defaultSli
   }
 
   return (
-    <CustomModal open={open} onClose={onClose} background='bg-[#836EF9]'>
+    <CustomModal open={open} onClose={onClose} background='bg-primary'>
       <Box mb={3} className='flex items-center justify-between p-4'>
         <h5 className='text-xl '>Settings</h5>
         <IoMdCloseCircleOutline onClick={onClose} />
@@ -107,14 +107,14 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, defaultSli
       <Divider />
       <Box my={2.5} className='flex items-center p-4'>
         <Box mr='6px'>
-          <p className='text-[#C6CACF]'>Slippage tolerance</p>
+          <p className='text-textSecondary'>Slippage tolerance</p>
         </Box>
         <QuestionHelper size={20} text='Your transaction will revert if the price changes unfavorably by more than this percentage' />
       </Box>
       <Box mb={2.5}>
         <Box className='flex items-center p-2 gap-3 p7'>
           <Box
-            className={`border border-[#23232C] p-1 rounded-sm mr-4${
+            className={`border border-secondary2 p-1 rounded-sm mr-4${
                 userSlippageTolerance === SLIPPAGE_AUTO
                   ? 'bg-neutral-300'
                   : ''
@@ -130,7 +130,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, defaultSli
             <small>AUTO</small>
           </Box>
           <Box
-            className={`border border-[#23232C] p-1 rounded-sm mr-4${
+            className={`border border-secondary2 p-1 rounded-sm mr-4${
                 userSlippageTolerance === 10 ? ' activeSlippageButton' : ''
               }`}
             onClick={() => {
@@ -144,7 +144,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, defaultSli
             <small>0.1%</small>
           </Box>
           <Box
-            className={`border border-[#23232C] p-1 rounded-sm mr-4${
+            className={`border border-secondary2 p-1 rounded-sm mr-4${
                 userSlippageTolerance === 50 ? 'bg-red-400' : ''
               }`}
             onClick={() => {
@@ -158,7 +158,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, defaultSli
             <small>0.5%</small>
           </Box>
           <Box
-            className={`border border-[#23232C] p-1 rounded-sm mr-4${
+            className={`border border-secondary2 p-1 rounded-sm mr-4${
                 userSlippageTolerance === 100 ? ' activeSlippageButton' : ''
               }`}
             onClick={() => {

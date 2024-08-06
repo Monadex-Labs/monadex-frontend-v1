@@ -24,7 +24,7 @@ const AddressInput: React.FC<AddressInputProps> = ({
   return (
     <Box
       className={`rounded-sm text-left p-2 border w-full flex items-center my-3 ${
-        error ? 'border-2 border-red-400' : 'border border-[#2D1653]'
+        error ? 'border-2 border-red-400' : 'border border-secondary2'
       }`}
     >
 
@@ -52,7 +52,7 @@ const AddressInput: React.FC<AddressInputProps> = ({
       />
        <CopyToClipboard text='copy'
           onCopy={() => setCopy(true)}>
-          <span className='border border-[#2D1653] text-sm opacity-40 bg-[#2E008B] p-2'>copy</span>
+          <span className='border border-secondary3 text-sm opacity-40 bg-secondary2 p-2'>copy</span>
         </CopyToClipboard>
     </Box>
   )

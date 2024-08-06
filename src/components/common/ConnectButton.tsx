@@ -16,7 +16,7 @@ const Base: React.FC<any> = ({ classNames, children, ...rest }: ButtonProps) => 
   return (
     <button
       {...rest}
-      className={cn('bg-[#836EF9] hover:bg-[#836EF9]/50 text-white focus:shadow-md text-sm px-5 py-2.5 text-center rounded-sm', classNames)}
+      className={cn('bg-primary hover:bg-primary/50 text-white focus:shadow-md text-sm px-5 py-2.5 text-center rounded-sm', classNames)}
 
     >
       {children}
@@ -33,7 +33,7 @@ export const PrimaryButton: React.FC<any> = ({ children, classNames, onClick }: 
   return (
     <button
       onClick={onClick}
-      className={cn('bg-[#836EF9] hover:bg-[#836EF9]/50 text-white focus:shadow-md text-sm px-5 py-2.5 text-center rounded-sm', classNames)}
+      className={cn('bg-primary hover:bg-primary/50 text-white focus:shadow-md text-sm px-5 py-2.5 text-center rounded-sm', classNames)}
     >{children}
     </button>
   )
@@ -64,7 +64,7 @@ export const ConnectButton: React.FC<any> = ({ classNames, children, ...rest }: 
         disabled={connecting}
         onMouseOver={() => setHover(true)}
         onClick={async () => ((wallet != null) ? await disconnect(wallet) : await connect())} // eslint-disable-line
-        className={cn('flex p-2 items-center justify-center gap-4 text-white bg-[#836EF9] hover:bg-[#836EF9]/50 focus:outline-none focus:ring-4 focus:ring-[#836EF9]/50 font-medium rounded-full text-sm px-5 py-2.5 text-center', classNames)}
+        className={cn('flex p-2 items-center justify-center gap-4 text-white bg-primary hover:bg-primary/50 focus:outline-none focus:ring-4 focus:ring-primary/50 font-medium rounded-full text-sm px-5 py-2.5 text-center', classNames)}
         {...rest}
       >
 

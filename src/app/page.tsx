@@ -47,7 +47,7 @@ const SwapPage: React.FC = () => {
         </Box>
       </Box>
           <Box
-            className='flex flex-col max-w-[480px] justify-center items-center p-2 mx-auto bg-[#18003E] rounded-md border border-[#2D1653]'
+            className='flex flex-col max-w-[480px] justify-center items-center p-2 mx-auto bg-bgColor rounded-md border border-primary'
           >
             <SwapDefaultMode
               token1={token1}

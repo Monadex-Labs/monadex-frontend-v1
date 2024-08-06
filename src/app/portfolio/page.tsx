@@ -18,7 +18,7 @@ const Portfolio: React.FC = () => {
   return (
     <div>
       <PageHeader isTablet={false} pageName='Portfolio' />
-      <Box className='max-w-[500px] justify-center items-center p-4 mx-auto bg-[#18003E] border border-[#836EF9] rounded-md'>
+      <Box className='max-w-[500px] justify-center items-center p-4 mx-auto bg-bgColor border border-primary rounded-md'>
         {openPoolFinder && (
           <PoolFinderModal
             open={openPoolFinder}
@@ -34,7 +34,7 @@ const Portfolio: React.FC = () => {
             ? (
               <Box>
                 <small className='text-textSecondary'>
-                  Don't see a pool you joined? <small className='text-primary cursor-pointer' onClick={() => setOpenPoolFinder(true)}>Import it</small>.
+                  Don't see a pool you joined? <span className='text-primary cursor-pointer' onClick={() => setOpenPoolFinder(true)}>Import it</span>.
                 </small>
                 {allV2PairsWithLiquidity.map((pair, index) => (
                   <Box key={index} mt={2}>

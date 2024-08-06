@@ -180,7 +180,7 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
             </Box>
             {isOnSelectedList
               ? (
-                <span className='text-[#C6CACF]'>{currency.name}</span>
+                <span className='text-textSecondary'>{currency.name}</span>
                 )
               : (
                 <Box className='flex items-center'>
@@ -189,7 +189,7 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
                   </span>
                   <Box
                     ml={2}
-                    className='text-xs font-medium bg-[#8133FF] px-3 py-1 rounded-full '
+                    className='text-xs font-medium bg-primary2 px-3 py-1 rounded-full '
                     onClick={(event) => {
                       event.stopPropagation()
                       if (customAdded) {

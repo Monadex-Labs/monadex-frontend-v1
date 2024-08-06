@@ -25,7 +25,7 @@ const CommonBases: React.FC<CommonBasesProps> = ({
       <Box className='flex flex-wrap'>
         <Box
 
-          className='rounded-full flex p-2 mt-1 mr-2 mb-1 ml-0 items-center bg-indigo-800 hover:cursor-pointer'
+          className='rounded-full flex p-2 mt-1 mr-2 mb-1 ml-0 items-center bg-secondary3 hover:cursor-pointer'
           onClick={() => {
             if (
               (selectedCurrency == null) ||

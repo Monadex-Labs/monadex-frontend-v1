@@ -47,7 +47,7 @@ const Header: React.FC<any> = () => {
         {paths.map((k, v) => {
           return (
             <Link
-              className={`text-gray-500 active:text-[#836EF9] font-medium hover:text-[#836EF9] text-md transition-all ${k.id === 'Docs' ? 'underline underline-offset-2 decoration-dotted' : ''}`}
+              className={`text-gray-500 active:text-primary font-medium hover:text-primary text-md transition-all ${k.id === 'Docs' ? 'underline underline-offset-2 decoration-dotted' : ''}`}
               key={v}
               href={k.path}
             >

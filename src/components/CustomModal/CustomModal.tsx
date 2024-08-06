@@ -39,7 +39,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
     >
       <Fade in={open}>
         <Box
-          className={cn(`${modalWrapper ?? ''} m-0 p-0 max-w-[700px] max-h-[80vh] overflow-hidden w-full absolute top-1/2 left-1/2 rounded-[10px] transform -translate-x-1/2 -translate-y-1/2 outline-none border border-[#836EF9] bg-[#1D0447]`, classname)}
+          className={cn(`${modalWrapper ?? ''} m-0 p-0 max-w-[700px] max-h-[80vh] overflow-hidden w-full absolute top-1/2 left-1/2 rounded-[10px] transform -translate-x-1/2 -translate-y-1/2 outline-none border border-primary bg-bgColor`, classname)}
           bgcolor={background}
           overflow={overflow}
         >
