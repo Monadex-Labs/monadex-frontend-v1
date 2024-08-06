@@ -83,13 +83,14 @@ const PoolFinderModal: React.FC<PoolFinderModalProps> = ({ open, onClose }) => {
           <IoIosArrowBack
             className='text-secondary cursor-pointer'
             onClick={onClose}
+            size={24}
           />
-          <h6 className='font-semibold'>Import Pool</h6>
-          <IoMdClose className='cursor-pointer' onClick={onClose} />
+          <h6 className='font-semibold text-lg'>Import Pool</h6>
+          <IoMdClose className='cursor-pointer' onClick={onClose} size={24}/>
         </Box>
         <Box
           mt={2}
-          className='border border-secondary2 p-3 rounded-md cursor-pointer'
+          className='border border-primary p-3 rounded-md cursor-pointer'
           onClick={() => {
             setShowSearch(true)
             setActiveField(Fields.TOKEN0)
@@ -105,14 +106,14 @@ const PoolFinderModal: React.FC<PoolFinderModalProps> = ({ open, onClose }) => {
               </Box>
               )
             : (
-              <p className='weight-600'>Select a token</p>
+              <p className='weight-600 text-textSecondary'>Select a token</p>
               )}
         </Box>
         <Box my={1} className='flex justify-center'>
           <IoMdAdd size='20' className='text-secondary' />
         </Box>
         <Box
-          className='border border-secondary2 rounded-md cursor-pointer'
+          className='border border-primary p-3 rounded-md cursor-pointer'
           onClick={() => {
             setShowSearch(true)
             setActiveField(Fields.TOKEN1)
@@ -139,7 +140,7 @@ const PoolFinderModal: React.FC<PoolFinderModalProps> = ({ open, onClose }) => {
             </p>
           </Box>
         )}
-        <Box className='mt-4 p-2 rounded-md flex content-center border border-secondary2 justify-center'>
+        <Box className='mt-4 p-2 rounded-md flex border border-secondary2 justify-center'>
           {(currency0 != null) && (currency1 != null)
             ? (
                 pairState === PairState.EXISTS
@@ -152,7 +153,7 @@ const PoolFinderModal: React.FC<PoolFinderModalProps> = ({ open, onClose }) => {
                           <Box textAlign='center'>
                             <p>You don't have liquidity in this pool yet.</p>
                             <Link
-                              href={`/new?currency0=${currencyId(currency0)}&currency1=${currencyId(currency1)}`}
+                              href={`/new?currency0=${currencyId(currency0)}&currency1=${currencyId(currency1)}`} // TODO: change this to pools/new (pending route change)
                               className='text-primary no-decoration'
                               onClick={onClose}
                             >
@@ -185,8 +186,8 @@ const PoolFinderModal: React.FC<PoolFinderModalProps> = ({ open, onClose }) => {
                         : null
               )
             : (
-              <p>
-                {!account
+              <p className='text-textSecondary'>
+                {(account == null || account === '')
                   ? 'Connect to a wallet to find pools.'
                   : 'Select a token to find your liquidity.'}
               </p>

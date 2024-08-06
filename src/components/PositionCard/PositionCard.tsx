@@ -61,14 +61,14 @@ export const MinimalPositionCard: React.FC<PositionCardProps> = ({
       : [undefined, undefined]
 
   return (
-    <Box className='w-100 rounded-md p-3 text-sm leading-none' border={border}>
+    <Box className='w-full rounded-md p-3 leading-6 text-center' border={border}>
       {userPoolBalance &&
         JSBI.greaterThan(userPoolBalance.raw, JSBI.BigInt(0))
         ? (
           <Box>
-            <p>Your Position</p>
+            <p className='font-semibold'>Your Position</p>
             <Box
-              className='flex content-between items-center mt-1'
+              className='flex justify-between items-center mt-1'
               onClick={() => setShowMore(!showMore)}
             >
               <Box className='flex items-center'>
@@ -83,17 +83,17 @@ export const MinimalPositionCard: React.FC<PositionCardProps> = ({
               </Box>
               <p>{formatTokenAmount(userPoolBalance)}</p>
             </Box>
-            <Box className='flex content-between items-center mt-1'>
+            <Box className='flex justify-between items-center mt-1'>
               <p>Your Pool Share:</p>
               <p>
                 {poolTokenPercentage ? poolTokenPercentage.toFixed(6) + '%' : '-'}
               </p>
             </Box>
-            <Box className='flex content-between items-center mt-1'>
+            <Box className='flex justify-between items-center mt-1'>
               <p>{currency0.symbol}:</p>
               <p>{formatTokenAmount(token0Deposited)}</p>
             </Box>
-            <Box className='flex content-between items-center mt-1'>
+            <Box className='flex justify-between items-center mt-1'>
               <p>{currency1.symbol}:</p>
               <p>{formatTokenAmount(token1Deposited)}</p>
             </Box>
