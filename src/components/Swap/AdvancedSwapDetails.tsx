@@ -29,7 +29,7 @@ export const TradeSummary: React.FC<TradeSummaryProps> = ({
     allowedSlippage
   )
   const tradeAmount = isExactIn ? trade.outputAmount : trade.inputAmount
-
+  console.log('dodo',trade.outputAmount,trade.inputAmount )
   return (
     <Box mt={1.5}className='rounded-sm font-fira flex flex-col p-3 text-[#ABABAB] transition duration-150 ease-in-out'>
       {openSettingsModal && (
