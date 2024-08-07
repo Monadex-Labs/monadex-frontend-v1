@@ -1,11 +1,10 @@
 'use client'
 import React, { useState, useMemo, useEffect } from 'react'
 import { Box, Divider } from '@mui/material'
-import { FiAlertTriangle } from 'react-icons/fi'
 import { QuestionHelper, CustomModal, NumericalInput } from '@/components'
 import { useSwapActionHandlers } from '@/state/swap/hooks'
 import { useUserSlippageTolerance, useSlippageManuallySet, useUserTransactionTTL } from '@/state/user/hooks'
-import { IoMdClose } from 'react-icons/io'
+import { IoMdClose, IoMdWarning } from 'react-icons/io'
 import { SLIPPAGE_AUTO } from '@/constants'
 
 enum SlippageError {
@@ -99,13 +98,13 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, defaultSli
   }
 
   return (
-    <CustomModal open={open} onClose={onClose} background='bg-primary'>
-      <Box mb={3} className='flex items-center justify-between p-4'>
-        <h5 className='text-xl '>Settings</h5>
-        <IoMdClose onClick={onClose} />
+    <CustomModal open={open} onClose={onClose} classname='p-6'>
+      <Box mb={3} className='flex items-center justify-between'>
+        <h5 className='font-semibold text-xl'>Settings</h5>
+        <IoMdClose onClick={onClose} size={24} />
       </Box>
-      <Divider />
-      <Box my={2.5} className='flex items-center p-4'>
+      <Divider className='bg-secondary3' />
+      <Box my={2.5} className='flex items-center'>
         <Box mr='6px'>
           <p className='text-textSecondary'>Slippage tolerance</p>
         </Box>
@@ -114,9 +113,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, defaultSli
       <Box mb={2.5}>
         <Box className='flex items-center p-2 gap-3 p7'>
           <Box
-            className={`border border-secondary2 p-1 rounded-sm mr-4${
+            className={`w-[62px] h-10 rounded-md border border-secondary2 flex items-center justify-center cursor-pointer mr-4 ${
                 userSlippageTolerance === SLIPPAGE_AUTO
-                  ? 'bg-neutral-300'
+                  ? 'bg-primary'
                   : ''
               }`}
             onClick={() => {
@@ -130,8 +129,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, defaultSli
             <small>AUTO</small>
           </Box>
           <Box
-            className={`border border-secondary2 p-1 rounded-sm mr-4${
-                userSlippageTolerance === 10 ? ' activeSlippageButton' : ''
+            className={`w-[62px] h-10 rounded-md border border-secondary2 flex items-center justify-center cursor-pointer mr-4 ${
+                userSlippageTolerance === 10 ? ' bg-primary' : ''
               }`}
             onClick={() => {
               setSlippageInput('')
@@ -144,8 +143,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, defaultSli
             <small>0.1%</small>
           </Box>
           <Box
-            className={`border border-secondary2 p-1 rounded-sm mr-4${
-                userSlippageTolerance === 50 ? 'bg-red-400' : ''
+            className={`w-[62px] h-10 rounded-md border border-secondary2 flex items-center justify-center cursor-pointer mr-4 ${
+                userSlippageTolerance === 50 ? 'bg-primary' : ''
               }`}
             onClick={() => {
               setSlippageInput('')
@@ -158,8 +157,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, defaultSli
             <small>0.5%</small>
           </Box>
           <Box
-            className={`border border-secondary2 p-1 rounded-sm mr-4${
-                userSlippageTolerance === 100 ? ' activeSlippageButton' : ''
+            className={`w-[62px] h-10 rounded-md border border-secondary2 flex items-center justify-center cursor-pointer mr-4 ${
+                userSlippageTolerance === 100 ? ' bg-primary' : ''
               }`}
             onClick={() => {
               setSlippageInput('')
@@ -172,11 +171,11 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, defaultSli
             <small>1%</small>
           </Box>
           <Box
-            className={`${
+            className={`flex h-10 rounded-md px-0 py-8 flex-1 items-center bg-bgColor${
                 slippageAlert ? 'border-primary' : 'border-secondary1'
               }`}
           >
-            {slippageAlert && <FiAlertTriangle color='#836EF9' size={16} />}
+            {slippageAlert && <IoMdWarning className='text-yellow-500' size={16} />}
             <NumericalInput
               placeholder={(userSlippageTolerance / 100).toFixed(2)}
               value={slippageInput}
@@ -193,25 +192,25 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, defaultSli
         </Box>
         {slippageError && (
           <Box mt={1.5}>
-            <small className='text-yellow-400'>
+            <small className='text-yellow-500'>
               {slippageError === SlippageError.InvalidInput
-                ? 'enter valid slippage'
+                ? 'Enter a valid slippage percentage'
                 : slippageError === SlippageError.RiskyLow
-                  ? 'tx May Fail'
-                  : 'tx May Be Frontrunned'}
+                  ? 'Your transaction may fail'
+                  : 'Your transaction may be frontrun'}
             </small>
           </Box>
         )}
       </Box>
-      <Divider />
+      <Divider className='bg-secondary3' />
       <Box my={2.5} className='flex items-center'>
         <Box mr='6px'>
-            <p>Transaction Deadline </p>
+            <p>Transaction Deadline</p>
           </Box>
         <QuestionHelper size={20} text='Your transaction will revert if it is pending for more than this long.' />
       </Box>
       <Box mb={2.5} className='flex items-center'>
-          <Box className='settingsInputWrapper' maxWidth={168}>
+          <Box className='flex h-10 rounded-md px-0 py-8 flex-1 items-center bg-bgColor' maxWidth={168}>
             <NumericalInput
               placeholder={(ttl / 60).toString()}
               value={deadlineInput}
@@ -229,7 +228,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, defaultSli
         </Box>
       {deadlineError && (
           <Box mt={1.5}>
-            <small className='text-yellow3'>Enter a valid deadline</small>
+            <small className='text-yellow-500'>Enter a valid deadline</small>
           </Box>
         )}
     </CustomModal>
