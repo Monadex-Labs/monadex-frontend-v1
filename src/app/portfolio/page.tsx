@@ -5,8 +5,7 @@ import Molandak from '@/static/assets/hedgehog.png'
 import { useV2LiquidityPools } from '@/hooks'
 import Image from 'next/image'
 import { useWalletData } from '@/utils'
-import PageHeader from '@/components/Swap/SwapHeader' // TODO: check if valid component to use
-import { PoolFinderModal, PoolPositionCard } from '@/components'
+import { PoolFinderModal, PoolPositionCard, QuestionHelper } from '@/components'
 
 const Portfolio: React.FC = () => {
   const { account } = useWalletData()
@@ -16,8 +15,22 @@ const Portfolio: React.FC = () => {
   } = useV2LiquidityPools(account ?? undefined)
 
   return (
-    <div>
-      <PageHeader isTablet={false} pageName='Portfolio' />
+    <div className='container mx-auto mt-10'>
+      <Box className='flex justify-between w-full p-3 items-center max-w-[500px] mx-auto'>
+        <div>
+          <p className='font-medium text-xl'>Portfolio</p>
+        </div>
+
+        <Box className='flex items-center gap-3 '>
+          <Box>
+            <QuestionHelper
+              size={23}
+              className='text-white'
+              text='If you have previously added liquidity to any pool you will find them or import them here'
+            />
+          </Box>
+        </Box>
+      </Box>
       <Box className='max-w-[500px] justify-center items-center p-4 mx-auto bg-bgColor border border-primary rounded-md'>
         {openPoolFinder && (
           <PoolFinderModal
