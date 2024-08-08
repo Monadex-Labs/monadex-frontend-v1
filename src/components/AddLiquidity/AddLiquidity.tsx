@@ -585,7 +585,7 @@ const AddLiquidity: React.FC<{
             </Box>
         )}
         <Button
-          className='w-full bg-gradient-to-r from-[#23006A] to-[#23006A]/50 py-4 px-4 rounded-md'
+          className='w-full bg-primary py-4 px-4 rounded-md disabled:bg-transparent disabled:text-textSecondary'
           disabled={
             Boolean(account) &&
             isSupportedNetwork &&

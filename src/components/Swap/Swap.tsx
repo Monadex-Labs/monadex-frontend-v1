@@ -617,8 +617,8 @@ const Swap: React.FC<{
       color='secondary'
       bgClass={currencyBgClass}
     />
-    <Box className='cursor-pointer flex justify-center items-center z-10 relative'>
-      <IoMdRepeat onClick={redirectWithSwitch} className='text-xl opacity-40'/>
+    <Box className='cursor-pointer flex justify-center items-center relative'>
+      <IoMdRepeat onClick={redirectWithSwitch} className='text-xl opacity-40' />
     </Box>
     <CurrencyInput
       title='To'
