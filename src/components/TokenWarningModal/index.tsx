@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react'
-import { Box, Button } from '@mui/material'
+import { Box } from '@mui/material'
+import { Button } from '@mui/base'
 import { Token } from '@monadex/sdk'
 import { CustomModal, CurrencyLogo } from '@/components'
 import { FiAlertTriangle } from 'react-icons/fi'
@@ -29,7 +30,7 @@ function TokenWarningCard ({ token }: { token?: Token }): React.ReactElement {
             rel='noreferrer'
           >
             <p>
-              {shortenAddress(token.address)} View on Block Explorer
+              {shortenAddress(token.address)} (View on Block Explorer)
             </p>
           </a>
         )}
@@ -62,7 +63,7 @@ export default function TokenWarningModal ({
           <Box className='flex' mr={1}>
             <FiAlertTriangle />
           </Box>
-          <h5>Token imported</h5>
+          <h5 className='font-semibold text-lg'>Token imported</h5>
         </Box>
         <Box mb={3}>
           <p>
@@ -80,10 +81,9 @@ export default function TokenWarningModal ({
           return <TokenWarningCard key={token.address} token={token} />
         })}
         <Box className='flex justify-between items-center'>
-          <p style={{ cursor: 'pointer', userSelect: 'none' }}>
+          <p style={{ cursor: 'pointer', userSelect: 'none' }} onClick={toggleUnderstand}>
             <input
               type='checkbox'
-              className='understand-checkbox'
               checked={understandChecked}
               onChange={toggleUnderstand}
             />{' '}
@@ -91,9 +91,7 @@ export default function TokenWarningModal ({
           </p>
           <Button
             disabled={!understandChecked}
-            style={{
-              borderRadius: '10px'
-            }}
+            className='rounded-md py-2 px-3 bg-primary hover:bg-primary2 cursor-pointer transition disabled:bg-transparent disabled:text-textSecondary disabled:cursor-auto'
             onClick={() => {
               onConfirm()
             }}
