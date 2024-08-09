@@ -9,7 +9,7 @@ const New = (): JSX.Element => {
   const [openSettingsModal, setOpenSettingsModal] = useState(false)
   const router = useRouter()
   return (
-    <div>
+    <div className='container mx-auto mt-10'>
       <Box className='flex justify-between w-full p-3 items-center max-w-[500px] mx-auto'>
         <div>
           <small onClick={() => router.push('/pools')} className='mb-3 opacity-40 hover:opacity-none transition-all cursor-pointer'>go to pools</small>
