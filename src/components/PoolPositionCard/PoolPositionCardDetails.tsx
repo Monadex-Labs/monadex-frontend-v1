@@ -92,8 +92,7 @@ const PoolPositionCardDetails: React.FC<{ pair: Pair }> = ({ pair }) => {
         <Box className='flex items-center justify-between gap-3'>
           <Button
             className='h-9 flex items-center justify-center rounded-md border border-primary text-primary hover:border-primary2 hover:text-primary2 p-4 bg-transparent w-1/2'
-            onClick={() =>
-              router.push(`/analytics/v2/pair/${pair.liquidityToken.address}`)}
+            onClick={() => console.log('Not implemented yet')}
           >
             <small>View Analytics</small>
           </Button>
@@ -101,7 +100,7 @@ const PoolPositionCardDetails: React.FC<{ pair: Pair }> = ({ pair }) => {
             className='h-9 flex items-center justify-center rounded-md bg-primary hover:bg-primary2 transition w-1/4'
             onClick={() => {
               router.push(
-                `/pools/v2?currency0=${currencyId(
+                `/new?currency0=${currencyId( // TODO: Change this to pools/new (pending route change)
                   currency0
                 )}&currency1=${currencyId(
                   currency1
