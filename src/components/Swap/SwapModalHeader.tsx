@@ -70,7 +70,7 @@ const SwapModalHeader: React.FC<SwapModalHeaderProps> = ({
           size={38}
         />
       </Box>
-      <Box className='text-center text-sm'>
+      <Box className='mx-6 my-0 flex flex-col items-center'>
         <p>
           Swap {' '}
           {trade
@@ -80,7 +80,7 @@ const SwapModalHeader: React.FC<SwapModalHeaderProps> = ({
             ? trade.inputAmount.currency.symbol
             : inputCurrency?.symbol}{' '}
         </p>
-        <IoMdArrowDown />
+        <IoMdArrowDown className='m-3' />
         <p>
           {trade
             ? formatTokenAmount(trade.outputAmount)

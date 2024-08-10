@@ -34,18 +34,18 @@ export const ConfirmationPendingContent: React.FC<ConfirmationPendingContentProp
 
   return (
     <Box padding={4} overflow='hidden'>
-      <Box className='mb-6 flex justify-between'>
-        <h5 className='text-lg font-medium'>{confirmationPendingContent.title}</h5>
-        <IoMdClose className='cursor-pointer' size={24} onClick={onDismiss} />
+      <Box className='flex items-center justify-end relative mb-5'>
+        <IoMdClose className='cursor-pointer z-10' size={24} onClick={onDismiss} />
       </Box>
       <Box className='flex justify-center my-5'>
         <Image className='animate-spin' src={Molandak} width={100} alt='molandak' />
       </Box>
       <Box className='p-2 text-center'>
+        <h5 className='text-lg font-medium'>{confirmationPendingContent.title}</h5>
         {confirmationPendingContent.pending && (
           <p className='font-base'>{confirmationPendingContent.pending}</p>
         )}
-        <p className='text-sm mt-2 font-medium opacity-40'>{confirmationPendingContent.confirm || ''}</p>
+        <p className='text-sm mt-2 font-medium opacity-40'>{confirmationPendingContent.confirm ?? ''}</p>
       </Box>
     </Box>
   )
@@ -67,27 +67,17 @@ export const TransactionSubmittedContent: React.FC<TransactionSubmittedContentPr
   modalContent
 }) => {
   return (
-    <Box padding={2}>
-      <Box className='flex items-center justify-flex-end relative mb-5'>
-        <IoMdClose className='cursor-pointer' size={24} onClick={onDismiss} />
+    <Box padding={4}>
+      <Box className='flex items-center justify-end relative mb-5'>
+        <h5 className='absolute w-full text-center font-medium'>{txPending ? 'Transaction Submitted' : 'Transaction Completed'}</h5>
+        <IoMdClose className='cursor-pointer z-10' size={24} onClick={onDismiss} />
       </Box>
-      {txPending ? (
-          
-          <>
-          <p className='text-sm font-medium'>{modalContent}</p>
-          <Box className='flex flex-col items-center' mt={3}>
-            <CircularProgress size={60} />
-          </Box>
-          </>  
-      ) : (
-        <>
-        <p className='text-sm font-medium'>{modalContent}</p>
-        <Box className='flex flex-col items-center' mt={3}>
-          <Image src={jimCheers} width={200} alt='ok' />
-        </Box>
-        </>
-        
-      )}
+      <Box className='mt-5 px-4 py-0 text-center flex flex-col justify-center items-center gap-5'>
+        {txPending ? <CircularProgress size={60} /> : <Image src={jimCheers} width={200} alt='ok' />}
+        <p>
+          {modalContent}
+        </p>
+      </Box>
       <Box className='flex justify-between' mt={3}>
         {chainId && hash && (
           <a
@@ -125,9 +115,9 @@ export const ConfirmationModalContent: React.FC<ConfirmationModalContentProps> =
 }) => {
   return (
     <Box padding={4}>
-      <Box className='flex items-center justify-flex-end relative mb-5'>
-        <h5 className='absolute w-full text-center'>{title}</h5>
-        <IoMdClose className='cursor-pointer' size={24} onClick={onDismiss} />
+      <Box className='flex items-center justify-end relative mb-5'>
+        <h5 className='absolute w-full text-center font-medium'>{title}</h5>
+        <IoMdClose className='cursor-pointer z-10' size={24} onClick={onDismiss} />
       </Box>
       {content()}
     </Box>
@@ -146,19 +136,18 @@ export const TransactionErrorContent: React.FC<TransactionErrorContentProps> = (
   return (
     <Box padding={2}>
       <Box>
-        <Box className='flex justify-between'>
-          <h5 className='text-lg font-medium'>Error</h5>
-          <IoMdClose className='cursor-pointer' size={24} onClick={onDismiss} />
+        <Box className='flex items-center justify-end relative mb-5'>
+          <h5 className='absolute w-full text-center font-medium'>Error</h5>
+          <IoMdClose className='cursor-pointer z-10' size={24} onClick={onDismiss} />
         </Box>
         <Box className='flex justify-center items-center flex-col mb-3 mt-3'>
-          <p className='text-lg font-medium'>{message}</p>
+          <p className='text-lg font-medium break-all overflow-scroll max-h-44'>{message}</p>
           <Image src={rejected} width={150} alt='rejected' className='my-5' />
         </Box>
       </Box>
       <Button
-        className=' text-white bg-gradient-to-r from-[#23006A] to-[#23006A]/50 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center w-full'
+        className=' text-white bg-secondary1 focus:outline-none font-medium rounded-md text-sm px-5 py-2.5 text-center w-full'
         onClick={onDismiss}
-
       >
         Dismiss
       </Button>

@@ -460,7 +460,7 @@ const AddLiquidity: React.FC<{
                 )}
           pendingText={pendingText}
           modalContent={
-            txPending ? 'submitted tx' : 'liquidity successfully added'
+            txPending ? 'Submitted transaction to add liquidity' : 'Successfully added liquidity'
           }
         />
       )}
