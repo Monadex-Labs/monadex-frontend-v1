@@ -13,7 +13,7 @@ export function useTokenBalancesWithLoadingIndicator (
   tokens?: Array<Token | undefined>
 ): [{ [tokenAddress: string]: TokenAmount | undefined }, boolean] {
   const validatedTokens: Token[] = useMemo(
-    () => tokens?.filter((t?: Token): t is Token => t?.address  ? isAddress(t?.address) : false) ?? [],
+    () => tokens?.filter((t?: Token): t is Token => t?.address !== undefined ? isAddress(t?.address) : false) ?? [],
     [tokens]
   )
   const validatedTokenAddresses = useMemo(() => validatedTokens.map((vt) => vt.address), [validatedTokens])
@@ -24,11 +24,11 @@ export function useTokenBalancesWithLoadingIndicator (
   return [
     useMemo(
       () =>
-        address && validatedTokens.length > 0
+        address !== undefined && validatedTokens.length > 0
           ? validatedTokens.reduce<{ [tokenAddress: string]: TokenAmount | undefined }>((memo, token, i) => {
             const value = balances?.[i]?.result?.[0]
-            const amount = value ? JSBI.BigInt(value.toString()) : undefined
-            if (amount) {
+            const amount = value != null ? JSBI.BigInt(value.toString()) : undefined
+            if (amount !== undefined) {
               memo[token.address] = new TokenAmount(token, amount)
             }
             return memo
@@ -62,7 +62,7 @@ export function useCurrencyBalances (account?: string, currencies?: Array<Native
   return useMemo(
     () =>
       currencies?.map((currency) => {
-        if (!account || !currency ) return undefined
+        if (account == null || currency == null) return undefined
         if (currency instanceof Token) return tokenBalances[currency.address]
         return undefined
       }) ?? [],
