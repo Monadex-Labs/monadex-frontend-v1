@@ -1,7 +1,4 @@
 'use client'
-
-'use client'
-import PageHeader from '@/components/Swap/SwapHeader'
 import { AddLiquidity, QuestionHelper, SettingsModal } from '@/components'
 import { Box } from '@mui/material'
 import { IoMdSettings } from 'react-icons/io'
@@ -18,14 +15,14 @@ const Pool = (): JSX.Element => {
           <Box className=''>
             <QuestionHelper
               size={23}
-                className='text-white'
-                text='When you add liquidity, you are given pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time.'
-              />
-            </Box>
-            <Box className=''>
-              <IoMdSettings onClick={() => setOpenSettingsModal(true)} className='text-white cursor-pointer text-2xl' />
-            </Box>
+              className='text-white'
+              text='When you add liquidity, you are given pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time.'
+            />
           </Box>
+          <Box className=''>
+            <IoMdSettings onClick={() => setOpenSettingsModal(true)} className='text-white cursor-pointer text-2xl' />
+          </Box>
+        </Box>
       </Box>
       <Box className='flex flex-col max-w-[500px] justify-center items-center p-4 mx-auto bg-bgColor rounded-md shadow-lg'>
         {openSettingsModal && (
@@ -34,8 +31,6 @@ const Pool = (): JSX.Element => {
             onClose={() => setOpenSettingsModal(false)}
           />
         )}
-        <Box className='border-md'>
-        </Box>
         <Box mt={2.5} className='w-full p-2'>
           <AddLiquidity />
         </Box>
