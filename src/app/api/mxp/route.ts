@@ -1,20 +1,18 @@
 import dbConnect from '@/discord/dbConnect'
-// import * as Xps from "../../../../../discord-bot-template/src/schemas/xps";
 import Xp from '@/discord/models'
 import { NextResponse } from 'next/server'
-import { parse, UrlWithParsedQuery } from 'url'
+import { URL } from 'url'
 
 export async function GET (req: Request): Promise<NextResponse<{
   message: any
 }>> {
-  const parseUrl: UrlWithParsedQuery = parse(req.url, true)
-  const { query } = parseUrl
-  const { id } = query
+  const parseUrl: URL = new URL(req.url)
+  const id = parseUrl.searchParams.get('id')
 
   await dbConnect()
 
   try {
-    if (id !== undefined) {
+    if (id != null) {
       const data = await Xp.findOne({ user: `<@${id}>` })
       console.log(data)
       return NextResponse.json({ data: data.points, message: 'success' })
