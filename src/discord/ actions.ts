@@ -1,11 +1,10 @@
 'use server'
-import { signIn, signOut } from '../auth'
+import { signIn, signOut } from '../../auth'
 
 
 export async function logIn() {
     try {
-        console.log('HEHEHEHEHEHE')
-        await signIn('discord', { redirectTo: "/" })
+        await signIn("discord")
       } catch (error) {
         console.error('Error during sign in:', error)
       }
