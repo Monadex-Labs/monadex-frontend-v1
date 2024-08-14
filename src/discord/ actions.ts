@@ -4,7 +4,7 @@ import { signIn, signOut } from '../auth'
 
 export async function logIn() {
     try {
-        console.log('dodo')
+        console.log('HEHEHEHEHEHE')
         await signIn('discord', { redirectTo: "/" })
       } catch (error) {
         console.error('Error during sign in:', error)

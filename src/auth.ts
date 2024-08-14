@@ -5,12 +5,12 @@ export const {
   signIn,
   signOut,
   auth,
-  handlers
+  handlers: { GET, POST }
 } = NextAuth({
   providers: [
     DiscordProvider({
-      clientId: '1245083094566965331',
-      clientSecret: 'Joid9UUXUZl7xYDMFWQ_KYwesnTwiafw',
+      clientId: process.env.AUTH_DISCORD_ID,
+      clientSecret: process.env.AUTH_DISCORD_SECRET,
       authorization: {
         params: {
           scope:
@@ -33,5 +33,5 @@ export const {
       return session
     }
   },
-  secret: 'nslN3FXUfe12xWe6mIg0R9O8efvsZGx8yvYkVvjcMM8='
+  secret: process.env.AUTH_DISCORD_SECRET
 })
