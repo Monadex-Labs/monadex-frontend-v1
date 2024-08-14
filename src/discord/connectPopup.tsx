@@ -1,5 +1,5 @@
 'use client'
-import { logIn, logOut } from '@/discord/actions'
+import { logIn, logOut } from './ actions'
 import { useSession } from 'next-auth/react'
 import { ButtonProps } from '@/components/common/ConnectButton'
 

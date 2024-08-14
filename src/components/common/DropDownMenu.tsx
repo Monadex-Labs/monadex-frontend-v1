@@ -1,6 +1,6 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { IoEllipsisHorizontal } from 'react-icons/io5'
-import Discord2Oauth from '@/discord/connectPopup'
+import {SignIn}  from '@/discord/buttons-actions'
 export default function Example() {
     return (
       <Menu as="div" className="relative inline-block text-right">
@@ -16,7 +16,7 @@ export default function Example() {
         >
           <div className="py-1 transition">
               <MenuItem>
-                <Discord2Oauth/>
+                <SignIn/>
               </MenuItem>
             <MenuItem>
               <a

@@ -5,7 +5,7 @@ export const {
   signIn,
   signOut,
   auth,
-  handlers: { GET, POST }
+  handlers
 } = NextAuth({
   providers: [
     DiscordProvider({
