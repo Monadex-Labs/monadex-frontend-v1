@@ -1,8 +1,5 @@
-import React, { useState } from 'react'
 import { Box } from '@mui/material'
-import { useWalletData } from '@/utils'
-import { isAddress } from '@/utils'
-import {CopyToClipboard} from 'react-copy-to-clipboard'
+import { useWalletData, isAddress } from '@/utils'
 
 interface AddressInputProps {
   value: string
@@ -17,7 +14,6 @@ const AddressInput: React.FC<AddressInputProps> = ({
   placeholder,
   label
 }) => {
-  const [copy, setCopy] = useState(false)
   const { chainId } = useWalletData()
   const error = Boolean(value.length > 0)
   const address = isAddress(value)
@@ -30,7 +26,7 @@ const AddressInput: React.FC<AddressInputProps> = ({
 
       <Box className='flex justify-between items-center'>
         <p>{label}</p>
-        {address &&  chainId && (
+        {address && chainId && (
           <a
             href='' // TODO: Add etherscan link to address (might create hook)
             target='_blank'
@@ -42,7 +38,7 @@ const AddressInput: React.FC<AddressInputProps> = ({
       </Box>
       <input
         value={value}
-        className={'text-grey-300 w-full focus:outline-none bg-transparent'}
+        className='text-grey-300 w-full focus:outline-none bg-transparent'
         placeholder={placeholder}
         onChange={(evt) => {
           const input = evt.target.value
@@ -50,10 +46,6 @@ const AddressInput: React.FC<AddressInputProps> = ({
           onChange(withoutSpaces)
         }}
       />
-       <CopyToClipboard text='copy'
-          onCopy={() => setCopy(true)}>
-          <span className='border border-secondary3 text-sm opacity-40 bg-secondary2 p-2'>copy</span>
-        </CopyToClipboard>
     </Box>
   )
 }
