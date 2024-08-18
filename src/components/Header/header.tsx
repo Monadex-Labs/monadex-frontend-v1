@@ -7,8 +7,11 @@ import { useMediaQuery, useTheme, Box } from '@mui/material'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import DropdownMenu from '../common/DropDownMenu'
+import { Mxpdisplay } from '../common/MXPdisplay'
+import { useSession } from 'next-auth/react'
 const Header: React.FC<any> = () => {
   const theme = useTheme()
+  const {status} = useSession()
   const tabletWindowSize = useMediaQuery(theme.breakpoints.down('md'))
   const router = useRouter()
   const paths = [
@@ -34,15 +37,16 @@ const Header: React.FC<any> = () => {
     }
   ]
   return (
-    <Box className='flex justify-between items-center p-4'>
-      <Box>
-        {tabletWindowSize && (
-          <Image src={Monadex_mobile} priority alt='MonadexLogo' className='cursor-pointer' onClick={() => router.push('/')} width={50} height={50} />
-        )}
-        {!tabletWindowSize && (
-          <Image src={Monadex} priority alt='MonadexLogo' className='cursor-pointer' onClick={() => router.push('/')} width={180} height={180} />
-        )}
-      </Box>
+    <Box className='flex items-center justify-between p-4 gap-3'>
+    <Box className="flex-grow-[0.2] p-2">
+      {tabletWindowSize && (
+        <Image src={Monadex_mobile} priority alt='MonadexLogo' className='cursor-pointer' onClick={() => router.push('/')} width={50} height={50} />
+      )}
+      {!tabletWindowSize && (
+        <Image src={Monadex} priority alt='MonadexLogo' className='cursor-pointer' onClick={() => router.push('/')} width={180} height={180} />
+      )}
+    </Box>
+    <div className='flex-grow flex justify-center p-2'>
       <div className='flex gap-6 p-2'>
         {paths.map((k, v) => {
           return (
@@ -56,11 +60,13 @@ const Header: React.FC<any> = () => {
           )
         })}
       </div>
-      <div className='flex gap-6 p-2  items-center'>
-        <DropdownMenu />
-        <ConnectButton />
-      </div>
-    </Box>
+    </div>
+    <div className='flex gap-6 items-center flex-grow-1 p-2'>
+       <Mxpdisplay/>
+      <DropdownMenu />
+      <ConnectButton />
+    </div>
+  </Box>
   )
 }
 export default Header
