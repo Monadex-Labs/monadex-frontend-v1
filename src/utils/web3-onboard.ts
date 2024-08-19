@@ -27,7 +27,9 @@ export default init({
     taho,
     coinbase
   ],
-
+  connect: {
+    autoConnectAllPreviousWallet: true
+  },
   // An array of Chains that your app supports
   chains: [
     {
