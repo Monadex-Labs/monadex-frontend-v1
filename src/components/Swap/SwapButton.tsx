@@ -58,7 +58,7 @@ const SwapButton = (props: Props): JSX.Element => {
 
   const [, connect] = useConnectWallet()
   const { isConnected } = useWalletData()
-  const [swapButtonText, setSwapButtonText] = useState('')
+  const [swapButtonText, setSwapButtonText] = useState('Swap')
   const [swapButtonDisabled, setSwapButtonDisabled] = useState(true)
 
   useEffect(() => {
