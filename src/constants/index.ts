@@ -23,7 +23,7 @@ export const RAFFLE_ADDRESS = '0xe6ddcc5353d6d67bdcef42430f1e3c11335823b8'
 export const INIT_CODE_HASH = '0x8009c475872d4440952067a3d491713f4a820605f565f899d722ca2b3e196d05'
 
 // default allowed slippage, in bips
-export const INITIAL_ALLOWED_SLIPPAGE = 50
+export const INITIAL_ALLOWED_SLIPPAGE = 0
 export const SLIPPAGE_AUTO = 0
 // 20 minutes, denominated in seconds
 export const DEFAULT_DEADLINE_FROM_NOW = 60 * 20
