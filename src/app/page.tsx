@@ -10,7 +10,7 @@ import SwapDefaultMode from '@/components/Swap/SwapDefaultMode'
 import { useUserSlippageTolerance } from '@/state/user/hooks'
 import { SlippageWrapper } from '@/components/Swap/SlippageWrapper'
 import { IoMdSettings } from 'react-icons/io'
-
+import { AiOutlineLineChart } from 'react-icons/ai'
 const SwapPage: React.FC = () => {
   const [openSettingsModal, setOpenSettingsModal] = useState(false)
   const { currencies } = useDerivedSwapInfo()
@@ -40,6 +40,11 @@ const SwapPage: React.FC = () => {
                 className='cursor-pointer'
                 onClick={() => setOpenSettingsModal(true)}
                 size={24}
+              />
+              <AiOutlineLineChart 
+              className='cursor-pointer'
+              onClick={() => console.log('implement charts')}
+              size={24}
               />
             </Box>
           </Box>
