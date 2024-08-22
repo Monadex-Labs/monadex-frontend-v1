@@ -7,22 +7,11 @@ import { DoubleCurrencyLogo } from '@/components'
 import { computeSlippageAdjustedAmounts } from '@/utils/price'
 import {
   basisPointsToPercent,
-  formatTokenAmount,
-  useWalletData
+  formatTokenAmount
 } from '@/utils'
 import { ONE } from '@/constants'
-import { wrappedCurrency } from '@/utils/wrappedCurrency'
 import { IoMdArrowDown, IoMdWarning } from 'react-icons/io'
-/**
- * 
- * (${(
-            (usdPrice ?? 0) *
-            (trade != null
-              ? Number(trade.inputAmount.toSignificant())
-              : 0)
-          ).toLocaleString('us')}
-    )
- */
+
 interface SwapModalHeaderProps {
   trade?: Trade
   inputCurrency?: Token
@@ -42,15 +31,11 @@ const SwapModalHeader: React.FC<SwapModalHeaderProps> = ({
   onAcceptChanges,
   onConfirm
 }) => {
-  const { chainId } = useWalletData()
   const slippageAdjustedAmounts = useMemo(
     () => computeSlippageAdjustedAmounts(trade, allowedSlippage),
     [trade, allowedSlippage]
   )
-  const wrappedToken = wrappedCurrency(
-    trade ? trade.inputAmount.currency : inputCurrency,
-    chainId
-  )
+
   const pct = basisPointsToPercent(allowedSlippage)
 
   const bestTradeAmount = trade

@@ -1,17 +1,17 @@
 'use'
-import { Box } from '@mui/material';
-import React, { lazy } from 'react';
+import { Box } from '@mui/material'
+import React, { lazy } from 'react'
 const Swap = lazy(() =>
-  import('@/components/Swap/Swap').then((module) => ({ default: module.default })),
-);
+  import('@/components/Swap/Swap').then(module => ({ default: module.default }))
+)
 
-const SwapMain:React.FC = () => {
-    return (
-      <>
+const SwapMain: React.FC = () => {
+  return (
+    <>
       <Box>
-      <Swap />
+        <Swap />
       </Box>
-      </>
-    )
-} 
+    </>
+  )
+}
 export default SwapMain
