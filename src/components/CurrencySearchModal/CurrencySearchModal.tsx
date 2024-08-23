@@ -24,9 +24,11 @@ const CurrencySearchModal: React.FC<CurrencySearchModalProps> = ({
   showCommonBases = false
 }) => {
   const nativeCurrency = MONAD
-
   const handleCurrencySelect = useCallback(
+    
     (currency: Token | NativeCurrency) => {
+      console.log('sososososo',currency)
+
       if (currency instanceof NativeCurrency) {
         onCurrencySelect(nativeCurrency) // TODO: Simplify this or check why it was like that before
       } else {

@@ -5,8 +5,7 @@ import { useSession } from 'next-auth/react'
 import { useFetchUserXP } from '@/discord/hooks/useFetchUser'
 export const Mxpdisplay:React.FC = () => {
   const {data: session} = useSession()
-  const {isLoading, userXP} = useFetchUserXP(session)
-  console.log('ICI',userXP)
+  const {userXP} = useFetchUserXP(session)
   return (
     <div className='flex border border-secondary1/50 px-3  rounded-full items-center bg-secondary1'>
     <Image src={gem} width={50} height={50} alt='gem image'/>

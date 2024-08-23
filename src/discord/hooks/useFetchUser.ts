@@ -22,7 +22,6 @@ export const useFetchUserXP = (session: Session | null): {
         }
       })
       const userData = await userResponse.json()
-      console.log('ici frere  🥳', userData)
     
       // CALL ENDPONT GET XP BALANCE
       try {

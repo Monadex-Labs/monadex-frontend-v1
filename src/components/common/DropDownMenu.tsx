@@ -5,7 +5,6 @@ import {SignIn, SignOut}  from '@/discord/buttons-actions'
 import { useSession } from 'next-auth/react'
 export default function Example() {
    const {status} = useSession()
-   console.log(status)
     return (
       <Menu as="div" className="relative inline-block text-right">
         <div>
