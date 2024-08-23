@@ -32,10 +32,12 @@ const Footer:React.FC = () => {
             <Link href={'#'} className='text-white font-medium'>Home</Link>
          </section>
     </div>
-    <div className='flex items-center justify-end'>
-      <Audio/>
-      <p className='text-end text-sm font-fira'>{blockNumber}</p>
-    </div>
+   {blockNumber ? (
+       <div className='flex items-center justify-end'>
+       <Audio/>
+       <p className='text-end text-sm font-fira'>{blockNumber}</p>
+     </div>
+   ): null}
     </div>
    )
 }

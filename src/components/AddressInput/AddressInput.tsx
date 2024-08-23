@@ -17,10 +17,12 @@ const AddressInput: React.FC<AddressInputProps> = ({
   placeholder,
   label
 }) => {
-  const [copy, setCopy] = useState(false)
+  const [_copy, setCopy] = useState(false)
   const { chainId } = useWalletData()
-  const error = Boolean(value.length > 0)
+  const error = !Boolean(value.length > 0)
   const address = isAddress(value)
+  console.log(error)
+  console.log('is addess', value.length > 0)
   return (
     <Box
       className={`rounded-sm text-left p-2 border w-full flex items-center my-3 ${
@@ -35,8 +37,9 @@ const AddressInput: React.FC<AddressInputProps> = ({
             href='' // TODO: Add etherscan link to address (might create hook)
             target='_blank'
             rel='noopener noreferrer'
+            className='px-2 text-sm '
           >
-            View on Block Explorer
+            tx
           </a>
         )}
       </Box>
@@ -50,7 +53,7 @@ const AddressInput: React.FC<AddressInputProps> = ({
           onChange(withoutSpaces)
         }}
       />
-       <CopyToClipboard text='copy'
+       <CopyToClipboard text={value}
           onCopy={() => setCopy(true)}>
           <span className='border border-secondary3 text-sm opacity-40 bg-secondary2 p-2'>copy</span>
         </CopyToClipboard>
