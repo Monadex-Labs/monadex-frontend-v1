@@ -30,7 +30,7 @@ import {
   JSBI,
   Trade,
   Token,
-  MONAD,
+  ETH,
   currencyEquals,
   NativeCurrency
 } from '@monadex/sdk'
@@ -87,6 +87,7 @@ const Swap: React.FC<{
     useAutoSlippage: autoSlippage
   } = useDerivedSwapInfo()
   const finalizedTransaction = useTransactionFinalizer()
+  console.log('another value', currencies)
   const {
     wrapType,
     execute: onWrap,
@@ -175,8 +176,8 @@ const Swap: React.FC<{
   const handleCurrencySelect = useCallback(
     (inputCurrency: Token | NativeCurrency) => {
       setApprovalSubmitted(false) // reset 2 step UI for approvals
-      const isSwichRedirect = currencyEquals(inputCurrency, MONAD)
-        ? parsedCurrency1Id === 'MONAD'
+      const isSwichRedirect = currencyEquals(inputCurrency, ETH)
+        ? parsedCurrency1Id === 'ETH'
         : Boolean(parsedCurrency1Id) &&
           inputCurrency !== undefined &&
           Boolean(inputCurrency instanceof Token && inputCurrency.address) &&
@@ -202,8 +203,8 @@ const Swap: React.FC<{
 
   const handleOtherCurrencySelect = useCallback(
     (outputCurrency: Token | NativeCurrency) => {
-      const isSwichRedirect = currencyEquals(outputCurrency, MONAD)
-        ? parsedCurrency0Id === 'MONAD'
+      const isSwichRedirect = currencyEquals(outputCurrency, ETH)
+        ? parsedCurrency0Id === 'ETH'
         : Boolean(parsedCurrency0Id) &&
           outputCurrency &&
           Boolean(outputCurrency instanceof Token && outputCurrency.address) &&
@@ -237,7 +238,7 @@ const Swap: React.FC<{
       parsedCurrency0Id === '' &&
       parsedCurrency1Id === ''
     ) {
-      redirectWithCurrency(MONAD, true)
+      redirectWithCurrency(ETH, true)
     } else {
       if (parsedCurrency0 != null) {
         onCurrencySelection(Field.INPUT, parsedCurrency0)

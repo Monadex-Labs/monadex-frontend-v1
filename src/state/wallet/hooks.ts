@@ -1,10 +1,12 @@
-import { CurrencyAmount, JSBI, NativeCurrency, Token, TokenAmount } from '@monadex/sdk'
+import { ChainId, CurrencyAmount, ETH, JSBI, NativeCurrency, Token, TokenAmount } from '@monadex/sdk'
 import { useMemo } from 'react'
 import { ERC20_INTERFACE } from '../../constants/index'
 import { isAddress } from 'viem'
-import { useMultipleContractSingleData } from '../multicall/hooks'
+import { isAddress as utilsAddess} from '@/utils'
+import { useMultipleContractSingleData, useSingleContractMultipleData } from '../multicall/hooks'
 import { useWalletData } from '@/utils'
 import { useAllTokens } from '@/hooks/Tokens'
+import { useMulticallContract } from '@/hooks/useContracts'
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.
 */
@@ -53,27 +55,39 @@ export function useTokenBalance (account?: string, token?: Token): TokenAmount |
 }
 
 export function useCurrencyBalances (account?: string, currencies?: Array<NativeCurrency | Token | undefined>): Array<CurrencyAmount | undefined> {
+  const {chainId} = useWalletData()
+  const nativeCurrency =  ETH
   const tokens = useMemo(
-    () => currencies?.filter((currency): currency is Token => currency instanceof Token) ?? [],
-    [currencies]
+    () =>
+      currencies
+        ?.filter((currency) => currency !== nativeCurrency)
+        .map((currency) => currency as Token) ?? [],
+    [currencies, nativeCurrency],
   )
-
   const tokenBalances = useTokenBalances(account, tokens)
+
+  const containsETH: boolean = useMemo(
+    () => currencies?.some((currency) => currency === nativeCurrency) ?? false,
+    [currencies, nativeCurrency],
+  )
+  const ethBalance = useMNDBalance(chainId, containsETH ? [account] : []);
   return useMemo(
     () =>
       currencies?.map((currency) => {
         if (account == null || currency == null) return undefined
+        if (currency === nativeCurrency) return ethBalance[account]
         if (currency instanceof Token) return tokenBalances[currency.address]
         return undefined
       }) ?? [],
-    [account, currencies, tokenBalances]
+    [account, currencies, tokenBalances, ethBalance, nativeCurrency]
   ) as CurrencyAmount []
 }
+
 export function useCurrencyBalance (
   account?: string,
   currency?: NativeCurrency | Token
 ): CurrencyAmount | TokenAmount | undefined {
-  return useCurrencyBalances(account, (currency !== undefined) ? [currency] : [])?.[0]
+  return useCurrencyBalances(account, currency ? [currency] : [])?.[0]
 }
 
 // mimics useAllBalances
@@ -87,4 +101,45 @@ export function useAllTokenBalances (): {
   ])
   const balances = useTokenBalances(account ?? undefined, allTokensArray)
   return balances ?? {}
+}
+
+export function useMNDBalance (
+  chainId: ChainId,
+  uncheckedAddresses?: (string | undefined)[]
+): {
+  [address : string] : CurrencyAmount | undefined
+} {
+const multicallContract = useMulticallContract()
+
+const addresses: string[] = useMemo(
+  () =>
+    uncheckedAddresses
+      ? uncheckedAddresses
+          .map(utilsAddess)
+          .filter((a): a is string => a !== false)
+          .sort()
+      : [],
+  [uncheckedAddresses],
+)
+const results = useSingleContractMultipleData(
+  multicallContract,
+  'getEthBalance',
+  addresses.map((address) => [address]),
+)
+return useMemo(
+  () =>
+    addresses.reduce<{ [address: string]: CurrencyAmount }>(
+      (memo, address, i) => {
+        const value = results?.[i]?.result?.[0];
+        if (value) {
+          memo[address] = CurrencyAmount.ether(
+            JSBI.BigInt(value.toString())
+          );
+        }
+        return memo;
+      },
+      {},
+    ),
+  [addresses, results, chainId],
+)
 }

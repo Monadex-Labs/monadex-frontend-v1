@@ -1,4 +1,4 @@
-import { ChainId, MONAD } from '@monadex/sdk'
+import { ChainId, ETH } from '@monadex/sdk'
 import { useWalletData } from '@/utils'
 import { useCallback } from 'react'
 import useParsedQueryString from './useParseQueryString'
@@ -19,7 +19,7 @@ export default function useSwapRedirects (): {
   const isMonad = useCallback(
     (currency: any) => {
       if (currency?.address) return false
-      const monad = MONAD
+      const monad = ETH
       return (
         monad.decimals === currency?.decimals &&
         monad.name === currency?.name &&
@@ -32,7 +32,7 @@ export default function useSwapRedirects (): {
   const redirectWithCurrency = useCallback(
     (currency: any, isInput: boolean) => {
       let redirectPath = currentPath
-      const currencyId = (isMonad(currency) && currency.name === 'MONAD') ? 'MND' : currency.address
+      const currencyId = (isMonad(currency) && currency.name === 'Ether') ? 'ETH' : currency.address
       if (isInput) {
         if (parsedQs.currency0 ?? parsedQs.inputCurrency) {
           if (parsedQs.currency0) {
@@ -63,6 +63,7 @@ export default function useSwapRedirects (): {
     let redirectPath = currentPath
     const inputCurrencyId = parsedQs.currency0 ?? parsedQs.inputCurrency
     const outputCurrencyId = parsedQs.currency1 ?? parsedQs.outputCurrency
+    console.log('IN === ', inputCurrencyId, 'OUT ==',outputCurrencyId)
     if (inputCurrencyId) {
       if (outputCurrencyId) {
         if (parsedQs.currency1) {

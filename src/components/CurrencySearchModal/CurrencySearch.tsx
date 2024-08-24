@@ -1,4 +1,4 @@
-import { ChainId, Token, MONAD, NativeCurrency } from '@monadex/sdk'
+import { ChainId, Token, ETH, NativeCurrency } from '@monadex/sdk'
 import React, {
   KeyboardEvent,
   RefObject,
@@ -44,8 +44,8 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
 }) => {
   const { account } = useWalletData()
   const dispatch = useDispatch<AppDispatch>()
-  const chainIdToUse = ChainId.MONAD
-  const nativeCurrency = MONAD
+  const chainIdToUse = ChainId.SEPOLIA
+  const nativeCurrency = ETH
   const handleInput = useCallback((input: string) => {
     const checksummedInput = isAddress(input)
     setSearchQuery(checksummedInput || input) // TODO: isAddress returns boolean, and setSearchQuery accepts string
@@ -64,7 +64,7 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
 
   const showETH: boolean = useMemo(() => {
     const s = searchQuery.toLowerCase().trim()
-    return s === '' || s === 'm' || s === 'mn' || s === 'mnd'
+    return s === '' || s === 'e' || s === 'et' || s === 'eth'
   }, [searchQuery])
 
   const tokenComparator = useTokenComparator(false)
@@ -119,7 +119,7 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
     account ?? undefined,
     allCurrencies
   )
-
+  console.log('currenCYBal', currencyBalances)
   const handleCurrencySelect = useCallback(
     (currency: Token | NativeCurrency) => {
       onCurrencySelect(currency)
@@ -157,7 +157,6 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
   const inputRef = useRef<HTMLInputElement>()
 
   let selectedListInfo = useSelectedListInfo()
-
   useEffect(() => {
     if (selectedListInfo.current === null) {
       dispatch(selectList(DEFAULT_TOKEN_LIST_URL))
@@ -184,7 +183,7 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
           autoFocus
         />
       </Box>
-      {showCommonBases != null && showCommonBases && (
+      {showCommonBases && showCommonBases && (
         <CommonBases
           chainId={chainIdToUse}
           onSelect={handleCurrencySelect}

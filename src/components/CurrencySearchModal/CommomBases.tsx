@@ -1,4 +1,4 @@
-import { ChainId, Token, NativeCurrency, currencyEquals, MONAD } from '@monadex/sdk'
+import { ChainId, Token, NativeCurrency, currencyEquals, ETH } from '@monadex/sdk'
 import { Box } from '@mui/material'
 import { CurrencyLogo, QuestionHelper } from '@/components'
 
@@ -13,7 +13,7 @@ const CommonBases: React.FC<CommonBasesProps> = ({
   onSelect,
   selectedCurrency
 }) => {
-  const nativeCurrency = MONAD
+  const nativeCurrency = ETH
   return (
     <Box mb={2}>
       <Box display='flex' my={1.5}>

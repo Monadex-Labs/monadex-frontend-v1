@@ -9,6 +9,8 @@ import MULTICALL_ABI from '../constants/abi/JSON/MulticallAbi.json'
 import MONADEXV1PAIR_ABI from '@/constants/abi/JSON/MonadexV1Pair.json'
 import MONADEXV1_FACTORY_ABI from '@/constants/abi/JSON/MonadexV1Factory.json'
 import WMND_ABI from '@/constants/abi/JSON/Wmnd_abi.json'
+import WETHABI from '@/constants/abi/JSON/WETH9Abi.json'
+
 import { useMemo } from 'react'
 import { erc20Abi_bytes32 } from 'viem'
 import { ChainId, WMND } from '@monadex/sdk'
@@ -71,6 +73,17 @@ export function useWMNDContract (
   return useContract(
     chainId ? WMND[chainId].address : undefined,
     WMND_ABI, 
+    withSignerIfPossible
+  ) as Contract
+}
+// temporary contract
+export function useWETHcontract (
+  withSignerIfPossible?: boolean
+): Contract | null {
+  const { chainId } = useWalletData()
+  return useContract(
+    chainId ? WMND[chainId].address : undefined,
+    WETHABI, 
     withSignerIfPossible
   ) as Contract
 }

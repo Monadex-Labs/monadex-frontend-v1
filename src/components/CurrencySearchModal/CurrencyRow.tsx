@@ -1,4 +1,4 @@
-import { CurrencyAmount, MONAD, Token } from '@monadex/sdk'
+import { CurrencyAmount, ETH, Token } from '@monadex/sdk'
 import React, { useState, useCallback, useMemo } from 'react'
 import { Box, Tooltip, CircularProgress, ListItem } from '@mui/material'
 import { WrappedTokenInfo } from '@/state/list/hooks'
@@ -16,8 +16,8 @@ import { FiCheck } from 'react-icons/fi'
 function currencyKey (currency: Token): string {
   return currency instanceof Token
     ? currency.address
-    : currency === MONAD
-      ? 'MONAD'
+    : currency === ETH
+      ? 'ETH'
       : ''
 }
 
@@ -85,12 +85,12 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
   const { account, chainId, provider } = useWalletData()
   const key = currencyKey(currency)
   const customAdded = useIsUserAddedToken(currency)
-  const nativeCurrency = MONAD
-
+  const nativeCurrency = ETH
+ 
   const removeToken = useRemoveUserAddedToken()
   const addToken = useAddUserToken()
   const isMetamask = getIsMetaMaskWallet() && isOnSelectedList
-
+  
   const addTokenToMetamask = (
     tokenAddress: any,
     tokenSymbol: any,
@@ -160,7 +160,7 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
               <small className='currencySymbol'>{currency.symbol}</small>
               {isMetamask != null &&
                 currency !== nativeCurrency &&
-                !(currency.name === 'MONAD') && (
+                !(currency.name === 'ETH') && (
                   <Box
                     ml='4px'
                     onClick={(event: any) => {

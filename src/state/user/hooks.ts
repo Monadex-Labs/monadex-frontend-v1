@@ -173,7 +173,7 @@ export function useTrackedTokenPairs (): Array<[Token, Token]> {
   const tokens = useAllTokens()
 
   // pinned pairs by defualt on the tokenList
-  const pinnedPairs = useMemo(() => ((chainId !== undefined) ? MONADEX_PINNED_PAIRS[chainId] ?? [] : []), [chainId])
+  const pinnedPairs = useMemo(() => (chainId ? MONADEX_PINNED_PAIRS[chainId] ?? [] : []), [chainId])
 
   // pairs for every token against every base
   const generatedPairs: Array<[Token, Token]> = useMemo(

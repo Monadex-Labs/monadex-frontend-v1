@@ -2,7 +2,7 @@ import {
   ChainId,
   NativeCurrency,
   CurrencyAmount,
-  MONAD,
+  ETH,
   Token,
   TokenAmount,
   WMND
@@ -17,7 +17,7 @@ export function wrappedCurrency (
   currency: NativeCurrency | Token | undefined,
   chainId: ChainId | undefined
 ): Token | undefined {
-  return chainId && currency === MONAD
+  return chainId && currency === ETH
     ? WMND[chainId]
     : currency instanceof Token && currency.chainId === chainId
       ? currency
@@ -36,6 +36,6 @@ export function wrappedCurrencyAmount (
     : undefined
 }
 export function unwrappedToken (token: Token): NativeCurrency | Token {
-  if (token instanceof Token && token.equals(WMND[token.chainId])) return MONAD
+  if (token instanceof Token && token.equals(WMND[token.chainId])) return ETH
   return token
 }

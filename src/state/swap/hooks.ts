@@ -1,5 +1,5 @@
 import { parseUnits } from '@ethersproject/units'
-import { MONAD, ChainId, JSBI, Token, TokenAmount, Trade, CurrencyAmount, NativeCurrency, Percent } from '@monadex/sdk'
+import { ETH, ChainId, JSBI, Token, TokenAmount, Trade, CurrencyAmount, NativeCurrency, Percent } from '@monadex/sdk'
 import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput, purchasedTicketsOnSwap, RaffleState, SwapDelay, setSwapDelay } from './actions'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { GlobalData, SLIPPAGE_AUTO } from '../../constants/index'
@@ -10,8 +10,7 @@ import { isAddress } from 'viem'
 import { useCurrencyBalances } from '../wallet/hooks'
 import { computeSlippageAdjustedAmounts } from '@/utils/price'
 import { AppDispatch, AppState } from '../store'
-import { useWallets } from '@web3-onboard/react'
-import { useCurrency } from '@/hooks/Tokens'
+import { _useCurrency, useCurrency } from '@/hooks/Tokens'
 import useFindBestRoute from '@/hooks/useFindBestRouter'
 import { useUserSlippageTolerance, useSlippageManuallySet } from '../user/hooks'
 import { formatAdvancedPercent } from '@/utils/numbers'
@@ -23,7 +22,7 @@ export function useSwapState (): AppState['swap'] {
 
 export function useSwapActionHandlers (): {
   // the moment when user will select the selection *
-  onCurrencySelection: (field: Field, currency: Token) => void
+  onCurrencySelection: (field: Field, currency: Token | NativeCurrency) => void
   // the moment when user will switch the selection *
   onSwitchTokens: () => void
   // the input value *
@@ -37,7 +36,7 @@ export function useSwapActionHandlers (): {
 
 } {
   const dispatch = useDispatch<AppDispatch>()
-  const NATIVE = MONAD // TODO: change the native if we do tests on eth sepolia
+  const NATIVE = ETH // TODO: change the native if we do tests on eth sepolia
   const timer = useRef<any>(null)
   const onCurrencySelection = useCallback(
     (field: Field, currency: Token | NativeCurrency) => {
@@ -48,7 +47,7 @@ export function useSwapActionHandlers (): {
             currency instanceof Token
               ? currency.address
               : currency === NATIVE
-                ? 'MONAD'
+                ? 'ETH'
                 : ''
         })
       )
@@ -143,8 +142,8 @@ export function involvesAddress (trade: Trade, checksummedAddress: string): bool
 // from the current swap inputs, compute the best trade and return it.
 
 export function useDerivedSwapInfo (): {
-  currencies: { [field in Field]?: Token }
-  currencyBalances: { [field in Field]?: TokenAmount }
+  currencies: { [field in Field]?: Token | NativeCurrency }
+  currencyBalances: { [field in Field]?: TokenAmount | CurrencyAmount}
   parsedAmount: TokenAmount | undefined
   v2Trade: Trade | undefined
   inputError?: string
@@ -167,8 +166,9 @@ export function useDerivedSwapInfo (): {
     recipient
   } = useSwapState()
 
-  const inputCurrency = useCurrency(inputCurrencyId)
-  const outputCurrency = useCurrency(outputCurrencyId)
+  const inputCurrency = _useCurrency(inputCurrencyId)
+  const outputCurrency = _useCurrency(outputCurrencyId)
+  console.log('typedValue', inputCurrency)
   const receiver: string | null = (recipient === null ? address : recipient) ?? null
 
   const relevantTokenBalances = useCurrencyBalances(address ?? undefined, [
@@ -184,14 +184,15 @@ export function useDerivedSwapInfo (): {
   const { v2Trade, bestTradeExactIn, bestTradeExactOut } = useFindBestRoute()
 
   const currencyBalances = { // eslint-disable-line
-    [Field.INPUT]: relevantTokenBalances?.[0] as TokenAmount,
-    [Field.OUTPUT]: relevantTokenBalances?.[1] as TokenAmount
+    [Field.INPUT]: relevantTokenBalances?.[0],
+    [Field.OUTPUT]: relevantTokenBalances?.[1]
   }
 
-  const currencies: { [field in Field]?: Token } = {
+  const currencies: { [field in Field]?: Token | NativeCurrency } = {
     [Field.INPUT]: inputCurrency ?? undefined,
     [Field.OUTPUT]: outputCurrency ?? undefined
   }
+  console.log('tests here', currencies)
 
   let inputError: string | undefined
   if (address === undefined) {
@@ -282,8 +283,8 @@ function parseCurrencyFromURLParameter (urlParam: any): string {
   if (typeof urlParam === 'string') {
     const valid = isAddress(urlParam) ? urlParam : null
     if (valid !== null) return valid
-    if (urlParam.toUpperCase() === 'MONAD') return 'MONAD'
-    if (valid === null) return 'MONAD'// TODO: review this
+    if (urlParam.toUpperCase() === 'ETH') return 'ETH'
+    if (valid === null) return 'ETH'// TODO: review this
   }
   return ''
 }
@@ -352,19 +353,19 @@ export function useDefaultsFromURLSearch ():
 | {
   inputCurrencyId: string | undefined
   outputCurrencyId: string | undefined
-}
+  }
 | undefined {
   const { chainId: Id } = useWalletData()
+  console.log('resultèèèè')
+
   const chainId = Id
   const parsedQs = useParsedQueryString()
   const dispatch = useDispatch<AppDispatch>()
 
-  const [result, setResult] = useState<{ inputCurrencyId: string | undefined, outputCurrencyId: string | undefined } | undefined
-  >()
+  const [result, setResult] = useState<{ inputCurrencyId: string | undefined, outputCurrencyId: string | undefined } | undefined>()
   useEffect(() => {
     if (!chainId) return // eslint-disable-line
     const parsed = queryParametersToSwapState(parsedQs)
-
     dispatch(
       replaceSwapState({
         typedValue: parsed.typedValue,

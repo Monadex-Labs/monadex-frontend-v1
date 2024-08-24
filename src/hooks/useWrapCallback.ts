@@ -1,10 +1,10 @@
-import { ChainId, NativeCurrency, currencyEquals, MONAD, WMND, CurrencyAmount } from '@monadex/sdk'
+import { ChainId, NativeCurrency, currencyEquals, WMND, CurrencyAmount, ETH } from '@monadex/sdk'
 import { useMemo, useState } from 'react'
 import { tryParseAmount } from '@/state/swap/hooks'
 import { useTransactionAdder } from '@/state/transactions/hooks'
 import { useCurrencyBalance } from '@/state/wallet/hooks'
 import { useWalletData, formatTokenAmount } from '@/utils/index'
-import { useWMNDContract } from './useContracts'
+import { useWMNDContract, useWETHcontract } from './useContracts'
 
 export enum WrapType {
   NOT_APPLICABLE,
@@ -32,8 +32,9 @@ export default function useWrapCallback (
   } {
   const { chainId, account } = useWalletData()
   const chainIdToUse = (chainId != null) ? chainId : ChainId.SEPOLIA
-  const nativeCurrency = MONAD
+  const nativeCurrency = ETH
   const wmndContract = useWMNDContract()
+  const wethContract = useWETHcontract()
   const balance = useCurrencyBalance(account ?? undefined, inputCurrency) as CurrencyAmount
   // we can always parse the amount typed as the input currency, since wrapping is 1:1
   const inputAmount = useMemo(
@@ -44,11 +45,11 @@ export default function useWrapCallback (
   const [wrapping, setWrapping] = useState(false)
   const [unwrapping, setUnWrapping] = useState(false)
   return useMemo(() => {
-    if (wmndContract === null || inputCurrency === null || outputCurrency === null) return NOT_APPLICABLE
+    if (wethContract === null || inputCurrency === null || outputCurrency === null) return NOT_APPLICABLE
     const sufficientBalance = (inputAmount != null) && (balance != null) && !balance.lessThan(inputAmount as CurrencyAmount)
     if (
       inputCurrency === nativeCurrency &&
-        currencyEquals(MONAD, outputCurrency as NativeCurrency)
+        currencyEquals(ETH, outputCurrency as NativeCurrency)
     ) {
       return {
         wrapType: wrapping ? WrapType.WRAPPING : WrapType.WRAP,
@@ -57,12 +58,12 @@ export default function useWrapCallback (
                 ? async () => {
                   setWrapping(true)
                   try {
-                    const txReceipt = await wmndContract.deposit({
+                    const txReceipt = await wethContract.deposit({
                       value: `0x${inputAmount.raw.toString(16)}`
                     })
                     addTransaction(txReceipt, {
                       summary: `Wrap ${formatTokenAmount(inputAmount)} ${
-                            MONAD.symbol as string
+                            ETH.symbol as string
                           } to ${WMND[chainId].symbol as string}`
                     })
                     await txReceipt.wait()
@@ -75,7 +76,7 @@ export default function useWrapCallback (
                 : undefined,
         inputError: sufficientBalance ? undefined : 'Insufficient Balance'
       }
-    } else if (currencyEquals(MONAD, inputCurrency as NativeCurrency) && outputCurrency === nativeCurrency) {
+    } else if (currencyEquals(ETH, inputCurrency as NativeCurrency) && outputCurrency === nativeCurrency) {
       return {
         wrapType: unwrapping ? WrapType.UNWRAPPING : WrapType.UNWRAP,
         execute:
@@ -83,9 +84,9 @@ export default function useWrapCallback (
                 ? async () => {
                   setUnWrapping(true)
                   try {
-                    const txReceipt = await wmndContract.withdraw(`0x${inputAmount.raw.toString(16)}`)
+                    const txReceipt = await wethContract.withdraw(`0x${inputAmount.raw.toString(16)}`)
                     addTransaction(txReceipt, {
-                      summary: `Unwrap ${formatTokenAmount(inputAmount)} ${WMND[chainId].symbol as string} to ${MONAD.symbol as string}`
+                      summary: `Unwrap ${formatTokenAmount(inputAmount)} ${WMND[chainId].symbol as string} to ${ETH.symbol as string}`
                     })
                     await txReceipt.wait()
                     setUnWrapping(false)
@@ -101,7 +102,7 @@ export default function useWrapCallback (
       return NOT_APPLICABLE
     }
   }, [
-    wmndContract,
+    wethContract,
     chainId,
     inputCurrency,
     outputCurrency,

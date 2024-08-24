@@ -159,9 +159,13 @@ export const BASES_TO_TRACK_LIQUIDITY_FOR: {
 
 // MONADEX_PINNED_PAIRS  => Mains Pairs pinned by default on the tokenlist page
 
-export const MONADEX_PINNED_PAIRS: { [chainid: number]: Array<[Token, Token]> } = {
-  [ChainId.MONAD_TESTNET]: [
-    [WMND[ChainId.MONAD_TESTNET], USDC[ChainId.MONAD_TESTNET]]
+export const MONADEX_PINNED_PAIRS: { [chainid: number]: Array<[Token, Token, Token]> } = {
+  [ChainId.SEPOLIA]: [
+    [
+      WMND[ChainId.SEPOLIA], 
+      USDC[ChainId.SEPOLIA],
+      MNDX[ChainId.SEPOLIA]
+    ]
     // ...other pairs to pin on the list by default
   ]
 }

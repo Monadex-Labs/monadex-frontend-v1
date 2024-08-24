@@ -1,7 +1,7 @@
 import {
   Token,
   CurrencyAmount,
-  MONAD,
+  ETH,
   JSBI,
   Pair,
   Percent,
@@ -41,7 +41,7 @@ export function useDerivedMintInfo (): {
   error?: string
 } {
   const { account, chainId } = useWalletData()
-  const nativeCurrency = MONAD
+  const nativeCurrency = ETH
   const {
     independentField,
     typedValue,
@@ -292,8 +292,8 @@ export function useMintActionHandlers (
           currencyId:
               currency instanceof Token
                 ? currency.address
-                : currency === MONAD
-                  ? 'MND'
+                : currency === ETH
+                  ? 'ETH'
                   : ''
         })
       )

@@ -12,7 +12,7 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
 import {
   currencyEquals,
-  MONAD,
+  ETH,
   TokenAmount,
   ChainId,
   Token
@@ -82,8 +82,8 @@ const AddLiquidity: React.FC<{
   >(null)
   const isSupportedNetwork = useIsSupportedNetwork()
   const { account, chainId, provider } = useWalletData()
-  const chainIdToUse = chainId ?? ChainId.MONAD
-  const nativeCurrency = MONAD
+  const chainIdToUse = chainId ?? ChainId.SEPOLIA
+  const nativeCurrency = ETH
   const { useAutoSlippage } = useDerivedSwapInfo()
 
   const [showConfirm, setShowConfirm] = useState(false)
@@ -102,16 +102,16 @@ const AddLiquidity: React.FC<{
   const parsedQuery = useParsedQueryString()
   const currency0Id =
     params?.currencyIdA != null
-      ? params.currencyIdA.toLowerCase() === 'mnd'
-        ? 'MND'
+      ? params.currencyIdA.toLowerCase() === 'eth'
+        ? 'ETH'
         : params.currencyIdA
       : parsedQuery?.currency0 != null
         ? (parsedQuery.currency0 as string)
         : undefined
   const currency1Id =
     params?.currencyIdB
-      ? params.currencyIdB.toLowerCase() === 'mnd'
-        ? 'MND'
+      ? params.currencyIdB.toLowerCase() === 'eth'
+        ? 'ETH'
         : params.currencyIdB
       : parsedQuery?.currency1 != null
         ? (parsedQuery.currency1 as string)
@@ -202,8 +202,8 @@ const AddLiquidity: React.FC<{
   const { redirectWithCurrency, redirectWithSwitch } = usePoolsRedirects()
   const handleCurrencyASelect = useCallback(
     (currencyA: any) => {
-      const isSwichRedirect = currencyEquals(currencyA, MONAD)
-        ? currency1Id === 'MND'
+      const isSwichRedirect = currencyEquals(currencyA, ETH)
+        ? currency1Id === 'ETH'
         : currencyA?.address?.toLowerCase() === currency1Id?.toLowerCase()
       if (isSwichRedirect) {
         redirectWithSwitch(currencyA, true)
@@ -222,8 +222,8 @@ const AddLiquidity: React.FC<{
 
   const handleCurrencyBSelect = useCallback(
     (currencyB: any) => {
-      const isSwichRedirect = currencyEquals(currencyB, MONAD)
-        ? currency0Id === 'MND'
+      const isSwichRedirect = currencyEquals(currencyB, ETH)
+        ? currency0Id === 'ETH'
         : currencyB?.address?.toLowerCase() === currency0Id?.toLowerCase()
       if (isSwichRedirect) {
         redirectWithSwitch(currencyB, false)
