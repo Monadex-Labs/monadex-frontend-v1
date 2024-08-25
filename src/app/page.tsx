@@ -23,7 +23,7 @@ const SwapPage: React.FC = () => {
 
   return (
     <div className='container mx-auto mt-10 flex p-2'>
-      {openChart ? (
+      {openChart && token1 && token2 ? (
         <ChartComponent  token1={token1} token2={token2}/>
       ) : null}
       <Box width='100%' mb={3} id='swap-page'>

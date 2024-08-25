@@ -47,7 +47,6 @@ export default function useWrapCallback (
   return useMemo(() => {
     if (wethContract === null || inputCurrency === null || outputCurrency === null) return NOT_APPLICABLE
     const sufficientBalance = (inputAmount != null) && (balance != null) && !balance.lessThan(inputAmount as CurrencyAmount)
-    console.log('soso est ici haha',currencyEquals(ETH, inputCurrency as NativeCurrency))
 
     if (
       inputCurrency === nativeCurrency &&

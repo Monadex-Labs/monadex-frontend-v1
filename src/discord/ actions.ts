@@ -6,6 +6,6 @@ export async function logIn() {
   await signIn('discord')  
 }
 
-export const logOut = async (): Promise<void> => {
+export async function logOut() {
   await signOut()
 }

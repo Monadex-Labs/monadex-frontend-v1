@@ -99,7 +99,6 @@ const Swap: React.FC<{
     typedValue
   )
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
-  console.log('showWrap', wrapType)
   const trade = showWrap ? undefined : v2Trade
   const {
     onCurrencySelection,
@@ -379,7 +378,6 @@ const Swap: React.FC<{
     }
   }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
   const fromTokenWrapped = wrappedCurrency(currencies[Field.INPUT], chainId)
-  console.log('fromTokenWrapped',fromTokenWrapped, 'INPUT', currencies[Field.INPUT])
   // ADD REACT GA FOR ANALYTICS LATER ON
 
   // const onV2TradeAnalytics = useV2TradeTypeAnalyticsCallback(

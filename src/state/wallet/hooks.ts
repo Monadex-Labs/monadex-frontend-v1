@@ -55,7 +55,9 @@ export function useTokenBalance (account?: string, token?: Token): TokenAmount |
 }
 
 export function useCurrencyBalances (account?: string, currencies?: Array<NativeCurrency | Token | undefined>): Array<CurrencyAmount | undefined> {
-  const {chainId, account:wallet} = useWalletData()
+  const {chainId} = useWalletData()
+  const chainIdToUse = chainId ? chainId : ChainId.SEPOLIA;
+
   const nativeCurrency =  ETH
   const tokens = useMemo(
     () =>
@@ -69,14 +71,13 @@ export function useCurrencyBalances (account?: string, currencies?: Array<Native
     () => currencies?.some((currency) => currency === nativeCurrency) ?? false,
     [currencies, nativeCurrency],
   )
-  const ethBalance = useMNDBalance(chainId, containsETH ? [account] : []);
+  const ethBalance = useMNDBalance(chainIdToUse, containsETH ? [account] : []);
   const walletUser = account as string 
-
   return useMemo(
     () =>
       currencies?.map((currency) => {
         if (account == null || currency == null) return undefined
-        if (currency === nativeCurrency) return ethBalance['0x492dB402d601F0424e810c8dbDD8A1913086aB43']
+        if (currency === nativeCurrency) return ethBalance[account]
         if (currency) {
           const address = (currency as Token).address;
           if (!address) {

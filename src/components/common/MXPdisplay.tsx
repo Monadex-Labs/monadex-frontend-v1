@@ -10,7 +10,7 @@ export const Mxpdisplay:React.FC = () => {
   return (
     <div className='flex border border-secondary1/50 px-3  rounded-full items-center bg-secondary1'>
     <Image src={gem} width={50} height={50} alt='gem image'/>
-     <p className='p-2 text-sm font-semibold italic'>{userXP ? userXP : <CircularProgress size={15} color='secondary' />} MXP</p>       
+     <p className='p-2 text-sm font-semibold italic'>{(userXP != null) ? userXP : <CircularProgress size={15} color='secondary' />} MXP</p>       
     </div>
     )
 }
