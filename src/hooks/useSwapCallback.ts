@@ -85,7 +85,6 @@ export function useSwapCallArguments (
         })
         )
         if(trade.tradeType === TradeType.EXACT_INPUT) {
-          console.log('jamax appelax')
           swapMethods.push(
             Router.swapCallParameters(trade, 
               {
@@ -120,15 +119,14 @@ export function useSwapCallback (
   const { account: address, chainId, provider: library } = useWalletData()
   const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName)
   const addTransaction = useTransactionAdder()
-  const recipient = recipientAddressOrName === null && address
-    // const contract = useRouterContract() as Contract
-
+  const recipient = recipientAddressOrName  ? recipientAddressOrName : address
+  console.log('cc',recipient)
   return useMemo(() => {
     if (!trade || !address || !chainId) { // eslint-disable-line
       return { state: SwapCallbackState.INVALID, callback: null, error: 'Missing dependencies' }
     }
     if (!recipient) { // eslint-disable-line
-      if (recipientAddressOrName !== null) {
+      if (recipientAddressOrName != null) {
         return { state: SwapCallbackState.INVALID, callback: null, error: 'Invalid recipient' }
       } else {
         return { state: SwapCallbackState.LOADING, callback: null, error: null }
@@ -159,7 +157,6 @@ export function useSwapCallback (
                 }
               })
               .catch(async (gasError) => {
-                console.log('erreur',gasError)
                 console.debug('Gas estimate failed, trying eth_call to extract error', call)
 
                 return await contract.callStatic[methodName](...args, options)

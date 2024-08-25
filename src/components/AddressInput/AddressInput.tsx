@@ -15,8 +15,10 @@ const AddressInput: React.FC<AddressInputProps> = ({
   label
 }) => {
   const { chainId } = useWalletData()
-  const error = Boolean(value.length > 0)
+  const error = !Boolean(value.length > 0)
   const address = isAddress(value)
+  console.log(error)
+  console.log('is addess', value.length > 0)
   return (
     <Box
       className={`rounded-sm text-left p-2 border w-full flex items-center my-3 ${

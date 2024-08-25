@@ -29,9 +29,9 @@ export const TradeSummary: React.FC<TradeSummaryProps> = ({
     allowedSlippage
   )
   const tradeAmount = isExactIn ? trade.outputAmount : trade.inputAmount
-  console.log('dodo',trade.outputAmount,trade.inputAmount )
+
   return (
-    <Box mt={1.5}className='rounded-sm font-fira flex flex-col p-3 text-textSecondary transition duration-150 ease-in-out'>
+    <Box mt={1.5} className='rounded-sm font-fira flex flex-col p-3 text-textSecondary transition duration-150 ease-in-out'>
       {openSettingsModal && (
         <SettingsModal
           open={openSettingsModal}
@@ -40,8 +40,8 @@ export const TradeSummary: React.FC<TradeSummaryProps> = ({
       )}
       <Box className='flex justify-between items-center'>
         <Box className='flex gap-2'>
-          <QuestionHelper text='slippage helper' />
-          <small>max slippage :</small>
+          <QuestionHelper text='Your transaction will revert if the price changes unfavorably by more than this percentage.' />
+          <small>Max Slippage:</small>
         </Box>
         <Box
           onClick={() => setOpenSettingsModal(true)}
@@ -54,8 +54,8 @@ export const TradeSummary: React.FC<TradeSummaryProps> = ({
       <Box className=''>
         <Box className='py-2 flex justify-between items-center'>
           <div className='flex gap-2'>
-          <QuestionHelper text='tx limit Helper' />
-          <small>{isExactIn ? 'min received' : 'max sold'}:</small>
+            <QuestionHelper text='Your transaction will revert if there is a large, unfavorable price movement before it is confirmed.' />
+            <small>{isExactIn ? 'Minimum Received' : 'Maximum Sold'}:</small>
           </div>
           <Box className='flex gap-2'>
             <small>
@@ -69,15 +69,15 @@ export const TradeSummary: React.FC<TradeSummaryProps> = ({
         </Box>
         <Box className='py-2 flex justify-between'>
           <Box className='flex gap-2'>
-            <QuestionHelper text='priceImpactHelper' />
-            <small>price impact :</small>
+            <QuestionHelper text='The difference between the market price and estimated price due to trade size.' />
+            <small>Price impact:</small>
           </Box>
           <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
         </Box>
         <Box className='py-2 flex justify-between'>
           <Box className='flex gap-2'>
-            <QuestionHelper text='liquidityProviderFeeHelper' />
-            <small>liquidity Provider Fee :</small>
+            <QuestionHelper text='A portion of each trade (0.30%) goes to liquidity providers as a protocol incentive.' />
+            <small>Liquidity Provider Fee:</small>
           </Box>
           <small>
             {formatTokenAmount(realizedLPFee as CurrencyAmount)} {trade.inputAmount.currency.symbol}
@@ -85,8 +85,8 @@ export const TradeSummary: React.FC<TradeSummaryProps> = ({
         </Box>
         <Box className='py-2 flex justify-between'>
           <Box className='flex gap-2'>
-          <QuestionHelper text='swapRouteHelper' />
-          <small>route :</small>
+            <QuestionHelper text='Routing through these tokens resulted in the best price for your trade.' />
+            <small>Route:</small>
           </Box>
           <Box>
             {trade.route.path.map((token, i, path) => {

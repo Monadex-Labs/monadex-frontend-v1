@@ -1,7 +1,11 @@
+'use client'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { IoEllipsisHorizontal } from 'react-icons/io5'
-import {SignIn}  from '@/discord/buttons-actions'
+import {SignIn, SignOut}  from '@/discord/buttons-actions'
+import { useSession } from 'next-auth/react'
 export default function Example() {
+   const {status} = useSession()
+   console.log(status)
     return (
       <Menu as="div" className="relative inline-block text-right">
         <div>
@@ -15,8 +19,13 @@ export default function Example() {
           className="absolute right-0 z-10 mt-2 w-56 origin-top-right transition focus:outline-none"
         >
           <div className="py-1 transition">
-              <MenuItem>
-                <SignIn/>
+            
+            <MenuItem>
+            {status === "authenticated" ? (
+              <SignOut/>
+            ) : (
+              <SignIn/>
+            )}
               </MenuItem>
             <MenuItem>
               <a

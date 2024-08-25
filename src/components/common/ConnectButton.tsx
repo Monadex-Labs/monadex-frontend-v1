@@ -42,15 +42,27 @@ export const ConnectButton: React.FC<any> = ({ classNames, children, ...rest }: 
   const [messageBtn, setMsgBtn] = useState<boolean>(false)
   const [hover, setHover] = useState(false)
   const checkWallet = supportedChainId(Number(wallet?.chains[0].id))
+  const [walletAddress, setWalletAddress] = useState<string | null>(null)
+
   useEffect(() => {
-    if (Number(wallet?.chains[0].id) === undefined) return undefined
-    const checkWallet = supportedChainId(Number(wallet?.chains[0].id))
+    if (Number(wallet?.chains[0]?.id) === undefined) return undefined
     if (checkWallet === 'Unsupported chain') {
       setMsgBtn(true)
     } else {
       setMsgBtn(false)
     }
-  }, [wallet, connecting, checkWallet])
+  }, [wallet, checkWallet])
+
+  useEffect(() => {
+    if (wallet != null) {
+      // If wallet is connected, set the wallet address
+      setWalletAddress(wallet.accounts[0]?.address)
+    } else {
+      // If no wallet is connected, set to null
+      setWalletAddress(null)
+    }
+  }, [wallet])
+
   return (
     <>
       {messageBtn &&
@@ -67,11 +79,11 @@ export const ConnectButton: React.FC<any> = ({ classNames, children, ...rest }: 
       >
         {connecting
           ? 'Connecting'
-          : (wallet != null)
-              ? `${wallet.accounts[0].address.slice(
+          : (walletAddress != null)
+              ? `${walletAddress.slice(
               0,
               4
-            )}...${wallet.accounts[0].address.slice(-4)}`
+            )}...${walletAddress.slice(-4)}`
               : (hover && wallet != null ? 'Disconnect' : 'Connect wallet')}
       </button>
     </>

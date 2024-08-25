@@ -1,9 +1,9 @@
 import { logIn, logOut } from './ actions'
 import { useSession } from 'next-auth/react'
 
-
 export function SignIn() {
-  
+  const { data: session } = useSession()
+
   const handleLogin = async () => {
     try {
       await logIn()
@@ -11,7 +11,7 @@ export function SignIn() {
       console.error('Login failed', error)
     }
   }
-    const { data: session } = useSession()
+   
     if (!session) return (
         <div>
             <form
@@ -34,6 +34,7 @@ export function SignIn() {
 } 
 
 export function SignOut() {
+  const { data: session } = useSession()
     return (
       <div>
         <form
@@ -41,7 +42,7 @@ export function SignOut() {
             await logOut()
           }}
         >
-          <button type="submit">Logout</button>
+          <button type="submit">@{session?.user?.name}</button>
         </form>
       </div>
     )
