@@ -33,7 +33,7 @@ export default function useWrapCallback (
   const { chainId, account } = useWalletData()
   const chainIdToUse = (chainId != null) ? chainId : ChainId.SEPOLIA
   const nativeCurrency = ETH
-  const wmndContract = useWMNDContract()
+  // const wmndContract = useWMNDContract()
   const wethContract = useWETHcontract()
   const balance = useCurrencyBalance(account ?? undefined, inputCurrency) as CurrencyAmount
   // we can always parse the amount typed as the input currency, since wrapping is 1:1
@@ -47,9 +47,11 @@ export default function useWrapCallback (
   return useMemo(() => {
     if (wethContract === null || inputCurrency === null || outputCurrency === null) return NOT_APPLICABLE
     const sufficientBalance = (inputAmount != null) && (balance != null) && !balance.lessThan(inputAmount as CurrencyAmount)
+    console.log('soso est ici haha',currencyEquals(ETH, inputCurrency as NativeCurrency))
+
     if (
       inputCurrency === nativeCurrency &&
-        currencyEquals(ETH, outputCurrency as NativeCurrency)
+        currencyEquals(WMND[ChainId.SEPOLIA], outputCurrency as NativeCurrency)
     ) {
       return {
         wrapType: wrapping ? WrapType.WRAPPING : WrapType.WRAP,
@@ -76,7 +78,7 @@ export default function useWrapCallback (
                 : undefined,
         inputError: sufficientBalance ? undefined : 'Insufficient Balance'
       }
-    } else if (currencyEquals(ETH, inputCurrency as NativeCurrency) && outputCurrency === nativeCurrency) {
+    } else if (currencyEquals(WMND[ChainId.SEPOLIA], inputCurrency as NativeCurrency) && outputCurrency === nativeCurrency) {
       return {
         wrapType: unwrapping ? WrapType.UNWRAPPING : WrapType.UNWRAP,
         execute:

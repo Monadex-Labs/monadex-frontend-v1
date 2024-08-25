@@ -133,7 +133,6 @@ const AddLiquidity: React.FC<{
     poolTokenPercentage,
     error
   } = useDerivedMintInfo()
-  console.log('currencies', currencies)
   const liquidityTokenData = {
     amountA: formatTokenAmount(parsedAmounts[Field.CURRENCY_A]),
     symbolA: currencies[Field.CURRENCY_A]?.symbol,

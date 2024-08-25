@@ -55,7 +55,7 @@ export function useTokenBalance (account?: string, token?: Token): TokenAmount |
 }
 
 export function useCurrencyBalances (account?: string, currencies?: Array<NativeCurrency | Token | undefined>): Array<CurrencyAmount | undefined> {
-  const {chainId} = useWalletData()
+  const {chainId, account:wallet} = useWalletData()
   const nativeCurrency =  ETH
   const tokens = useMemo(
     () =>
@@ -65,22 +65,29 @@ export function useCurrencyBalances (account?: string, currencies?: Array<Native
     [currencies, nativeCurrency],
   )
   const tokenBalances = useTokenBalances(account, tokens)
-
   const containsETH: boolean = useMemo(
     () => currencies?.some((currency) => currency === nativeCurrency) ?? false,
     [currencies, nativeCurrency],
   )
   const ethBalance = useMNDBalance(chainId, containsETH ? [account] : []);
+  const walletUser = account as string 
+
   return useMemo(
     () =>
       currencies?.map((currency) => {
         if (account == null || currency == null) return undefined
-        if (currency === nativeCurrency) return ethBalance[account]
-        if (currency instanceof Token) return tokenBalances[currency.address]
+        if (currency === nativeCurrency) return ethBalance['0x492dB402d601F0424e810c8dbDD8A1913086aB43']
+        if (currency) {
+          const address = (currency as Token).address;
+          if (!address) {
+            return undefined
+          }
+          return tokenBalances[address];
+        }
         return undefined
       }) ?? [],
     [account, currencies, tokenBalances, ethBalance, nativeCurrency]
-  ) as CurrencyAmount []
+  ) 
 }
 
 export function useCurrencyBalance (

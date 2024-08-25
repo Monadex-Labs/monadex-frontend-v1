@@ -63,7 +63,6 @@ export default function useSwapRedirects (): {
     let redirectPath = currentPath
     const inputCurrencyId = parsedQs.currency0 ?? parsedQs.inputCurrency
     const outputCurrencyId = parsedQs.currency1 ?? parsedQs.outputCurrency
-    console.log('IN === ', inputCurrencyId, 'OUT ==',outputCurrencyId)
     if (inputCurrencyId) {
       if (outputCurrencyId) {
         if (parsedQs.currency1) {

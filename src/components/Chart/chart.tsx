@@ -10,7 +10,6 @@ interface Pairs {
 export const ChartComponent: FC<Pairs> = ({ token1, token2 }) => {
 
    const PairState = usePair(token1, token2)
-   console.log(PairState)
    return <div className="flex flex-col">
      <p className="mb-5 text-gray-600"><span className="text-xl font-semibold text-primary">{token1?.symbol}</span> /{token2?.symbol}</p>
      <div className="">

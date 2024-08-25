@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react'
 import {
+  useDefaultsFromURLSearch,
   useDerivedSwapInfo,
   useSwapActionHandlers,
   useSwapState
@@ -52,6 +53,7 @@ import SwapButton from './SwapButton'
 const Swap: React.FC<{
   currencyBgClass?: string
 }> = ({ currencyBgClass }) => {
+  const loadedUrlParams = useDefaultsFromURLSearch()
   const pathname = usePathname()
   const isSupportedNetwork = useIsSupportedNetwork()
   // token warning stuff
@@ -87,7 +89,6 @@ const Swap: React.FC<{
     useAutoSlippage: autoSlippage
   } = useDerivedSwapInfo()
   const finalizedTransaction = useTransactionFinalizer()
-  console.log('another value', currencies)
   const {
     wrapType,
     execute: onWrap,
@@ -98,6 +99,7 @@ const Swap: React.FC<{
     typedValue
   )
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
+  console.log('showWrap', wrapType)
   const trade = showWrap ? undefined : v2Trade
   const {
     onCurrencySelection,
@@ -377,6 +379,7 @@ const Swap: React.FC<{
     }
   }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
   const fromTokenWrapped = wrappedCurrency(currencies[Field.INPUT], chainId)
+  console.log('fromTokenWrapped',fromTokenWrapped, 'INPUT', currencies[Field.INPUT])
   // ADD REACT GA FOR ANALYTICS LATER ON
 
   // const onV2TradeAnalytics = useV2TradeTypeAnalyticsCallback(

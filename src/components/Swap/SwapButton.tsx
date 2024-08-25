@@ -3,7 +3,7 @@
 import { ALLOWED_PRICE_IMPACT_HIGH } from '@/constants'
 import { ApprovalState } from '@/hooks/useApproveCallback'
 import { WrapType } from '@/hooks/useWrapCallback'
-import { ChainId, ETH, Token, WMND, currencyEquals } from '@monadex/sdk'
+import { ChainId, ETH, NativeCurrency, Token, WMND, currencyEquals } from '@monadex/sdk'
 import { Field } from '@/state/swap/actions'
 import { useEffect, useState } from 'react'
 import { Button } from '@mui/base'
@@ -14,8 +14,8 @@ interface Props {
   account: string
   isSupportedNetwork: boolean
   currencies: {
-    INPUT?: Token | undefined
-    OUTPUT?: Token | undefined
+    INPUT?: Token | NativeCurrency | undefined
+    OUTPUT?: Token | NativeCurrency | undefined
   }
   formattedAmounts: {
     [x: string]: string

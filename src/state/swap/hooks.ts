@@ -168,7 +168,6 @@ export function useDerivedSwapInfo (): {
 
   const inputCurrency = _useCurrency(inputCurrencyId)
   const outputCurrency = _useCurrency(outputCurrencyId)
-  console.log('typedValue', inputCurrency)
   const receiver: string | null = (recipient === null ? address : recipient) ?? null
 
   const relevantTokenBalances = useCurrencyBalances(address ?? undefined, [
@@ -188,12 +187,12 @@ export function useDerivedSwapInfo (): {
     [Field.OUTPUT]: relevantTokenBalances?.[1]
   }
 
+
   const currencies: { [field in Field]?: Token | NativeCurrency } = {
     [Field.INPUT]: inputCurrency ?? undefined,
     [Field.OUTPUT]: outputCurrency ?? undefined
   }
-  console.log('tests here', currencies)
-
+  console.log('inputCurrencyId',inputCurrencyId)
   let inputError: string | undefined
   if (address === undefined) {
     inputError = 'Connect Wallet'
@@ -356,16 +355,15 @@ export function useDefaultsFromURLSearch ():
   }
 | undefined {
   const { chainId: Id } = useWalletData()
-  console.log('resultèèèè')
-
+  
   const chainId = Id
   const parsedQs = useParsedQueryString()
   const dispatch = useDispatch<AppDispatch>()
-
   const [result, setResult] = useState<{ inputCurrencyId: string | undefined, outputCurrencyId: string | undefined } | undefined>()
   useEffect(() => {
     if (!chainId) return // eslint-disable-line
     const parsed = queryParametersToSwapState(parsedQs)
+    console.log('here parsed',parsed[Field.INPUT].currencyId)
     dispatch(
       replaceSwapState({
         typedValue: parsed.typedValue,

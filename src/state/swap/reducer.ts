@@ -47,7 +47,6 @@ const initialState: SwapState = {
 export default createReducer<SwapState>(initialState, (builder) => {
   builder
     .addCase(replaceSwapState, (state, { payload: { typedValue, field, inputCurrencyId, outputCurrencyId, recipient, raffle, swapDelay } }) => {
-      console.log('currencyId=====', inputCurrencyId)
       return {
         [Field.INPUT]: {
           currencyId: inputCurrencyId

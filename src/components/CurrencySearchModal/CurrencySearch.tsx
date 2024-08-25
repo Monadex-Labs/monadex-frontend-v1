@@ -119,7 +119,6 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
     account ?? undefined,
     allCurrencies
   )
-  console.log('currenCYBal', currencyBalances)
   const handleCurrencySelect = useCallback(
     (currency: Token | NativeCurrency) => {
       onCurrencySelect(currency)
