@@ -1,13 +1,12 @@
 'use client'
 import useParsedQueryString from '@/hooks/useParseQueryString'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useUserSlippageTolerance } from '@/state/user/hooks'
 import { SLIPPAGE_AUTO } from '@/state/user/reducer'
 
-// text slippage
 export const SlippageWrapper: React.FC = () => {
   const parsedQs = useParsedQueryString()
-  const swapSlippage = parsedQs.slippage // eslint-disable-line
+  const swapSlippage = parsedQs.slippage !== undefined && parsedQs.slippage !== ''
     ? (parsedQs.slippage as string)
     : undefined
   const [
@@ -15,15 +14,21 @@ export const SlippageWrapper: React.FC = () => {
     setUserSlippageTolerance
   ] = useUserSlippageTolerance()
 
+  const [slippage, setSlippage] = useState(0)
+
   useEffect(() => {
-    if (swapSlippage) {
+    if (swapSlippage !== undefined) {
       setUserSlippageTolerance(Number(swapSlippage))
     }
   }, [swapSlippage])
 
+  useEffect(() => {
+    setSlippage(allowedSlippage)
+  }, [allowedSlippage])
+
   return (
     <small className='text-xs font-medium'>
-      {`${allowedSlippage === SLIPPAGE_AUTO ? 'Auto' : allowedSlippage / 100} %`}{' '}
+      {`${slippage === SLIPPAGE_AUTO ? 'Auto' : slippage / 100} %`}{' '}
       slippage
     </small>
   )
