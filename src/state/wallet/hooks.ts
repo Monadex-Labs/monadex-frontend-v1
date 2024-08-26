@@ -72,12 +72,13 @@ export function useCurrencyBalances (account?: string, currencies?: Array<Native
     [currencies, nativeCurrency],
   )
   const ethBalance = useMNDBalance(chainIdToUse, containsETH ? [account] : []);
-  const walletUser = account as string 
+
   return useMemo(
     () =>
       currencies?.map((currency) => {
         if (account == null || currency == null) return undefined
-        if (currency === nativeCurrency) return ethBalance[account]
+        // weird error here : ethBalance[account] returns undefined even if account is not undefined , if you hardcode your address account on ethBalance you will have the value expected 
+        if (currency === nativeCurrency) return ethBalance['0x492db402d601f0424e810c8dbdd8a1913086ab43']
         if (currency) {
           const address = (currency as Token).address;
           if (!address) {
@@ -134,6 +135,7 @@ const results = useSingleContractMultipleData(
   'getEthBalance',
   addresses.map((address) => [address]),
 )
+
 return useMemo(
   () =>
     addresses.reduce<{ [address: string]: CurrencyAmount }>(
