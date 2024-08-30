@@ -78,7 +78,11 @@ export function useCurrencyBalances (account?: string, currencies?: Array<Native
       currencies?.map((currency) => {
         if (account == null || currency == null) return undefined
         // weird error here : ethBalance[account] returns undefined even if account is not undefined , if you hardcode your address account on ethBalance you will have the value expected 
-        if (currency === nativeCurrency) return ethBalance['0x492db402d601f0424e810c8dbdd8a1913086ab43']
+        if (currency === nativeCurrency) {
+          const checksummed = utilsAddess(account)
+          const address = typeof checksummed === 'boolean' ? '' : checksummed
+          return ethBalance[address]
+        }
         if (currency) {
           const address = (currency as Token).address;
           if (!address) {
