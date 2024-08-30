@@ -3,7 +3,7 @@ import {
   Trade,
   TokenAmount,
   CurrencyAmount,
-  MONAD,
+  ETH,
   ChainId
 } from '@monadex/sdk'
 import { useCallback, useState, useMemo } from 'react'
@@ -37,7 +37,7 @@ export function useApproveCallback (
   const [isApproved, setApproved] = useState(false)
   const { account, chainId } = useWalletData()
   const chainIdToUse = chainId ? chainId : ChainId.SEPOLIA // eslint-disable-line
-  const nativeCurrency = MONAD
+  const nativeCurrency = ETH
   const token = amountToApprove instanceof TokenAmount ? amountToApprove.token : undefined // a verified
   const currentAllowance = useTokenAllowance(
     token,

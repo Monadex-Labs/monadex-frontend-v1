@@ -1,4 +1,4 @@
-import { Token, MONAD, NativeCurrency } from '@monadex/sdk'
+import { Token, ETH, NativeCurrency } from '@monadex/sdk'
 import React, { useCallback } from 'react'
 import { CustomModal } from '@/components'
 import CurrencySearch from './CurrencySearch'
@@ -23,10 +23,11 @@ const CurrencySearchModal: React.FC<CurrencySearchModalProps> = ({
   otherSelectedCurrency,
   showCommonBases = false
 }) => {
-  const nativeCurrency = MONAD
-
+  const nativeCurrency = ETH
   const handleCurrencySelect = useCallback(
+    
     (currency: Token | NativeCurrency) => {
+
       if (currency instanceof NativeCurrency) {
         onCurrencySelect(nativeCurrency) // TODO: Simplify this or check why it was like that before
       } else {

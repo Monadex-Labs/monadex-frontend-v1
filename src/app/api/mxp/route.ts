@@ -14,7 +14,6 @@ export async function GET (req: Request): Promise<NextResponse<{
   try {
     if (id != null) {
       const data = await Xp.findOne({ user: `<@${id}>` })
-      console.log(data)
       return NextResponse.json({ data: data.points, message: 'success' })
     } else {
       return NextResponse.json({ message: 'User not found' })

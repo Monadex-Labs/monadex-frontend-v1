@@ -5,7 +5,7 @@ import { getAddress } from '@ethersproject/address'
 
 import { Contract } from '@ethersproject/contracts'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
-import { ChainId, CurrencyAmount, JSBI, MONAD, Percent, TokenAmount, Token, NativeCurrency } from '@monadex/sdk'
+import { ChainId, CurrencyAmount, JSBI, ETH, Percent, TokenAmount, Token, NativeCurrency } from '@monadex/sdk'
 import { EIP1193Provider, isAddress as isViemAddress } from 'viem'
 import truncateEthAddress from 'truncate-eth-address'
 import { useWallets } from '@web3-onboard/react'
@@ -44,7 +44,7 @@ export function basisPointsToPercent (num: number): Percent {
 }
 
 export function currencyId (currency: Token | NativeCurrency): string {
-  if (currency === MONAD) return 'MND'
+  if (currency === ETH) return 'ETH'
   if (currency instanceof Token) return currency.address
   throw new Error('invalid currency')
 }
@@ -139,7 +139,7 @@ export function isTokensOnList (
   chainId: ChainId
 ): boolean[] {
   return currencies.map((currency) => {
-    if (currency === MONAD) return true
+    if (currency === ETH) return true
 
     return Boolean(
       currency instanceof Token &&
@@ -249,7 +249,7 @@ export function maxAmountSpend (
   currencyAmount?: CurrencyAmount
 ): CurrencyAmount | undefined {
   if (!currencyAmount) return undefined
-  if (currencyAmount?.currency === MONAD) {
+  if (currencyAmount?.currency === ETH) {
     if (
       JSBI.greaterThan(currencyAmount.raw, MIN_NATIVE_CURRENCY_FOR_GAS[chainId])
     ) {
@@ -269,7 +269,7 @@ export function halfAmountSpend (
 ): CurrencyAmount | TokenAmount | undefined {
   if (currencyAmount == null) return undefined
   const halfAmount = JSBI.divide(currencyAmount?.raw, JSBI.BigInt(2))
-  if (currencyAmount?.currency === MONAD) {
+  if (currencyAmount?.currency === ETH) {
     if (JSBI.greaterThan(halfAmount, MIN_NATIVE_CURRENCY_FOR_GAS[chainId])) {
       return CurrencyAmount.ether(halfAmount)
     } else {

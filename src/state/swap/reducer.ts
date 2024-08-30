@@ -102,7 +102,6 @@ export default createReducer<SwapState>(initialState, (builder) => {
     })
 
     .addCase(purchasedTicketsOnSwap, (state, { payload: { raffle } }) => {
-      console.log('ic', state)
       return {
         ...state,
         raffle: {

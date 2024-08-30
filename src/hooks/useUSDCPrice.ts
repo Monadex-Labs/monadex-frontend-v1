@@ -9,7 +9,7 @@ export default function useUSDCPrice (
   allLiquidity?: boolean
 ): Price | undefined {
   const { chainId } = useWalletData()
-  const chainIdToUse = chainId ?? ChainId.MONAD
+  const chainIdToUse = chainId ?? ChainId.ETH
 
   const USDC_TOKEN = USDC[chainIdToUse]
   const STABLECOIN_AMOUNT_OUT_ALL:

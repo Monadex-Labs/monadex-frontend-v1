@@ -1,7 +1,7 @@
 import {
   currencyEquals,
   Token,
-  MONAD,
+  ETH,
   NativeCurrency,
   CurrencyAmount,
   ChainId,
@@ -34,7 +34,7 @@ const CurrencyList: React.FC<CurrencyListProps> = ({
   balances,
   usdPrices
 }) => {
-  const nativeCurrency = MONAD
+  const nativeCurrency = ETH
   const itemData = useMemo(
     () => (showETH ? [nativeCurrency, ...currencies] : currencies),
     [currencies, nativeCurrency, showETH]
@@ -56,7 +56,7 @@ const CurrencyList: React.FC<CurrencyListProps> = ({
       )
       const handleSelect = (): void => onCurrencySelect(currency)
       const token =
-          currencyEquals(currency, MONAD) || currency.name === 'MONAD'
+          currencyEquals(currency, ETH) || currency.name === 'ether'
             ? WMND[chainId]
             : currency
       const usdPrice = usdPrices != null
@@ -74,7 +74,7 @@ const CurrencyList: React.FC<CurrencyListProps> = ({
           otherSelected={otherSelected}
           isOnSelectedList={isOnSelectedList[index]}
           balance={balances[index]}
-          usdPrice={usdPrice != null ? usdPrice.price : 0}
+          usdPrice={usdPrice ? usdPrice.price : 0}
         />
       )
     },

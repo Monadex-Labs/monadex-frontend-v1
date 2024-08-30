@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { Token, NativeCurrency, TokenAmount, MONAD, JSBI } from '@monadex/sdk'
+import { Token, NativeCurrency, TokenAmount, ETH, JSBI } from '@monadex/sdk'
 import { IoIosArrowBack, IoMdAdd, IoMdClose } from 'react-icons/io'
 import { Box } from '@mui/material'
 import {
@@ -29,7 +29,7 @@ const PoolFinderModal: React.FC<PoolFinderModalProps> = ({ open, onClose }) => {
 
   const [showSearch, setShowSearch] = useState<boolean>(false)
   const [activeField, setActiveField] = useState<number>(Fields.TOKEN1)
-  const nativeCurrency = MONAD
+  const nativeCurrency = ETH
   const [currency0, setCurrency0] = useState<Token | NativeCurrency | null>(nativeCurrency)
   const [currency1, setCurrency1] = useState<Token | NativeCurrency | null>(null)
 

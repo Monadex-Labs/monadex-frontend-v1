@@ -1,4 +1,4 @@
-import { MONAD, ChainId, currencyEquals, NativeCurrency, Token } from '@monadex/sdk'
+import { ETH, ChainId, currencyEquals, NativeCurrency, Token } from '@monadex/sdk'
 import { useCallback } from 'react'
 import { useParams, useSearchParams, usePathname, useRouter } from 'next/navigation'
 import useParsedQueryString from './useParseQueryString'
@@ -16,8 +16,8 @@ export default function usePoolsRedirects() {
   const parsedQs = useParsedQueryString()
 
   const getCurrencyId = useCallback((currency: any, isV2 = true) => {
-    if (isV2 && currencyEquals(currency, MONAD)) return 'MND'
-    if (!isV2 && currency.name === 'MONAD') return 'MND'
+    if (isV2 && currencyEquals(currency, ETH)) return 'ETH'
+    if (!isV2 && currency.name === 'ETH') return 'ETH'
     return currency.address
   }, [])
 
@@ -42,8 +42,8 @@ export default function usePoolsRedirects() {
     let redirectPath = currentPath
 
     if (path.includes('/add')) {
-      const paramA = isInput ? currencyId : (currencyParamA || (currencyId === 'MND' ? 'MND' : ''))
-      const paramB = isInput ? (currencyParamB || (currencyId === 'MND' ? 'MND' : '')) : currencyId
+      const paramA = isInput ? currencyId : (currencyParamA || (currencyId === 'ETH' ? 'ETH' : ''))
+      const paramB = isInput ? (currencyParamB || (currencyId === 'ETH' ? 'ETH' : '')) : currencyId
       redirectPath = `/add/${paramA}/${paramB}${params?.version ? `/${params.version}` : ''}`
     } else {
       if (currencyParamA || currencyParamB) {

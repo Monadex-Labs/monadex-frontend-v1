@@ -1,4 +1,4 @@
-import { Token, ChainId, currencyEquals, NativeCurrency, MONAD } from '@monadex/sdk'
+import { Token, ChainId, currencyEquals, NativeCurrency, ETH } from '@monadex/sdk'
 import { parseBytes32String } from '@ethersproject/strings'
 import { useMemo } from 'react'
 import { useBytes32TokenContract, useTokenContract } from './useContracts'
@@ -168,8 +168,8 @@ export function useCurrency (currencyId: string | undefined): Token | null | und
 export function _useCurrency (
   currencyId: string | undefined
 ): NativeCurrency | Token | null | undefined {
-  const nativeCurrency = MONAD
-  const isMND = currencyId?.toUpperCase() === 'MND'
+  const nativeCurrency = ETH
+  const isMND = currencyId?.toUpperCase() === 'ETH' // update to MND
   const token = useToken(isMND ? undefined : currencyId)
   return isMND ? nativeCurrency : token
 }

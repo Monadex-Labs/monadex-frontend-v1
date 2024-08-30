@@ -1,4 +1,4 @@
-import { currencyEquals, MONAD, NativeCurrency, Token } from '@monadex/sdk'
+import { currencyEquals, ETH, NativeCurrency, Token } from '@monadex/sdk'
 import { useMemo } from 'react'
 import { Box } from '@mui/material'
 import useHttpLocations from '@/hooks/useHttpLocations'
@@ -23,7 +23,7 @@ const CurrencyLogo: React.FC<CurrencyLogoProps> = ({
   withoutBg,
   className
 }) => {
-  const nativeCurrency = MONAD
+  const nativeCurrency = ETH
   const nativeCurrencyImage = currency?.symbol !== undefined ? '/' + currency?.symbol + '.png' : '/.png'
   const uriLocations = useHttpLocations(
     currency instanceof WrappedTokenInfo

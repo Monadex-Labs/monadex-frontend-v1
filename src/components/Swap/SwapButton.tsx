@@ -3,7 +3,7 @@
 import { ALLOWED_PRICE_IMPACT_HIGH } from '@/constants'
 import { ApprovalState } from '@/hooks/useApproveCallback'
 import { WrapType } from '@/hooks/useWrapCallback'
-import { ChainId, MONAD, Token, WMND, currencyEquals } from '@monadex/sdk'
+import { ChainId, ETH, NativeCurrency, Token, WMND, currencyEquals } from '@monadex/sdk'
 import { Field } from '@/state/swap/actions'
 import { useEffect, useState } from 'react'
 import { Button } from '@mui/base'
@@ -14,8 +14,8 @@ interface Props {
   account: string
   isSupportedNetwork: boolean
   currencies: {
-    INPUT?: Token | undefined
-    OUTPUT?: Token | undefined
+    INPUT?: Token | NativeCurrency | undefined
+    OUTPUT?: Token | NativeCurrency | undefined
   }
   formattedAmounts: {
     [x: string]: string
@@ -75,11 +75,11 @@ const SwapButton = (props: Props): JSX.Element => {
         if (wrapInputError) setSwapButtonText(wrapInputError)
         setSwapButtonText(
           wrapType === WrapType.WRAP
-            ? `Wrap Monad ${MONAD.symbol ?? '[INVALID SYMBOL]'}`
+            ? `Wrap Monad ${ETH.symbol ?? '[INVALID SYMBOL]'}`
             : wrapType === WrapType.UNWRAP
               ? `Unwrap Monad ${WMND[chainId].symbol ?? '[INVALID SYMBOL]'}`
               : wrapType === WrapType.WRAPPING
-                ? `Wrapping Monad ${MONAD.symbol ?? '[INVALID SYMBOL]'}`
+                ? `Wrapping Monad ${ETH.symbol ?? '[INVALID SYMBOL]'}`
                 : wrapType === WrapType.UNWRAPPING
                   ? `Unwrapping Monad ${WMND[chainId].symbol ?? '[INVALID SYMBOL]'}`
                   : ''
@@ -137,7 +137,7 @@ const SwapButton = (props: Props): JSX.Element => {
         setSwapButtonDisabled(
           (inputCurrency &&
             chainId &&
-            currencyEquals(inputCurrency, MONAD) &&
+            currencyEquals(inputCurrency, ETH) &&
             approval === ApprovalState.UNKNOWN) ||
             !isValid ||
             priceImpactSeverity > 3 ||
