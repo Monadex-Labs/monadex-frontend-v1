@@ -1,975 +1,1178 @@
 [
   {
+    "type": "constructor",
     "inputs": [
       {
-        "internalType": "address",
         "name": "_factory",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
-        "internalType": "address",
         "name": "_raffle",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
-        "internalType": "address",
         "name": "_wNative",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
     ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
+    "stateMutability": "nonpayable"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "target",
-        "type": "address"
-      }
-    ],
-    "name": "AddressEmptyCode",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      }
-    ],
-    "name": "AddressInsufficientBalance",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "FailedInnerCall",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "MonadexV1Library__InputAmountZero",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "MonadexV1Library__InvalidSwapPath",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "MonadexV1Library__OutputAmountZero",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "MonadexV1Library__ReservesZero",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "MonadexV1Library__ZeroAmountIn",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "MonadexV1Library__ZeroReserves",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "deadline",
-        "type": "uint256"
-      }
-    ],
-    "name": "MonadexV1Router__DeadlinePasssed",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "amountIn",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amountInMax",
-        "type": "uint256"
-      }
-    ],
-    "name": "MonadexV1Router__ExcessiveInputAmount",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "amountA",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amountAMin",
-        "type": "uint256"
-      }
-    ],
-    "name": "MonadexV1Router__InsufficientAAmount",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "amountB",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amountBMin",
-        "type": "uint256"
-      }
-    ],
-    "name": "MonadexV1Router__InsufficientBAmount",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "amountOut",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amountOutMin",
-        "type": "uint256"
-      }
-    ],
-    "name": "MonadexV1Router__InsufficientOutputAmount",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "MonadexV1Router__InvalidPath",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "MonadexV1Router__TokenNotSupportedByRaffle",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "MonadexV1Router__TransferFailed",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      }
-    ],
-    "name": "SafeERC20FailedOperation",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "address",
-            "name": "tokenA",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "tokenB",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "amountADesired",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "amountBDesired",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "amountAMin",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "amountBMin",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "receiver",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "deadline",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct MonadexV1Types.AddLiquidity",
-        "name": "_addLiquidityParams",
-        "type": "tuple"
-      }
-    ],
+    "type": "function",
     "name": "addLiquidity",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
+        "name": "_addLiquidityParams",
+        "type": "tuple",
+        "internalType": "struct MonadexV1Types.AddLiquidity",
         "components": [
           {
-            "internalType": "address",
-            "name": "token",
-            "type": "address"
+            "name": "tokenA",
+            "type": "address",
+            "internalType": "address"
           },
           {
-            "internalType": "uint256",
-            "name": "amountTokenDesired",
-            "type": "uint256"
+            "name": "tokenB",
+            "type": "address",
+            "internalType": "address"
           },
           {
-            "internalType": "uint256",
-            "name": "amountTokenMin",
-            "type": "uint256"
+            "name": "amountADesired",
+            "type": "uint256",
+            "internalType": "uint256"
           },
           {
-            "internalType": "uint256",
-            "name": "amountNativeTokenMin",
-            "type": "uint256"
+            "name": "amountBDesired",
+            "type": "uint256",
+            "internalType": "uint256"
           },
           {
-            "internalType": "address",
+            "name": "amountAMin",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "amountBMin",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
             "name": "receiver",
-            "type": "address"
+            "type": "address",
+            "internalType": "address"
           },
           {
-            "internalType": "uint256",
             "name": "deadline",
-            "type": "uint256"
+            "type": "uint256",
+            "internalType": "uint256"
           }
-        ],
-        "internalType": "struct MonadexV1Types.AddLiquidityNative",
-        "name": "_addLiquidityNativeParams",
-        "type": "tuple"
+        ]
       }
     ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "addLiquidityNative",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_amountOut",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_reserveIn",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_reserveOut",
-        "type": "uint256"
-      },
-      {
+        "name": "_addLiquidityNativeParams",
+        "type": "tuple",
+        "internalType": "struct MonadexV1Types.AddLiquidityNative",
         "components": [
           {
-            "internalType": "uint256",
-            "name": "numerator",
-            "type": "uint256"
+            "name": "token",
+            "type": "address",
+            "internalType": "address"
           },
           {
-            "internalType": "uint256",
-            "name": "denominator",
-            "type": "uint256"
+            "name": "amountTokenDesired",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "amountTokenMin",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "amountNativeTokenMin",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "receiver",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "deadline",
+            "type": "uint256",
+            "internalType": "uint256"
           }
-        ],
-        "internalType": "struct MonadexV1Types.Fee",
-        "name": "_poolFee",
-        "type": "tuple"
+        ]
       }
     ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
     "name": "getAmountIn",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_amountIn",
-        "type": "uint256"
+        "name": "_amountOut",
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
-        "internalType": "uint256",
         "name": "_reserveIn",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
-        "internalType": "uint256",
         "name": "_reserveOut",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "numerator",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "denominator",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct MonadexV1Types.Fee",
         "name": "_poolFee",
-        "type": "tuple"
+        "type": "tuple",
+        "internalType": "struct MonadexV1Types.Fee",
+        "components": [
+          {
+            "name": "numerator",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "denominator",
+            "type": "uint256",
+            "internalType": "uint256"
+          }
+        ]
       }
     ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "pure"
+  },
+  {
+    "type": "function",
     "name": "getAmountOut",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_amountOut",
-        "type": "uint256"
+        "name": "_amountIn",
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
-        "internalType": "address[]",
-        "name": "_path",
-        "type": "address[]"
+        "name": "_reserveIn",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "_reserveOut",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "_poolFee",
+        "type": "tuple",
+        "internalType": "struct MonadexV1Types.Fee",
+        "components": [
+          {
+            "name": "numerator",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "denominator",
+            "type": "uint256",
+            "internalType": "uint256"
+          }
+        ]
       }
     ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "pure"
+  },
+  {
+    "type": "function",
     "name": "getAmountsIn",
-    "outputs": [
-      {
-        "internalType": "uint256[]",
-        "name": "",
-        "type": "uint256[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_amountIn",
-        "type": "uint256"
+        "name": "_amountOut",
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
-        "internalType": "address[]",
         "name": "_path",
-        "type": "address[]"
+        "type": "address[]",
+        "internalType": "address[]"
       }
     ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "getAmountsOut",
-    "outputs": [
-      {
-        "internalType": "uint256[]",
-        "name": "",
-        "type": "uint256[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
-        "internalType": "enum MonadexV1Types.Multipliers",
-        "name": "_multiplier",
-        "type": "uint8"
+        "name": "_amountIn",
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
-        "internalType": "address[]",
         "name": "_path",
-        "type": "address[]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "_amounts",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "address",
-        "name": "_receiver",
-        "type": "address"
+        "type": "address[]",
+        "internalType": "address[]"
       }
     ],
-    "name": "purchaseRaffleTickets",
     "outputs": [
       {
-        "internalType": "uint256",
         "name": "",
-        "type": "uint256"
+        "type": "uint256[]",
+        "internalType": "uint256[]"
       }
     ],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    "stateMutability": "view"
   },
   {
-    "inputs": [
+    "type": "function",
+    "name": "getFactory",
+    "inputs": [],
+    "outputs": [
       {
-        "internalType": "uint256",
-        "name": "_amountA",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_reserveA",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_reserveB",
-        "type": "uint256"
+        "name": "",
+        "type": "address",
+        "internalType": "address"
       }
     ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getRaffle",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getWNative",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "quote",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_tokenA",
-        "type": "address"
+        "name": "_amountA",
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
-        "internalType": "address",
-        "name": "_tokenB",
-        "type": "address"
+        "name": "_reserveA",
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
-        "internalType": "uint256",
-        "name": "_lpTokensToBurn",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_amountAMin",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_amountBMin",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "_receiver",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_deadline",
-        "type": "uint256"
+        "name": "_reserveB",
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "pure"
+  },
+  {
+    "type": "function",
     "name": "removeLiquidity",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_token",
-        "type": "address"
+        "name": "_tokenA",
+        "type": "address",
+        "internalType": "address"
       },
       {
-        "internalType": "uint256",
+        "name": "_tokenB",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
         "name": "_lpTokensToBurn",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
-        "internalType": "uint256",
-        "name": "_amountTokenMin",
-        "type": "uint256"
+        "name": "_amountAMin",
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
-        "internalType": "uint256",
-        "name": "_amountNativeMin",
-        "type": "uint256"
+        "name": "_amountBMin",
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
-        "internalType": "address",
         "name": "_receiver",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
-        "internalType": "uint256",
         "name": "_deadline",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "removeLiquidityNative",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_amountOutMin",
-        "type": "uint256"
+        "name": "_token",
+        "type": "address",
+        "internalType": "address"
       },
       {
-        "internalType": "address[]",
-        "name": "_path",
-        "type": "address[]"
+        "name": "_lpTokensToBurn",
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
-        "internalType": "address",
+        "name": "_amountTokenMin",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "_amountNativeMin",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
         "name": "_receiver",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
-        "internalType": "uint256",
         "name": "_deadline",
-        "type": "uint256"
-      },
-      {
-        "components": [
-          {
-            "internalType": "bool",
-            "name": "purchaseTickets",
-            "type": "bool"
-          },
-          {
-            "internalType": "enum MonadexV1Types.Multipliers",
-            "name": "multiplier",
-            "type": "uint8"
-          }
-        ],
-        "internalType": "struct MonadexV1Types.PurchaseTickets",
-        "name": "_purchaseTickets",
-        "type": "tuple"
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "removeLiquidityNativeWithPermit",
+    "inputs": [
+      {
+        "name": "_params",
+        "type": "tuple",
+        "internalType": "struct MonadexV1Types.RemoveLiquidityNativeWithPermit",
+        "components": [
+          {
+            "name": "token",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "lpTokensToBurn",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "amountTokenMin",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "amountNativeMin",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "receiver",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "deadline",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "approveMax",
+            "type": "bool",
+            "internalType": "bool"
+          },
+          {
+            "name": "v",
+            "type": "uint8",
+            "internalType": "uint8"
+          },
+          {
+            "name": "r",
+            "type": "bytes32",
+            "internalType": "bytes32"
+          },
+          {
+            "name": "s",
+            "type": "bytes32",
+            "internalType": "bytes32"
+          }
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "removeLiquidityWithPermit",
+    "inputs": [
+      {
+        "name": "_params",
+        "type": "tuple",
+        "internalType": "struct MonadexV1Types.RemoveLiquidityWithPermit",
+        "components": [
+          {
+            "name": "tokenA",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "tokenB",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "lpTokensToBurn",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "amountAMin",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "amountBMin",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "receiver",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "deadline",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "approveMax",
+            "type": "bool",
+            "internalType": "bool"
+          },
+          {
+            "name": "v",
+            "type": "uint8",
+            "internalType": "uint8"
+          },
+          {
+            "name": "r",
+            "type": "bytes32",
+            "internalType": "bytes32"
+          },
+          {
+            "name": "s",
+            "type": "bytes32",
+            "internalType": "bytes32"
+          }
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "swapExactNativeForTokens",
-    "outputs": [
-      {
-        "internalType": "uint256[]",
-        "name": "",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_amountIn",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
         "name": "_amountOutMin",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
-        "internalType": "address[]",
         "name": "_path",
-        "type": "address[]"
+        "type": "address[]",
+        "internalType": "address[]"
       },
       {
-        "internalType": "address",
         "name": "_receiver",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
-        "internalType": "uint256",
         "name": "_deadline",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
+        "name": "_purchaseTickets",
+        "type": "tuple",
+        "internalType": "struct MonadexV1Types.PurchaseTickets",
         "components": [
           {
-            "internalType": "bool",
             "name": "purchaseTickets",
-            "type": "bool"
+            "type": "bool",
+            "internalType": "bool"
           },
           {
-            "internalType": "enum MonadexV1Types.Multipliers",
             "name": "multiplier",
-            "type": "uint8"
+            "type": "uint8",
+            "internalType": "enum MonadexV1Types.Multipliers"
+          },
+          {
+            "name": "minimumTicketsToReceive",
+            "type": "uint256",
+            "internalType": "uint256"
           }
-        ],
-        "internalType": "struct MonadexV1Types.PurchaseTickets",
-        "name": "_purchaseTickets",
-        "type": "tuple"
+        ]
       }
     ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      },
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
     "name": "swapExactTokensForNative",
-    "outputs": [
-      {
-        "internalType": "uint256[]",
-        "name": "",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
-        "internalType": "uint256",
         "name": "_amountIn",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
-        "internalType": "uint256",
         "name": "_amountOutMin",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
-        "internalType": "address[]",
         "name": "_path",
-        "type": "address[]"
+        "type": "address[]",
+        "internalType": "address[]"
       },
       {
-        "internalType": "address",
         "name": "_receiver",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
-        "internalType": "uint256",
         "name": "_deadline",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
+        "name": "_purchaseTickets",
+        "type": "tuple",
+        "internalType": "struct MonadexV1Types.PurchaseTickets",
         "components": [
           {
-            "internalType": "bool",
             "name": "purchaseTickets",
-            "type": "bool"
+            "type": "bool",
+            "internalType": "bool"
           },
           {
-            "internalType": "enum MonadexV1Types.Multipliers",
             "name": "multiplier",
-            "type": "uint8"
+            "type": "uint8",
+            "internalType": "enum MonadexV1Types.Multipliers"
+          },
+          {
+            "name": "minimumTicketsToReceive",
+            "type": "uint256",
+            "internalType": "uint256"
           }
-        ],
-        "internalType": "struct MonadexV1Types.PurchaseTickets",
-        "name": "_purchaseTickets",
-        "type": "tuple"
+        ]
       }
     ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      },
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "swapExactTokensForTokens",
-    "outputs": [
-      {
-        "internalType": "uint256[]",
-        "name": "",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_amountOut",
-        "type": "uint256"
+        "name": "_amountIn",
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
-        "internalType": "address[]",
+        "name": "_amountOutMin",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
         "name": "_path",
-        "type": "address[]"
+        "type": "address[]",
+        "internalType": "address[]"
       },
       {
-        "internalType": "address",
         "name": "_receiver",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
-        "internalType": "uint256",
         "name": "_deadline",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
+        "name": "_purchaseTickets",
+        "type": "tuple",
+        "internalType": "struct MonadexV1Types.PurchaseTickets",
         "components": [
           {
-            "internalType": "bool",
             "name": "purchaseTickets",
-            "type": "bool"
+            "type": "bool",
+            "internalType": "bool"
           },
           {
-            "internalType": "enum MonadexV1Types.Multipliers",
             "name": "multiplier",
-            "type": "uint8"
+            "type": "uint8",
+            "internalType": "enum MonadexV1Types.Multipliers"
+          },
+          {
+            "name": "minimumTicketsToReceive",
+            "type": "uint256",
+            "internalType": "uint256"
           }
-        ],
-        "internalType": "struct MonadexV1Types.PurchaseTickets",
-        "name": "_purchaseTickets",
-        "type": "tuple"
+        ]
       }
     ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      },
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "swapNativeForExactTokens",
-    "outputs": [
-      {
-        "internalType": "uint256[]",
-        "name": "",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
-        "internalType": "uint256",
         "name": "_amountOut",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
-        "internalType": "uint256",
-        "name": "_amountInMax",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address[]",
         "name": "_path",
-        "type": "address[]"
+        "type": "address[]",
+        "internalType": "address[]"
       },
       {
-        "internalType": "address",
         "name": "_receiver",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
-        "internalType": "uint256",
         "name": "_deadline",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
+        "name": "_purchaseTickets",
+        "type": "tuple",
+        "internalType": "struct MonadexV1Types.PurchaseTickets",
         "components": [
           {
-            "internalType": "bool",
             "name": "purchaseTickets",
-            "type": "bool"
+            "type": "bool",
+            "internalType": "bool"
           },
           {
-            "internalType": "enum MonadexV1Types.Multipliers",
             "name": "multiplier",
-            "type": "uint8"
+            "type": "uint8",
+            "internalType": "enum MonadexV1Types.Multipliers"
+          },
+          {
+            "name": "minimumTicketsToReceive",
+            "type": "uint256",
+            "internalType": "uint256"
           }
-        ],
-        "internalType": "struct MonadexV1Types.PurchaseTickets",
-        "name": "_purchaseTickets",
-        "type": "tuple"
+        ]
       }
     ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      },
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
     "name": "swapTokensForExactNative",
-    "outputs": [
-      {
-        "internalType": "uint256[]",
-        "name": "",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
-        "internalType": "uint256",
         "name": "_amountOut",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
-        "internalType": "uint256",
         "name": "_amountInMax",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
-        "internalType": "address[]",
         "name": "_path",
-        "type": "address[]"
+        "type": "address[]",
+        "internalType": "address[]"
       },
       {
-        "internalType": "address",
         "name": "_receiver",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
-        "internalType": "uint256",
         "name": "_deadline",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
+        "name": "_purchaseTickets",
+        "type": "tuple",
+        "internalType": "struct MonadexV1Types.PurchaseTickets",
         "components": [
           {
-            "internalType": "bool",
             "name": "purchaseTickets",
-            "type": "bool"
+            "type": "bool",
+            "internalType": "bool"
           },
           {
-            "internalType": "enum MonadexV1Types.Multipliers",
             "name": "multiplier",
-            "type": "uint8"
+            "type": "uint8",
+            "internalType": "enum MonadexV1Types.Multipliers"
+          },
+          {
+            "name": "minimumTicketsToReceive",
+            "type": "uint256",
+            "internalType": "uint256"
           }
-        ],
-        "internalType": "struct MonadexV1Types.PurchaseTickets",
-        "name": "_purchaseTickets",
-        "type": "tuple"
+        ]
       }
     ],
-    "name": "swapTokensForExactTokens",
     "outputs": [
       {
-        "internalType": "uint256[]",
         "name": "",
-        "type": "uint256[]"
+        "type": "uint256[]",
+        "internalType": "uint256[]"
       },
       {
-        "internalType": "uint256",
         "name": "",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "swapTokensForExactTokens",
+    "inputs": [
+      {
+        "name": "_amountOut",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "_amountInMax",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "_path",
+        "type": "address[]",
+        "internalType": "address[]"
+      },
+      {
+        "name": "_receiver",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_deadline",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "_purchaseTickets",
+        "type": "tuple",
+        "internalType": "struct MonadexV1Types.PurchaseTickets",
+        "components": [
+          {
+            "name": "purchaseTickets",
+            "type": "bool",
+            "internalType": "bool"
+          },
+          {
+            "name": "multiplier",
+            "type": "uint8",
+            "internalType": "enum MonadexV1Types.Multipliers"
+          },
+          {
+            "name": "minimumTicketsToReceive",
+            "type": "uint256",
+            "internalType": "uint256"
+          }
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      },
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "error",
+    "name": "AddressEmptyCode",
+    "inputs": [
+      {
+        "name": "target",
+        "type": "address",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "AddressInsufficientBalance",
+    "inputs": [
+      {
+        "name": "account",
+        "type": "address",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "FailedInnerCall",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "MonadexV1Library__InputAmountZero",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "MonadexV1Library__InvalidSwapPath",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "MonadexV1Library__OutputAmountZero",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "MonadexV1Library__ReservesZero",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "MonadexV1Library__ZeroAmountIn",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "MonadexV1Router__DeadlinePasssed",
+    "inputs": [
+      {
+        "name": "deadline",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "MonadexV1Router__ExcessiveInputAmount",
+    "inputs": [
+      {
+        "name": "amountIn",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "amountInMax",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "MonadexV1Router__InsufficientAAmount",
+    "inputs": [
+      {
+        "name": "amountA",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "amountAMin",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "MonadexV1Router__InsufficientBAmount",
+    "inputs": [
+      {
+        "name": "amountB",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "amountBMin",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "MonadexV1Router__InsufficientOutputAmount",
+    "inputs": [
+      {
+        "name": "amountOut",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "amountOutMin",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "MonadexV1Router__InsufficientTicketAmountReceived",
+    "inputs": [
+      {
+        "name": "ticketsReceived",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "minimumTicketsToReceive",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "MonadexV1Router__InvalidPath",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "MonadexV1Router__TokenNotSupportedByRaffle",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "MonadexV1Router__TransferFailed",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "SafeERC20FailedOperation",
+    "inputs": [
+      {
+        "name": "token",
+        "type": "address",
+        "internalType": "address"
+      }
+    ]
   }
 ]

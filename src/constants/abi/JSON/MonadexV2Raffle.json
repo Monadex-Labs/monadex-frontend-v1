@@ -8,9 +8,36 @@
         "internalType": "address[]"
       },
       {
-        "name": "_priceFeedIds",
-        "type": "bytes32[]",
-        "internalType": "bytes32[]"
+        "name": "_pythPriceFeedContract",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_priceFeedConfigs",
+        "type": "tuple[]",
+        "internalType": "struct MonadexV1Types.PriceFeedConfig[]",
+        "components": [
+          {
+            "name": "priceFeedId",
+            "type": "bytes32",
+            "internalType": "bytes32"
+          },
+          {
+            "name": "noOlderThan",
+            "type": "uint256",
+            "internalType": "uint256"
+          }
+        ]
+      },
+      {
+        "name": "_entropyContract",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_entropyProvider",
+        "type": "address",
+        "internalType": "address"
       },
       {
         "name": "_multipliersToPercentages",
@@ -47,15 +74,9 @@
         ]
       },
       {
-        "name": "_pythPriceFeedContract",
-        "type": "address",
-        "internalType": "address"
-      },
-      { "name": "_entropy", "type": "address", "internalType": "address" },
-      {
-        "name": "_entropyProvider",
-        "type": "address",
-        "internalType": "address"
+        "name": "_minimumParticipants",
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
     "stateMutability": "nonpayable"
@@ -64,9 +85,21 @@
     "type": "function",
     "name": "_entropyCallback",
     "inputs": [
-      { "name": "sequence", "type": "uint64", "internalType": "uint64" },
-      { "name": "provider", "type": "address", "internalType": "address" },
-      { "name": "randomNumber", "type": "bytes32", "internalType": "bytes32" }
+      {
+        "name": "sequence",
+        "type": "uint64",
+        "internalType": "uint64"
+      },
+      {
+        "name": "provider",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "randomNumber",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
     ],
     "outputs": [],
     "stateMutability": "nonpayable"
@@ -75,95 +108,229 @@
     "type": "function",
     "name": "allowance",
     "inputs": [
-      { "name": "owner", "type": "address", "internalType": "address" },
-      { "name": "spender", "type": "address", "internalType": "address" }
+      {
+        "name": "owner",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "spender",
+        "type": "address",
+        "internalType": "address"
+      }
     ],
-    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
     "stateMutability": "view"
   },
   {
     "type": "function",
     "name": "approve",
     "inputs": [
-      { "name": "spender", "type": "address", "internalType": "address" },
-      { "name": "value", "type": "uint256", "internalType": "uint256" }
+      {
+        "name": "spender",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "value",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
     ],
-    "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
     "name": "balanceOf",
     "inputs": [
-      { "name": "account", "type": "address", "internalType": "address" }
+      {
+        "name": "account",
+        "type": "address",
+        "internalType": "address"
+      }
     ],
-    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
     "stateMutability": "view"
   },
   {
     "type": "function",
     "name": "claimWinnings",
     "inputs": [
-      { "name": "_token", "type": "address", "internalType": "address" },
-      { "name": "_receiver", "type": "address", "internalType": "address" }
+      {
+        "name": "_token",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_receiver",
+        "type": "address",
+        "internalType": "address"
+      }
     ],
-    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
     "name": "decimals",
     "inputs": [],
-    "outputs": [{ "name": "", "type": "uint8", "internalType": "uint8" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint8",
+        "internalType": "uint8"
+      }
+    ],
     "stateMutability": "view"
   },
   {
     "type": "function",
-    "name": "drawWinners",
-    "inputs": [
+    "name": "drawWinnersAndAllocateRewards",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "getCurrentRandomNumber",
+    "inputs": [],
+    "outputs": [
       {
-        "name": "_userRandomNumber",
+        "name": "",
         "type": "bytes32",
         "internalType": "bytes32"
       }
     ],
-    "outputs": [],
-    "stateMutability": "payable"
+    "stateMutability": "view"
   },
   {
     "type": "function",
     "name": "getCurrentRangeEnd",
     "inputs": [],
-    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getCurrentSequenceNumber",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint64",
+        "internalType": "uint64"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getEntropyProvider",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
     "stateMutability": "view"
   },
   {
     "type": "function",
     "name": "getLastTimestamp",
     "inputs": [],
-    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
     "stateMutability": "view"
   },
   {
     "type": "function",
     "name": "getMaxMultipliers",
     "inputs": [],
-    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
     "stateMutability": "pure"
   },
   {
     "type": "function",
     "name": "getMaxTiers",
     "inputs": [],
-    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
     "stateMutability": "pure"
   },
   {
     "type": "function",
     "name": "getMaxWinners",
     "inputs": [],
-    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
     "stateMutability": "pure"
+  },
+  {
+    "type": "function",
+    "name": "getMinimumParticipantsForRaffle",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
   },
   {
     "type": "function",
@@ -198,53 +365,111 @@
   },
   {
     "type": "function",
-    "name": "getPriceFeedIdForToken",
-    "inputs": [
-      { "name": "_token", "type": "address", "internalType": "address" }
-    ],
-    "outputs": [{ "name": "", "type": "bytes32", "internalType": "bytes32" }],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
     "name": "getPricePerTicket",
     "inputs": [],
-    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
     "stateMutability": "pure"
   },
   {
     "type": "function",
-    "name": "getPythAddress",
+    "name": "getPythPriceFeedConfigForToken",
+    "inputs": [
+      {
+        "name": "_token",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "tuple",
+        "internalType": "struct MonadexV1Types.PriceFeedConfig",
+        "components": [
+          {
+            "name": "priceFeedId",
+            "type": "bytes32",
+            "internalType": "bytes32"
+          },
+          {
+            "name": "noOlderThan",
+            "type": "uint256",
+            "internalType": "uint256"
+          }
+        ]
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getPythPriceFeedContractAddress",
     "inputs": [],
-    "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
     "stateMutability": "view"
   },
   {
     "type": "function",
     "name": "getRaffleDuration",
     "inputs": [],
-    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
     "stateMutability": "pure"
   },
   {
     "type": "function",
     "name": "getRangeSize",
     "inputs": [],
-    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
     "stateMutability": "pure"
   },
   {
     "type": "function",
     "name": "getRegistrationPeriod",
     "inputs": [],
-    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
     "stateMutability": "pure"
   },
   {
     "type": "function",
     "name": "getRouterAddress",
     "inputs": [],
-    "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
     "stateMutability": "view"
   },
   {
@@ -252,7 +477,11 @@
     "name": "getSupportedTokens",
     "inputs": [],
     "outputs": [
-      { "name": "", "type": "address[]", "internalType": "address[]" }
+      {
+        "name": "",
+        "type": "address[]",
+        "internalType": "address[]"
+      }
     ],
     "stateMutability": "view"
   },
@@ -260,19 +489,81 @@
     "type": "function",
     "name": "getUserAtRangeStart",
     "inputs": [
-      { "name": "_rangeStart", "type": "uint256", "internalType": "uint256" }
+      {
+        "name": "_rangeStart",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
     ],
-    "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getWinningPortions",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "tuple[3]",
+        "internalType": "struct MonadexV1Types.Fee[3]",
+        "components": [
+          {
+            "name": "numerator",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "denominator",
+            "type": "uint256",
+            "internalType": "uint256"
+          }
+        ]
+      }
+    ],
     "stateMutability": "view"
   },
   {
     "type": "function",
     "name": "getWinnings",
     "inputs": [
-      { "name": "_user", "type": "address", "internalType": "address" },
-      { "name": "_token", "type": "address", "internalType": "address" }
+      {
+        "name": "_user",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_token",
+        "type": "address",
+        "internalType": "address"
+      }
     ],
-    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "hasRegistrationPeriodEnded",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
     "stateMutability": "view"
   },
   {
@@ -292,70 +583,158 @@
     "type": "function",
     "name": "isRegistrationOpen",
     "inputs": [],
-    "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
     "stateMutability": "view"
   },
   {
     "type": "function",
     "name": "isSupportedToken",
     "inputs": [
-      { "name": "_token", "type": "address", "internalType": "address" }
+      {
+        "name": "_token",
+        "type": "address",
+        "internalType": "address"
+      }
     ],
-    "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
     "stateMutability": "view"
   },
   {
     "type": "function",
     "name": "name",
     "inputs": [],
-    "outputs": [{ "name": "", "type": "string", "internalType": "string" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "string",
+        "internalType": "string"
+      }
+    ],
     "stateMutability": "view"
   },
   {
     "type": "function",
     "name": "owner",
     "inputs": [],
-    "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
     "stateMutability": "view"
   },
   {
     "type": "function",
     "name": "previewPurchase",
     "inputs": [
-      { "name": "_token", "type": "address", "internalType": "address" },
-      { "name": "_amount", "type": "uint256", "internalType": "uint256" },
+      {
+        "name": "_token",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
       {
         "name": "_multiplier",
         "type": "uint8",
         "internalType": "enum MonadexV1Types.Multipliers"
       }
     ],
-    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
     "stateMutability": "view"
   },
   {
     "type": "function",
     "name": "purchaseTickets",
     "inputs": [
-      { "name": "_token", "type": "address", "internalType": "address" },
-      { "name": "_amount", "type": "uint256", "internalType": "uint256" },
+      {
+        "name": "_swapper",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_token",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
       {
         "name": "_multiplier",
         "type": "uint8",
         "internalType": "enum MonadexV1Types.Multipliers"
       },
-      { "name": "_receiver", "type": "address", "internalType": "address" }
+      {
+        "name": "_receiver",
+        "type": "address",
+        "internalType": "address"
+      }
     ],
-    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
     "name": "register",
     "inputs": [
-      { "name": "_amount", "type": "uint256", "internalType": "uint256" }
+      {
+        "name": "_amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
     ],
-    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "removeToken",
+    "inputs": [
+      {
+        "name": "_token",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
@@ -367,13 +746,48 @@
   },
   {
     "type": "function",
-    "name": "supportToken",
+    "name": "requestRandomNumber",
     "inputs": [
-      { "name": "_token", "type": "address", "internalType": "address" },
       {
-        "name": "_pythPriceFeedId",
+        "name": "_userRandomNumber",
         "type": "bytes32",
         "internalType": "bytes32"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint64",
+        "internalType": "uint64"
+      }
+    ],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "supportToken",
+    "inputs": [
+      {
+        "name": "_token",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_pythPriceFeedConfig",
+        "type": "tuple",
+        "internalType": "struct MonadexV1Types.PriceFeedConfig",
+        "components": [
+          {
+            "name": "priceFeedId",
+            "type": "bytes32",
+            "internalType": "bytes32"
+          },
+          {
+            "name": "noOlderThan",
+            "type": "uint256",
+            "internalType": "uint256"
+          }
+        ]
       }
     ],
     "outputs": [],
@@ -383,42 +797,90 @@
     "type": "function",
     "name": "symbol",
     "inputs": [],
-    "outputs": [{ "name": "", "type": "string", "internalType": "string" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "string",
+        "internalType": "string"
+      }
+    ],
     "stateMutability": "view"
   },
   {
     "type": "function",
     "name": "totalSupply",
     "inputs": [],
-    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
     "stateMutability": "view"
   },
   {
     "type": "function",
     "name": "transfer",
     "inputs": [
-      { "name": "to", "type": "address", "internalType": "address" },
-      { "name": "value", "type": "uint256", "internalType": "uint256" }
+      {
+        "name": "to",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "value",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
     ],
-    "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
     "name": "transferFrom",
     "inputs": [
-      { "name": "from", "type": "address", "internalType": "address" },
-      { "name": "to", "type": "address", "internalType": "address" },
-      { "name": "value", "type": "uint256", "internalType": "uint256" }
+      {
+        "name": "from",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "to",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "value",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
     ],
-    "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
     "name": "transferOwnership",
     "inputs": [
-      { "name": "newOwner", "type": "address", "internalType": "address" }
+      {
+        "name": "newOwner",
+        "type": "address",
+        "internalType": "address"
+      }
     ],
     "outputs": [],
     "stateMutability": "nonpayable"
@@ -444,19 +906,6 @@
         "type": "uint256",
         "indexed": false,
         "internalType": "uint256"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "DrawRequested",
-    "inputs": [
-      {
-        "name": "sequenceNumber",
-        "type": "uint64",
-        "indexed": false,
-        "internalType": "uint64"
       }
     ],
     "anonymous": false
@@ -491,7 +940,51 @@
         "internalType": "address"
       },
       {
-        "name": "priceFeedD",
+        "name": "priceFeedConfig",
+        "type": "tuple",
+        "indexed": true,
+        "internalType": "struct MonadexV1Types.PriceFeedConfig",
+        "components": [
+          {
+            "name": "priceFeedId",
+            "type": "bytes32",
+            "internalType": "bytes32"
+          },
+          {
+            "name": "noOlderThan",
+            "type": "uint256",
+            "internalType": "uint256"
+          }
+        ]
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "RandomNumberRequested",
+    "inputs": [
+      {
+        "name": "sequenceNumber",
+        "type": "uint64",
+        "indexed": true,
+        "internalType": "uint64"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "RandomNumberSupplied",
+    "inputs": [
+      {
+        "name": "currentSequenceNumber",
+        "type": "uint64",
+        "indexed": true,
+        "internalType": "uint64"
+      },
+      {
+        "name": "currentRandomNumber",
         "type": "bytes32",
         "indexed": true,
         "internalType": "bytes32"
@@ -538,7 +1031,7 @@
       {
         "name": "router",
         "type": "address",
-        "indexed": false,
+        "indexed": true,
         "internalType": "address"
       }
     ],
@@ -549,16 +1042,47 @@
     "name": "TicketsPurchased",
     "inputs": [
       {
+        "name": "by",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "token",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
         "name": "receiver",
         "type": "address",
         "indexed": true,
         "internalType": "address"
       },
       {
-        "name": "amount",
+        "name": "ticketsMinted",
         "type": "uint256",
         "indexed": true,
         "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "TokenRemoved",
+    "inputs": [
+      {
+        "name": "token",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
       }
     ],
     "anonymous": false
@@ -574,10 +1098,22 @@
         "internalType": "address"
       },
       {
-        "name": "pythPriceFeedID",
-        "type": "bytes32",
+        "name": "pythPriceFeedConfig",
+        "type": "tuple",
         "indexed": true,
-        "internalType": "bytes32"
+        "internalType": "struct MonadexV1Types.PriceFeedConfig",
+        "components": [
+          {
+            "name": "priceFeedId",
+            "type": "bytes32",
+            "internalType": "bytes32"
+          },
+          {
+            "name": "noOlderThan",
+            "type": "uint256",
+            "internalType": "uint256"
+          }
+        ]
       }
     ],
     "anonymous": false
@@ -655,63 +1191,136 @@
     "type": "error",
     "name": "AddressEmptyCode",
     "inputs": [
-      { "name": "target", "type": "address", "internalType": "address" }
+      {
+        "name": "target",
+        "type": "address",
+        "internalType": "address"
+      }
     ]
   },
   {
     "type": "error",
     "name": "AddressInsufficientBalance",
     "inputs": [
-      { "name": "account", "type": "address", "internalType": "address" }
+      {
+        "name": "account",
+        "type": "address",
+        "internalType": "address"
+      }
     ]
   },
   {
     "type": "error",
     "name": "ERC20InsufficientAllowance",
     "inputs": [
-      { "name": "spender", "type": "address", "internalType": "address" },
-      { "name": "allowance", "type": "uint256", "internalType": "uint256" },
-      { "name": "needed", "type": "uint256", "internalType": "uint256" }
+      {
+        "name": "spender",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "allowance",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "needed",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
     ]
   },
   {
     "type": "error",
     "name": "ERC20InsufficientBalance",
     "inputs": [
-      { "name": "sender", "type": "address", "internalType": "address" },
-      { "name": "balance", "type": "uint256", "internalType": "uint256" },
-      { "name": "needed", "type": "uint256", "internalType": "uint256" }
+      {
+        "name": "sender",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "balance",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "needed",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
     ]
   },
   {
     "type": "error",
     "name": "ERC20InvalidApprover",
     "inputs": [
-      { "name": "approver", "type": "address", "internalType": "address" }
+      {
+        "name": "approver",
+        "type": "address",
+        "internalType": "address"
+      }
     ]
   },
   {
     "type": "error",
     "name": "ERC20InvalidReceiver",
     "inputs": [
-      { "name": "receiver", "type": "address", "internalType": "address" }
+      {
+        "name": "receiver",
+        "type": "address",
+        "internalType": "address"
+      }
     ]
   },
   {
     "type": "error",
     "name": "ERC20InvalidSender",
     "inputs": [
-      { "name": "sender", "type": "address", "internalType": "address" }
+      {
+        "name": "sender",
+        "type": "address",
+        "internalType": "address"
+      }
     ]
   },
   {
     "type": "error",
     "name": "ERC20InvalidSpender",
     "inputs": [
-      { "name": "spender", "type": "address", "internalType": "address" }
+      {
+        "name": "spender",
+        "type": "address",
+        "internalType": "address"
+      }
     ]
   },
-  { "type": "error", "name": "FailedInnerCall", "inputs": [] },
+  {
+    "type": "error",
+    "name": "FailedInnerCall",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "MonadexV1Raffle__CannotRemoveTokenYet",
+    "inputs": [
+      {
+        "name": "token",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "currentBalance",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "MonadexV1Raffle__CannotRequestRandomNumberYet",
+    "inputs": []
+  },
   {
     "type": "error",
     "name": "MonadexV1Raffle__DrawNotAllowedYet",
@@ -720,7 +1329,18 @@
   {
     "type": "error",
     "name": "MonadexV1Raffle__InsufficientEntries",
-    "inputs": []
+    "inputs": [
+      {
+        "name": "numberOfParticipants",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "minimumParticipantsRequired",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
   },
   {
     "type": "error",
@@ -735,7 +1355,18 @@
   {
     "type": "error",
     "name": "MonadexV1Raffle__NotEnoughBalance",
-    "inputs": []
+    "inputs": [
+      {
+        "name": "ticketsToBurn",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "actualBalance",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
   },
   {
     "type": "error",
@@ -747,53 +1378,128 @@
     "name": "MonadexV1Raffle__NotOpenForRegistration",
     "inputs": []
   },
-  { "type": "error", "name": "MonadexV1Raffle__NotRouter", "inputs": [] },
+  {
+    "type": "error",
+    "name": "MonadexV1Raffle__NotRouter",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "MonadexV1Raffle__RandomNumberAlreadyRequested",
+    "inputs": [
+      {
+        "name": "sequenceNumber",
+        "type": "uint64",
+        "internalType": "uint64"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "MonadexV1Raffle__RandomNumberAlreadySupplied",
+    "inputs": [
+      {
+        "name": "randomNumber",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ]
+  },
   {
     "type": "error",
     "name": "MonadexV1Raffle__RouterAddressAlreadyInitialised",
     "inputs": [
-      { "name": "router", "type": "address", "internalType": "address" }
+      {
+        "name": "router",
+        "type": "address",
+        "internalType": "address"
+      }
     ]
   },
   {
     "type": "error",
     "name": "MonadexV1Raffle__SequenceNumbersDoNotMatch",
-    "inputs": []
+    "inputs": [
+      {
+        "name": "suppliedSequenceNumber",
+        "type": "uint64",
+        "internalType": "uint64"
+      },
+      {
+        "name": "currentSequenceNumber",
+        "type": "uint64",
+        "internalType": "uint64"
+      }
+    ]
   },
   {
     "type": "error",
     "name": "MonadexV1Raffle__TokenAlreadySupported",
-    "inputs": []
+    "inputs": [
+      {
+        "name": "token",
+        "type": "address",
+        "internalType": "address"
+      }
+    ]
   },
   {
     "type": "error",
     "name": "MonadexV1Raffle__TokenNotSupported",
     "inputs": [
-      { "name": "token", "type": "address", "internalType": "address" }
+      {
+        "name": "token",
+        "type": "address",
+        "internalType": "address"
+      }
     ]
   },
-  { "type": "error", "name": "MonadexV1Raffle__ZeroAmount", "inputs": [] },
-  { "type": "error", "name": "MonadexV1Raffle__ZeroTickets", "inputs": [] },
-  { "type": "error", "name": "MonadexV1Raffle__ZeroWinnings", "inputs": [] },
+  {
+    "type": "error",
+    "name": "MonadexV1Raffle__ZeroAmount",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "MonadexV1Raffle__ZeroTickets",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "MonadexV1Raffle__ZeroWinnings",
+    "inputs": []
+  },
   {
     "type": "error",
     "name": "OwnableInvalidOwner",
     "inputs": [
-      { "name": "owner", "type": "address", "internalType": "address" }
+      {
+        "name": "owner",
+        "type": "address",
+        "internalType": "address"
+      }
     ]
   },
   {
     "type": "error",
     "name": "OwnableUnauthorizedAccount",
     "inputs": [
-      { "name": "account", "type": "address", "internalType": "address" }
+      {
+        "name": "account",
+        "type": "address",
+        "internalType": "address"
+      }
     ]
   },
   {
     "type": "error",
     "name": "SafeERC20FailedOperation",
     "inputs": [
-      { "name": "token", "type": "address", "internalType": "address" }
+      {
+        "name": "token",
+        "type": "address",
+        "internalType": "address"
+      }
     ]
   }
 ]
