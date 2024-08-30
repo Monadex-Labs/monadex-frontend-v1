@@ -16,7 +16,6 @@ const Base: React.FC<any> = ({ classNames, children, ...rest }: ButtonProps) => 
     <button
       {...rest}
       className={cn('bg-primary hover:bg-primary/50 text-white focus:shadow-md text-sm px-5 py-2.5 text-center rounded-sm', classNames)}
-
     >
       {children}
     </button>
@@ -78,7 +77,6 @@ export const ConnectButton: React.FC<any> = ({ classNames, children, ...rest }: 
         className={cn('flex p-2 items-center justify-center gap-4 text-white bg-primary hover:bg-primary/50 focus:outline-none focus:ring-4 focus:ring-primary/50 font-medium rounded-full text-sm px-5 py-2.5 text-center', classNames)}
         {...rest}
       >
-
         {connecting
           ? 'Connecting'
           : (walletAddress != null)

@@ -184,10 +184,6 @@ const AddLiquidity: React.FC<{
     chainId ? V1_ROUTER_ADDRESS[chainId] : undefined
   )
 
-  const userPoolBalance = useTokenBalance(
-    account ?? undefined,
-    pair?.liquidityToken
-  )
   const atMaxAmounts: { [field in Field]?: TokenAmount } = [
     Field.CURRENCY_A,
     Field.CURRENCY_B
