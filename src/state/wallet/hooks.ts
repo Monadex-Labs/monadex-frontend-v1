@@ -1,35 +1,62 @@
-import { ChainId, CurrencyAmount, ETH, JSBI, NativeCurrency, Token, TokenAmount } from '@monadex/sdk'
+import {
+  ChainId,
+  CurrencyAmount,
+  ETH,
+  JSBI,
+  NativeCurrency,
+  Token,
+  TokenAmount
+} from '@monadex/sdk'
 import { useMemo } from 'react'
 import { ERC20_INTERFACE } from '../../constants/index'
 import { isAddress } from 'viem'
-import { isAddress as utilsAddess} from '@/utils'
-import { useMultipleContractSingleData, useSingleContractMultipleData } from '../multicall/hooks'
-import { useWalletData } from '@/utils'
+import { isAddress as utilsAddess, useWalletData } from '@/utils'
+import {
+  useMultipleContractSingleData,
+  useSingleContractMultipleData
+} from '../multicall/hooks'
 import { useAllTokens } from '@/hooks/Tokens'
 import { useMulticallContract } from '@/hooks/useContracts'
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.
-*/
+ */
 export function useTokenBalancesWithLoadingIndicator (
   address?: string,
   tokens?: Array<Token | undefined>
 ): [{ [tokenAddress: string]: TokenAmount | undefined }, boolean] {
   const validatedTokens: Token[] = useMemo(
-    () => tokens?.filter((t?: Token): t is Token => t?.address !== undefined ? isAddress(t?.address) : false) ?? [],
+    () =>
+      tokens?.filter((t?: Token): t is Token =>
+        t?.address !== undefined ? isAddress(t?.address) : false
+      ) ?? [],
     [tokens]
   )
-  const validatedTokenAddresses = useMemo(() => validatedTokens.map((vt) => vt.address), [validatedTokens])
+  const validatedTokenAddresses = useMemo(
+    () => validatedTokens.map(vt => vt.address),
+    [validatedTokens]
+  )
 
-  const balances = useMultipleContractSingleData(validatedTokenAddresses, ERC20_INTERFACE, 'balanceOf', [address])
+  const balances = useMultipleContractSingleData(
+    validatedTokenAddresses,
+    ERC20_INTERFACE,
+    'balanceOf',
+    [address]
+  )
 
-  const anyLoading: boolean = useMemo(() => balances.some((callState) => callState.loading), [balances])
+  const anyLoading: boolean = useMemo(
+    () => balances.some(callState => callState.loading),
+    [balances]
+  )
   return [
     useMemo(
       () =>
         address !== undefined && validatedTokens.length > 0
-          ? validatedTokens.reduce<{ [tokenAddress: string]: TokenAmount | undefined }>((memo, token, i) => {
+          ? validatedTokens.reduce<{
+            [tokenAddress: string]: TokenAmount | undefined
+          }>((memo, token, i) => {
             const value = balances?.[i]?.result?.[0]
-            const amount = value != null ? JSBI.BigInt(value.toString()) : undefined
+            const amount =
+              value != null ? JSBI.BigInt(value.toString()) : undefined
             if (amount !== undefined) {
               memo[token.address] = new TokenAmount(token, amount)
             }
@@ -48,52 +75,58 @@ export function useTokenBalances (
   return useTokenBalancesWithLoadingIndicator(address, tokens)[0]
 }
 
-export function useTokenBalance (account?: string, token?: Token): TokenAmount | undefined {
+export function useTokenBalance (
+  account?: string,
+  token?: Token
+): TokenAmount | undefined {
   const tokenBalances = useTokenBalances(account, [token])
   if (token == null || token === undefined) return undefined
   return tokenBalances[token.address]
 }
 
-export function useCurrencyBalances (account?: string, currencies?: Array<NativeCurrency | Token | undefined>): Array<CurrencyAmount | undefined> {
-  const {chainId} = useWalletData()
-  const chainIdToUse = chainId ? chainId : ChainId.SEPOLIA;
+export function useCurrencyBalances (
+  account?: string,
+  currencies?: Array<NativeCurrency | Token | undefined>
+): Array<CurrencyAmount | undefined> {
+  const { chainId } = useWalletData()
+  const chainIdToUse = chainId ?? ChainId.SEPOLIA
 
-  const nativeCurrency =  ETH
+  const nativeCurrency = ETH
   const tokens = useMemo(
     () =>
       currencies
-        ?.filter((currency) => currency !== nativeCurrency)
-        .map((currency) => currency as Token) ?? [],
-    [currencies, nativeCurrency],
+        ?.filter(currency => currency !== nativeCurrency)
+        .map(currency => currency as Token) ?? [],
+    [currencies, nativeCurrency]
   )
   const tokenBalances = useTokenBalances(account, tokens)
   const containsETH: boolean = useMemo(
-    () => currencies?.some((currency) => currency === nativeCurrency) ?? false,
-    [currencies, nativeCurrency],
+    () => currencies?.some(currency => currency === nativeCurrency) ?? false,
+    [currencies, nativeCurrency]
   )
-  const ethBalance = useMNDBalance(chainIdToUse, containsETH ? [account] : []);
+  const ethBalance = useMNDBalance(chainIdToUse, containsETH ? [account] : [])
 
   return useMemo(
     () =>
-      currencies?.map((currency) => {
+      currencies?.map(currency => {
         if (account == null || currency == null) return undefined
-        // weird error here : ethBalance[account] returns undefined even if account is not undefined , if you hardcode your address account on ethBalance you will have the value expected 
+        // weird error here : ethBalance[account] returns undefined even if account is not undefined , if you hardcode your address account on ethBalance you will have the value expected
         if (currency === nativeCurrency) {
           const checksummed = utilsAddess(account)
           const address = typeof checksummed === 'boolean' ? '' : checksummed
           return ethBalance[address]
         }
         if (currency) {
-          const address = (currency as Token).address;
+          const address = (currency as Token).address
           if (!address) {
             return undefined
           }
-          return tokenBalances[address];
+          return tokenBalances[address]
         }
         return undefined
       }) ?? [],
     [account, currencies, tokenBalances, ethBalance, nativeCurrency]
-  ) 
+  )
 }
 
 export function useCurrencyBalance (
@@ -109,51 +142,50 @@ export function useAllTokenBalances (): {
 } {
   const { account } = useWalletData()
   const allTokens = useAllTokens()
-  const allTokensArray = useMemo(() => Object.values(allTokens ?? {}), [
-    allTokens
-  ])
+  const allTokensArray = useMemo(
+    () => Object.values(allTokens ?? {}),
+    [allTokens]
+  )
   const balances = useTokenBalances(account ?? undefined, allTokensArray)
   return balances ?? {}
 }
 
 export function useMNDBalance (
   chainId: ChainId,
-  uncheckedAddresses?: (string | undefined)[]
+  uncheckedAddresses?: Array<string | undefined>
 ): {
-  [address : string] : CurrencyAmount | undefined
-} {
-const multicallContract = useMulticallContract()
+    [address: string]: CurrencyAmount | undefined
+  } {
+  const multicallContract = useMulticallContract()
 
-const addresses: string[] = useMemo(
-  () =>
-    uncheckedAddresses
-      ? uncheckedAddresses
+  const addresses: string[] = useMemo(
+    () =>
+      uncheckedAddresses
+        ? uncheckedAddresses
           .map(utilsAddess)
           .filter((a): a is string => a !== false)
           .sort()
-      : [],
-  [uncheckedAddresses],
-)
-const results = useSingleContractMultipleData(
-  multicallContract,
-  'getEthBalance',
-  addresses.map((address) => [address]),
-)
+        : [],
+    [uncheckedAddresses]
+  )
+  const results = useSingleContractMultipleData(
+    multicallContract,
+    'getEthBalance',
+    addresses.map(address => [address])
+  )
 
-return useMemo(
-  () =>
-    addresses.reduce<{ [address: string]: CurrencyAmount }>(
-      (memo, address, i) => {
-        const value = results?.[i]?.result?.[0];
-        if (value) {
-          memo[address] = CurrencyAmount.ether(
-            JSBI.BigInt(value.toString())
-          );
-        }
-        return memo;
-      },
-      {},
-    ),
-  [addresses, results, chainId],
-)
+  return useMemo(
+    () =>
+      addresses.reduce<{ [address: string]: CurrencyAmount }>(
+        (memo, address, i) => {
+          const value = results?.[i]?.result?.[0]
+          if (value) {
+            memo[address] = CurrencyAmount.ether(JSBI.BigInt(value.toString()))
+          }
+          return memo
+        },
+        {}
+      ),
+    [addresses, results, chainId]
+  )
 }
