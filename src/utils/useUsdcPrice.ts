@@ -1,28 +1,37 @@
-import { NativeCurrency, Price, Token, Trade } from '@monadex/sdk'
+import { NativeCurrency, Price, Token, TokenAmount, Trade } from '@monadex/sdk'
 import { useWalletData } from './index'
 import { tryParseAmount } from '@/state/swap/hooks'
 import { USDC } from '@/constants'
 import { useMemo } from 'react'
 import { useAllCommonPairs } from '@/hooks/Trades'
+
+/**
+ * Returns the price in USDC of the input currency
+ * @param currency currency to compute the USDC price of
+ */
+
 export default function useUSDCPrice (currency?: Token | NativeCurrency): Price | undefined {
   const { chainId } = useWalletData()
-  const amountOut = (chainId !== undefined)
+  const amountOut = chainId
     ? tryParseAmount('1', USDC[chainId])
-    : undefined
+    : undefined;
 
-  const allowedPairs = useAllCommonPairs(currency, USDC[chainId])
+  const allowedPairs = useAllCommonPairs(currency, USDC[chainId]);
   return useMemo(() => {
-    if (!currency || !amountOut || !allowedPairs.length) { // eslint-disable-line
-      return undefined
+    if (!currency || !amountOut || !allowedPairs.length) {
+      return undefined;
     }
-    const trade =
-    Trade.bestTradeExactOut(allowedPairs, currency, amountOut, {
-      maxHops: 3,
-      maxNumResults: 1
-    })[0] ?? null
 
-    if (!trade) return // eslint-disable-line
-    const { numerator, denominator } = trade.route.midPrice
+    const trade =
+      Trade.bestTradeExactOut(allowedPairs, currency, amountOut, {
+        maxHops: 3,
+        maxNumResults: 1,
+      })[0] ?? null;
+
+    if (!trade) return;
+
+    const { numerator, denominator } = trade.route.midPrice;
+
     return new Price(currency, USDC[chainId], denominator, numerator)
   }, [currency, allowedPairs, amountOut, chainId])
 }

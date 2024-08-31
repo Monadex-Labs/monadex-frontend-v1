@@ -44,6 +44,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
     currency
   )
   const usdPriceV2 = Number(useUSDCPrice(currency)?.toSignificant() ?? 0)
+  console.log('usdc Price', usdPriceV2)
   const usdPrice = usdPriceV2
   return (
     <div

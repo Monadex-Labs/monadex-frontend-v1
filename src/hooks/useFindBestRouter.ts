@@ -59,8 +59,9 @@ const useFindBestRoute = (): {
     swapDelay,
     onSwapDelay
   )
+
   const v2Trade = isExactIn ? bestTradeExactIn : bestTradeExactOut
- 
+  console.log('exact', isExactIn)
   const swapCalls = useSwapCallArguments(
     v2Trade ?? undefined,
     allowedSlippage,

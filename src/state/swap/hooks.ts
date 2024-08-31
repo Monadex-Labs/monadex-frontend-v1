@@ -363,7 +363,6 @@ export function useDefaultsFromURLSearch ():
   useEffect(() => {
     if (!chainId) return // eslint-disable-line
     const parsed = queryParametersToSwapState(parsedQs)
-    console.log('PARSED',parsed)
     dispatch(
       replaceSwapState({
         typedValue: parsed.typedValue,
@@ -382,7 +381,7 @@ export function useDefaultsFromURLSearch ():
       inputCurrencyId: parsed[Field.INPUT].currencyId,
       outputCurrencyId: parsed[Field.OUTPUT].currencyId
     })
-  }, [dispatch, chainId, parsedQs])
+  }, [dispatch, chainId])
 
   return result
 }

@@ -9,7 +9,7 @@ const Footer:React.FC = () => {
    const blockNumber = useBlockNumber()
    return (
 
-    <div className='p-4  mt-10'>
+    <div className='p-4  mt-10 absolute bottom-0 w-full'>
     <div className='flex justify-around p-4  max-w-[90%] mx-auto'>
          <section className='flex  p-2 flex-col'>
             <h3 className='text-gray-400'>Community</h3>

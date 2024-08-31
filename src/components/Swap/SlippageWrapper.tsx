@@ -27,9 +27,10 @@ export const SlippageWrapper: React.FC = () => {
   }, [allowedSlippage])
 
   return (
-    <small className='text-xs font-medium'>
+    <small className='text-xs font-medium px-3 py-2 rounded-full bg-bgColor text-highlight bg-opacity-50 font-semibold'>
       {`${slippage === SLIPPAGE_AUTO ? 'Auto' : slippage / 100} %`}{' '}
       slippage
     </small>
   )
 }
+// 0xa15C94e0b133111878EA3256aBd5dF22E50B7240

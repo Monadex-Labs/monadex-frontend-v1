@@ -23,6 +23,11 @@ const config: Config = {
       colors: {
         'bgColor': '#160238',
         'primary': '#836EF9',
+        'text-error' : '#FF1010',
+        'text-yellow' : '#F3EC5D',
+        'text-blueviolet' : '#5D6EF3',
+        'text-success' : '#74DE1D',
+        'highlight': '#8438FF',
         'primary2': '#6453c6',
         'secondary1': '#22064f',
         'secondary2': '#1F0050',

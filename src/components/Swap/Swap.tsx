@@ -591,39 +591,8 @@ const Swap: React.FC<{
         : (
           <AdvancedSwapDetails trade={trade} />
           )}
-      <Box className=''>
-        {showApproveFlow && (
-          <Box width='48%'>
-            <Button
-              className='w-full'
-              disabled={
-                approving ||
-                approval !== ApprovalState.NOT_APPROVED ||
-                approvalSubmitted
-              }
-              onClick={() => {
-                void handleApprove()
-              }}
-            >
-              {approvalSubmitted && approval !== ApprovalState.APPROVED
-                ? (
-                  <Box className='border'>
-                    Approving <CircularProgress size={16} />
-                  </Box>
-                  )
-                : approvalSubmitted && approval === ApprovalState.APPROVED
-                  ? (
-                      'Approved'
-                    )
-                  : (
-                `Approve ${
-                  currencies[Field.INPUT]?.symbol ?? '[INVALID SYMBOL]'
-                }`
-                    )}
-            </Button>
-          </Box>
-        )}
-        <Box width={showApproveFlow ? '48%' : '100%'}>
+      <Box>
+        <Box>
           <SwapButton
             account={account}
             isSupportedNetwork={isSupportedNetwork}
@@ -642,6 +611,7 @@ const Swap: React.FC<{
             isValid={isValid}
             approval={approval}
             onSwap={onSwap}
+            handleApprove={handleApprove}
           />
         </Box>
       </Box>

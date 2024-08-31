@@ -31,14 +31,14 @@ export const TradeSummary: React.FC<TradeSummaryProps> = ({
   const tradeAmount = isExactIn ? trade.outputAmount : trade.inputAmount
 
   return (
-    <Box mt={1.5} className='rounded-sm font-fira flex flex-col p-3 text-textSecondary transition duration-150 ease-in-out'>
+    <Box mt={1.5} className='rounded-sm  flex flex-col p-3 text-textSecondary transition duration-150 ease-in-out'>
       {openSettingsModal && (
         <SettingsModal
           open={openSettingsModal}
           onClose={() => setOpenSettingsModal(false)}
         />
       )}
-      <Box className='flex justify-between items-center'>
+      <Box className='flex justify-between items-center font-semibold text-primary underline underline-offset-3 decoration-dotted	'>
         <Box className='flex gap-2'>
           <QuestionHelper text='Your transaction will revert if the price changes unfavorably by more than this percentage.' />
           <small>Max Slippage:</small>
@@ -51,7 +51,7 @@ export const TradeSummary: React.FC<TradeSummaryProps> = ({
           <MdEdit />
         </Box>
       </Box>
-      <Box className=''>
+      <Box className='mt-3'>
         <Box className='py-2 flex justify-between items-center'>
           <div className='flex gap-2'>
             <QuestionHelper text='Your transaction will revert if there is a large, unfavorable price movement before it is confirmed.' />
@@ -84,7 +84,7 @@ export const TradeSummary: React.FC<TradeSummaryProps> = ({
           </small>
         </Box>
         <Box className='py-2 flex justify-between'>
-          <Box className='flex gap-2'>
+          <Box className='flex gap-2 items-center'>
             <QuestionHelper text='Routing through these tokens resulted in the best price for your trade.' />
             <small>Route:</small>
           </Box>

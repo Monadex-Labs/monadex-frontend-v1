@@ -5,10 +5,11 @@ import { ApprovalState } from '@/hooks/useApproveCallback'
 import { WrapType } from '@/hooks/useWrapCallback'
 import { ChainId, ETH, NativeCurrency, Token, WMND, currencyEquals } from '@monadex/sdk'
 import { Field } from '@/state/swap/actions'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { Button } from '@mui/base'
 import { useConnectWallet } from '@web3-onboard/react'
 import { useWalletData } from '@/utils'
+import { Box, CircularProgress } from '@mui/material'
 
 interface Props {
   account: string
@@ -22,6 +23,7 @@ interface Props {
   }
   showWrap: boolean
   noRoute: boolean
+  handleApprove: () => Promise<void>
   userHasSpecifiedInputOutput: boolean
   priceImpactSeverity: 0 | 4 | 3 | 1 | 2
   wrapInputError: string | undefined
@@ -53,50 +55,55 @@ const SwapButton = (props: Props): JSX.Element => {
     showApproveFlow,
     isValid,
     approval,
-    onSwap
+    onSwap,
+    handleApprove
   } = props
 
   const [, connect] = useConnectWallet()
   const { isConnected } = useWalletData()
-  const [swapButtonText, setSwapButtonText] = useState('Swap')
-  const [swapButtonDisabled, setSwapButtonDisabled] = useState(true)
+  const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
 
-  useEffect(() => {
-    if (account) {
-      if (!isSupportedNetwork) setSwapButtonText('Switch Network')
-      if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) {
-        setSwapButtonText('Select a token')
-      } else if (
-        formattedAmounts[Field.INPUT] === '' &&
-        formattedAmounts[Field.OUTPUT] === ''
-      ) {
-        setSwapButtonText('Enter Amount')
-      } else if (showWrap) {
-        if (wrapInputError) setSwapButtonText(wrapInputError)
-        setSwapButtonText(
-          wrapType === WrapType.WRAP
-            ? `Wrap Monad ${ETH.symbol ?? '[INVALID SYMBOL]'}`
-            : wrapType === WrapType.UNWRAP
-              ? `Unwrap Monad ${WMND[chainId].symbol ?? '[INVALID SYMBOL]'}`
-              : wrapType === WrapType.WRAPPING
-                ? `Wrapping Monad ${ETH.symbol ?? '[INVALID SYMBOL]'}`
-                : wrapType === WrapType.UNWRAPPING
-                  ? `Unwrapping Monad ${WMND[chainId].symbol ?? '[INVALID SYMBOL]'}`
-                  : ''
-        )
-      } else if (noRoute && userHasSpecifiedInputOutput) {
-        setSwapButtonText('Insufficient liquidity for this trade.')
-      } else if (priceImpactSeverity > 3) {
-        setSwapButtonText(
-          `Price impact is more than ${Number(
-            ALLOWED_PRICE_IMPACT_HIGH.multiply('100').toFixed(4)
-          )}`
-        )
-      } else {
-        setSwapButtonText(swapInputError ?? swapCallbackError ?? 'Swap')
+  const buttonState = useMemo(() => {
+    if (!account) return { text: 'Connect Wallet', action: connect, disabled: false }
+    if (!isSupportedNetwork) return { text: 'Switch Network', action: () => {}, disabled: false }
+    if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) return { text: 'Select a token', action: () => {}, disabled: true }
+    if (formattedAmounts[Field.INPUT] === '' && formattedAmounts[Field.OUTPUT] === '') return { text: 'Enter Amount', action: () => {}, disabled: true }
+    
+    if (showWrap) {
+      if (wrapInputError) return { text: wrapInputError, action: () => {}, disabled: true }
+      const wrapText = wrapType === WrapType.WRAP ? `Wrap` : wrapType === WrapType.UNWRAP ? `Unwrap` : ''
+      const symbol = wrapType === WrapType.WRAP ? ETH.symbol : WMND[chainId].symbol
+      return { 
+        text: `${wrapText} Monad ${symbol ?? '[INVALID SYMBOL]'}`,
+        action: onSwap,
+        disabled: wrapType === WrapType.WRAPPING || wrapType === WrapType.UNWRAPPING
       }
-    } else {
-      setSwapButtonText('Connect Wallet')
+    }
+
+    if (noRoute && userHasSpecifiedInputOutput) return { text: 'Insufficient liquidity for this trade.', action: () => {}, disabled: true }
+    if (priceImpactSeverity > 3) return { 
+      text: `Price impact is more than ${Number(ALLOWED_PRICE_IMPACT_HIGH.multiply('100').toFixed(4))}`,
+      action: () => {},
+      disabled: true
+    }
+
+    switch (approval) {
+      case ApprovalState.PENDING:
+        return { text: 'Approving', action: () => {}, disabled: true }
+      case ApprovalState.NOT_APPROVED:
+        return { 
+          text: `Approve ${currencies[Field.INPUT]?.symbol ?? '[INVALID SYMBOL]'}`,
+          action: handleApprove,
+          disabled: false
+        }
+      case ApprovalState.APPROVED:
+        return { 
+          text: swapInputError ?? swapCallbackError ?? 'Swap',
+          action: onSwap,
+          disabled: !isValid || !!swapCallbackError
+        }
+      default:
+        return { text: 'Unknown approval state', action: () => {}, disabled: true }
     }
   }, [
     account,
@@ -111,67 +118,34 @@ const SwapButton = (props: Props): JSX.Element => {
     wrapType,
     chainId,
     swapInputError,
-    swapCallbackError
-  ])
-
-  useEffect(() => {
-    const inputCurrency = currencies[Field.INPUT]
-
-    if (account) {
-      if (!isSupportedNetwork) setSwapButtonDisabled(false)
-      if (showWrap) {
-        setSwapButtonDisabled(
-          Boolean(wrapInputError) ||
-            wrapType === WrapType.WRAPPING ||
-            wrapType === WrapType.UNWRAPPING
-        )
-      } else if (noRoute && userHasSpecifiedInputOutput) {
-        setSwapButtonDisabled(true)
-      } else if (showApproveFlow) {
-        setSwapButtonDisabled(
-          !isValid ||
-            approval !== ApprovalState.APPROVED ||
-            priceImpactSeverity > 3
-        )
-      } else {
-        setSwapButtonDisabled(
-          (inputCurrency &&
-            chainId &&
-            currencyEquals(inputCurrency, ETH) &&
-            approval === ApprovalState.UNKNOWN) ||
-            !isValid ||
-            priceImpactSeverity > 3 ||
-            !!swapCallbackError
-        )
-      }
-    } else {
-      setSwapButtonDisabled(false)
-    }
-  }, [
-    currencies,
-    account,
-    isSupportedNetwork,
-    showWrap,
-    noRoute,
-    userHasSpecifiedInputOutput,
-    showApproveFlow,
-    wrapInputError,
-    wrapType,
-    isValid,
+    swapCallbackError,
     approval,
-    priceImpactSeverity,
-    chainId,
-    swapCallbackError
+    isValid,
+    onSwap,
+    handleApprove,
+    connect
   ])
+
+  const handleClick = async () => {
+    if (buttonState.action === handleApprove) {
+      setApprovalSubmitted(true)
+    }
+    await buttonState.action()
+  }
+
   return (
     <Button
       className='w-full bg-primary py-4 px-4 rounded-md disabled:opacity-40'
-      disabled={showApproveFlow || (swapButtonDisabled as boolean)}
-      onClick={
-        isConnected && isSupportedNetwork ? onSwap : async () => await connect()
-      }
+      disabled={buttonState.disabled}
+      onClick={handleClick}
     >
-      {swapButtonText}
+      {approval === ApprovalState.PENDING ? (
+        <Box className='flex items-center justify-center'>
+          Approving <CircularProgress size={16} className="ml-2" />
+        </Box>
+      ) : (
+        buttonState.text
+      )}
     </Button>
   )
 }

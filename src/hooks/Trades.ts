@@ -1,4 +1,4 @@
-import { Pair, Token, Trade, TokenAmount, NativeCurrency, ChainId } from '@monadex/sdk'
+import { Pair, Token, Trade, TokenAmount, NativeCurrency, ChainId, Price} from '@monadex/sdk'
 import {
   CUSTOM_BASES,
   BASES_TO_CHECK_TRADES_AGAINST
@@ -9,6 +9,7 @@ import { SwapDelay } from '@/state/swap/actions'
 import { PairState, usePairs } from '@/data/Reserves'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 import { useWalletData } from '@/utils'
+import {USDC} from '@/constants'
 export function useAllCommonPairs (
   currencyA?: Token | NativeCurrency,
   currencyB?: Token | NativeCurrency
@@ -145,6 +146,7 @@ export function useTradeExactOut (
   swapDelay?: SwapDelay,
   onSetSwapDelay?: (swapDelay: SwapDelay) => void
 ): Trade | null {
+
   const allowedPairs = useAllCommonPairs(
     currencyIn,
     currencyAmountOut?.token
@@ -160,7 +162,7 @@ export function useTradeExactOut (
     if (swapDelay !== SwapDelay.SWAP_REFRESH && onSetSwapDelay) {
       onSetSwapDelay(SwapDelay.SWAP_COMPLETE)
     }
-    if (currencyIn !== undefined && currencyAmountOut !== undefined && allowedPairs.length > 0) {
+    if (currencyIn && currencyAmountOut && allowedPairs.length > 0) {
       return (
         Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, {
           maxHops: 3,

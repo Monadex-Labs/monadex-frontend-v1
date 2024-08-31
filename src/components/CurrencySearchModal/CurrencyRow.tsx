@@ -69,7 +69,6 @@ interface CurrenyRowProps {
   style: any
   isOnSelectedList?: boolean
   balance: CurrencyAmount | undefined
-  usdPrice: number
 }
 
 const CurrencyRow: React.FC<CurrenyRowProps> = ({
@@ -80,7 +79,6 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
   style,
   isOnSelectedList,
   balance,
-  usdPrice
 }) => {
   const { account, chainId, provider } = useWalletData()
   const key = currencyKey(currency)
@@ -152,7 +150,7 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
           if (!isSelected && !otherSelected) onSelect()
         }}
       >
-        <Box className='w-full bg-transparent flex p-4'>
+        <Box className='w-full bg-transparent flex p-4 items-center gap-3'>
           {(otherSelected || isSelected) && <FiCheck />}
           <CurrencyLogo currency={currency} size='32px' />
           <Box ml={1} height={32}>
@@ -217,9 +215,6 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
               ? (
                 <>
                   <Balance balance={balance} />
-                  <span className='text-secondary'>
-                    ${formatNumber(Number(balance.toExact()) * usdPrice)}
-                  </span>
                 </>
                 )
               : account != null
