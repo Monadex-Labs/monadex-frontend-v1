@@ -12,7 +12,6 @@ export function FormattedPriceImpact ({
   priceImpact?: Percent
 }): ReactElement {
   const severity = warningSeverity(priceImpact)
-  console.log(severity)
   return (
     <small
       className={
@@ -25,7 +24,8 @@ export function FormattedPriceImpact ({
                   : 'text-success'
         }
     >
-      {priceImpact ? `${priceImpact.multiply(BigInt(-1)).toFixed(2)}%` : '-'}
+      {/* {(priceImpact != null) ? `${priceImpact.multiply(BigInt(-1)).toFixed(2)}%` : '-'} */}
+      {(priceImpact != null) ? `${priceImpact.multiply(BigInt(100)).toFixed(2)}%` : '-'}
     </small>
   )
 }

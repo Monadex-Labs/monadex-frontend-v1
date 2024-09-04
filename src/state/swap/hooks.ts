@@ -1,7 +1,7 @@
 import { parseUnits } from '@ethersproject/units'
 import { ETH, ChainId, JSBI, Token, TokenAmount, Trade, CurrencyAmount, NativeCurrency, Percent } from '@monadex/sdk'
 import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput, purchasedTicketsOnSwap, RaffleState, SwapDelay, setSwapDelay } from './actions'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { GlobalData, SLIPPAGE_AUTO } from '../../constants/index'
 import { useDispatch, useSelector } from 'react-redux'
 import { ParsedQs } from 'qs'
@@ -109,7 +109,7 @@ export function useSwapActionHandlers (): {
 // try to parse a user entered amount for a given token
 
 export function tryParseAmount (value?: string, currency?: NativeCurrency | Token): CurrencyAmount | TokenAmount | undefined {
-  if (!value || !currency) {
+  if (!value || (currency == null)) {
     return undefined
   }
   try {
@@ -143,7 +143,7 @@ export function involvesAddress (trade: Trade, checksummedAddress: string): bool
 
 export function useDerivedSwapInfo (): {
   currencies: { [field in Field]?: Token | NativeCurrency }
-  currencyBalances: { [field in Field]?: TokenAmount | CurrencyAmount}
+  currencyBalances: { [field in Field]?: TokenAmount | CurrencyAmount }
   parsedAmount: TokenAmount | undefined
   v2Trade: Trade | undefined
   inputError?: string
@@ -187,13 +187,10 @@ export function useDerivedSwapInfo (): {
     [Field.OUTPUT]: relevantTokenBalances?.[1]
   }
 
-
   const currencies: { [field in Field]?: Token | NativeCurrency } = {
     [Field.INPUT]: inputCurrency ?? undefined,
     [Field.OUTPUT]: outputCurrency ?? undefined
   }
-  console.log('currencies',inputCurrencyId)
-
   let inputError: string | undefined
   if (address === undefined) {
     inputError = 'Connect Wallet'
@@ -223,13 +220,15 @@ export function useDerivedSwapInfo (): {
 
   const [slippageManuallySet] = useSlippageManuallySet()
   const FIXED_AUTO_SLIPPAGE = new Percent(JSBI.BigInt(5), JSBI.BigInt(10000)) // 0.5%
-  const autoSlippage = allowedSlippage === SLIPPAGE_AUTO
-    ? Math.ceil(
-      Number(
-        parseFloat(formatAdvancedPercent(FIXED_AUTO_SLIPPAGE)).toFixed(2)
-      ) * 100
-    )
-    : allowedSlippage
+  const autoSlippage = useMemo(() => {
+    return allowedSlippage === SLIPPAGE_AUTO
+      ? Math.ceil(
+          Number(
+            parseFloat(formatAdvancedPercent(FIXED_AUTO_SLIPPAGE)).toFixed(2)
+          ) * 100
+        )
+      : allowedSlippage
+  }, [allowedSlippage])
   const slippageAdjustedAmount = v2Trade && autoSlippage && computeSlippageAdjustedAmounts(v2Trade, autoSlippage) // eslint-disable-line
   // compare input balance to max input based on version
   const [balanceIn, amountIn] = [
@@ -353,7 +352,7 @@ export function useDefaultsFromURLSearch ():
 | {
   inputCurrencyId: string | undefined
   outputCurrencyId: string | undefined
-  }
+}
 | undefined {
   const { chainId: Id } = useWalletData()
   const chainId = Id

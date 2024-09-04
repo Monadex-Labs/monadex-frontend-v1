@@ -32,16 +32,16 @@ export const MinimalPositionCard: React.FC<PositionCardProps> = ({
   const totalPoolTokens = useTotalSupply(pair.liquidityToken)
 
   const poolTokenPercentage =
-    !!userPoolBalance &&
-    !!totalPoolTokens &&
+    !(userPoolBalance == null) &&
+    !(totalPoolTokens == null) &&
     JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
       ? new Percent(userPoolBalance.raw, totalPoolTokens.raw)
       : undefined
 
   const [token0Deposited, token1Deposited] =
     !!pair &&
-    !!totalPoolTokens &&
-    !!userPoolBalance &&
+    !(totalPoolTokens == null) &&
+    !(userPoolBalance == null) &&
     // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
     JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
       ? [
@@ -62,7 +62,7 @@ export const MinimalPositionCard: React.FC<PositionCardProps> = ({
 
   return (
     <Box className='w-full rounded-md p-3 leading-6 text-center' border={border}>
-      {userPoolBalance &&
+      {(userPoolBalance != null) &&
         JSBI.greaterThan(userPoolBalance.raw, JSBI.BigInt(0))
         ? (
           <Box>
@@ -86,7 +86,7 @@ export const MinimalPositionCard: React.FC<PositionCardProps> = ({
             <Box className='flex justify-between items-center mt-1'>
               <p>Your Pool Share:</p>
               <p>
-                {poolTokenPercentage ? poolTokenPercentage.toFixed(6) + '%' : '-'}
+                {(poolTokenPercentage != null) ? poolTokenPercentage.toFixed(6) + '%' : '-'}
               </p>
             </Box>
             <Box className='flex justify-between items-center mt-1'>

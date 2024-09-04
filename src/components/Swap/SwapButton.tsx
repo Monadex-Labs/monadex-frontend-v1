@@ -66,14 +66,14 @@ const SwapButton = (props: Props): JSX.Element => {
   const buttonState = useMemo(() => {
     if (!account) return { text: 'Connect Wallet', action: connect, disabled: false }
     if (!isSupportedNetwork) return { text: 'Switch Network', action: () => {}, disabled: false }
-    if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) return { text: 'Select a token', action: () => {}, disabled: true }
+    if ((currencies[Field.INPUT] == null) || (currencies[Field.OUTPUT] == null)) return { text: 'Select a token', action: () => {}, disabled: true }
     if (formattedAmounts[Field.INPUT] === '' && formattedAmounts[Field.OUTPUT] === '') return { text: 'Enter Amount', action: () => {}, disabled: true }
-    
+
     if (showWrap) {
       if (wrapInputError) return { text: wrapInputError, action: () => {}, disabled: true }
-      const wrapText = wrapType === WrapType.WRAP ? `Wrap` : wrapType === WrapType.UNWRAP ? `Unwrap` : ''
+      const wrapText = wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : ''
       const symbol = wrapType === WrapType.WRAP ? ETH.symbol : WMND[chainId].symbol
-      return { 
+      return {
         text: `${wrapText} Monad ${symbol ?? '[INVALID SYMBOL]'}`,
         action: onSwap,
         disabled: wrapType === WrapType.WRAPPING || wrapType === WrapType.UNWRAPPING
@@ -81,23 +81,25 @@ const SwapButton = (props: Props): JSX.Element => {
     }
 
     if (noRoute && userHasSpecifiedInputOutput) return { text: 'Insufficient liquidity for this trade.', action: () => {}, disabled: true }
-    if (priceImpactSeverity > 3) return { 
-      text: `Price impact is more than ${Number(ALLOWED_PRICE_IMPACT_HIGH.multiply('100').toFixed(4))}`,
-      action: () => {},
-      disabled: true
+    if (priceImpactSeverity > 3) {
+      return {
+        text: `Price impact is more than ${Number(ALLOWED_PRICE_IMPACT_HIGH.multiply('100').toFixed(4))}`,
+        action: () => {},
+        disabled: true
+      }
     }
 
     switch (approval) {
       case ApprovalState.PENDING:
         return { text: 'Approving', action: () => {}, disabled: true }
       case ApprovalState.NOT_APPROVED:
-        return { 
+        return {
           text: `Approve ${currencies[Field.INPUT]?.symbol ?? '[INVALID SYMBOL]'}`,
           action: handleApprove,
           disabled: false
         }
       case ApprovalState.APPROVED:
-        return { 
+        return {
           text: swapInputError ?? swapCallbackError ?? 'Swap',
           action: onSwap,
           disabled: !isValid || !!swapCallbackError
@@ -139,13 +141,15 @@ const SwapButton = (props: Props): JSX.Element => {
       disabled={buttonState.disabled}
       onClick={handleClick}
     >
-      {approval === ApprovalState.PENDING ? (
-        <Box className='flex items-center justify-center'>
-          Approving <CircularProgress size={16} className="ml-2" />
-        </Box>
-      ) : (
-        buttonState.text
-      )}
+      {approval === ApprovalState.PENDING
+        ? (
+          <Box className='flex items-center justify-center'>
+            Approving <CircularProgress size={16} className='ml-2' />
+          </Box>
+          )
+        : (
+            buttonState.text
+          )}
     </Button>
   )
 }

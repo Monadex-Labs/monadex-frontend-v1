@@ -7,33 +7,33 @@ const config: Config = {
   ],
   theme: {
     screens: {
-      'sm': '640px',  // => @media (min-width: 640px) { ... }
-      'md': '768px',  // => @media (min-width: 768px) { ... }
-      'lg': '1024px', // => @media (min-width: 1024px) { ... }
-      'xl': '1280px', // => @media (min-width: 1280px) { ... }
-      '2xl': '1536px' // => @media (min-width: 1536px) { ... }
+      sm: '640px', // => @media (min-width: 640px) { ... }
+      md: '768px', // => @media (min-width: 768px) { ... }
+      lg: '1024px', // => @media (min-width: 1024px) { ... }
+      xl: '1280px', // => @media (min-width: 1280px) { ... }
+      '2xl': '1636px' // => @media (min-width: 1536px) { ... }
     },
     extend: {
 
-      animation : {
+      animation: {
         'spin-fast': 'spin 0.5s linear infinite', // Faster spin
-        'spin-slow': 'spin 2s linear infinite',   // Slower spin
+        'spin-slow': 'spin 2s linear infinite' // Slower spin
       },
-      // add all colors vars used here and refactor the dapp style color 
+      // add all colors vars used here and refactor the dapp style color
       colors: {
-        'bgColor': '#160238',
-        'primary': '#836EF9',
-        'text-error' : '#FF1010',
-        'text-yellow' : '#F3EC5D',
-        'text-blueviolet' : '#5D6EF3',
-        'text-success' : '#74DE1D',
-        'highlight': '#8438FF',
-        'primary2': '#6453c6',
-        'secondary1': '#22064f',
-        'secondary2': '#1F0050',
-        'secondary3': '#2a016b',
-        'textSecondary': '#8a8ea8',
-        'blue7': '#7365ce',
+        bgColor: '#160238',
+        primary: '#836EF9',
+        error: '#FF1010',
+        yellow: '#F3EC5D',
+        blueviolet: '#5D6EF3',
+        success: '#74DE1D',
+        highlight: '#8438FF',
+        primary2: '#6453c6',
+        secondary1: '#22064f',
+        secondary2: '#1F0050',
+        secondary3: '#2a016b',
+        textSecondary: '#8a8ea8',
+        blue7: '#7365ce'
       },
       fontFamily: {
         fira: ['var(--font-fira-code)']

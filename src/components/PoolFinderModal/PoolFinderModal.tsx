@@ -86,7 +86,7 @@ const PoolFinderModal: React.FC<PoolFinderModalProps> = ({ open, onClose }) => {
             size={24}
           />
           <h6 className='font-semibold text-lg'>Import Pool</h6>
-          <IoMdClose className='cursor-pointer' onClick={onClose} size={24}/>
+          <IoMdClose className='cursor-pointer' onClick={onClose} size={24} />
         </Box>
         <Box
           mt={2}

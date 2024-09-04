@@ -55,7 +55,7 @@ function useCallsData (calls: Array<Call | undefined>, options?: ListenerOptions
   AppState['multicall']['callResults']>(
     (state) => state.multicall.callResults
   )
-  
+
   const dispatch = useDispatch<AppDispatch>()
   const serializedCallKeys: string = useMemo(
     () =>

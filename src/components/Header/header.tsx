@@ -9,10 +9,13 @@ import { useRouter } from 'next/navigation'
 import DropdownMenu from '../common/DropDownMenu'
 import { Mxpdisplay } from '../common/MXPdisplay'
 import { useSession } from 'next-auth/react'
+import { usePathname } from 'next/navigation'
 const Header: React.FC<any> = () => {
   const theme = useTheme()
-  const {status} = useSession()
-  const tabletWindowSize = useMediaQuery(theme.breakpoints.down('md'))
+  const { status } = useSession()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+  const isTablet = useMediaQuery(theme.breakpoints.down('md'))
+  const pathname = usePathname()
   const router = useRouter()
   const paths = [
     {
@@ -37,36 +40,45 @@ const Header: React.FC<any> = () => {
     }
   ]
   return (
-    <Box className='flex items-center justify-between p-4 gap-3'>
-    <Box className="flex-grow-[0.2] p-2">
-      {tabletWindowSize && (
-        <Image src={Monadex_mobile} priority alt='MonadexLogo' className='cursor-pointer' onClick={() => router.push('/')} width={50} height={50} />
-      )}
-      {!tabletWindowSize && (
-        <Image src={Monadex} priority alt='MonadexLogo' className='cursor-pointer' onClick={() => router.push('/')} width={180} height={180} />
-      )}
-    </Box>
-    <div className='flex-grow flex justify-center p-2'>
-      <div className='flex gap-6 p-2'>
-        {paths.map((k, v) => {
-          return (
-            <Link
-              className={`text-gray-500 active:text-primary font-medium hover:text-primary text-md transition-all ${k.id === 'Docs' ? 'underline underline-offset-2 decoration-dotted' : ''}`}
-              key={v}
-              href={k.path}
-            >
-              {k.name}
-            </Link>
-          )
-        })}
+    <Box className={`flex justify-between ${isMobile ? 'hidden' : ''}`}>
+      <div className='flex flex-col sm:flex-row items-center justify-between p-2 sm:p-4 gap-3'>
+        <Box className='w-full sm:w-auto flex justify-center sm:justify-start'>
+          <Image
+            src={isMobile ? Monadex_mobile : Monadex}
+            priority
+            alt='MonadexLogo'
+            className='cursor-pointer'
+            onClick={() => router.push('/')}
+            width={isMobile ? 50 : 200}
+            height={isMobile ? 50 : 200}
+          />
+        </Box>
+        
+        <Box className=''>
+          <nav className='flex flex-wrap justify-center gap-5 sm:gap-6 ml-2'>
+            {paths.map((k, v) => (
+              <Link
+                className={`
+                  text-gray-500 font-medium text-md sm:text-md transition-all
+                  hover:text-primary focus:text-primary
+                  ${pathname === k.path ? 'text-primary' : ''}
+                  ${k.id === 'Docs' ? 'underline underline-offset-2 decoration-dotted' : ''}
+                `}
+                key={v}
+                href={k.path}
+              >
+                {k.name}
+              </Link>
+            ))}
+          </nav>
+        </Box>
       </div>
-    </div>
-    <div className='flex gap-6 items-center flex-grow-1 p-2'>
-       <Mxpdisplay/>
-      <DropdownMenu />
-      <ConnectButton />
-    </div>
-  </Box>
+      <Box className='w-full sm:w-auto flex justify-center sm:justify-end items-center gap-3 sm:gap-6 order-2 sm:order-3 mt-4 sm:mt-0'>
+        {!isMobile && <Mxpdisplay />}
+        <DropdownMenu />
+        <ConnectButton />
+      </Box>
+    </Box>
   )
 }
 export default Header

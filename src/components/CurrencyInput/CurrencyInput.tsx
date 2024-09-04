@@ -44,7 +44,6 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
     currency
   )
   const usdPriceV2 = Number(useUSDCPrice(currency)?.toSignificant() ?? 0)
-  console.log('usdc Price', usdPriceV2)
   const usdPrice = usdPriceV2
   return (
     <div
@@ -86,12 +85,12 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
             {`Balance: ${formatTokenAmount(selectedCurrencyBalance)}`}
           </small>
           {Boolean(account) && (currency != null) && showMaxButton === true && (
-              <div className='' onClick={onMax}>
-                <small className='text-primary] font-lg'>Max</small>
-              </div>
-            )}
+            <div className='' onClick={onMax}>
+              <small className='text-primary] font-lg'>Max</small>
+            </div>
+          )}
         </div>
-        
+
         <small className='text-textSecondary text-md p-1'>
           ${(usdPrice * Number(amount)).toLocaleString('us')}
         </small>

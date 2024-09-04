@@ -4,7 +4,7 @@ import { useParams, useSearchParams, usePathname, useRouter } from 'next/navigat
 import useParsedQueryString from './useParseQueryString'
 import { useWalletData } from '@/utils'
 
-export default function usePoolsRedirects() {
+export default function usePoolsRedirects () {
   const { chainId } = useWalletData()
   const chainIdToUse = chainId ?? ChainId.SEPOLIA
   const router = useRouter()

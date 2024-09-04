@@ -40,53 +40,43 @@ export const PrimaryButton: React.FC<any> = ({ children, classNames, onClick }: 
 export const ConnectButton: React.FC<any> = ({ classNames, children, ...rest }: ButtonProps) => {
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet()
   const [messageBtn, setMsgBtn] = useState<boolean>(false)
-  const [hover, setHover] = useState(false)
-  const checkWallet = supportedChainId(Number(wallet?.chains[0].id))
-  const [walletAddress, setWalletAddress] = useState<string | null>(null)
+  const [isHovering, setIsHovering] = useState(false)
+  const [buttonText, setButtonText] = useState<string>('Connect wallet')
 
   useEffect(() => {
-    if (Number(wallet?.chains[0]?.id) === undefined) return undefined
-    if (checkWallet === 'Unsupported chain') {
+    const checkWallet = wallet ? supportedChainId(Number(wallet.chains[0].id)) : null
+    if (wallet && checkWallet === 'Unsupported chain') {
       setMsgBtn(true)
     } else {
       setMsgBtn(false)
     }
-  }, [wallet, checkWallet])
 
-  useEffect(() => {
-    if (wallet != null) {
-      // If wallet is connected, set the wallet address
-      setWalletAddress(wallet.accounts[0]?.address)
+    if (wallet) {
+      const address = wallet.accounts[0]?.address
+      setButtonText(address ? `${address.slice(0, 4)}...${address.slice(-4)}` : 'Connected')
     } else {
-      // If no wallet is connected, set to null
-      setWalletAddress(null)
+      setButtonText('Connect wallet')
     }
   }, [wallet])
 
-  return (
-    <>
-      {messageBtn &&
-        <SwitchChainPopUp
-          open={messageBtn}
-          onClose={() => setMsgBtn(false)}
-        />}
-      <button
-        disabled={connecting}
-        onMouseOver={() => setHover(true)}
-        onClick={async () => ((wallet != null) ? await disconnect(wallet) : await connect())} // eslint-disable-line
-        className={cn('flex p-2 items-center justify-center gap-4 text-white bg-primary hover:bg-primary/50 focus:outline-none focus:ring-4 focus:ring-primary/50 font-medium rounded-full text-sm px-5 py-2.5 text-center', classNames)}
-        {...rest}
-      >
-        {connecting
-          ? 'Connecting'
-          : (walletAddress != null)
-              ? `${walletAddress.slice(
-              0,
-              4
-            )}...${walletAddress.slice(-4)}`
-              : (hover && wallet != null ? 'Disconnect' : 'Connect wallet')}
-      </button>
-    </>
+  const handleClick = async () => {
+    if (wallet) {
+      await disconnect(wallet)
+    } else {
+      await connect()
+    }
+  }
 
+  return (
+    <button
+      disabled={connecting}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+      onClick={handleClick}
+      className={cn('flex p-2 items-center justify-center gap-4 text-white bg-primary hover:bg-primary/50 focus:outline-none focus:ring-4 focus:ring-primary/50 font-medium rounded-full text-sm px-5 py-2.5 text-center', classNames)}
+      {...rest}
+    >
+      {connecting ? 'Connecting' : (isHovering && wallet ? 'Disconnect' : buttonText)}
+    </button>
   )
 }

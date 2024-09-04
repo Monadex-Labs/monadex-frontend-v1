@@ -20,7 +20,7 @@ export default function uriToHttp (uri: string): string[] {
       return [
           `https://cloudflare-ipfs.com/ipns/${name}/`,
           `https://ipfs.io/ipns/${name}/`
-        ];
+      ]
     default:
       return []
   }

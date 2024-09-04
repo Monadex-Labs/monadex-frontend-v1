@@ -25,9 +25,8 @@ const CurrencySearchModal: React.FC<CurrencySearchModalProps> = ({
 }) => {
   const nativeCurrency = ETH
   const handleCurrencySelect = useCallback(
-    
-    (currency: Token | NativeCurrency) => {
 
+    (currency: Token | NativeCurrency) => {
       if (currency instanceof NativeCurrency) {
         onCurrencySelect(nativeCurrency) // TODO: Simplify this or check why it was like that before
       } else {

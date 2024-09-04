@@ -585,7 +585,7 @@ const Swap: React.FC<{
         ? (
           <Box mt={2} className='flex justify-center gap-2 items-center flex-col'>
             <CircularProgress size={16} />
-            <p className='text-xs mb-2'>Fetching Best Route</p>
+            <p className='text-xs mb-2'>Fetching Best Quote</p>
           </Box>
           )
         : (

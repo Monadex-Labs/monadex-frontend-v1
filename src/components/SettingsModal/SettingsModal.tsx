@@ -32,10 +32,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, defaultSli
   const userSlippageIsSet = !!userSlippageTolerance
   useEffect(() => {
     if (!userSlippageIsSet && defaultSlippage > 0) {
-      setUserSlippageTolerance(defaultSlippage);
+      setUserSlippageTolerance(defaultSlippage)
     }
   }, [defaultSlippage, setUserSlippageTolerance, userSlippageIsSet])
-  
+
   const slippageInputIsValid =
   slippageInput === '' ||
   (userSlippageTolerance / 100).toFixed(2) ===
@@ -205,32 +205,32 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, defaultSli
       <Divider className='bg-secondary3' />
       <Box my={2.5} className='flex items-center'>
         <Box mr='6px'>
-            <p>Transaction Deadline</p>
-          </Box>
+          <p>Transaction Deadline</p>
+        </Box>
         <QuestionHelper size={20} text='Your transaction will revert if it is pending for more than this long.' />
       </Box>
       <Box mb={2.5} className='flex items-center'>
-          <Box className='flex h-10 rounded-md px-0 py-8 flex-1 items-center bg-bgColor' maxWidth={168}>
-            <NumericalInput
-              placeholder={(ttl / 60).toString()}
-              value={deadlineInput}
-              fontSize={14}
-              fontWeight={500}
-              onBlur={() => {
-                parseCustomDeadline((ttl / 60).toString())
-              }}
-              onUserInput={(value) => parseCustomDeadline(value)}
-            />
-          </Box>
-          <Box ml={1}>
-            <small>minutes</small>
-          </Box>
+        <Box className='flex h-10 rounded-md px-0 py-8 flex-1 items-center bg-bgColor' maxWidth={168}>
+          <NumericalInput
+            placeholder={(ttl / 60).toString()}
+            value={deadlineInput}
+            fontSize={14}
+            fontWeight={500}
+            onBlur={() => {
+              parseCustomDeadline((ttl / 60).toString())
+            }}
+            onUserInput={(value) => parseCustomDeadline(value)}
+          />
         </Box>
+        <Box ml={1}>
+          <small>minutes</small>
+        </Box>
+      </Box>
       {deadlineError && (
-          <Box mt={1.5}>
-            <small className='text-yellow-500'>Enter a valid deadline</small>
-          </Box>
-        )}
+        <Box mt={1.5}>
+          <small className='text-yellow-500'>Enter a valid deadline</small>
+        </Box>
+      )}
     </CustomModal>
   )
 }

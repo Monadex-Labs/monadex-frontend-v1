@@ -21,7 +21,7 @@ const useFindBestRoute = (): {
   bestTradeExactIn: Trade | null
   bestTradeExactOut: Trade | null
 } => {
-  const {chainId} = useWalletData()
+  const { chainId } = useWalletData()
   const { onSwapDelay } = useSwapActionHandlers()
   // const parsedQuery = useParsedQueryString()
 
@@ -52,16 +52,14 @@ const useFindBestRoute = (): {
     onSwapDelay
   )
 
-
-  const bestTradeExactOut = useTradeExactOut(  
-    inputCurrency ?? undefined,  
+  const bestTradeExactOut = useTradeExactOut(
+    inputCurrency ?? undefined,
     !isExactIn ? parsedAmount : undefined,
     swapDelay,
     onSwapDelay
   )
 
   const v2Trade = isExactIn ? bestTradeExactIn : bestTradeExactOut
-  console.log('exact', isExactIn)
   const swapCalls = useSwapCallArguments(
     v2Trade ?? undefined,
     allowedSlippage,

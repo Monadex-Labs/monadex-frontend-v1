@@ -131,8 +131,8 @@ export const GlobalData = {
       BIPS_BASE
     ) // 15%
   },
-  utils  :  {
-    DEFAULT_DEADLINE_FROM_NOW: 60 * 20, // 20 minutes, denominated in seconds
+  utils: {
+    DEFAULT_DEADLINE_FROM_NOW: 60 * 20 // 20 minutes, denominated in seconds
   }
 }
 
@@ -162,7 +162,7 @@ export const BASES_TO_TRACK_LIQUIDITY_FOR: {
 export const MONADEX_PINNED_PAIRS: { [chainid: number]: Array<[Token, Token, Token]> } = {
   [ChainId.SEPOLIA]: [
     [
-      WMND[ChainId.SEPOLIA], 
+      WMND[ChainId.SEPOLIA],
       USDC[ChainId.SEPOLIA],
       MNDX[ChainId.SEPOLIA]
     ]

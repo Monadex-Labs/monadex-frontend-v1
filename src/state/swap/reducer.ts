@@ -98,7 +98,7 @@ export default createReducer<SwapState>(initialState, (builder) => {
       state.recipient = recipient
     })
     .addCase(setSwapDelay, (state, { payload: { swapDelay } }) => {
-      state.swapDelay = swapDelay;
+      state.swapDelay = swapDelay
     })
 
     .addCase(purchasedTicketsOnSwap, (state, { payload: { raffle } }) => {

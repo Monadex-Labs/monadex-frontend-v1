@@ -4,10 +4,10 @@ import MulticallUpdater from '@/state/multicall/updater'
 import ApplicationUpdater from '@/state/application/updater'
 export default function Updaters (): JSX.Element {
   return (
-      <>
-        <ListUpdater />
-        <MulticallUpdater />
-        <ApplicationUpdater />
-      </>
+    <>
+      <ListUpdater />
+      <MulticallUpdater />
+      <ApplicationUpdater />
+    </>
   )
 }

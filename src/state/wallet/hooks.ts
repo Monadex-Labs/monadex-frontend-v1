@@ -132,7 +132,7 @@ export function useCurrencyBalance (
   account?: string,
   currency?: NativeCurrency | Token
 ): CurrencyAmount | TokenAmount | undefined {
-  return useCurrencyBalances(account, currency ? [currency] : [])?.[0]
+  return useCurrencyBalances(account, (currency != null) ? [currency] : [])?.[0]
 }
 
 // mimics useAllBalances
@@ -159,7 +159,7 @@ export function useMNDBalance (
 
   const addresses: string[] = useMemo(
     () =>
-      uncheckedAddresses
+      (uncheckedAddresses != null)
         ? uncheckedAddresses
           .map(utilsAddess)
           .filter((a): a is string => a !== false)

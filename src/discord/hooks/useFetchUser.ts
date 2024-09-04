@@ -22,7 +22,7 @@ export const useFetchUserXP = (session: Session | null): {
         }
       })
       const userData = await userResponse.json()
-    
+
       // CALL ENDPONT GET XP BALANCE
       try {
         const data = await axios.get('/api/mxp', {

@@ -14,23 +14,23 @@ export default function useUSDCPrice (currency?: Token | NativeCurrency): Price 
   const { chainId } = useWalletData()
   const amountOut = chainId
     ? tryParseAmount('1', USDC[chainId])
-    : undefined;
+    : undefined
 
-  const allowedPairs = useAllCommonPairs(currency, USDC[chainId]);
+  const allowedPairs = useAllCommonPairs(currency, USDC[chainId])
   return useMemo(() => {
-    if (!currency || !amountOut || !allowedPairs.length) {
-      return undefined;
+    if ((currency == null) || (amountOut == null) || (allowedPairs.length === 0)) {
+      return undefined
     }
 
     const trade =
       Trade.bestTradeExactOut(allowedPairs, currency, amountOut, {
         maxHops: 3,
-        maxNumResults: 1,
-      })[0] ?? null;
+        maxNumResults: 1
+      })[0] ?? null
 
-    if (!trade) return;
+    if (!trade) return
 
-    const { numerator, denominator } = trade.route.midPrice;
+    const { numerator, denominator } = trade.route.midPrice
 
     return new Price(currency, USDC[chainId], denominator, numerator)
   }, [currency, allowedPairs, amountOut, chainId])

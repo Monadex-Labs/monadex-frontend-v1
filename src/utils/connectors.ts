@@ -18,7 +18,7 @@ const allNonMetamaskFlags: NonMetaMaskFlag[] = [
   'isBitKeep',
   // 'isPhantom',
   'isTrust'
-];
+]
 export const getIsMetaMaskWallet = (): boolean => {
   const { ethereum } = window as any
 
@@ -32,7 +32,7 @@ export const getIsMetaMaskWallet = (): boolean => {
               provider.isMetaMask &&
               !provider.detected &&
               !allNonMetamaskFlags.some((flag) => provider[flag])
-          )
+        )
         : ethereum.providers && ethereum.providers.length > 0
           ? ethereum.providers.find(
             (provider: any) =>

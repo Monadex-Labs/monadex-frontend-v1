@@ -119,8 +119,8 @@ const RemoveLiquidityModal: React.FC<RemoveLiquidityModalProps> = ({
   )
   const totalPoolTokens = useTotalSupply(pair?.liquidityToken)
   const poolTokenPercentage =
-    !!userPoolBalance &&
-    !!totalPoolTokens &&
+    !(userPoolBalance == null) &&
+    !(totalPoolTokens == null) &&
     JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
       ? new Percent(userPoolBalance.raw, totalPoolTokens.raw)
       : undefined
@@ -148,9 +148,9 @@ const RemoveLiquidityModal: React.FC<RemoveLiquidityModalProps> = ({
   }
 
   const [token0Deposited, token1Deposited] =
-    !!pair &&
-    !!totalPoolTokens &&
-    !!userPoolBalance &&
+    !(pair == null) &&
+    !(totalPoolTokens == null) &&
+    !(userPoolBalance == null) &&
     JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
       ? [
           pair.getLiquidityValue(
@@ -176,12 +176,12 @@ const RemoveLiquidityModal: React.FC<RemoveLiquidityModalProps> = ({
     chainId ? V1_ROUTER_ADDRESS[chainId] : undefined
   )
   const onAttemptToApprove = async () => {
-    if (!pairContract || !pair || !provider || !deadline) {
+    if ((pairContract == null) || (pair == null) || !provider || (deadline == null)) {
       setErrorMsg('Missing dependencies')
       return
     }
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
-    if (!liquidityAmount) {
+    if (liquidityAmount == null) {
       setErrorMsg('Missing liquidity amount')
       return
     }
@@ -202,7 +202,7 @@ const RemoveLiquidityModal: React.FC<RemoveLiquidityModalProps> = ({
   const router = useRouterContract()
 
   const onRemove = async () => {
-    if (!chainId || !provider || !account || !deadline || !router) {
+    if (!chainId || !provider || !account || (deadline == null) || (router == null)) {
       setRemoveErrorMessage('Missing dependencies')
       throw new Error('Missing dependencies')
     }
@@ -210,7 +210,7 @@ const RemoveLiquidityModal: React.FC<RemoveLiquidityModalProps> = ({
       [Field.CURRENCY_A]: currencyAmountA,
       [Field.CURRENCY_B]: currencyAmountB
     } = parsedAmounts
-    if (!currencyAmountA || !currencyAmountB) {
+    if ((currencyAmountA == null) || (currencyAmountB == null)) {
       setRemoveErrorMessage('Need to input amounts')
       throw new Error('noInputAmounts')
     }
@@ -227,12 +227,12 @@ const RemoveLiquidityModal: React.FC<RemoveLiquidityModalProps> = ({
     }
 
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
-    if (!liquidityAmount) {
+    if (liquidityAmount == null) {
       setRemoveErrorMessage('No liquidity.')
       throw new Error('No liquidity.')
     }
 
-    if (!tokenA || !tokenB) {
+    if ((tokenA == null) || (tokenB == null)) {
       setRemoveErrorMessage('Could not wrap')
       throw new Error('Could not wrap')
     }
@@ -257,8 +257,8 @@ const RemoveLiquidityModal: React.FC<RemoveLiquidityModalProps> = ({
       throw new Error('confirmWithoutApproval')
     }
     const safeGasEstimates: Array<BigNumber | undefined> = await Promise.all(
-      methodNames.map((methodName) =>
-        router.estimateGas[methodName](...args)
+      methodNames.map(async (methodName) =>
+        await router.estimateGas[methodName](...args)
           .then(calculateGasMargin)
           .catch((error: any) => {
             console.error('estimateGas failed', methodName, args, error)
@@ -313,7 +313,7 @@ const RemoveLiquidityModal: React.FC<RemoveLiquidityModalProps> = ({
           setRemoveErrorMessage(
             error.code === 'ACTION_REJECTED'
               ? 'Transaction rejected.'
-              : 'There is an error in transaction. Please increase your slippage.',
+              : 'There is an error in transaction. Please increase your slippage.'
           )
         })
     }
@@ -322,7 +322,7 @@ const RemoveLiquidityModal: React.FC<RemoveLiquidityModalProps> = ({
   const modalHeader = () => {
     return (
       <Box>
-        <Box className='flex justify-center' mt={10} mb={3}> 
+        <Box className='flex justify-center' mt={10} mb={3}>
           <DoubleCurrencyLogo
             currency0={currency0}
             currency1={currency1}
@@ -365,18 +365,20 @@ const RemoveLiquidityModal: React.FC<RemoveLiquidityModalProps> = ({
             txPending={txPending}
             hash={txHash}
             content={() =>
-              removeErrorMessage ? (
-                <TransactionErrorContent
-                  onDismiss={handleDismissConfirmation}
-                  message={removeErrorMessage}
-                />
-              ) : (
-                <ConfirmationModalContent
-                  title='Removing Liquidity'
-                  onDismiss={handleDismissConfirmation}
-                  content={modalHeader}
-                />
-              )}
+              removeErrorMessage
+                ? (
+                  <TransactionErrorContent
+                    onDismiss={handleDismissConfirmation}
+                    message={removeErrorMessage}
+                  />
+                  )
+                : (
+                  <ConfirmationModalContent
+                    title='Removing Liquidity'
+                    onDismiss={handleDismissConfirmation}
+                    content={modalHeader}
+                  />
+                  )}
             pendingText=''
             modalContent={
               txPending
@@ -464,22 +466,22 @@ const RemoveLiquidityModal: React.FC<RemoveLiquidityModalProps> = ({
           <Box className='flex justify-between items-center mt-4'>
             <p>Your Pool Share</p>
             <p>
-              {poolTokenPercentage
+              {(poolTokenPercentage != null)
                 ? poolTokenPercentage.toSignificant() + '%'
                 : '-'}
             </p>
           </Box>
         </Box>
-        {pair && (
+        {(pair != null) && (
           <Box className='flex justify-between items-center' mt={2} px={2}>
             <small>
               1 {currency0.symbol} ={' '}
-              {tokenA ? pair.priceOf(tokenA).toSignificant(6) : '-'}{' '}
+              {(tokenA != null) ? pair.priceOf(tokenA).toSignificant(6) : '-'}{' '}
               {currency1.symbol}
             </small>
             <small>
               1 {currency1.symbol} ={' '}
-              {tokenB ? pair.priceOf(tokenB).toSignificant(6) : '-'}{' '}
+              {(tokenB != null) ? pair.priceOf(tokenB).toSignificant(6) : '-'}{' '}
               {currency0.symbol}
             </small>
           </Box>

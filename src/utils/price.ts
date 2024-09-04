@@ -1,5 +1,5 @@
 import { Fraction, JSBI, Percent, TokenAmount, Trade, CurrencyAmount } from '@monadex/sdk'
-import { formatTokenAmount } from './index'
+import { formatTokenAmount, basisPointsToPercent } from './index'
 import {
   ALLOWED_PRICE_IMPACT_HIGH,
   ALLOWED_PRICE_IMPACT_LOW,
@@ -8,93 +8,87 @@ import {
   ZERO_PERCENT
 } from '../constants'
 import { Field } from '../state/swap/actions'
-import { basisPointsToPercent } from './index'
 
 const BASE_FEE = new Percent(JSBI.BigInt(30), JSBI.BigInt(10000))
 const ONE_HUNDRED_PERCENT = new Percent(JSBI.BigInt(10000), JSBI.BigInt(10000))
 const INPUT_FRACTION_AFTER_FEE = ONE_HUNDRED_PERCENT.subtract(BASE_FEE)
 
 // computes price breakdown for the trade
-export function computeTradePriceBreakdown(
-  trade?: Trade,
-): { priceImpactWithoutFee?: Percent; realizedLPFee?: CurrencyAmount } {
-
+export function computeTradePriceBreakdown (
+  trade?: Trade
+): { priceImpactWithoutFee?: Percent, realizedLPFee?: CurrencyAmount } {
   // for each hop in our trade, take away the x*y=k price impact from 0.25% fees
   // e.g. for 3 tokens/2 hops: 1 - ((1 - .03) * (1-.03))
-  const realizedLPFee = !trade
+  const realizedLPFee = (trade == null)
     ? undefined
     : ONE_HUNDRED_PERCENT.subtract(
-        trade.route.pairs.reduce<Fraction>(
-          (currentFee: Fraction): Fraction =>
-            currentFee.multiply(INPUT_FRACTION_AFTER_FEE),
-          ONE_HUNDRED_PERCENT,
-        ),
-      );
+      trade.route.pairs.reduce<Fraction>(
+        (currentFee: Fraction): Fraction =>
+          currentFee.multiply(INPUT_FRACTION_AFTER_FEE),
+        ONE_HUNDRED_PERCENT
+      )
+    )
 
   // remove lp fees from price impact
   const priceImpactWithoutFeeFraction =
-    trade && realizedLPFee
+    (trade != null) && (realizedLPFee != null)
       ? trade.priceImpact.subtract(realizedLPFee)
-      : undefined;
+      : undefined
   // the x*y=k impact
-  const priceImpactWithoutFeePercent = priceImpactWithoutFeeFraction
+  const priceImpactWithoutFeePercent = (priceImpactWithoutFeeFraction != null)
     ? new Percent(
-        priceImpactWithoutFeeFraction?.numerator,
-        priceImpactWithoutFeeFraction?.denominator,
-      )
-    : undefined;
+      priceImpactWithoutFeeFraction?.numerator,
+      priceImpactWithoutFeeFraction?.denominator
+    )
+    : undefined
   // the amount of the input that accrues to LPs
   const realizedLPFeeAmount =
     realizedLPFee &&
     trade &&
     (trade.inputAmount instanceof TokenAmount
       ? new TokenAmount(
-          trade.inputAmount.token,
-          realizedLPFee.multiply(trade.inputAmount.raw).quotient,
-        )
+        trade.inputAmount.token,
+        realizedLPFee.multiply(trade.inputAmount.raw).quotient
+      )
       : CurrencyAmount.ether(
-          realizedLPFee.multiply(trade.inputAmount.raw).quotient,
-        ));
+        realizedLPFee.multiply(trade.inputAmount.raw).quotient
+      ))
 
   return {
     priceImpactWithoutFee: priceImpactWithoutFeePercent,
-    realizedLPFee: realizedLPFeeAmount,
-  };
+    realizedLPFee: realizedLPFeeAmount
+  }
 }
 
 // computes the minimum amount out and maximum amount in for a trade given a user specified allowed slippage in bips
-export function computeSlippageAdjustedAmounts(
+export function computeSlippageAdjustedAmounts (
   trade: Trade | undefined,
-  allowedSlippage: number,
+  allowedSlippage: number
 ): { [field in Field]?: CurrencyAmount } {
-  const pct = basisPointsToPercent(allowedSlippage);
+  const pct = basisPointsToPercent(allowedSlippage)
   return {
     [Field.INPUT]: trade?.maximumAmountIn(pct),
-    [Field.OUTPUT]: trade?.minimumAmountOut(pct),
-  };
+    [Field.OUTPUT]: trade?.minimumAmountOut(pct)
+  }
 }
-export function warningSeverity(
-  priceImpact: Percent | undefined,
+export function warningSeverity (
+  priceImpact: Percent | undefined
 ): 0 | 1 | 2 | 3 | 4 {
   if (
     !priceImpact?.lessThan(BLOCKED_PRICE_IMPACT_NON_EXPERT)
-  )
-    return 4;
-  if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_HIGH))
-    return 3;
-  if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_MEDIUM))
-    return 2;
-  if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_LOW))
-    return 1;
-  return 0;
+  ) { return 4 }
+  if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_HIGH)) { return 3 }
+  if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_MEDIUM)) { return 2 }
+  if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_LOW)) { return 1 }
+  return 0
 }
 
-export function formatExecutionPrice(
+export function formatExecutionPrice (
   trade?: Trade,
-  inverted?: boolean,
+  inverted?: boolean
 ): string {
-  if (!trade) {
-    return '';
+  if (trade == null) {
+    return ''
   }
   return inverted
     ? `${trade.executionPrice.invert().toSignificant(6)} ${
@@ -102,5 +96,5 @@ export function formatExecutionPrice(
       } / ${trade.outputAmount.currency.symbol}`
     : `${trade.executionPrice.toSignificant(6)} ${
         trade.outputAmount.currency.symbol
-      } / ${trade.inputAmount.currency.symbol}`;
+      } / ${trade.inputAmount.currency.symbol}`
 }

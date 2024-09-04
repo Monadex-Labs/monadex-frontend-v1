@@ -2,6 +2,7 @@
 /**
  * AdvancedSwapDetails is used to display the details of a trade using Monadex V1 router
  */
+import Image from 'next/image'
 import { Trade, TradeType, CurrencyAmount } from '@monadex/sdk'
 import React, { useState } from 'react'
 import { Box } from '@mui/material'
@@ -13,6 +14,10 @@ import { MdEdit } from 'react-icons/md'
 import { formatTokenAmount } from '@/utils'
 import { useDerivedSwapInfo } from '@/state/swap/hooks'
 import { SLIPPAGE_AUTO } from '@/constants'
+import Dash from '@/static/assets/dash.svg'
+import { IoIosArrowRoundForward } from 'react-icons/io'
+import { usePoolFee } from '@/utils/getPoolFee'
+
 interface TradeSummaryProps {
   trade: Trade
   allowedSlippage: number
@@ -28,8 +33,10 @@ export const TradeSummary: React.FC<TradeSummaryProps> = ({
     trade,
     allowedSlippage
   )
-  const tradeAmount = isExactIn ? trade.outputAmount : trade.inputAmount
 
+  const tradeAmount = isExactIn ? trade.outputAmount : trade.inputAmount
+  const pairAddress:string | null = trade.route.pairs[0].liquidityToken.address ? trade.route.pairs[0].liquidityToken.address : '...'
+  const poolFee = usePoolFee(pairAddress)
   return (
     <Box mt={1.5} className='rounded-sm  flex flex-col p-3 text-textSecondary transition duration-150 ease-in-out'>
       {openSettingsModal && (
@@ -83,21 +90,27 @@ export const TradeSummary: React.FC<TradeSummaryProps> = ({
             {formatTokenAmount(realizedLPFee as CurrencyAmount)} {trade.inputAmount.currency.symbol}
           </small>
         </Box>
-        <Box className='py-2 flex justify-between'>
-          <Box className='flex gap-2 items-center'>
+        <Box className='py-2 flex justify-between border flex-col border-dashed rounded-lg border-primary mt-1 mb-1'>
+          <Box className='flex gap-2 items-center justify-center mb-3'>
             <QuestionHelper text='Routing through these tokens resulted in the best price for your trade.' />
-            <small>Route:</small>
+            <p className='text-center text-sm font-semibold'>Route</p>
           </Box>
-          <Box>
+          <Box className='flex flex-row justify-center items-center gap-3'>
             {trade.route.path.map((token, i, path) => {
               const isLastItem: boolean = i === path.length - 1
               return (
-                <small key={i}>
-                  {token.symbol}{' '}
-                  {
-                  isLastItem ? '' : ' > '
-                  }
-                </small>
+                <React.Fragment key={token.address}>
+                  <Box className='flex flex-col items-center gap-2'>
+                    <CurrencyLogo currency={token} size='23px' />
+                    <p className='text-sm font-semibold'>{token.symbol}</p>
+                  </Box>
+                  {!isLastItem && (
+                    <div className='flex items-center gap-2 flex-col'>
+                    <small className='text-white px-3 py-1 rounded-full bg-primary'>{poolFee}</small>
+                    <IoIosArrowRoundForward className="text-primary" size={33} />
+                    </div>
+                  )}
+                </React.Fragment>
               )
             })}
           </Box>
@@ -118,7 +131,7 @@ export const AdvancedSwapDetails: React.FC<AdvancedSwapDetailsProps> = ({
 
   return (
     <>
-      {trade && (
+      {(trade != null) && (
         <TradeSummary
           trade={trade}
           allowedSlippage={

@@ -1,4 +1,4 @@
-import { Pair, Token, Trade, TokenAmount, NativeCurrency, ChainId, Price} from '@monadex/sdk'
+import { Pair, Token, Trade, TokenAmount, NativeCurrency, ChainId, Price } from '@monadex/sdk'
 import {
   CUSTOM_BASES,
   BASES_TO_CHECK_TRADES_AGAINST
@@ -9,7 +9,7 @@ import { SwapDelay } from '@/state/swap/actions'
 import { PairState, usePairs } from '@/data/Reserves'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 import { useWalletData } from '@/utils'
-import {USDC} from '@/constants'
+import { USDC } from '@/constants'
 export function useAllCommonPairs (
   currencyA?: Token | NativeCurrency,
   currencyB?: Token | NativeCurrency
@@ -20,7 +20,7 @@ export function useAllCommonPairs (
     () => (chainTouse ? BASES_TO_CHECK_TRADES_AGAINST[chainTouse] : []),
     [chainTouse]
   )
-  const [tokenA, tokenB] = chainId 
+  const [tokenA, tokenB] = chainId
     ? [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)]
     : [undefined, undefined]
 
@@ -33,7 +33,7 @@ export function useAllCommonPairs (
   )
   const allPairCombinations: Array<[Token, Token]> = useMemo(
     () =>
-      tokenA && tokenB
+      (tokenA != null) && (tokenB != null)
         ? [
             // the direct pair
             [tokenA, tokenB],
@@ -74,7 +74,7 @@ export function useAllCommonPairs (
         : [],
     [tokenA, tokenB, bases, basePairs, chainId]
   )
-// @todo: FOR LATER
+  // @todo: FOR LATER
   const allPairs = usePairs(allPairCombinations)
   // only pass along valid pairs, non-duplicated pairs
   return useMemo(
@@ -98,7 +98,7 @@ export function useAllCommonPairs (
  * Returns the best trade for the exact amount of tokens in to the given token out
 */
 let bestTradeExactIn: Trade | null = null
-export function useTradeExactIn ( 
+export function useTradeExactIn (
   currencyAmountIn?: TokenAmount,
   currencyOut?: Token,
   swapDelay?: SwapDelay,
@@ -109,7 +109,7 @@ export function useTradeExactIn (
     currencyOut
   )
   bestTradeExactIn = useMemo(() => {
-    if (!currencyAmountIn) {
+    if (currencyAmountIn == null) {
       return null
     }
     if (
@@ -118,10 +118,10 @@ export function useTradeExactIn (
     ) {
       return bestTradeExactIn
     }
-    if (swapDelay !== SwapDelay.SWAP_REFRESH && onSetSwapDelay) {
+    if (swapDelay !== SwapDelay.SWAP_REFRESH && (onSetSwapDelay != null)) {
       onSetSwapDelay(SwapDelay.SWAP_COMPLETE)
     }
-    if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
+    if (currencyAmountIn && (currencyOut != null) && allowedPairs.length > 0) {
       return (
         Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, {
           maxHops: 3,
@@ -146,7 +146,6 @@ export function useTradeExactOut (
   swapDelay?: SwapDelay,
   onSetSwapDelay?: (swapDelay: SwapDelay) => void
 ): Trade | null {
-
   const allowedPairs = useAllCommonPairs(
     currencyIn,
     currencyAmountOut?.token
@@ -159,10 +158,10 @@ export function useTradeExactOut (
     ) {
       return bestTradeExactOut
     }
-    if (swapDelay !== SwapDelay.SWAP_REFRESH && onSetSwapDelay) {
+    if (swapDelay !== SwapDelay.SWAP_REFRESH && (onSetSwapDelay != null)) {
       onSetSwapDelay(SwapDelay.SWAP_COMPLETE)
     }
-    if (currencyIn && currencyAmountOut && allowedPairs.length > 0) {
+    if ((currencyIn != null) && currencyAmountOut && allowedPairs.length > 0) {
       return (
         Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, {
           maxHops: 3,

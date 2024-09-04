@@ -78,36 +78,40 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
   otherSelected,
   style,
   isOnSelectedList,
-  balance,
+  balance
 }) => {
   const { account, chainId, provider } = useWalletData()
   const key = currencyKey(currency)
   const customAdded = useIsUserAddedToken(currency)
   const nativeCurrency = ETH
- 
+
   const removeToken = useRemoveUserAddedToken()
   const addToken = useAddUserToken()
   const isMetamask = getIsMetaMaskWallet() && isOnSelectedList
-  
-  const addTokenToMetamask = (
-    tokenAddress: any,
-    tokenSymbol: any,
-    tokenDecimals: any,
-    tokenImage: any
-  ): void => {
-    if (provider?.provider?.request != null) {
-      void provider.provider.request({
-        method: 'wallet_watchAsset',
-        params: [{
-          type: 'ERC20',
-          options: {
-            address: tokenAddress,
-            symbol: tokenSymbol,
-            decimals: tokenDecimals,
-            image: tokenImage
+
+  const addTokenToMetamask = async (
+    tokenAddress: string,
+    tokenSymbol: string,
+    tokenDecimals: number,
+    tokenImage: string
+  ) => {
+    if (provider?.provider?.request) {
+      try {
+        await provider.provider.request({
+          method: 'wallet_watchAsset',
+          params: {
+            type: 'ERC20',
+            options: {
+              address: tokenAddress,
+              symbol: tokenSymbol,
+              decimals: tokenDecimals,
+              image: tokenImage
+            }
           }
-        }]
-      })
+        })
+      } catch (error) {
+        console.error('Error adding token to MetaMask:', error)
+      }
     }
   }
 
@@ -164,10 +168,9 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
                     onClick={(event: any) => {
                       addTokenToMetamask(
                         currency.address,
-                        currency.symbol,
+                        currency.symbol as string,
                         currency.decimals,
-                        // CURRENCY.ADDRESS
-                        getTokenLogoURL()
+                        getTokenLogoURL(currency.address)
                       )
                       event.stopPropagation()
                     }}

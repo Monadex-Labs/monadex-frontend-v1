@@ -12,6 +12,7 @@ import { ChartComponent } from '@/components/Chart/chart'
 import { SlippageWrapper } from '@/components/Swap/SlippageWrapper'
 import { IoMdSettings } from 'react-icons/io'
 import { AiOutlineLineChart } from 'react-icons/ai'
+import modalBgimage from '@/static/assets/bg.png'
 const SwapPage: React.FC = () => {
   const [openSettingsModal, setOpenSettingsModal] = useState(false)
   const [openChart, setOpenChart] = useState(false)
@@ -23,9 +24,11 @@ const SwapPage: React.FC = () => {
 
   return (
     <div className='container mx-auto mt-10 flex p-2'>
-      {openChart && token1 && token2 ? (
-        <ChartComponent  token1={token1} token2={token2}/>
-      ) : null}
+      {openChart && (token1 != null) && (token2 != null)
+        ? (
+          <ChartComponent token1={token1} token2={token2} />
+          )
+        : null}
       <Box width='100%' mb={3} id='swap-page'>
         {openSettingsModal && (
           <SettingsModal
@@ -46,19 +49,42 @@ const SwapPage: React.FC = () => {
                 onClick={() => setOpenSettingsModal(true)}
                 size={24}
               />
-              <AiOutlineLineChart 
-              className='cursor-pointer'
-              onClick={() => setOpenChart(!openChart)}
-              size={24}
+              <AiOutlineLineChart
+                className='cursor-pointer'
+                onClick={() => setOpenChart(!openChart)}
+                size={24}
               />
             </Box>
           </Box>
         </Box>
-        <Box className='flex flex-col max-w-[500px] justify-center items-center p-2 mx-auto bg-bgColor rounded-md border border-primary'>
-          <SwapDefaultMode
-            token1={token1}
-            token2={token2}
-          />
+        <Box 
+          className='flex flex-col max-w-[500px] justify-center items-center p-2 mx-auto rounded-md border border-primary bg-bgColor'
+          sx={{
+            position: 'relative',
+            overflow: 'hidden',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundImage: `url(${modalBgimage.src})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+              opacity: 0.35,
+              mixBlendMode: 'overlay',
+              zIndex: 0,
+            }
+          }}
+        >
+          <Box sx={{ position: 'relative', zIndex: 1, width: '100%' }} className='p-2'>
+            <SwapDefaultMode
+              token1={token1}
+              token2={token2}
+            />
+          </Box>
         </Box>
       </Box>
     </div>

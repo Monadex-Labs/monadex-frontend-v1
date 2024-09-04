@@ -21,7 +21,7 @@ export default function useIsWindowVisible (): boolean {
     document.addEventListener('visibilitychange', listener)
     return () => {
       document.removeEventListener('visibilitychange', listener)
-    };
+    }
   }, [listener])
 
   return focused

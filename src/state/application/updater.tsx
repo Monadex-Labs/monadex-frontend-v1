@@ -7,9 +7,9 @@ import { updateBlockNumber } from './actions'
 import { useWalletData } from '@/utils'
 import { ChainId } from '@monadex/sdk'
 
-export default function Updater(): null {
+export default function Updater (): null {
   const { findProvider: library, chainId } = useWalletData()
-  const currentChain = chainId ? chainId : ChainId.SEPOLIA
+  const currentChain = chainId || ChainId.SEPOLIA
   const dispatch = useDispatch()
 
   const windowVisible = useIsWindowVisible()
@@ -94,7 +94,7 @@ export default function Updater(): null {
     dispatch(
       updateBlockNumber({
         chainId,
-        blockNumber: debouncedState.blockNumber as number,
+        blockNumber: debouncedState.blockNumber as number
       })
     )
   }, [

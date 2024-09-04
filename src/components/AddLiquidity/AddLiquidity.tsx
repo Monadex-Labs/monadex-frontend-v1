@@ -210,7 +210,7 @@ const AddLiquidity: React.FC<{
   )
 
   useEffect(() => {
-    if (currency0) {
+    if (currency0 != null) {
       onCurrencySelection(Field.CURRENCY_A, currency0)
     }
   }, [currency0Id])
@@ -230,7 +230,7 @@ const AddLiquidity: React.FC<{
   )
 
   useEffect(() => {
-    if (currency1) {
+    if (currency1 != null) {
       onCurrencySelection(Field.CURRENCY_B, currency1)
     }
   }, [currency1Id])
@@ -244,17 +244,17 @@ const AddLiquidity: React.FC<{
 
   const router = useRouterContract()
   const onAddLiquidity = async (): Promise<void> => {
-    if (!chainId || !provider || !account || !router) return
+    if (!chainId || !provider || !account || (router == null)) return
     const {
       [Field.CURRENCY_A]: parsedAmountA,
       [Field.CURRENCY_B]: parsedAmountB
     } = parsedAmounts
     if (
-      !parsedAmountA ||
-      !parsedAmountB ||
-      !currencies[Field.CURRENCY_A] ||
-      !currencies[Field.CURRENCY_B] ||
-      !deadline
+      (parsedAmountA == null) ||
+      (parsedAmountB == null) ||
+      (currencies[Field.CURRENCY_A] == null) ||
+      (currencies[Field.CURRENCY_B] == null) ||
+      (deadline == null)
     ) {
       return
     }
@@ -317,10 +317,10 @@ const AddLiquidity: React.FC<{
       value = null
     }
     setAttemptingTxn(true)
-    await estimate(args, value ? { value } : {})
+    await estimate(args, (value != null) ? { value } : {})
       .then(async (estimatedGasLimit: BigNumber): Promise<any> => {
         return await method(args, {
-          ...(value ? { value } : {}),
+          ...((value != null) ? { value } : {}),
           gasLimit: calculateGasMargin(estimatedGasLimit)
         })
           .then(async (response) => {
@@ -464,7 +464,7 @@ const AddLiquidity: React.FC<{
         title='Token 1'
         currency={currencies[Field.CURRENCY_A]}
         showHalfButton={Boolean(maxAmounts[Field.CURRENCY_A])}
-        showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
+        showMaxButton={atMaxAmounts[Field.CURRENCY_A] == null}
         onMax={() =>
           onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')}
         onHalf={() => {
@@ -483,10 +483,10 @@ const AddLiquidity: React.FC<{
         title='Token 2'
         showHalfButton={Boolean(maxAmounts[Field.CURRENCY_B])}
         currency={currencies[Field.CURRENCY_B]}
-        showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
+        showMaxButton={atMaxAmounts[Field.CURRENCY_B] == null}
         onHalf={() => {
           const maxAmount = maxAmounts[Field.CURRENCY_B]
-          if (maxAmount) {
+          if (maxAmount != null) {
             onFieldBInput(
               maxAmount.divide('2').toFixed(maxAmount.currency.decimals)
             )
@@ -519,7 +519,7 @@ const AddLiquidity: React.FC<{
             <Box className='p-2 flex justify-between'>
               <small>Your Pool Share</small>
               <small>
-                {(poolTokenPercentage)
+                {(poolTokenPercentage != null)
                   ? poolTokenPercentage.toSignificant(6) + '%'
                   : '-'}
               </small>
