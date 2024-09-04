@@ -187,12 +187,10 @@ export function useDerivedSwapInfo (): {
     [Field.OUTPUT]: relevantTokenBalances?.[1]
   }
 
-
   const currencies: { [field in Field]?: Token | NativeCurrency } = {
     [Field.INPUT]: inputCurrency ?? undefined,
     [Field.OUTPUT]: outputCurrency ?? undefined
   }
-  console.log('currencies',inputCurrencyId)
 
   let inputError: string | undefined
   if (address === undefined) {
