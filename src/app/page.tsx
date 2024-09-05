@@ -79,7 +79,7 @@ const SwapPage: React.FC = () => {
             }
           }}
         >
-          <Box sx={{ position: 'relative', zIndex: 1, width: '100%' }} className='p-2'>
+          <Box sx={{ zIndex: 1, width: '100%' }} className='p-2'>
             <SwapDefaultMode
               token1={token1}
               token2={token2}

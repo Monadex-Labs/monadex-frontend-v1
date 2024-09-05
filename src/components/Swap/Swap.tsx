@@ -88,6 +88,7 @@ const Swap: React.FC<{
     inputError: swapInputError,
     useAutoSlippage: autoSlippage
   } = useDerivedSwapInfo()
+  console.log("useDerivedSwapInfo ", currencies)
   const finalizedTransaction = useTransactionFinalizer()
   const {
     wrapType,
@@ -133,6 +134,7 @@ const Swap: React.FC<{
               : trade?.outputAmount
         }
   }, [parsedAmount, independentField, trade, showWrap])
+
   const formattedAmounts = useMemo(() => {
     return {
       [independentField]: typedValue,
@@ -460,6 +462,7 @@ const Swap: React.FC<{
     chainId,
     formattedAmounts
   ])
+  console.log("what I got here",currencies[Field.INPUT])
   const fetchingBestRoute =
     swapDelay === SwapDelay.USER_INPUT ||
     swapDelay === SwapDelay.FETCHING_SWAP ||

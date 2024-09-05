@@ -359,8 +359,10 @@ export function useDefaultsFromURLSearch ():
   const parsedQs = useParsedQueryString()
   const dispatch = useDispatch<AppDispatch>()
   const [result, setResult] = useState<{ inputCurrencyId: string | undefined, outputCurrencyId: string | undefined } | undefined>()
-  useEffect(() => {
-    if (!chainId) return // eslint-disable-line
+  
+  const parseAndDispatch = useCallback(() => {
+    if (!chainId) return
+
     const parsed = queryParametersToSwapState(parsedQs)
     dispatch(
       replaceSwapState({
@@ -380,7 +382,12 @@ export function useDefaultsFromURLSearch ():
       inputCurrencyId: parsed[Field.INPUT].currencyId,
       outputCurrencyId: parsed[Field.OUTPUT].currencyId
     })
-  }, [dispatch, chainId])
+  }, [chainId, parsedQs, dispatch])
 
+  useEffect(() => {
+    console.log("useEffect running")
+    parseAndDispatch()
+  }, [parseAndDispatch])
+  
   return result
 }

@@ -25,6 +25,7 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({
   const handleOpenModal = useCallback(() => {
     setModalOpen(true)
   }, [])
+
   return (
     <Box className='px-3 py-2 rounded-md flex justify-between items-center gap-3'>
       <Box
@@ -35,7 +36,7 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({
         }
         onClick={handleOpenModal}
       >
-        {currency != null
+        {currency 
           ? (
             <Box className='flex items-center gap-2'>
               <CurrencyLogo currency={currency} size='28px' />
