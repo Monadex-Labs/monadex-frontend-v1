@@ -10,7 +10,7 @@ import { Button } from '@mui/base'
 import { useConnectWallet } from '@web3-onboard/react'
 import { useWalletData } from '@/utils'
 import { Box, CircularProgress } from '@mui/material'
-
+import { useSwitchNetwork } from '@/utils'
 interface Props {
   account: string
   isSupportedNetwork: boolean
@@ -62,19 +62,23 @@ const SwapButton = (props: Props): JSX.Element => {
   const [, connect] = useConnectWallet()
   const { isConnected } = useWalletData()
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
+  const  {switchNetwork} = useSwitchNetwork()
 
   const buttonState = useMemo(() => {
-    if (!account) return { text: 'Connect Wallet', action: connect, disabled: false }
-    if (!isSupportedNetwork) return { text: 'Switch Network', action: () => {}, disabled: false }
+    if (!isConnected) return { text: 'Connect Wallet', action: connect, disabled: false }
+    
+    if (!isSupportedNetwork) return { text: 'Switch Network', action: switchNetwork , disabled: false }
+    
     if ((currencies[Field.INPUT] == null) || (currencies[Field.OUTPUT] == null)) return { text: 'Select a token', action: () => {}, disabled: true }
+    
     if (formattedAmounts[Field.INPUT] === '' && formattedAmounts[Field.OUTPUT] === '') return { text: 'Enter Amount', action: () => {}, disabled: true }
 
     if (showWrap) {
       if (wrapInputError) return { text: wrapInputError, action: () => {}, disabled: true }
-      const wrapText = wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : ''
+      const wrapText = wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : ``
       const symbol = wrapType === WrapType.WRAP ? ETH.symbol : WMND[chainId].symbol
       return {
-        text: `${wrapText} Monad ${symbol ?? '[INVALID SYMBOL]'}`,
+        text: `${wrapText}  ${symbol ?? '[INVALID SYMBOL]'}`,
         action: onSwap,
         disabled: wrapType === WrapType.WRAPPING || wrapType === WrapType.UNWRAPPING
       }
@@ -137,7 +141,7 @@ const SwapButton = (props: Props): JSX.Element => {
 
   return (
     <Button
-      className='w-full bg-primary py-4 px-4 rounded-md disabled:opacity-40 -z-10'
+      className='w-full bg-primary py-4 px-4 rounded-md disabled:opacity-40'
       disabled={buttonState.disabled}
       onClick={handleClick}
     >
