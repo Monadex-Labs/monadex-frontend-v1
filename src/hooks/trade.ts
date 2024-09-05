@@ -13,6 +13,7 @@ export const defaultRouter: TradeRouter = {
 export interface PurchaseTickets {
   purchaseTickets: boolean
   multiplier?: number
+  minimumTicketsToReceive: number
 }
 
 export class MonadexTrade extends Trade {

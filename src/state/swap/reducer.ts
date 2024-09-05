@@ -38,7 +38,8 @@ const initialState: SwapState = {
   },
   raffle: {
     ticketsPurchased: false,
-    multiplier: null
+    multiplier: 0,
+    minimumTicketsToReceive: 0
   },
   recipient: null,
   swapDelay: SwapDelay.INIT
@@ -57,7 +58,8 @@ export default createReducer<SwapState>(initialState, (builder) => {
         independentField: field,
         raffle: {
           ticketsPurchased: raffle.ticketsPurchased,
-          multiplier: raffle.multiplier
+          multiplier: raffle.multiplier,
+          minimumTicketsToReceive: 0
         },
         swapDelay,
         typedValue,
@@ -106,7 +108,8 @@ export default createReducer<SwapState>(initialState, (builder) => {
         ...state,
         raffle: {
           ticketsPurchased: raffle.ticketsPurchased,
-          multiplier: raffle.multiplier
+          multiplier: raffle.multiplier,
+          minimumTicketsToReceive: 0
         }
       }
     })
