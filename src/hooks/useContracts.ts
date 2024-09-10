@@ -72,18 +72,21 @@ export function useWMNDContract (
   const { chainId } = useWalletData()
   return useContract(
     chainId ? WMND[chainId].address : undefined,
-    WMND_ABI, 
+    WMND_ABI,
     withSignerIfPossible
   ) as Contract
 }
 // temporary contract
 export function useWETHcontract (
   withSignerIfPossible?: boolean
-): Contract | null {
+): Contract | null | undefined {
   const { chainId } = useWalletData()
+  const useChain = chainId ? chainId : ChainId.SEPOLIA
+  const wmndAddress = WMND[useChain] ? WMND[useChain].address : undefined
+
   return useContract(
-    chainId ? WMND[chainId].address : undefined,
-    WETHABI, 
+    wmndAddress,
+    WETHABI,
     withSignerIfPossible
   ) as Contract
 }

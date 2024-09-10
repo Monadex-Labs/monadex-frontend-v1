@@ -24,7 +24,8 @@ export function FormattedPriceImpact ({
                   : 'text-success'
         }
     >
-      {(priceImpact != null) ? `${priceImpact.multiply(BigInt(-1)).toFixed(2)}%` : '-'}
+      {/* {(priceImpact != null) ? `${priceImpact.multiply(BigInt(-1)).toFixed(2)}%` : '-'} */}
+      {(priceImpact != null) ? `${priceImpact.multiply(BigInt(100)).toFixed(2)}%` : '-'}
     </small>
   )
 }

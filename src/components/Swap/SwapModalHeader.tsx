@@ -38,7 +38,7 @@ const SwapModalHeader: React.FC<SwapModalHeaderProps> = ({
 
   const pct = basisPointsToPercent(allowedSlippage)
 
-  const bestTradeAmount = trade
+  const bestTradeAmount = (trade != null)
     ? trade.tradeType === TradeType.EXACT_INPUT
       ? new Fraction(ONE).add(pct).invert().multiply(trade.outputAmount).quotient
       : new Fraction(ONE).add(pct).multiply(trade.inputAmount).quotient
@@ -48,9 +48,9 @@ const SwapModalHeader: React.FC<SwapModalHeaderProps> = ({
     <Box>
       <Box mt={5} className='flex justify-center'>
         <DoubleCurrencyLogo
-          currency0={trade ? trade.inputAmount.currency : inputCurrency as Token}
+          currency0={(trade != null) ? trade.inputAmount.currency : inputCurrency as Token}
           currency1={
-            trade ? trade.outputAmount.currency : outputCurrency as Token
+            (trade != null) ? trade.outputAmount.currency : outputCurrency as Token
           }
           size={38}
         />
@@ -58,31 +58,33 @@ const SwapModalHeader: React.FC<SwapModalHeaderProps> = ({
       <Box className='mx-6 my-0 flex flex-col items-center'>
         <p>
           Swap {' '}
-          {trade
+          {(trade != null)
             ? formatTokenAmount(trade.inputAmount)
             : ''}{' '}
-          {trade
+          {(trade != null)
             ? trade.inputAmount.currency.symbol
             : inputCurrency?.symbol}{' '}
         </p>
         <IoMdArrowDown className='m-3' />
         <p>
-          {trade
+          {(trade != null)
             ? formatTokenAmount(trade.outputAmount)
             : ''}{' '}
-          {trade
+          {(trade != null)
             ? trade.outputAmount.currency.symbol
             : outputCurrency?.symbol}
         </p>
       </Box>
       {showAcceptChanges && (
         <Box className='p-1 '>
-          <Box>
-            <IoMdWarning />
-            <p className='text-sm font-medium'>Price Updated</p>
+          <Box className='flex justify-center mt-2 mb-4 items-center gap-2'>
+            <IoMdWarning className='text-yellow' />
+            <p className='text-sm font-medium text-yellow'>Price Updated</p>
           </Box>
-          <Button onClick={onAcceptChanges}
-            className=' w-full bg-gradient-to-r from-[#23006A] to-[#23006A]/50 py-4 px-4 rounded-md disabled:opacity-40'>
+          <Button
+            onClick={onAcceptChanges}
+            className=' w-full bg-gradient-to-r from-[#23006A] to-[#23006A]/50 py-4 px-4 rounded-md disabled:opacity-40'
+          >
             Accept
           </Button>
         </Box>
@@ -94,7 +96,7 @@ const SwapModalHeader: React.FC<SwapModalHeaderProps> = ({
               {`Output is estimated. You will receive at least ${
               trade
                 ? formatTokenAmount(slippageAdjustedAmounts[Field.OUTPUT])
-                : bestTradeAmount && outputCurrency 
+                : (bestTradeAmount != null) && (outputCurrency != null)
                 ? (
                     Number(bestTradeAmount.toString()) /
                     10 ** outputCurrency.decimals
@@ -111,9 +113,9 @@ const SwapModalHeader: React.FC<SwapModalHeaderProps> = ({
             ? (
               <p className='font-medium p-1 opacity-40 mt-4'>
                 {`Input is estimated. You will sell at most ${
-              trade 
+              trade
                 ? formatTokenAmount(slippageAdjustedAmounts[Field.INPUT])
-                : bestTradeAmount && inputCurrency 
+                : (bestTradeAmount != null) && (inputCurrency != null)
                 ? (
                     Number(bestTradeAmount.toString()) /
                     10 ** inputCurrency.decimals

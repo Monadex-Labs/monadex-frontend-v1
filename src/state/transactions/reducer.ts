@@ -44,9 +44,9 @@ export default createReducer(initialState, (builder) =>
         const txs = transactions[chainId] ?? {}
         txs[hash] = { hash, approval, summary, claim, from, addedTime: now() }
         transactions[chainId] = txs
-      },
+      }
     )
-    .addCase(clearAllTransactions, (transactions, { payload: { chainId} }) => {
+    .addCase(clearAllTransactions, (transactions, { payload: { chainId } }) => {
       if (transactions[chainId] === undefined) return
       transactions[chainId] = {}
     })

@@ -74,7 +74,6 @@ const CurrencyList: React.FC<CurrencyListProps> = ({
           otherSelected={otherSelected}
           isOnSelectedList={isOnSelectedList[index]}
           balance={balances[index]}
-          usdPrice={usdPrice ? usdPrice.price : 0}
         />
       )
     },

@@ -16,7 +16,7 @@ export default function useInterval (
   useEffect(() => {
     function tick (): void {
       const current = savedCallback.current
-      current && current()
+      ;(current != null) && current()
     }
 
     if (delay !== null) {

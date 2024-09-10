@@ -1,7 +1,7 @@
 import React from 'react'
 import { escapeRegExp } from '@/utils'
 
-const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`); // match escaped "." characters via in a non-capturing group
+const inputRegex = RegExp('^\\d*(?:\\\\[.])?\\d*$') // match escaped "." characters via in a non-capturing group
 
 export const NumericalInput = React.memo(function InnerInput ({
   value,

@@ -4,16 +4,15 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { JSBI, Percent, Router, SwapParameters, Trade, TradeType } from '@monadex/sdk'
 import { useMemo } from 'react'
 import { useTransactionAdder } from '@/state/transactions/hooks'
-import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
+import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE, GlobalData } from '../constants'
 import { calculateGasMargin, shortenAddress, isAddress } from '../utils'
 import isZero from '../utils/isZero'
 import useTransactionDeadline from './useTransactionDeadline'
 import { useRouterContract } from './useContracts'
 import { purchasedTicketsOnSwap } from '@/state/swap/actions'
-import { GlobalData } from '../constants'
 import { useSelector } from 'react-redux'
 import { useWalletData } from '../utils/index'
-
+import { checksumAddress } from 'viem'
 export enum SwapCallbackState {
   INVALID,
   LOADING,
@@ -55,29 +54,32 @@ export function useSwapCallArguments (
 ): SwapCall[] {
   const recipientAddress = isAddress(recipientAddressOrName)
   const { account: address, chainId, provider: wallet } = useWalletData()
-  const recipient = recipientAddressOrName === null ? address : recipientAddress
+  const checksumAddress = isAddress(address)
+
+  const recipient = recipientAddressOrName === null ? checksumAddress : recipientAddress
   const deadline = useTransactionDeadline()
   const contract = useRouterContract() as Contract
-  //const ticketsState = useSelector(purchasedTicketsOnSwap)
-  // grab raffle state 
+  // const ticketsState = useSelector(purchasedTicketsOnSwap)
+  // grab raffle state
   // const ticketsPurchased = ticketsState.payload.raffle?.ticketsPurchased as boolean
   // const multiplier = ticketsState.payload.raffle?.multiplier as number
   return useMemo(() => {
     // checking
     if (!trade || !recipient || !wallet  || !chainId || !deadline ) return [] // eslint-disable-line
     if (!contract) return []
-  //  Trade type always equal ot 1
+    //  Trade type always equal ot 1
     const swapMethods = [] as any[]
-    switch(tradeVersion) {
-      case version.v2 : 
+    switch (tradeVersion) {
+      case version.v2 :
         swapMethods.push(
           Router.swapCallParameters(trade, {
             feeOnTransfer: false,
             allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
             recipient,
-            ttl: 
-            deadline ? deadline.toNumber() :
-            GlobalData.utils.DEFAULT_DEADLINE_FROM_NOW
+            ttl:
+            deadline
+              ? deadline.toNumber()
+              : GlobalData.utils.DEFAULT_DEADLINE_FROM_NOW
           }, {
             // fake data to test before creation of the raffle component
             purchaseTickets: Boolean(false),
@@ -85,17 +87,18 @@ export function useSwapCallArguments (
             minimumTicketsToReceive: 0
         })
         )
-        if(trade.tradeType === TradeType.EXACT_INPUT) {
+        if (trade.tradeType === TradeType.EXACT_INPUT) {
           swapMethods.push(
-            Router.swapCallParameters(trade, 
+            Router.swapCallParameters(trade,
               {
-              feeOnTransfer: false,
-              allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
-              recipient,
-              ttl: 
-                deadline ? deadline.toNumber() : 
-                GlobalData.utils.DEFAULT_DEADLINE_FROM_NOW
-              },{
+                feeOnTransfer: false,
+                allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+                recipient,
+                ttl:
+                deadline
+                  ? deadline.toNumber()
+                  : GlobalData.utils.DEFAULT_DEADLINE_FROM_NOW
+              }, {
               // fake data to test before creation of the raffle component
               purchaseTickets: Boolean(false),
               multiplier : 0,
@@ -121,7 +124,7 @@ export function useSwapCallback (
   const { account: address, chainId, provider: library } = useWalletData()
   const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName)
   const addTransaction = useTransactionAdder()
-  const recipient = recipientAddressOrName  ? recipientAddressOrName : address
+  const recipient = recipientAddressOrName ?? address
   return useMemo(() => {
     if (!trade || !address || !chainId) { // eslint-disable-line
       return { state: SwapCallbackState.INVALID, callback: null, error: 'Missing dependencies' }

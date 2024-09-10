@@ -15,7 +15,7 @@ const AddressInput: React.FC<AddressInputProps> = ({
   label
 }) => {
   const { chainId } = useWalletData()
-  const error = !Boolean(value.length > 0)
+  const error = !(value.length > 0)
   const address = isAddress(value)
   return (
     <Box

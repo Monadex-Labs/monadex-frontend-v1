@@ -69,7 +69,6 @@ interface CurrenyRowProps {
   style: any
   isOnSelectedList?: boolean
   balance: CurrencyAmount | undefined
-  usdPrice: number
 }
 
 const CurrencyRow: React.FC<CurrenyRowProps> = ({
@@ -79,37 +78,40 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
   otherSelected,
   style,
   isOnSelectedList,
-  balance,
-  usdPrice
+  balance
 }) => {
   const { account, chainId, provider } = useWalletData()
   const key = currencyKey(currency)
   const customAdded = useIsUserAddedToken(currency)
   const nativeCurrency = ETH
- 
+
   const removeToken = useRemoveUserAddedToken()
   const addToken = useAddUserToken()
   const isMetamask = getIsMetaMaskWallet() && isOnSelectedList
-  
+
   const addTokenToMetamask = (
-    tokenAddress: any,
-    tokenSymbol: any,
-    tokenDecimals: any,
+    tokenAddress: string,
+    tokenSymbol: string,
+    tokenDecimals: number,
     tokenImage: any
-  ): void => {
-    if (provider?.provider?.request != null) {
-      void provider.provider.request({
-        method: 'wallet_watchAsset',
-        params: [{
-          type: 'ERC20',
-          options: {
-            address: tokenAddress,
-            symbol: tokenSymbol,
-            decimals: tokenDecimals,
-            image: tokenImage
-          }
-        }]
-      })
+  ) => {
+    if (provider?.provider?.request) {
+      try {
+        provider.provider.request({
+          method: 'wallet_watchAsset',
+          params: {
+            type: 'ERC20',
+            options: {
+              address: tokenAddress,
+              symbol: tokenSymbol,
+              decimals: tokenDecimals,
+              image: tokenImage
+            }
+          } as unknown as any[]
+        })
+      } catch (error) {
+        console.error('Error adding token to MetaMask:', error)
+      }
     }
   }
 
@@ -152,7 +154,7 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
           if (!isSelected && !otherSelected) onSelect()
         }}
       >
-        <Box className='w-full bg-transparent flex p-4'>
+        <Box className='w-full bg-transparent flex p-4 items-center gap-3'>
           {(otherSelected || isSelected) && <FiCheck />}
           <CurrencyLogo currency={currency} size='32px' />
           <Box ml={1} height={32}>
@@ -166,10 +168,9 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
                     onClick={(event: any) => {
                       addTokenToMetamask(
                         currency.address,
-                        currency.symbol,
+                        currency.symbol ?? 'INVALID SYMBOL',
                         currency.decimals,
-                        // CURRENCY.ADDRESS
-                        getTokenLogoURL()
+                        getTokenLogoURL(currency.address)
                       )
                       event.stopPropagation()
                     }}
@@ -217,9 +218,6 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
               ? (
                 <>
                   <Balance balance={balance} />
-                  <span className='text-secondary'>
-                    ${formatNumber(Number(balance.toExact()) * usdPrice)}
-                  </span>
                 </>
                 )
               : account != null

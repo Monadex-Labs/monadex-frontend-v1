@@ -110,7 +110,6 @@ export function useCurrencyBalances (
     () =>
       currencies?.map(currency => {
         if (account == null || currency == null) return undefined
-        // weird error here : ethBalance[account] returns undefined even if account is not undefined , if you hardcode your address account on ethBalance you will have the value expected
         if (currency === nativeCurrency) {
           const checksummed = utilsAddess(account)
           const address = typeof checksummed === 'boolean' ? '' : checksummed
@@ -133,7 +132,7 @@ export function useCurrencyBalance (
   account?: string,
   currency?: NativeCurrency | Token
 ): CurrencyAmount | TokenAmount | undefined {
-  return useCurrencyBalances(account, currency ? [currency] : [])?.[0]
+  return useCurrencyBalances(account, (currency != null) ? [currency] : [])?.[0]
 }
 
 // mimics useAllBalances
@@ -160,7 +159,7 @@ export function useMNDBalance (
 
   const addresses: string[] = useMemo(
     () =>
-      uncheckedAddresses
+      (uncheckedAddresses != null)
         ? uncheckedAddresses
           .map(utilsAddess)
           .filter((a): a is string => a !== false)

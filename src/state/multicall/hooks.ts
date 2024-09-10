@@ -55,7 +55,7 @@ function useCallsData (calls: Array<Call | undefined>, options?: ListenerOptions
   AppState['multicall']['callResults']>(
     (state) => state.multicall.callResults
   )
-  
+
   const dispatch = useDispatch<AppDispatch>()
   const serializedCallKeys: string = useMemo(
     () =>
@@ -100,11 +100,6 @@ function useCallsData (calls: Array<Call | undefined>, options?: ListenerOptions
       calls?.map<CallResult>((call) => {
         if (chainId === undefined || call === undefined) return INVALID_RESULT
         const result = callResults[chainId]?.[toCallKey(call)]
-        // calls.filter((c) => {
-        //   if(c?.callData === '0x0902f1ac') {
-        //     console.log('result', callResults[chainId])
-        //   }
-        // })
         let data
         if (result?.data != null && result?.data !== '0x') {
           data = result.data

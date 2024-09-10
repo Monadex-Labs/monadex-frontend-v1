@@ -248,7 +248,7 @@ export function maxAmountSpend (
   chainId: ChainId,
   currencyAmount?: CurrencyAmount
 ): CurrencyAmount | undefined {
-  if (!currencyAmount) return undefined
+  if (currencyAmount == null) return undefined
   if (currencyAmount?.currency === ETH) {
     if (
       JSBI.greaterThan(currencyAmount.raw, MIN_NATIVE_CURRENCY_FOR_GAS[chainId])

@@ -61,15 +61,15 @@ const ConfirmSwapModal: React.FC<ConfirmSwapModalProps> = ({
   const showAcceptChanges = useMemo(
     () =>
       Boolean(
-        trade &&
-          originalTrade &&
+        (trade != null) &&
+          (originalTrade != null) &&
           tradeMeaningfullyDiffers(trade, originalTrade)
       ),
     [originalTrade, trade]
   )
 
   const modalHeader = useCallback(() => {
-    return trade
+    return (trade != null)
       ? (
         <SwapModalHeader
           trade={trade}

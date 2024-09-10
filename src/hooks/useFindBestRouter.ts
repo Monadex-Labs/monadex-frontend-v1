@@ -1,4 +1,3 @@
-// import { SmartRouter, RouterTypes } from '@/constants/index'
 import { SwapDelay, Field } from '@/state/swap/actions'
 import {
   tryParseAmount,
@@ -12,16 +11,15 @@ import { useWalletData } from '@/utils'
 import { useCurrency } from './Tokens'
 import { useTradeExactIn, useTradeExactOut } from '@/hooks/Trades'
 import { useSwapCallArguments, SwapCall } from './useSwapCallback'
-// import useParsedQueryString from './useParseQueryString'
-import { ChainId, TokenAmount, Trade } from '@monadex/sdk'
-import { useMemo } from 'react'
+import { TokenAmount, Trade } from '@monadex/sdk'
+
 const useFindBestRoute = (): {
   v2Trade: Trade | null
   swapCalls: SwapCall[]
   bestTradeExactIn: Trade | null
   bestTradeExactOut: Trade | null
 } => {
-  const {chainId} = useWalletData()
+  const { chainId } = useWalletData()
   const { onSwapDelay } = useSwapActionHandlers()
   // const parsedQuery = useParsedQueryString()
 
@@ -52,15 +50,14 @@ const useFindBestRoute = (): {
     onSwapDelay
   )
 
-
-  const bestTradeExactOut = useTradeExactOut(  
-    inputCurrency ?? undefined,  
+  const bestTradeExactOut = useTradeExactOut(
+    inputCurrency ?? undefined,
     !isExactIn ? parsedAmount : undefined,
     swapDelay,
     onSwapDelay
   )
+
   const v2Trade = isExactIn ? bestTradeExactIn : bestTradeExactOut
- 
   const swapCalls = useSwapCallArguments(
     v2Trade ?? undefined,
     allowedSlippage,

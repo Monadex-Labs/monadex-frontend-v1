@@ -12,7 +12,6 @@ import { AppDispatch, AppState } from '../store'
 import { Call, addListenerOptions, errorFetchingMulticallResults, fetchingMulticallResults, parseCallKey, updateMulticallResults } from './actions'
 import { getConfig } from '@/constants/config'
 import { ChainId } from '@monadex/sdk'
-import { SwitchChainPopUp } from '@/components/Popup/switchChainPopup'
 // chunk calls so we do not exceed the gas limit
 const DEFAULT_GAS_REQUIRED = 1_000_000
 /**

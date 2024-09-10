@@ -9,7 +9,7 @@ export interface SerializedToken {
 }
 
 export interface FeeTier {
-  
+
 }
 
 export interface SerializedPair {

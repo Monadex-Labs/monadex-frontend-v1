@@ -41,7 +41,7 @@ export interface MulticallState {
 const initialState: MulticallState = {
   callResults: {},
   listenerOptions: {
-    [84532]: {
+    84532: {
       blocksPerFetch: 7
     }
   }
@@ -50,7 +50,7 @@ const initialState: MulticallState = {
 export default createReducer(initialState, (builder) =>
   builder
     .addCase(addMulticallListeners, (state, { payload: { calls, chainId, options: { blocksPerFetch = 1 } = {} } }) => {
-      const listeners: MulticallState['callListeners'] = state.callListeners
+      const listeners: MulticallState['callListeners'] = (state.callListeners != null)
         ? state.callListeners
         : (state.callListeners = {})
       listeners[chainId] = listeners[chainId] ?? {}
@@ -75,7 +75,7 @@ export default createReducer(initialState, (builder) =>
     .addCase(
       removeMulticallListeners,
       (state, { payload: { chainId, calls, options: { blocksPerFetch = 1 } = {} } }) => {
-        const listeners: MulticallState['callListeners'] = state.callListeners
+        const listeners: MulticallState['callListeners'] = (state.callListeners != null)
           ? state.callListeners
           : (state.callListeners = {})
 
@@ -122,7 +122,6 @@ export default createReducer(initialState, (builder) =>
       })
     })
     .addCase(updateMulticallResults, (state, { payload: { chainId, results, blockNumber } }) => {
-      // console.log('datas 0x', results)
       state.callResults[chainId] = state.callResults[chainId] ?? {}
       Object.keys(results).forEach((callKey) => {
         const current = state.callResults[chainId][callKey]

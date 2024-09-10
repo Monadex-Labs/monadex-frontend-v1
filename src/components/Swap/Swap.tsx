@@ -133,6 +133,7 @@ const Swap: React.FC<{
               : trade?.outputAmount
         }
   }, [parsedAmount, independentField, trade, showWrap])
+
   const formattedAmounts = useMemo(() => {
     return {
       [independentField]: typedValue,
@@ -585,45 +586,14 @@ const Swap: React.FC<{
         ? (
           <Box mt={2} className='flex justify-center gap-2 items-center flex-col'>
             <CircularProgress size={16} />
-            <p className='text-xs mb-2'>Fetching Best Route</p>
+            <p className='text-xs mb-2'>Fetching Best Quote</p>
           </Box>
           )
         : (
           <AdvancedSwapDetails trade={trade} />
           )}
-      <Box className=''>
-        {showApproveFlow && (
-          <Box width='48%'>
-            <Button
-              className='w-full'
-              disabled={
-                approving ||
-                approval !== ApprovalState.NOT_APPROVED ||
-                approvalSubmitted
-              }
-              onClick={() => {
-                void handleApprove()
-              }}
-            >
-              {approvalSubmitted && approval !== ApprovalState.APPROVED
-                ? (
-                  <Box className='border'>
-                    Approving <CircularProgress size={16} />
-                  </Box>
-                  )
-                : approvalSubmitted && approval === ApprovalState.APPROVED
-                  ? (
-                      'Approved'
-                    )
-                  : (
-                `Approve ${
-                  currencies[Field.INPUT]?.symbol ?? '[INVALID SYMBOL]'
-                }`
-                    )}
-            </Button>
-          </Box>
-        )}
-        <Box width={showApproveFlow ? '48%' : '100%'}>
+      <Box>
+        <Box>
           <SwapButton
             account={account}
             isSupportedNetwork={isSupportedNetwork}
@@ -642,6 +612,7 @@ const Swap: React.FC<{
             isValid={isValid}
             approval={approval}
             onSwap={onSwap}
+            handleApprove={handleApprove}
           />
         </Box>
       </Box>

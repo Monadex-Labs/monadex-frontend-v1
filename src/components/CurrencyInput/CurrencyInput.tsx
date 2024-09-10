@@ -85,12 +85,12 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
             {`Balance: ${formatTokenAmount(selectedCurrencyBalance)}`}
           </small>
           {Boolean(account) && (currency != null) && showMaxButton === true && (
-              <div className='' onClick={onMax}>
-                <small className='text-primary] font-lg'>Max</small>
-              </div>
-            )}
+            <div className='' onClick={onMax}>
+              <small className='text-primary] font-lg'>Max</small>
+            </div>
+          )}
         </div>
-        
+
         <small className='text-textSecondary text-md p-1'>
           ${(usdPrice * Number(amount)).toLocaleString('us')}
         </small>

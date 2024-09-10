@@ -201,7 +201,6 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
           otherCurrency={otherSelectedCurrency}
           selectedCurrency={selectedCurrency}
           balances={currencyBalances}
-          usdPrices={[]} // TODO: Add USDC token prices (Pending fn: useUSDCPricesFromAddresses)
         />
       </Box>
 

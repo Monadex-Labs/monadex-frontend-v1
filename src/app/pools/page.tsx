@@ -1,7 +1,6 @@
 'use client'
 import Link from 'next/link'
 const Pool = (): JSX.Element => {
-
   // FIRST CONTAINER DISPLAYING TVL & DAILY VOLUME
   // Trending pools
   // Large pools
