@@ -9,6 +9,7 @@ export enum Field {
 export interface RaffleState {
   ticketsPurchased: boolean | string
   multiplier?: number | null | string
+  minimumTicketsToReceive?: number | null | string
 }
 export enum SwapDelay {
   INIT = 'INIT', // The initial state of the swap cycle before a user interaction

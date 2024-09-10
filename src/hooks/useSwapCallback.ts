@@ -83,8 +83,9 @@ export function useSwapCallArguments (
           }, {
             // fake data to test before creation of the raffle component
             purchaseTickets: Boolean(false),
-            multiplier: Number(0)
-          })
+            multiplier : 0,
+            minimumTicketsToReceive: 0
+        })
         )
         if (trade.tradeType === TradeType.EXACT_INPUT) {
           swapMethods.push(
@@ -99,8 +100,9 @@ export function useSwapCallArguments (
                   : GlobalData.utils.DEFAULT_DEADLINE_FROM_NOW
               }, {
               // fake data to test before creation of the raffle component
-                purchaseTickets: Boolean(false),
-                multiplier: 0
+              purchaseTickets: Boolean(false),
+              multiplier : 0,
+              minimumTicketsToReceive: 0
               }
             )
           )

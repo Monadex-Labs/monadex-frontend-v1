@@ -12,13 +12,10 @@ export const ZERO_PERCENT = new Percent('0')
 export const ONE_HUNDRED_PERCENT = new Percent('1')
 
 export const ERC20_INTERFACE = new Interface(ERC20ABI)
-// test tokenA on sepolia : 0xeBB73A78C5969Fd6C2ABCA93bd4C1e6f336da196
-// test tokenB on sepolia : 0xdd9ec86EC9563D4bae8c7AcA55f4814cbF41c464
-// test wMonad on sepolia 0x3f2509FE1523ce1c8735d76f5E9ACa9BD6c62C19
-export const MULTICALL_ADDRESS = '0x5C36F9f347293e0c7ad2106F5c15303911ffd71b' // eth sepolia address
-export const FACTORY_ADDRESS = '0x3FB48a9b88685Fb14DcfBE65553200b1790964E1' // eth sepolia address
-export const ROUTER_ADDRESS = '0x6BDC96BD77b5ee7112aeaE8841EF15B733C9cE98' // eth sepolia address
-export const RAFFLE_ADDRESS = '0xe6ddcc5353d6d67bdcef42430f1e3c11335823b8'
+export const MULTICALL_ADDRESS = '0x52b4919fD23C7266D042615Ce5BAaac5B03Bf218'
+export const FACTORY_ADDRESS = '0x5f1498f06d631f010183D5DE08Af835c60eB1cd2'
+export const ROUTER_ADDRESS = '0x89831AED10991214D3Bd417FF0E97E5e876bE8dD'
+export const RAFFLE_ADDRESS = '0x50986028fd38c3fbB7ce47b3d21F556C03f31d34'
 
 export const INIT_CODE_HASH = '0x8009c475872d4440952067a3d491713f4a820605f565f899d722ca2b3e196d05'
 
@@ -40,7 +37,7 @@ export const WMND_ONLY: ChainTokenList = {
 
 }
 export const V1_ROUTER_ADDRESS: AddressMap = {
-  [ChainId.SEPOLIA]: '0x6BDC96BD77b5ee7112aeaE8841EF15B733C9cE98'
+  [ChainId.SEPOLIA]: '0x89831AED10991214D3Bd417FF0E97E5e876bE8dD'
   // add chain.monad testnet and monad here
 }
 // one basis point
@@ -70,7 +67,7 @@ export const DEFAULT_TOKEN_LIST_URL: string = 'https://dani3.com/assets/docs/lis
 export const MNDX: { [chainid: number]: Token } = {
   [ChainId.SEPOLIA]: new Token(
     ChainId.SEPOLIA,
-    '0xc53109678A0c78326282700132640FC1C06D6A26',
+    '0xe7Ac0E38a0bAAFeb3e5cBa94E2fbAE44511D0F8A',
     18,
     'MDX',
     'Monadex token'
@@ -79,7 +76,7 @@ export const MNDX: { [chainid: number]: Token } = {
 export const USDC: { [chainid: number]: Token } = {
   [ChainId.SEPOLIA]: new Token(
     ChainId.SEPOLIA,
-    '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238',
+    '0xbf5bec5a2711719b5A2c344d17fBC276726ab1b1',
     6,
     'USDC',
     'USD Coin'

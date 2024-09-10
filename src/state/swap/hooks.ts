@@ -191,6 +191,7 @@ export function useDerivedSwapInfo (): {
     [Field.INPUT]: inputCurrency ?? undefined,
     [Field.OUTPUT]: outputCurrency ?? undefined
   }
+
   let inputError: string | undefined
   if (address === undefined) {
     inputError = 'Connect Wallet'
@@ -329,7 +330,8 @@ export function queryParametersToSwapState (parsedQs: ParsedQs): SwapState {
   // Assuming parsedQs has raffle related parameters
   const raffleState = {
     ticketsPurchased: parseBooleanURLParameter(parsedQs.ticketsPurchased),
-    multiplier: parseTokenAmountURLParameter(parsedQs.multiplier)
+    multiplier: parseTokenAmountURLParameter(parsedQs.multiplier),
+    minimumTokensToReceive: parseTokenAmountURLParameter(parsedQs.minimumTokensToReceive)
   }
   return {
     [Field.INPUT]: {
@@ -374,7 +376,8 @@ export function useDefaultsFromURLSearch ():
         swapDelay: SwapDelay.INIT,
         raffle: {
           ticketsPurchased: parsed.raffle.ticketsPurchased,
-          multiplier: parsed.raffle.multiplier
+          multiplier: parsed.raffle.multiplier,
+          minimumTicketsToReceive: parsed.raffle.minimumTicketsToReceive
         }
       })
     )
