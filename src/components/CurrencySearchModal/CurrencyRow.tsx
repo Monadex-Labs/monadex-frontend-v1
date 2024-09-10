@@ -89,15 +89,15 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
   const addToken = useAddUserToken()
   const isMetamask = getIsMetaMaskWallet() && isOnSelectedList
 
-  const addTokenToMetamask = async (
+  const addTokenToMetamask = (
     tokenAddress: string,
     tokenSymbol: string,
     tokenDecimals: number,
-    tokenImage: string
+    tokenImage: any
   ) => {
     if (provider?.provider?.request) {
       try {
-        await provider.provider.request({
+        provider.provider.request({
           method: 'wallet_watchAsset',
           params: {
             type: 'ERC20',
@@ -107,7 +107,7 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
               decimals: tokenDecimals,
               image: tokenImage
             }
-          }
+          } as unknown as any[]
         })
       } catch (error) {
         console.error('Error adding token to MetaMask:', error)
@@ -168,7 +168,7 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
                     onClick={(event: any) => {
                       addTokenToMetamask(
                         currency.address,
-                        currency.symbol as string,
+                        currency.symbol ?? 'INVALID SYMBOL',
                         currency.decimals,
                         getTokenLogoURL(currency.address)
                       )

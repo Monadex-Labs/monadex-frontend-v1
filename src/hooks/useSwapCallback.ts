@@ -122,7 +122,7 @@ export function useSwapCallback (
   const { account: address, chainId, provider: library } = useWalletData()
   const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName)
   const addTransaction = useTransactionAdder()
-  const recipient = recipientAddressOrName || address
+  const recipient = recipientAddressOrName ?? address
   return useMemo(() => {
     if (!trade || !address || !chainId) { // eslint-disable-line
       return { state: SwapCallbackState.INVALID, callback: null, error: 'Missing dependencies' }

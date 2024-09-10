@@ -462,7 +462,6 @@ const Swap: React.FC<{
     chainId,
     formattedAmounts
   ])
-  console.log("what I got here",currencies[Field.INPUT])
   const fetchingBestRoute =
     swapDelay === SwapDelay.USER_INPUT ||
     swapDelay === SwapDelay.FETCHING_SWAP ||

@@ -11,6 +11,7 @@ import { useConnectWallet } from '@web3-onboard/react'
 import { useWalletData } from '@/utils'
 import { Box, CircularProgress } from '@mui/material'
 import { useSwitchNetwork } from '@/utils'
+
 interface Props {
   account: string
   isSupportedNetwork: boolean
@@ -62,12 +63,18 @@ const SwapButton = (props: Props): JSX.Element => {
   const [, connect] = useConnectWallet()
   const { isConnected } = useWalletData()
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
-  const  {switchNetwork} = useSwitchNetwork()
+  const [isClient, setIsClient] = useState(false)
+  const { switchNetwork } = useSwitchNetwork()
 
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  console.log("isSupportedNetwork", isSupportedNetwork)
   const buttonState = useMemo(() => {
     if (!isConnected) return { text: 'Connect Wallet', action: connect, disabled: false }
     
-    if (!isSupportedNetwork) return { text: 'Switch Network', action: switchNetwork , disabled: false }
+    if (!isSupportedNetwork) return { text: 'Switch Network', action: switchNetwork, disabled: false }
     
     if ((currencies[Field.INPUT] == null) || (currencies[Field.OUTPUT] == null)) return { text: 'Select a token', action: () => {}, disabled: true }
     
@@ -111,26 +118,7 @@ const SwapButton = (props: Props): JSX.Element => {
       default:
         return { text: 'Unknown approval state', action: () => {}, disabled: true }
     }
-  }, [
-    account,
-    isSupportedNetwork,
-    currencies,
-    formattedAmounts,
-    showWrap,
-    noRoute,
-    userHasSpecifiedInputOutput,
-    priceImpactSeverity,
-    wrapInputError,
-    wrapType,
-    chainId,
-    swapInputError,
-    swapCallbackError,
-    approval,
-    isValid,
-    onSwap,
-    handleApprove,
-    connect
-  ])
+  }, [isClient, account, isSupportedNetwork, currencies, formattedAmounts, showWrap, noRoute, userHasSpecifiedInputOutput, priceImpactSeverity, wrapInputError, wrapType, chainId, swapInputError, swapCallbackError, approval, isValid, onSwap, handleApprove, connect])
 
   const handleClick = async () => {
     if (buttonState.action === handleApprove) {

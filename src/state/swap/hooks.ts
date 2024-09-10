@@ -385,7 +385,6 @@ export function useDefaultsFromURLSearch ():
   }, [chainId, parsedQs, dispatch])
 
   useEffect(() => {
-    console.log("useEffect running")
     parseAndDispatch()
   }, [parseAndDispatch])
   

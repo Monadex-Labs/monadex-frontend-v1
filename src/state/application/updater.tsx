@@ -9,7 +9,7 @@ import { ChainId } from '@monadex/sdk'
 
 export default function Updater (): null {
   const { findProvider: library, chainId } = useWalletData()
-  const currentChain = chainId || ChainId.SEPOLIA
+  const currentChain = chainId ?? ChainId.SEPOLIA
   const dispatch = useDispatch()
 
   const windowVisible = useIsWindowVisible()

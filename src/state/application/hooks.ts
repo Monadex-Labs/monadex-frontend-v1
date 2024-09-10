@@ -12,6 +12,7 @@ import { useWalletData } from '@/utils/index'
 
 export function useBlockNumber (): number | undefined {
   const { chainId } = useWalletData()
+  console.log("chainId", chainId)
   return useSelector((state: AppState) => state.application.blockNumber[chainId ?? -1])
 }
 export function useModalOpen (modal: ApplicationModal): boolean {

@@ -36,7 +36,7 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({
         }
         onClick={handleOpenModal}
       >
-        {currency 
+        {currency != null
           ? (
             <Box className='flex items-center gap-2'>
               <CurrencyLogo currency={currency} size='28px' />
