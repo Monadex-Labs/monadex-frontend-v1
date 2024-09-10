@@ -12,9 +12,7 @@ import { useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
 const Header: React.FC<any> = () => {
   const theme = useTheme()
-  const { status } = useSession()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
-  const isTablet = useMediaQuery(theme.breakpoints.down('md'))
   const pathname = usePathname()
   const router = useRouter()
   const paths = [
@@ -40,7 +38,7 @@ const Header: React.FC<any> = () => {
     }
   ]
   return (
-    <Box className={`flex justify-between ${isMobile ? 'hidden' : ''}`}>
+    <Box className={`flex justify-between w-[95%] mx-auto ${isMobile ? 'hidden' : ''}`}>
       <div className='flex flex-col sm:flex-row items-center justify-between p-2 sm:p-4 gap-3'>
         <Box className='w-full sm:w-auto flex justify-center sm:justify-start'>
           <Image
@@ -74,8 +72,8 @@ const Header: React.FC<any> = () => {
         </Box>
       </div>
       <Box className='w-full sm:w-auto flex justify-center sm:justify-end items-center gap-3 sm:gap-6 order-2 sm:order-3 mt-4 sm:mt-0'>
-        {!isMobile && <Mxpdisplay />}
         <DropdownMenu />
+        {!isMobile && <Mxpdisplay />}
         <ConnectButton />
       </Box>
     </Box>

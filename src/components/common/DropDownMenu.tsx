@@ -9,7 +9,7 @@ export default function Example () {
     <Menu as='div' className='relative inline-block text-right'>
       <div>
         <MenuButton className='inline-flex w-full justify-center text-md'>
-          <IoEllipsisHorizontal className='text-md text-gray-500' />
+          <IoEllipsisHorizontal className='text-xl text-gray-500' />
         </MenuButton>
       </div>
 

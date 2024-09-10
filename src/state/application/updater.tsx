@@ -9,7 +9,7 @@ import { ChainId } from '@monadex/sdk'
 
 export default function Updater (): null {
   const { findProvider: library, chainId } = useWalletData()
-  const currentChain = chainId ?? ChainId.SEPOLIA
+  const currentChain = chainId || ChainId.SEPOLIA
   const dispatch = useDispatch()
 
   const windowVisible = useIsWindowVisible()
@@ -40,11 +40,11 @@ export default function Updater (): null {
   useEffect(() => {
     if (!library || !windowVisible) return
 
-    let stale = false
+    let state = false
     library
       .getBlockNumber()
       .then((blockNumber) => {
-        if (!stale) {
+        if (!state) {
           p(blockNumber)
         }
       })
@@ -53,7 +53,7 @@ export default function Updater (): null {
       })
 
     return () => {
-      stale = true
+      state = true
     }
   }, [library, windowVisible, chainId, blockNumberCallback])
 

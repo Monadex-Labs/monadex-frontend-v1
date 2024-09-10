@@ -162,7 +162,6 @@ export function useTradeExactOut (
       onSetSwapDelay(SwapDelay.SWAP_COMPLETE)
     }
     if ((currencyIn != undefined) && currencyAmountOut && allowedPairs.length > 0) {
-      console.log('allowedPairs HEHRE', currencyIn)
       return (
         Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, {
           maxHops: 3,

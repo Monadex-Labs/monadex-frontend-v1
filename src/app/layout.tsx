@@ -8,12 +8,15 @@ import Web3ProviderWrapper from '@/utils/ProviderWrapper'
 import Header from '@/components/Header'
 import NextAuthSessionProvider from '@/discord/SessionProvider'
 import Footer from '@/components/Footer/footer'
+import LoadingScreen from '@/components/common/LoadingScreen'
 const inter = Inter({ subsets: ['latin'] })
 const firaCode = Fira_Code({ subsets: ['latin'], variable: '--font-fira-code' })
 export const metadata: Metadata = {
-  title: 'Monadex',
+  title: 'Monadex | The leading DEX on Monad',
   description: 'The liquidity factory on Monad'
 }
+
+
 export default function RootLayout ({
   children
 }: Readonly<{
@@ -23,6 +26,7 @@ export default function RootLayout ({
     // wrap redux provider
     <html lang='en-US'>
       <body className={`${inter.className} ${firaCode.variable}`}>
+        <LoadingScreen />
         <NextAuthSessionProvider>
           <QueryWrapper>
             <Web3ProviderWrapper>

@@ -88,7 +88,6 @@ const Swap: React.FC<{
     inputError: swapInputError,
     useAutoSlippage: autoSlippage
   } = useDerivedSwapInfo()
-  console.log("useDerivedSwapInfo ", currencies)
   const finalizedTransaction = useTransactionFinalizer()
   const {
     wrapType,
