@@ -52,7 +52,7 @@ export const TradeSummary: React.FC<TradeSummaryProps> = ({
         </Box>
         <Box
           onClick={() => setOpenSettingsModal(true)}
-          className='flex gap-2'
+          className='flex gap-2 justify-center items-center'
         >
           <small>{allowedSlippage / 100}%</small>
           <MdEdit />
@@ -64,7 +64,7 @@ export const TradeSummary: React.FC<TradeSummaryProps> = ({
             <QuestionHelper text='Your transaction will revert if there is a large, unfavorable price movement before it is confirmed.' />
             <small>{isExactIn ? 'Minimum Received' : 'Maximum Sold'}:</small>
           </div>
-          <Box className='flex gap-2'>
+          <Box className='flex gap-2 justify-center items-center'>
             <small>
               {formatTokenAmount(
                 slippageAdjustedAmounts[isExactIn ? Field.OUTPUT : Field.INPUT]
@@ -81,7 +81,7 @@ export const TradeSummary: React.FC<TradeSummaryProps> = ({
           </Box>
           <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
         </Box>
-        <Box className='py-2 flex justify-between'>
+        <Box className='py-2 flex justify-between '>
           <Box className='flex gap-2'>
             <QuestionHelper text='A portion of each trade (0.30%) goes to liquidity providers as a protocol incentive.' />
             <small>Liquidity Provider Fee:</small>
@@ -93,7 +93,7 @@ export const TradeSummary: React.FC<TradeSummaryProps> = ({
         <Box className='py-2 flex justify-between border flex-col border-dashed rounded-lg border-primary mt-1 mb-1'>
           <Box className='flex gap-2 items-center justify-center mb-3'>
             <QuestionHelper text='Routing through these tokens resulted in the best price for your trade.' />
-            <p className='text-center text-sm font-semibold'>Route</p>
+            <small className='text-center font-semibold'>Route</small>
           </Box>
           <Box className='flex flex-row justify-center items-center gap-3'>
             {trade.route.path.map((token, i, path) => {
@@ -105,8 +105,8 @@ export const TradeSummary: React.FC<TradeSummaryProps> = ({
                     <p className='text-sm font-semibold'>{token.symbol}</p>
                   </Box>
                   {!isLastItem && (
-                    <div className='flex items-center gap-2 flex-col'>
-                    <small className='text-white px-3 py-1 rounded-full bg-primary'>{poolFee}</small>
+                    <div className='flex items-center justify-center gap-2 flex-col'>
+                    {/* <small className='text-white '>{poolFee}</small> */}
                     <IoIosArrowRoundForward className="text-primary" size={33} />
                     </div>
                   )}

@@ -27,7 +27,7 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({
   }, [])
 
   return (
-    <Box className='px-3 py-2 rounded-md flex justify-between items-center gap-3'>
+    <Box className='rounded-md flex justify-between items-center gap-3'>
       <Box
         className={
           bgClass === undefined
@@ -44,7 +44,7 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({
             </Box>
             )
           : (
-            <p>Select a token</p>
+            <p>Select token</p>
             )}
         {children}
         <IoIosArrowDown />
