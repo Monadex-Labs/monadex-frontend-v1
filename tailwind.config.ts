@@ -36,7 +36,9 @@ const config: Config = {
         blue7: '#7365ce'
       },
       fontFamily: {
-        fira: ['var(--font-fira-code)']
+        fira: ['var(--font-fira-code)'],
+        clash: ['Clash', 'sans-serif'],
+        regular: ['Clash-regular', 'sans-serif']
       }
     }
   },

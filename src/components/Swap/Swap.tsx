@@ -528,7 +528,7 @@ const Swap: React.FC<{
         bgClass={currencyBgClass}
       />
       {trade?.executionPrice != null && (
-        <Box className='flex gap-2 opacity-40 mt-2'>
+        <Box className='flex gap-2 opacity-80 mt-2 font-regular'>
           <small>Price:</small>
           <small className='flex gap-2'>
             1{' '}

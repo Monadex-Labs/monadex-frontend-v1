@@ -38,14 +38,14 @@ export const TradeSummary: React.FC<TradeSummaryProps> = ({
   const pairAddress:string | null = trade.route.pairs[0].liquidityToken.address ? trade.route.pairs[0].liquidityToken.address : '...'
   const poolFee = usePoolFee(pairAddress)
   return (
-    <Box mt={1.5} className='rounded-sm  flex flex-col p-3 text-textSecondary transition duration-150 ease-in-out'>
+    <Box mt={1.5} className='rounded-sm  flex flex-col p-3 text-textSecondary  mb-2 text-lg transition duration-150 ease-in-out'>
       {openSettingsModal && (
         <SettingsModal
           open={openSettingsModal}
           onClose={() => setOpenSettingsModal(false)}
         />
       )}
-      <Box className='flex justify-between items-center font-semibold text-primary underline underline-offset-3 decoration-dotted	'>
+      <Box className='flex justify-between items-center font-semibold  text-primary underline underline-offset-3 decoration-dotted	'>
         <Box className='flex gap-2'>
           <QuestionHelper text='Your transaction will revert if the price changes unfavorably by more than this percentage.' />
           <small>Max Slippage:</small>

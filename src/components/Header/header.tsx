@@ -39,7 +39,7 @@ const Header: React.FC<any> = () => {
   ]
   return (
     <Box className={`flex justify-between w-[95%] mx-auto ${isMobile ? 'hidden' : ''}`}>
-      <div className='flex flex-col sm:flex-row items-center justify-between p-2 sm:p-4 gap-3'>
+      <div className='flex flex-col sm:flex-row items-center justify-between p-2 sm:p-4 gap-8'>
         <Box className='w-full sm:w-auto flex justify-center sm:justify-start'>
           <Image
             src={isMobile ? Monadex_mobile : Monadex}
@@ -53,11 +53,11 @@ const Header: React.FC<any> = () => {
         </Box>
         
         <Box className=''>
-          <nav className='flex flex-wrap justify-center gap-5 sm:gap-6 ml-2'>
+          <nav className='flex flex-wrap justify-center sm:gap-6 ml-2'>
             {paths.map((k, v) => (
               <Link
                 className={`
-                  text-gray-500 font-medium text-md sm:text-md transition-all
+                  text-gray-500 font-medium text-lg sm:text-md transition-all
                   hover:text-primary focus:text-primary
                   ${pathname === k.path ? 'text-primary' : ''}
                   ${k.id === 'Docs' ? 'underline underline-offset-2 decoration-dotted' : ''}

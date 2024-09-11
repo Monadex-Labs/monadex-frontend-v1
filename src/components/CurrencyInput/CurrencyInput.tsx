@@ -48,7 +48,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
   return (
     <div
       id={id}
-      className={`${showPrice === true ? ' priceShowBox' : ''} ${'bg-bgColor/50 rounded-sm shadow-sm'} p-2 my-2`}
+      className={`${showPrice === true ? ' priceShowBox' : ''} ${'bg-bgColor/80 rounded-sm shadow-sm'} p-2 my-2`}
     >
       <div className='flex justify-between mb-2'>
         <p className='text-textSecondary text-sm font-semibold p-1'>{title ?? 'you pay'}</p>
@@ -72,7 +72,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
             value={amount}
             align='right'
             color={color}
-            placeholder='0.00'
+            placeholder='0'
             onUserInput={(val: any) => {
               setAmount(val)
             }}
@@ -92,7 +92,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
         </div>
 
         <small className='text-textSecondary text-md p-1'>
-          ${(usdPrice * Number(amount)).toLocaleString('us')}
+         ~ ${(usdPrice * Number(amount)).toLocaleString('us')}
         </small>
       </div>
     </div>

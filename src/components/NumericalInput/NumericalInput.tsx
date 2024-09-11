@@ -29,7 +29,7 @@ export const NumericalInput = React.memo(function InnerInput ({
   return (
     <input
       {...rest}
-      className='w-full relative outline-none border-none whitespace-nowrap text-ellipsis overflow-hidden text-left bg-transparent'
+      className='w-full relative outline-none border-none whitespace-nowrap text-ellipsis overflow-hidden text-left bg-transparent text-2xl'
       value={value}
       style={{ textAlign: align, color, fontSize, fontWeight }}
       onChange={(event) => {

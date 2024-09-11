@@ -39,3 +39,23 @@
     background-position: 50% 50%;
   }
 }
+
+@layer base {
+  @font-face {
+    font-family: 'Clash';
+    font-style: regular;
+    font-weight: 600;
+    font-display: swap;
+    src: url( ../static/fonts/ClashGrotesk-Medium.woff) format('woff');
+  }
+}
+
+@layer base {
+  @font-face {
+    font-family: 'Clash-regular';
+    font-style: regular;
+    font-weight: 400;
+    font-display: swap;
+    src: url( ../static/fonts/ClashGrotesk-Regular.woff) format('woff');
+  }
+}

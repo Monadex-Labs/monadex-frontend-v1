@@ -25,7 +25,7 @@ export default function RootLayout ({
   return (
     // wrap redux provider
     <html lang='en-US'>
-      <body className={`${inter.className} ${firaCode.variable}`}>
+      <body className={`font-clash ${firaCode.variable}`}>
         <LoadingScreen />
         <NextAuthSessionProvider>
           <QueryWrapper>
