@@ -236,7 +236,7 @@ export function useSwapCallback (
             } else {
               // otherwise, the error was unexpected and we need to convey that
               console.error('Swap failed', error, methodName, args, value)
-              throw new Error(`Swap failed: ${error.message}`) // eslint-disable-line
+              throw new Error(`Swap failed: ${error.reason}`) // eslint-disable-line
             }
           })
       },
