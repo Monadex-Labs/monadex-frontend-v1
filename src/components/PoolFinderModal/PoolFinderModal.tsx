@@ -153,7 +153,7 @@ const PoolFinderModal: React.FC<PoolFinderModalProps> = ({ open, onClose }) => {
                           <Box textAlign='center'>
                             <p>You don't have liquidity in this pool yet.</p>
                             <Link
-                              href={`/new?currency0=${currencyId(currency0)}&currency1=${currencyId(currency1)}`} // TODO: change this to pools/new (pending route change)
+                              href={`/pools/new?currency0=${currencyId(currency0)}&currency1=${currencyId(currency1)}`}
                               className='text-primary no-decoration'
                               onClick={onClose}
                             >
@@ -167,7 +167,7 @@ const PoolFinderModal: React.FC<PoolFinderModalProps> = ({ open, onClose }) => {
                       <Box textAlign='center'>
                         <p>No pool found.</p>
                         <Link
-                          href={`/new?currency0=${currencyId(currency0)}&currency1=${currencyId(currency1)}`}
+                          href={`/pools/new?currency0=${currencyId(currency0)}&currency1=${currencyId(currency1)}`}
                           className='text-primary no-decoration'
                           onClick={onClose}
                         >
