@@ -10,6 +10,7 @@ import { Button } from '@mui/base'
 import { useConnectWallet } from '@web3-onboard/react'
 import { useWalletData } from '@/utils'
 import { Box, CircularProgress } from '@mui/material'
+import { useSwitchNetwork } from '@/utils'
 
 interface Props {
   account: string
@@ -23,7 +24,6 @@ interface Props {
   }
   showWrap: boolean
   noRoute: boolean
-  handleApprove: () => Promise<void>
   userHasSpecifiedInputOutput: boolean
   priceImpactSeverity: 0 | 4 | 3 | 1 | 2
   wrapInputError: string | undefined
@@ -34,6 +34,7 @@ interface Props {
   showApproveFlow: boolean
   isValid: boolean
   approval: ApprovalState
+  handleApprove: () => Promise<void>
   onSwap: () => void
 }
 
@@ -62,10 +63,10 @@ const SwapButton = (props: Props): JSX.Element => {
   const [, connect] = useConnectWallet()
   const { isConnected } = useWalletData()
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
-
+  const { switchNetwork } = useSwitchNetwork()
   const buttonState = useMemo(() => {
     if (!account) return { text: 'Connect Wallet', action: connect, disabled: false }
-    if (!isSupportedNetwork) return { text: 'Switch Network', action: () => {}, disabled: false }
+    if (!isSupportedNetwork) return { text: 'Switch Network', action: switchNetwork, disabled: false }
     if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) return { text: 'Select a token', action: () => {}, disabled: true }
     if (formattedAmounts[Field.INPUT] === '' && formattedAmounts[Field.OUTPUT] === '') return { text: 'Enter Amount', action: () => {}, disabled: true }
     

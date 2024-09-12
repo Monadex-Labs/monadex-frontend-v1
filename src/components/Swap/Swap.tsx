@@ -5,6 +5,7 @@ import {
   useSwapActionHandlers,
   useSwapState
 } from '@/state/swap/hooks'
+import dynamic from 'next/dynamic'
 import { useSwapCallback } from '@/hooks/useSwapCallback'
 import { useAppDispatch } from '@/state/store'
 import { useUserSlippageTolerance } from '@/state/user/hooks'
@@ -48,8 +49,7 @@ import { usePathname } from 'next/navigation'
 import useSwapRedirects from '@/hooks/useSwapRedirect'
 import { updateUserBalance } from '@/state/balance/action'
 import { IoMdArrowDown, IoMdRepeat } from 'react-icons/io'
-import SwapButton from './SwapButton'
-
+const SwapButton = dynamic(() => import('./SwapButton'), { ssr: false })
 const Swap: React.FC<{
   currencyBgClass?: string
 }> = ({ currencyBgClass }) => {
