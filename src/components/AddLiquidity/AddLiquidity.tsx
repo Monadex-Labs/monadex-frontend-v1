@@ -195,6 +195,7 @@ const AddLiquidity: React.FC<{
   }, {})
 
   const { redirectWithCurrency, redirectWithSwitch } = usePoolsRedirects()
+  
   const handleCurrencyASelect = useCallback(
     (currencyA: any) => {
       const isSwichRedirect = currencyEquals(currencyA, ETH)
@@ -223,7 +224,7 @@ const AddLiquidity: React.FC<{
       if (isSwichRedirect) {
         redirectWithSwitch(currencyB, false)
       } else {
-        redirectWithCurrency(currencyB, false)
+        redirectWithCurrency(currencyB, false)  // here we get correctly currencyB
       }
     },
     [redirectWithCurrency, currency0Id, redirectWithSwitch]

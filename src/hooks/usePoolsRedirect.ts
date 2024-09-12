@@ -5,8 +5,6 @@ import useParsedQueryString from './useParseQueryString'
 import { useWalletData } from '@/utils'
 
 export default function usePoolsRedirects () {
-  const { chainId } = useWalletData()
-  const chainIdToUse = chainId ?? ChainId.SEPOLIA
   const router = useRouter()
   const params = useParams()
   const _search = useSearchParams().toString()
@@ -34,28 +32,23 @@ export default function usePoolsRedirects () {
 
   const redirectWithCurrency = useCallback((currency: any, isInput: boolean, isV2 = true) => {
     const currencyId = getCurrencyId(currency, isV2)
-    const paramName = isInput ? 'currency0' : 'currency1'
-    const otherParamName = isInput ? 'currency1' : 'currency0'
+  
     const currencyParamA = params?.currencyIdA ?? parsedQs.currency0
     const currencyParamB = params?.currencyIdB ?? parsedQs.currency1
-
+  
     let redirectPath = currentPath
-
     if (path.includes('/add')) {
-      const paramA = isInput ? currencyId : (currencyParamA || (currencyId === 'ETH' ? 'ETH' : ''))
-      const paramB = isInput ? (currencyParamB || (currencyId === 'ETH' ? 'ETH' : '')) : currencyId
+      const paramA = isInput ? currencyId : currencyParamA || ''
+      const paramB = isInput ? currencyParamB || '' : currencyId
       redirectPath = `/add/${paramA}/${paramB}${params?.version ? `/${params.version}` : ''}`
     } else {
-      if (currencyParamA || currencyParamB) {
-        redirectPath = redirectPath.replace(
-          `${paramName}=${isInput ? currencyParamA : currencyParamB}`,
-          `${paramName}=${currencyId}`
-        )
-      } else {
-        redirectPath = `${redirectPath}${search === '' ? '?' : '&'}${paramName}=${currencyId}`
-      }
+      const newParams = new URLSearchParams(search)
+      newParams.set(isInput ? 'currency0' : 'currency1', currencyId)
+      if (!isInput && !newParams.has('currency0')) newParams.set('currency0', currencyParamA as string || '')
+      if (isInput && !newParams.has('currency1')) newParams.set('currency1', currencyParamB as string || '')
+      redirectPath = `${path}?${newParams.toString()}`
     }
-
+  
     router.push(redirectPath)
   }, [currentPath, parsedQs, router, search, path, params, getCurrencyId])
 

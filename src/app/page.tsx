@@ -73,7 +73,7 @@ const SwapPage: React.FC = () => {
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',
-              opacity: 0.55,
+              opacity: 0.35,
               mixBlendMode: 'overlay',
               zIndex: 0,
             }
