@@ -11,11 +11,11 @@ import Footer from '@/components/Footer/footer'
 import LoadingScreen from '@/components/common/LoadingScreen'
 const inter = Inter({ subsets: ['latin'] })
 const firaCode = Fira_Code({ subsets: ['latin'], variable: '--font-fira-code' })
+
 export const metadata: Metadata = {
   title: 'Monadex | The leading DEX on Monad',
   description: 'The liquidity factory on Monad'
 }
-
 
 export default function RootLayout ({
   children
