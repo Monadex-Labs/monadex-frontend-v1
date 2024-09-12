@@ -27,11 +27,11 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({
   }, [])
 
   return (
-    <Box className='rounded-md flex justify-between items-center gap-3'>
+    <Box className='flex w-full justify-between items-center gap-3'>
       <Box
         className={
           bgClass === undefined
-            ? `flex items-center gap-3 cursor-pointer p-3 rounded-md border ${currency != null ? 'border-secondary2' : 'border-primary'}`
+            ? `flex items-center gap-3 cursor-pointer py-3 px-5 rounded-full border ${currency != null ? 'border-secondary2' : 'border-primary'}`
             : bgClass
         }
         onClick={handleOpenModal}
