@@ -38,7 +38,7 @@ const Header: React.FC<any> = () => {
     }
   ]
   return (
-    <Box className={`flex justify-between w-[95%] mx-auto ${isMobile ? 'hidden' : ''}`}>
+    <Box className={`flex justify-between px-3 bg-bgColor/70 mx-auto ${isMobile ? 'hidden' : ''}`}>
       <div className='flex flex-col sm:flex-row items-center justify-between p-2 sm:p-4 gap-8'>
         <Box className='w-full sm:w-auto flex justify-center sm:justify-start'>
           <Image
