@@ -1,12 +1,10 @@
 'use client'
 import { useEffect, useState } from 'react'
 
-export function useLoader() {
+export function useLoader(): boolean {
   const [isLoaderRemoved, setIsLoaderRemoved] = useState(false)
 
   useEffect(() => {
-    if (typeof window === 'undefined') return
-
     const loader = document.getElementById('globalLoader')
     if (!loader) {
       setIsLoaderRemoved(true)
@@ -24,9 +22,13 @@ export function useLoader() {
       }, { once: true })
     }
 
-    setTimeout(removeLoader, 300)
+    // Wait for 2000ms before removing the loader
+    const timer = setTimeout(() => {
+      removeLoader()
+    }, 2000)
 
     return () => {
+      clearTimeout(timer)
       loader.remove()
       setIsLoaderRemoved(true)
     }
