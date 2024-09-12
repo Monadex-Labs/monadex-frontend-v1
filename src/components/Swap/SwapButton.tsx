@@ -66,7 +66,7 @@ const SwapButton = (props: Props): JSX.Element => {
   const { switchNetwork } = useSwitchNetwork()
   const buttonState = useMemo(() => {
     if (!account) return { text: 'Connect Wallet', action: connect, disabled: false }
-    if (!isSupportedNetwork) return { text: 'Switch Network', action: switchNetwork, disabled: false }
+    if (account && !isSupportedNetwork) return { text: 'Switch Network', action: () => switchNetwork , disabled: false }
     if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) return { text: 'Select a token', action: () => {}, disabled: true }
     if (formattedAmounts[Field.INPUT] === '' && formattedAmounts[Field.OUTPUT] === '') return { text: 'Enter Amount', action: () => {}, disabled: true }
     

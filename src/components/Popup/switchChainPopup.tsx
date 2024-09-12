@@ -17,12 +17,14 @@ interface SettingsModalProps {
 export const SwitchChainPopUp: React.FC<SettingsModalProps> = ({ open, onClose }): JSX.Element => {
   const { networkName } = useWalletData()
   const { switchNetwork } = useSwitchNetwork()
-  console.log('networkName', networkName)
   return (
-    <Modal open={open} onClose={onClose}>
-      <Box className='fixed inset-0 flex items-center justify-center z-10'>
+    <CustomModal 
+    classname='border max-w-[400px] rounded-md border-primary border-2 p-4 bg-bgColor transition duration-300'
+    open={open} 
+    onClose={onClose}>
+      <Box className=''>
 
-        <Box className='border max-w-[400px] rounded-md border-primary border-2 p-4 bg-bgColor transition duration-300 '>
+        <Box className=''>
           <Box className='flex flex-col items-center justify-center'>
             <Image src={Molandak} alt='hedgehog' width={150} height={150} />
             <h1 className='text-white text-md font-semibold'>This chain is unsupported</h1>
@@ -43,6 +45,6 @@ export const SwitchChainPopUp: React.FC<SettingsModalProps> = ({ open, onClose }
 
         </Box>
       </Box>
-    </Modal>
+    </CustomModal>
   )
 }

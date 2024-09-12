@@ -1,7 +1,7 @@
 'use client'
 import { useConnectWallet } from '@web3-onboard/react'
 import { cn } from '@/utils/cn'
-import { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { supportedChainId } from '@/utils/supportedChain'
 import { SwitchChainPopUp } from '../Popup/switchChainPopup'
 
@@ -39,16 +39,22 @@ export const PrimaryButton: React.FC<any> = ({ children, classNames, onClick }: 
 
 export const ConnectButton: React.FC<any> = ({ classNames, children, ...rest }: ButtonProps) => {
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet()
-  const [messageBtn, setMsgBtn] = useState<boolean>(false)
+  const [openPopUp, setOpenPopUp] = useState<React.ReactElement | null>()
   const [isHovering, setIsHovering] = useState(false)
   const [buttonText, setButtonText] = useState<string>('Connect wallet')
-
+    const [dismiss, setDismiss] = useState(false)
+  
+   // reset if they close warning without tokens in params
+   const handleDismiss = useCallback(() => {
+    setDismiss(true)
+  }, [])
   useEffect(() => {
     const checkWallet = wallet ? supportedChainId(Number(wallet.chains[0].id)) : null
     if (wallet && checkWallet === 'Unsupported chain') {
-      setMsgBtn(true)
+      console.log('here fam!')
+      setOpenPopUp(<SwitchChainPopUp open={true} onClose={handleDismiss}/>)
     } else {
-      setMsgBtn(false)
+      setOpenPopUp(null)
     }
 
     if (wallet) {
@@ -68,15 +74,20 @@ export const ConnectButton: React.FC<any> = ({ classNames, children, ...rest }: 
   }
 
   return (
+   <>
+   {openPopUp != null ? ( openPopUp ) : (
     <button
-      disabled={connecting}
-      onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
-      onClick={handleClick}
-      className={cn('flex p-2 items-center justify-center gap-4 text-white bg-primary hover:bg-primary/50 focus:outline-none focus:ring-4 focus:ring-primary/50 font-medium rounded-full text-sm px-5 py-2.5 text-center', classNames)}
-      {...rest}
+    disabled={connecting}
+    onMouseEnter={() => setIsHovering(true)}
+    onMouseLeave={() => setIsHovering(false)}
+    onClick={handleClick}
+    className={cn('flex p-2 items-center justify-center gap-4 text-white bg-primary hover:bg-primary/50 focus:outline-none focus:ring-4 focus:ring-primary/50 font-medium rounded-full text-sm px-5 py-2.5 text-center', classNames)}
+    {...rest}
     >
-      {connecting ? 'Connecting' : (isHovering && wallet ? 'Disconnect' : buttonText)}
+    {connecting ? 'Connecting' : (isHovering && wallet ? 'Disconnect' : buttonText)}
     </button>
+   ) }
+    
+   </>
   )
 }

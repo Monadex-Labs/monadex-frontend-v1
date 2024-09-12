@@ -281,7 +281,9 @@ export function halfAmountSpend (
 export function useSwitchNetwork (): {
   switchNetwork: () => Promise<void>
 } {
+
   const { provider, chainId } = useWalletData()
+  
   const switchNetwork = useCallback(async () => {
     if (!provider || !chainId) {
       console.log('Provider or chainId is missing')
@@ -308,9 +310,9 @@ export function useSwitchNetwork (): {
             params: [{
               chainId: `0x${Number(ChainId.SEPOLIA).toString(16)}`, // Update with the actual chain ID
               rpcUrls: ['https://base-sepolia-rpc.publicnode.com'], // Update with the actual RPC URL for Monad
-              chainName: 'Monad Testnet', // Provide a name for the network
+              chainName: 'Base sepolia', // Provide a name for the network
               nativeCurrency: {
-                name: 'ETH',
+                name: 'Ether',
                 symbol: 'ETH',
                 decimals: 18
               },
@@ -333,5 +335,3 @@ export function useSwitchNetwork (): {
 
   return { switchNetwork }
 }
-
-export default useSwitchNetwork
