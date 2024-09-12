@@ -135,7 +135,7 @@ const SwapButton = (props: Props): JSX.Element => {
 
   return (
     <Button
-      className='w-full bg-primary py-4 px-4 rounded-md disabled:opacity-40 bg-opacity-90 text-lg'
+      className='w-full bg-primary py-4 px-4 rounded-full disabled:opacity-40 bg-opacity-90 text-lg'
       disabled={buttonState.disabled}
       onClick={handleClick}
     >
