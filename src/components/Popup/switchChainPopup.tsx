@@ -8,6 +8,7 @@ import Molandak from '@/static/assets/hedgehog.png'
 import MonadLogo from '@/static/assets/monad_logo.png'
 import unknownLogo from '@/static/assets/unknown_logo.png'
 import { FaArrowRight } from 'react-icons/fa'
+
 interface SettingsModalProps {
   open: boolean
   onClose: () => void
@@ -16,6 +17,7 @@ interface SettingsModalProps {
 export const SwitchChainPopUp: React.FC<SettingsModalProps> = ({ open, onClose }): JSX.Element => {
   const { networkName } = useWalletData()
   const { switchNetwork } = useSwitchNetwork()
+  console.log('networkName', networkName)
   return (
     <Modal open={open} onClose={onClose}>
       <Box className='fixed inset-0 flex items-center justify-center z-10'>

@@ -29,6 +29,7 @@ export const finalizeTransaction = createAction<{
   hash: string
   receipt: SerializableTransactionReceipt | 'failed'
 }>('transactions/finalizeTransaction')
+
 export const checkedTransaction = createAction<{
   chainId: ChainId
   hash: string

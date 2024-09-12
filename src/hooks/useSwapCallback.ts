@@ -224,7 +224,8 @@ export function useSwapCallback (
                   : recipientAddressOrName
                   }`
             addTransaction(response, {
-              summary: withRecipient
+              summary: withRecipient,
+            
             })
 
             return { response, summary: withRecipient }

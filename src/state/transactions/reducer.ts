@@ -70,6 +70,7 @@ export default createReducer(initialState, (builder) =>
     .addCase(
       finalizeTransaction,
       (transactions, { payload: { hash, chainId, receipt } }) => {
+        console.log('receipt HEHEHEHE', receipt)
         const tx = transactions[chainId]?.[hash]
         if (tx === undefined) {
           return
@@ -79,6 +80,7 @@ export default createReducer(initialState, (builder) =>
           tx.ticketsPurchased = receipt.ticketsPurchased
           tx.receipt = receipt
         }
+        console.log('receipt', tx.confirmedTime = now())
         tx.confirmedTime = now()
       }
     )

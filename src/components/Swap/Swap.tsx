@@ -416,6 +416,7 @@ const Swap: React.FC<{
 
         try {
           const receipt = await response.wait()
+          console.log('HEHEH')
           finalizedTransaction(receipt, {
             summary
           })
@@ -429,6 +430,7 @@ const Swap: React.FC<{
             txHash: response.hash
           })
         } catch (error: any) {
+          console.log('SUR LE CATCH ZEBI')
           setSwapState({
             attemptingTxn: false,
             tradeToConfirm,
@@ -439,6 +441,7 @@ const Swap: React.FC<{
         }
       })
       .catch(error => {
+        console.log('error', error)
         setSwapState({
           attemptingTxn: false,
           tradeToConfirm,

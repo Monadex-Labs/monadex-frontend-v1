@@ -39,14 +39,17 @@ export const PrimaryButton: React.FC<any> = ({ children, classNames, onClick }: 
 
 export const ConnectButton: React.FC<any> = ({ classNames, children, ...rest }: ButtonProps) => {
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet()
-  const [isUnsupportedChain, setIsUnsupportedChain] = useState<boolean>(false)
+  const [messageBtn, setMsgBtn] = useState<boolean>(false)
   const [isHovering, setIsHovering] = useState(false)
   const [buttonText, setButtonText] = useState<string>('Connect wallet')
-  const [showSwitchChainPopUp, setShowSwitchChainPopUp] = useState<boolean>(false)
 
   useEffect(() => {
     const checkWallet = wallet ? supportedChainId(Number(wallet.chains[0].id)) : null
-    setIsUnsupportedChain(checkWallet === 'Unsupported chain')
+    if (wallet && checkWallet === 'Unsupported chain') {
+      setMsgBtn(true)
+    } else {
+      setMsgBtn(false)
+    }
 
     if (wallet) {
       const address = wallet.accounts[0]?.address
@@ -58,38 +61,22 @@ export const ConnectButton: React.FC<any> = ({ classNames, children, ...rest }: 
 
   const handleClick = async () => {
     if (wallet) {
-      if (isUnsupportedChain) {
-        setShowSwitchChainPopUp(true)
-      } else {
-        await disconnect(wallet)
-      }
+      await disconnect(wallet)
     } else {
       await connect()
     }
   }
 
-  const handleCloseSwitchChainPopUp = () => {
-    setShowSwitchChainPopUp(false)
-  }
-
   return (
-    <>
-      <button
-        disabled={connecting}
-        onMouseEnter={() => setIsHovering(true)}
-        onMouseLeave={() => setIsHovering(false)}
-        onClick={handleClick}
-        className={cn('flex p-2 items-center justify-center gap-4 text-white bg-primary hover:bg-primary/50 focus:outline-none focus:ring-4 focus:ring-primary/50 font-medium rounded-full text-sm px-5 py-2.5 text-center', classNames)}
-        {...rest}
-      >
-        {connecting ? 'Connecting' : (isHovering && wallet ? 'Disconnect' : buttonText)}
-      </button>
-      {showSwitchChainPopUp && (
-        <SwitchChainPopUp
-          open={showSwitchChainPopUp}
-          onClose={handleCloseSwitchChainPopUp}
-        />
-      )}
-    </>
+    <button
+      disabled={connecting}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+      onClick={handleClick}
+      className={cn('flex p-2 items-center justify-center gap-4 text-white bg-primary hover:bg-primary/50 focus:outline-none focus:ring-4 focus:ring-primary/50 font-medium rounded-full text-sm px-5 py-2.5 text-center', classNames)}
+      {...rest}
+    >
+      {connecting ? 'Connecting' : (isHovering && wallet ? 'Disconnect' : buttonText)}
+    </button>
   )
 }
