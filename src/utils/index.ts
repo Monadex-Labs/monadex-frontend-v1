@@ -230,7 +230,7 @@ export function confirmPriceImpactWithoutFee (
   ) {
     return (
       window.prompt(
-        `This swap has a price impact of at least {{ priceImpact }}%. Please type the word 'confirm' to continue with this swap : ${GlobalData.percents.PRICE_IMPACT_WITHOUT_FEE_CONFIRM_MIN.toFixed(0)}`
+        `This swap has a price impact of at least ${priceImpactWithoutFee.toFixed(0)}%. Please type the word 'confirm' to continue with this swap:`
       ) === 'confirm'
     )
   } else if (
@@ -239,7 +239,7 @@ export function confirmPriceImpactWithoutFee (
     )
   ) {
     return window.confirm(
-     `confirm SwapPrice Impact : ${GlobalData.percents.PRICE_IMPACT_WITHOUT_FEE_CONFIRM_MIN.toFixed(0)}`
+     `Confirm Swap price impact : ${GlobalData.percents.PRICE_IMPACT_WITHOUT_FEE_CONFIRM_MIN.toFixed(0)}`
     )
   }
   return true
