@@ -40,6 +40,8 @@ export const V1_ROUTER_ADDRESS: AddressMap = {
   [ChainId.SEPOLIA]: '0x89831AED10991214D3Bd417FF0E97E5e876bE8dD'
   // add chain.monad testnet and monad here
 }
+
+
 // one basis point
 export const ONE_BIPS = new Percent(JSBI.BigInt(1), JSBI.BigInt(10000))
 export const BIPS_BASE = JSBI.BigInt(10000)
@@ -57,11 +59,15 @@ export interface TokenData {
   address: string
   decimals: number
 }
-// fake data just for test please change it
+
 
 export const UNSUPPORTED_LIST_URLS: string[] = []
 export const MONADEX_TOKEN_LIST: TokenList | TokenList[] = [] // token list = list of tokens supported offcially by monadex
 export const DEFAULT_TOKEN_LIST_URL: string = 'https://dani3.com/assets/docs/list.json' // TODO: Publish MONAD json file, extract to env and change URL
+
+export const WHITELISTED_ADDRESSES:string[] = [
+  // enter WL addresses...
+]
 
 // let's add some tokens in eth-sepolia for test purposes // USDC - ETH
 export const MNDX: { [chainid: number]: Token } = {
