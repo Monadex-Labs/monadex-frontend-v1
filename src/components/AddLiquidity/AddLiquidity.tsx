@@ -33,7 +33,6 @@ import {
   useMintActionHandlers,
   useMintState
 } from '@/state/mint/hooks'
-import { useTokenBalance } from '@/state/wallet/hooks'
 import { useUserSlippageTolerance } from '@/state/user/hooks'
 
 import {
@@ -109,7 +108,7 @@ const AddLiquidity: React.FC<{
         ? (parsedQuery.currency0 as string)
         : undefined
   const currency1Id =
-    params?.currencyIdB
+    params?.currencyIdB != null
       ? params.currencyIdB.toLowerCase() === 'eth'
         ? 'ETH'
         : params.currencyIdB
@@ -123,7 +122,6 @@ const AddLiquidity: React.FC<{
   const {
     dependentField,
     currencies,
-    pair,
     pairState,
     currencyBalances,
     parsedAmounts,
@@ -168,7 +166,7 @@ const AddLiquidity: React.FC<{
 
   const formattedAmounts = {
     [independentField]: typedValue,
-    [dependentField]: noLiquidity
+    [dependentField]: noLiquidity != null
       ? otherTypedValue
       : parsedAmounts[dependentField]?.toExact() ?? ''
   }
@@ -177,11 +175,11 @@ const AddLiquidity: React.FC<{
   const [approvingB, setApprovingB] = useState(false)
   const [approvalA, approveACallback] = useApproveCallback(
     parsedAmounts[Field.CURRENCY_A],
-    chainId ? V1_ROUTER_ADDRESS[chainId] : undefined
+    chainId != null ? V1_ROUTER_ADDRESS[chainId] : undefined
   )
   const [approvalB, approveBCallback] = useApproveCallback(
     parsedAmounts[Field.CURRENCY_B],
-    chainId ? V1_ROUTER_ADDRESS[chainId] : undefined
+    chainId != null ? V1_ROUTER_ADDRESS[chainId] : undefined
   )
 
   const atMaxAmounts: { [field in Field]?: TokenAmount } = [
@@ -195,7 +193,7 @@ const AddLiquidity: React.FC<{
   }, {})
 
   const { redirectWithCurrency, redirectWithSwitch } = usePoolsRedirects()
-  
+
   const handleCurrencyASelect = useCallback(
     (currencyA: any) => {
       const isSwichRedirect = currencyEquals(currencyA, ETH)
@@ -224,7 +222,7 @@ const AddLiquidity: React.FC<{
       if (isSwichRedirect) {
         redirectWithSwitch(currencyB, false)
       } else {
-        redirectWithCurrency(currencyB, false)  // here we get correctly currencyB
+        redirectWithCurrency(currencyB, false)
       }
     },
     [redirectWithCurrency, currency0Id, redirectWithSwitch]
@@ -245,7 +243,7 @@ const AddLiquidity: React.FC<{
 
   const router = useRouterContract()
   const onAddLiquidity = async (): Promise<void> => {
-    if (!chainId || !provider || !account || (router == null)) return
+    if (chainId == null || provider == null || account == null || router == null) return
     const {
       [Field.CURRENCY_A]: parsedAmountA,
       [Field.CURRENCY_B]: parsedAmountB
@@ -263,11 +261,11 @@ const AddLiquidity: React.FC<{
     const amountsMin = {
       [Field.CURRENCY_A]: calculateSlippageAmount(
         parsedAmountA as TokenAmount,
-        noLiquidity ? 0 : allowedSlippage
+        noLiquidity != null ? 0 : allowedSlippage
       )[0],
       [Field.CURRENCY_B]: calculateSlippageAmount(
         parsedAmountB as TokenAmount,
-        noLiquidity ? 0 : allowedSlippage
+        noLiquidity != null ? 0 : allowedSlippage
       )[0]
     }
 
@@ -364,14 +362,14 @@ const AddLiquidity: React.FC<{
   const handleDismissConfirmation = useCallback(() => {
     setShowConfirm(false)
     // if there was a tx hash, we want to clear the input
-    if (txHash) {
+    if (txHash !== '') {
       onFieldAInput('')
     }
     setTxHash('')
   }, [onFieldAInput, txHash])
 
   const buttonText = useMemo(() => {
-    if (account) {
+    if (account !== '') {
       if (!isSupportedNetwork) return 'Switch Network'
       return error ?? 'Supply'
     }
@@ -403,7 +401,7 @@ const AddLiquidity: React.FC<{
           </small>
         </Box>
         <Box className='border'>
-          <Button className='w-full' onClick={onAddLiquidity}>
+          <Button className='w-full' onClick={onAddLiquidity}> {/* eslint-disable-line @typescript-eslint/no-misused-promises */}
             Confirm Supply
           </Button>
         </Box>
@@ -440,7 +438,7 @@ const AddLiquidity: React.FC<{
           txPending={txPending}
           hash={txHash}
           content={() =>
-            addLiquidityErrorMessage
+            addLiquidityErrorMessage != null
               ? (
                 <TransactionErrorContent
                   onDismiss={handleDismissConfirmation}
@@ -546,7 +544,7 @@ const AddLiquidity: React.FC<{
                 >
                   <Button
                     className='w-full py-4 px-4 bg-gradient-to-r from-[#23006A] to-[#23006A]/50'
-                    onClick={handleApproveA}
+                    onClick={handleApproveA} // eslint-disable-line @typescript-eslint/no-misused-promises
                     disabled={approvingA || approvalA === ApprovalState.PENDING}
                   >
                     {approvalA === ApprovalState.PENDING
@@ -565,7 +563,7 @@ const AddLiquidity: React.FC<{
                 >
                   <Button
                     className='w-full py-4 px-4 bg-gradient-to-r from-[#23006A] to-[#23006A]/50'
-                    onClick={handleApproveB}
+                    onClick={handleApproveB} /* eslint-disable-line @typescript-eslint/no-misused-promises */
                     disabled={approvingB || approvalB === ApprovalState.PENDING}
                   >
                     {approvalB === ApprovalState.PENDING

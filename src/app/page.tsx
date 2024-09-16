@@ -57,7 +57,7 @@ const SwapPage: React.FC = () => {
             </Box>
           </Box>
         </Box>
-        <Box 
+        <Box
           className='flex flex-col max-w-[500px] justify-center items-center p-2 mx-auto rounded-md border border-primary bg-bgColor'
           sx={{
             position: 'relative',
@@ -75,7 +75,7 @@ const SwapPage: React.FC = () => {
               backgroundRepeat: 'no-repeat',
               opacity: 0.35,
               mixBlendMode: 'overlay',
-              zIndex: 0,
+              zIndex: 0
             }
           }}
         >
