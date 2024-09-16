@@ -10,7 +10,6 @@ const withBundleAnalyzerConfigured = withBundleAnalyzer(bundleAnalyzerConfig)
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   productionBrowserSourceMaps: false,
-
   async headers () {
     return [
       {
