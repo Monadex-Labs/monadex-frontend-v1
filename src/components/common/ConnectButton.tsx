@@ -1,9 +1,10 @@
 'use client'
 import { useConnectWallet } from '@web3-onboard/react'
 import { cn } from '@/utils/cn'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { supportedChainId } from '@/utils/supportedChain'
 import { SwitchChainPopUp } from '../Popup/switchChainPopup'
+import { isAddress } from 'viem'
 
 export interface ButtonProps {
   classNames?: string
@@ -42,23 +43,22 @@ export const ConnectButton: React.FC<any> = ({ classNames, children, ...rest }: 
   const [isHovering, setIsHovering] = useState(false)
   const [buttonText, setButtonText] = useState<string>('Connect wallet')
   const [dismiss, setDismiss] = useState(false)
-  
 
   useEffect(() => {
-    const checkWallet = wallet ? supportedChainId(Number(wallet.chains[0].id)) : null
-    if (wallet && checkWallet === 'Unsupported chain') {
+    const checkWallet = wallet != null ? supportedChainId(Number(wallet.chains[0].id)) : null
+    if (wallet != null && checkWallet === 'Unsupported chain') {
       setDismiss(true)
     }
-    if (wallet) {
+    if (wallet != null) {
       const address = wallet.accounts[0]?.address
-      setButtonText(address ? `${address.slice(0, 4)}...${address.slice(-4)}` : 'Connected')
+      setButtonText(isAddress(address) ? `${address.slice(0, 4)}...${address.slice(-4)}` : 'Connected')
     } else {
       setButtonText('Connect wallet')
     }
   }, [wallet])
 
-  const handleClick = async () => {
-    if (wallet) {
+  const handleClick = async (): Promise<void> => {
+    if (wallet != null) {
       await disconnect(wallet)
     } else {
       await connect()
@@ -66,18 +66,18 @@ export const ConnectButton: React.FC<any> = ({ classNames, children, ...rest }: 
   }
 
   return (
-   <div>
-    <button
-    disabled={connecting}
-    onMouseEnter={() => setIsHovering(true)}
-    onMouseLeave={() => setIsHovering(false)}
-    onClick={handleClick}
-    className={cn('flex p-2 items-center justify-center gap-4 text-white bg-primary hover:bg-primary/50 focus:outline-none focus:ring-4 focus:ring-primary/50 font-medium rounded-full text-sm px-5 py-2.5 text-center', classNames)}
-    {...rest}
-    >
-    {connecting ? 'Connecting' : (isHovering && wallet ? 'Disconnect' : buttonText)}
-    </button>
-    {dismiss && <SwitchChainPopUp open={dismiss} onClose={() => setDismiss(false)}/>}
-   </div>
+    <div>
+      <button
+        disabled={connecting}
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => setIsHovering(false)}
+        onClick={handleClick} // eslint-disable-line @typescript-eslint/no-misused-promises
+        className={cn('flex p-2 items-center justify-center gap-4 text-white bg-primary hover:bg-primary/50 focus:outline-none focus:ring-4 focus:ring-primary/50 font-medium rounded-full text-sm px-5 py-2.5 text-center', classNames)}
+        {...rest}
+      >
+        {connecting ? 'Connecting' : (isHovering && wallet != null ? 'Disconnect' : buttonText)}
+      </button>
+      {dismiss && <SwitchChainPopUp open={dismiss} onClose={() => setDismiss(false)} />}
+    </div>
   )
 }

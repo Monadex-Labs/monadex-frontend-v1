@@ -1,4 +1,4 @@
-const Audio = () => {
+const Audio = (): JSX.Element => {
   return (
     <>
       <span className='relative flex h-2 w-2 mr-2'>

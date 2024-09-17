@@ -26,7 +26,7 @@ const AddressInput: React.FC<AddressInputProps> = ({
 
       <Box className='flex justify-between items-center'>
         <p>{label}</p>
-        {address && chainId && (
+        {address !== '' && address !== false && chainId != null && (
           <a
             href='' // TODO: Add etherscan link to address (might create hook)
             target='_blank'
