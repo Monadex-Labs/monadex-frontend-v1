@@ -7,8 +7,6 @@ import {
   selectCurrency,
   switchCurrencies,
   setRecipient,
-  purchasedTicketsOnSwap,
-  RaffleState,
   SwapDelay
 } from './actions'
 
@@ -21,7 +19,6 @@ export interface SwapState {
   readonly [Field.OUTPUT]: {
     readonly currencyId?: string | undefined
   }
-  readonly raffle: RaffleState
   readonly swapDelay: SwapDelay
   // the typed recipient address or ENS name, or null if swap should go to sender
   readonly recipient: string | null
@@ -36,18 +33,13 @@ const initialState: SwapState = {
   [Field.OUTPUT]: {
     currencyId: undefined
   },
-  raffle: {
-    ticketsPurchased: false,
-    multiplier: 0,
-    minimumTicketsToReceive: 0
-  },
   recipient: null,
   swapDelay: SwapDelay.INIT
 }
 
 export default createReducer<SwapState>(initialState, (builder) => {
   builder
-    .addCase(replaceSwapState, (state, { payload: { typedValue, field, inputCurrencyId, outputCurrencyId, recipient, raffle, swapDelay } }) => {
+    .addCase(replaceSwapState, (state, { payload: { typedValue, field, inputCurrencyId, outputCurrencyId, recipient, swapDelay } }) => {
       return {
         [Field.INPUT]: {
           currencyId: inputCurrencyId
@@ -56,11 +48,6 @@ export default createReducer<SwapState>(initialState, (builder) => {
           currencyId: outputCurrencyId
         },
         independentField: field,
-        raffle: {
-          ticketsPurchased: raffle.ticketsPurchased,
-          multiplier: raffle.multiplier,
-          minimumTicketsToReceive: 0
-        },
         swapDelay,
         typedValue,
         recipient
@@ -101,16 +88,5 @@ export default createReducer<SwapState>(initialState, (builder) => {
     })
     .addCase(setSwapDelay, (state, { payload: { swapDelay } }) => {
       state.swapDelay = swapDelay
-    })
-
-    .addCase(purchasedTicketsOnSwap, (state, { payload: { raffle } }) => {
-      return {
-        ...state,
-        raffle: {
-          ticketsPurchased: raffle.ticketsPurchased,
-          multiplier: raffle.multiplier,
-          minimumTicketsToReceive: 0
-        }
-      }
     })
 })

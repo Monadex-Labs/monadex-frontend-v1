@@ -59,10 +59,7 @@ export function useSwapCallArguments (
   const recipient = recipientAddressOrName === null ? checksumAddress : recipientAddress
   const deadline = useTransactionDeadline()
   const contract = useRouterContract() as Contract
-  // const ticketsState = useSelector(purchasedTicketsOnSwap)
-  // grab raffle state
-  // const ticketsPurchased = ticketsState.payload.raffle?.ticketsPurchased as boolean
-  // const multiplier = ticketsState.payload.raffle?.multiplier as number
+
   return useMemo(() => {
     // checking
     if (!trade || !recipient || !wallet  || !chainId || !deadline ) return [] // eslint-disable-line

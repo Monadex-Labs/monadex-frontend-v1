@@ -1,6 +1,6 @@
 import { parseUnits } from '@ethersproject/units'
 import { ETH, ChainId, JSBI, Token, TokenAmount, Trade, CurrencyAmount, NativeCurrency, Percent } from '@monadex/sdk'
-import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput, purchasedTicketsOnSwap, RaffleState, SwapDelay, setSwapDelay } from './actions'
+import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput, SwapDelay, setSwapDelay } from './actions'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { GlobalData, SLIPPAGE_AUTO } from '../../constants/index'
 import { useDispatch, useSelector } from 'react-redux'
@@ -29,8 +29,6 @@ export function useSwapActionHandlers (): {
   onUserInput: (field: Field, typedValue: string) => void
   // the moment when user will set the recipient *
   onRecipientChange: (recipient: string | null) => void
-  //  the moment when user will purchase the tickets
-  onPurchasedTickets: (raffle: RaffleState) => void
   // the swap delay state *
   onSwapDelay: (swapDelay: SwapDelay) => void
 
@@ -90,19 +88,11 @@ export function useSwapActionHandlers (): {
   )
 
   // the moment when user will purchase the tickets
-
-  const onPurchasedTickets = useCallback(
-    (raffle: RaffleState) => {
-      dispatch(purchasedTicketsOnSwap({ raffle }))
-    },
-    [dispatch]
-  )
   return {
     onCurrencySelection,
     onSwitchTokens,
     onUserInput,
     onRecipientChange,
-    onPurchasedTickets,
     onSwapDelay
   }
 }
@@ -327,12 +317,6 @@ export function queryParametersToSwapState (parsedQs: ParsedQs): SwapState {
     }
   }
   const recipient = validatedRecipient(parsedQs.recipient)
-  // Assuming parsedQs has raffle related parameters
-  const raffleState = {
-    ticketsPurchased: parseBooleanURLParameter(parsedQs.ticketsPurchased),
-    multiplier: parseTokenAmountURLParameter(parsedQs.multiplier),
-    minimumTokensToReceive: parseTokenAmountURLParameter(parsedQs.minimumTokensToReceive)
-  }
   return {
     [Field.INPUT]: {
       currencyId: inputCurrency
@@ -343,10 +327,7 @@ export function queryParametersToSwapState (parsedQs: ParsedQs): SwapState {
     typedValue: parseTokenAmountURLParameter(parsedQs.exactAmount),
     independentField: parseIndependentFieldURLParameter(parsedQs.exactField),
     recipient,
-    swapDelay: SwapDelay.INIT,
-    raffle: {
-      ...raffleState
-    }
+    swapDelay: SwapDelay.INIT
   }
 }
 // updates the swap state to use the defaults for a given network
@@ -373,12 +354,7 @@ export function useDefaultsFromURLSearch ():
         inputCurrencyId: parsed[Field.INPUT].currencyId,
         outputCurrencyId: parsed[Field.OUTPUT].currencyId,
         recipient: parsed.recipient,
-        swapDelay: SwapDelay.INIT,
-        raffle: {
-          ticketsPurchased: parsed.raffle.ticketsPurchased,
-          multiplier: parsed.raffle.multiplier,
-          minimumTicketsToReceive: parsed.raffle.minimumTicketsToReceive
-        }
+        swapDelay: SwapDelay.INIT
       })
     )
     setResult({
