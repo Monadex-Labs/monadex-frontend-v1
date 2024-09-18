@@ -4,8 +4,7 @@ import {
   ETH,
   NativeCurrency,
   CurrencyAmount,
-  ChainId,
-  WMND
+  ChainId
 } from '@monadex/sdk'
 import React, { useMemo, useCallback } from 'react'
 import { Virtuoso } from 'react-virtuoso'
@@ -55,16 +54,7 @@ const CurrencyList: React.FC<CurrencyListProps> = ({
         otherCurrency != null && currencyEquals(otherCurrency, currency)
       )
       const handleSelect = (): void => onCurrencySelect(currency)
-      const token =
-          currencyEquals(currency, ETH) || currency.name === 'ether'
-            ? WMND[chainId]
-            : currency
-      const usdPrice = usdPrices != null
-        ? usdPrices.find(
-          (item) =>
-            item.address.toLowerCase() === token?.address.toLowerCase()
-        )
-        : undefined
+
       return (
         <CurrencyRow
           style={style}

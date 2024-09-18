@@ -48,7 +48,7 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
   const nativeCurrency = ETH
   const handleInput = useCallback((input: string) => {
     const checksummedInput = isAddress(input)
-    setSearchQuery(checksummedInput || input) // TODO: isAddress returns boolean, and setSearchQuery accepts string
+    setSearchQuery((checksummedInput !== '' && checksummedInput !== false) ? checksummedInput : input)
   }, [])
 
   const [searchQuery, setSearchQuery] = useState<string>('')
@@ -70,7 +70,7 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
   const tokenComparator = useTokenComparator(false)
 
   const filteredTokens: Token[] = useMemo(() => {
-    if (isAddressSearch) return searchToken != null ? [searchToken] : [] // TODO: check for type string or true value on isAddressSearch
+    if (isAddressSearch !== '' && isAddressSearch !== false) return searchToken != null ? [searchToken] : [] // TODO: check for type string or true value on isAddressSearch
     const filteredResult = filterTokens(Object.values(allTokens), searchQuery)
     let filteredInactiveResult: Token[] = []
     // search in inactive token list.
@@ -182,7 +182,7 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
           autoFocus
         />
       </Box>
-      {showCommonBases && showCommonBases && (
+      {showCommonBases !== undefined && showCommonBases && (
         <CommonBases
           chainId={chainIdToUse}
           onSelect={handleCurrencySelect}

@@ -6,7 +6,7 @@ import { useAddUserToken, useRemoveUserAddedToken } from '@/state/user/hooks'
 import { useIsUserAddedToken, useCurrency } from '@/hooks/Tokens'
 import { CurrencyLogo, PlusHelper, TokenWarningModal } from '@/components'
 import { getTokenLogoURL } from '@/utils/getTokenLogoURL'
-import { formatNumber, formatTokenAmount } from '@/utils/index'
+import { formatTokenAmount } from '@/utils/index'
 import { getIsMetaMaskWallet } from '@/utils/connectors'
 import { wrappedCurrency } from '@/utils/wrappedCurrency'
 import { useWalletData } from '@/utils'
@@ -94,10 +94,10 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
     tokenSymbol: string,
     tokenDecimals: number,
     tokenImage: any
-  ) => {
-    if (provider?.provider?.request) {
+  ): void => {
+    if (provider?.provider?.request != null) {
       try {
-        provider.provider.request({
+        void provider.provider.request({
           method: 'wallet_watchAsset',
           params: {
             type: 'ERC20',

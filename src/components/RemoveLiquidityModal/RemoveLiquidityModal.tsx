@@ -173,10 +173,10 @@ const RemoveLiquidityModal: React.FC<RemoveLiquidityModalProps> = ({
   )
   const [approval, approveCallback] = useApproveCallback(
     parsedAmounts[Field.LIQUIDITY],
-    chainId ? V1_ROUTER_ADDRESS[chainId] : undefined
+    chainId != null ? V1_ROUTER_ADDRESS[chainId] : undefined
   )
-  const onAttemptToApprove = async () => {
-    if ((pairContract == null) || (pair == null) || !provider || (deadline == null)) {
+  const onAttemptToApprove = async (): Promise<void> => {
+    if ((pairContract == null) || (pair == null) || provider == null || (deadline == null)) {
       setErrorMsg('Missing dependencies')
       return
     }
@@ -201,8 +201,8 @@ const RemoveLiquidityModal: React.FC<RemoveLiquidityModalProps> = ({
 
   const router = useRouterContract()
 
-  const onRemove = async () => {
-    if (!chainId || !provider || !account || (deadline == null) || (router == null)) {
+  const onRemove = async (): Promise<void> => {
+    if (chainId == null || provider == null || account == null || (deadline == null) || (router == null)) {
       setRemoveErrorMessage('Missing dependencies')
       throw new Error('Missing dependencies')
     }
@@ -319,7 +319,7 @@ const RemoveLiquidityModal: React.FC<RemoveLiquidityModalProps> = ({
     }
   }
 
-  const modalHeader = () => {
+  const modalHeader = (): JSX.Element => {
     return (
       <Box>
         <Box className='flex justify-center' mt={10} mb={3}>
@@ -346,7 +346,7 @@ const RemoveLiquidityModal: React.FC<RemoveLiquidityModalProps> = ({
           </small>
         </Box>
         <Box mt={2}>
-          <Button className='bg-primary hover:bg-primary2 transition w-full rounded-md h-12' onClick={onRemove}>
+          <Button className='bg-primary hover:bg-primary2 transition w-full rounded-md h-12' onClick={onRemove}> {/* eslint-disable-line @typescript-eslint/no-misused-promises */}
             Confirm
           </Button>
         </Box>
@@ -365,7 +365,7 @@ const RemoveLiquidityModal: React.FC<RemoveLiquidityModalProps> = ({
             txPending={txPending}
             hash={txHash}
             content={() =>
-              removeErrorMessage
+              removeErrorMessage !== ''
                 ? (
                   <TransactionErrorContent
                     onDismiss={handleDismissConfirmation}
@@ -486,10 +486,10 @@ const RemoveLiquidityModal: React.FC<RemoveLiquidityModalProps> = ({
             </small>
           </Box>
         )}
-        <Box mt={2} className='flex justify-between items-center items-center gap-3'>
+        <Box mt={2} className='flex justify-between items-center gap-3'>
           <Button
             className='disabled:bg-transparent disabled:text-textSecondary bg-primary hover:bg-primary2 transition w-1/2 rounded-md h-12'
-            onClick={onAttemptToApprove}
+            onClick={onAttemptToApprove} // eslint-disable-line @typescript-eslint/no-misused-promises
             disabled={approving || approval !== ApprovalState.NOT_APPROVED}
           >
             {approving

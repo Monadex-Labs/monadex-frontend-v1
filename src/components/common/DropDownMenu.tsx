@@ -3,7 +3,8 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { IoEllipsisHorizontal } from 'react-icons/io5'
 import { SignIn, SignOut } from '@/discord/buttons-actions'
 import { useSession } from 'next-auth/react'
-export default function Example () {
+
+export default function DropDownMenu (): JSX.Element {
   const { status } = useSession()
   return (
     <Menu as='div' className='relative inline-block text-right'>

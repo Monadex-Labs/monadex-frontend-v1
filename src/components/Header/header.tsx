@@ -5,11 +5,10 @@ import Monadex_mobile from '@/static/assets/Dex_logo_Mobile.svg'
 import { ConnectButton } from '@/components/common'
 import { useMediaQuery, useTheme, Box } from '@mui/material'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import DropdownMenu from '../common/DropDownMenu'
 import { Mxpdisplay } from '../common/MXPdisplay'
-import { useSession } from 'next-auth/react'
-import { usePathname } from 'next/navigation'
+
 const Header: React.FC<any> = () => {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
@@ -51,7 +50,7 @@ const Header: React.FC<any> = () => {
             height={isMobile ? 50 : 200}
           />
         </Box>
-        
+
         <Box className=''>
           <nav className='flex flex-wrap justify-center sm:gap-6 ml-2'>
             {paths.map((k, v) => (

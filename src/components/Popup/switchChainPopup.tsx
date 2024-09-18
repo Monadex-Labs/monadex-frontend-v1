@@ -1,8 +1,7 @@
 'use client'
 import Image from 'next/image'
 import CustomModal from '../CustomModal/CustomModal'
-import { Box, Divider } from '@mui/material'
-import { Modal } from '@mui/base'
+import { Box } from '@mui/material'
 import { useWalletData, useSwitchNetwork } from '@/utils/index'
 import Molandak from '@/static/assets/hedgehog.png'
 import MonadLogo from '@/static/assets/monad_logo.png'
@@ -18,10 +17,11 @@ export const SwitchChainPopUp: React.FC<SettingsModalProps> = ({ open, onClose }
   const { networkName } = useWalletData()
   const { switchNetwork } = useSwitchNetwork()
   return (
-    <CustomModal 
-    classname='border max-w-[400px] rounded-md border-primary border-2 p-4 bg-bgColor transition duration-300'
-    open={open} 
-    onClose={onClose}>
+    <CustomModal
+      classname='max-w-[400px] rounded-md border-primary border-2 p-4 bg-bgColor transition duration-300'
+      open={open}
+      onClose={onClose}
+    >
       <Box className=''>
 
         <Box className=''>
@@ -37,7 +37,7 @@ export const SwitchChainPopUp: React.FC<SettingsModalProps> = ({ open, onClose }
             </Box>
             <button
               className='bg-primary hover:bg-primary/50 text-white focus:shadow-md text-sm px-5 py-2.5 text-center w-full mt-4 rounded-sm'
-              onClick={switchNetwork}
+              onClick={switchNetwork} // eslint-disable-line @typescript-eslint/no-misused-promises
             >
               Switch network
             </button>

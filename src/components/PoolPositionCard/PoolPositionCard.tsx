@@ -26,7 +26,7 @@ const PoolPositionCard: React.FC<{ pair: Pair }> = ({ pair }) => {
             size={28}
           />
           <p className='font-semibold' style={{ marginLeft: 16 }}>
-            {!currency0 || !currency1
+            {currency0 == null || currency1 == null
               ? 'Loading'
               : `${currency0.symbol ?? 'INVALID SYMBOl'}/${currency1.symbol ?? 'INVALID SYMBOl'}`}
           </p>

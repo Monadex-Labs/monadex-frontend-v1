@@ -32,7 +32,7 @@ const PoolPositionCardDetails: React.FC<{ pair: Pair }> = ({ pair }) => {
       : undefined
 
   const [token0Deposited, token1Deposited] =
-    !!pair &&
+    !(pair == null) &&
     !(totalPoolTokens == null) &&
     !(userPoolBalance == null) &&
     // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply

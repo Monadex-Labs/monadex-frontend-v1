@@ -92,7 +92,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
         </div>
 
         <small className='text-textSecondary text-md p-1'>
-         ~ ${(usdPrice * Number(amount)).toLocaleString('us')}
+          ~ ${(usdPrice * Number(amount)).toLocaleString('us')}
         </small>
       </div>
     </div>
