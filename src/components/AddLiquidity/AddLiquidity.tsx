@@ -166,7 +166,7 @@ const AddLiquidity: React.FC<{
 
   const formattedAmounts = {
     [independentField]: typedValue,
-    [dependentField]: noLiquidity != null
+    [dependentField]: noLiquidity !== undefined && noLiquidity
       ? otherTypedValue
       : parsedAmounts[dependentField]?.toExact() ?? ''
   }
