@@ -13,6 +13,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@apollo/client": "^3.11.8",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@ethersproject/abi": "^5.7.0",
@@ -39,10 +40,13 @@
     "@web3-onboard/react": "^2.9.0",
     "@web3-onboard/taho": "^2.1.0",
     "@web3-onboard/web3auth": "^2.3.0",
+    "apollo-cache-inmemory": "^1.6.6",
     "axios": "^1.7.2",
     "cids": "^1.1.9",
     "clsx": "^2.1.1",
     "ethers": "^5.7.2",
+    "graphql-request": "^7.1.0",
+    "graphql-tag": "^2.12.6",
     "lodash.flatmap": "^4.5.0",
     "mongoose": "^8.5.0",
     "multicodec": "^3.2.1",

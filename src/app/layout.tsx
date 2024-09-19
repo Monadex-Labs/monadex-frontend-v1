@@ -9,6 +9,7 @@ import Header from '@/components/Header'
 import NextAuthSessionProvider from '@/discord/SessionProvider'
 import Footer from '@/components/Footer/footer'
 import LoadingScreen from '@/components/common/LoadingScreen'
+import { ApolloWrapper } from '@/utils/ApolloWrapper'
 const inter = Inter({ subsets: ['latin'] })
 const firaCode = Fira_Code({ subsets: ['latin'], variable: '--font-fira-code' })
 export const metadata: Metadata = {
@@ -32,9 +33,12 @@ export default function RootLayout ({
             <Web3ProviderWrapper>
               <ReduxProvider>
                 <Updaters />
+                <ApolloWrapper>
+
                 <Header />
                 {children}
                 <Footer />
+                </ApolloWrapper>
               </ReduxProvider>
             </Web3ProviderWrapper>
           </QueryWrapper>

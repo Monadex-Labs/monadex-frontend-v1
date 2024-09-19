@@ -9,6 +9,7 @@ import multicall from './multicall/reducer'
 import application from './application/reducer'
 import burn from './burn/reducer'
 import mint from './mint/reducer'
+import pools from './pools/reducer'
 
 const PERSISTED_KEYS: string[] = ['user', 'transaction', 'lists']
 
@@ -21,7 +22,8 @@ const store = configureStore({
     transaction,
     mint,
     burn,
-    swap
+    swap,
+    pools
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false, thunk: true }).concat(save({ states: PERSISTED_KEYS })),
   preloadedState: load({ states: PERSISTED_KEYS })
