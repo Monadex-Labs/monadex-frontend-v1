@@ -27,8 +27,8 @@ export const PAIR_DAY_DATA = gql`
 `
 
 export const ALL_PAIRS:any = gql`
-  query pairs($skip: Int!) {
-    pairs(first: 500, skip: $skip, orderBy: trackedReserveETH, orderDirection: desc) {
+  query pairs {
+    pairs(first: 500, orderBy: trackedReserveETH, orderDirection: desc) {
       id
       token0 {
         id
