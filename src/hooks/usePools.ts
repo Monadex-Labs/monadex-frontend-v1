@@ -1,23 +1,76 @@
 import { useEffect, useCallback, useState, useMemo, useRef } from 'react'
 import useCurrentBlockTimestamp from '@/hooks/useCurrentBlockTimestamp'
 import { client } from '@/apollo/client'
-import { ALL_PAIRS, PAIRS_BULK } from '@/apollo/queries'
+import { ALL_PAIRS, PAIRS_BULK, PAIRS_HISTORICAL_BULK } from '@/apollo/queries'
+import dayjs from 'dayjs'
+import { getBlocksFromTimestamps } from '@/utils'
 
 const PAIRS_TO_FETCH = 500
 const CACHE_DURATION = 5 * 60 * 1000 // 5 minutes
+
+interface PairData {
+  id: string
+  [key: string]: any
+}
 
 const useBulkPools = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
   const [allPairs, setAllPairs] = useState<string[]>([])
-  const [bulkPairsData, setBulkPairsData] = useState<any[]>([])
+  const [bulkPairsData, setBulkPairsData] = useState<PairData[]>([])
+  const [historicalData, setHistoricalData] = useState<Record<string, PairData>>({})
   const lastFetchTimestamp = useRef<number | null>(null)
   const currentBlock = useCurrentBlockTimestamp()?.toNumber()
+
+  const getTimestampsForChanges = useCallback(() => {
+    const utcCurrentTime = dayjs()
+    return [utcCurrentTime.subtract(1, 'day').startOf('minute').unix()]
+  }, [])
 
   const shouldFetch = useMemo(() => {
     if (!lastFetchTimestamp.current) return true
     return Date.now() - lastFetchTimestamp.current > CACHE_DURATION
   }, [lastFetchTimestamp.current])
+
+  const fetchPairList = useCallback(async () => {
+    const pairsResult = await client.query({
+      query: ALL_PAIRS,
+      fetchPolicy: 'network-only',
+    })
+    return pairsResult.data.pairs.map((pair: PairData) => pair.id)
+  }, [])
+
+  const fetchBulkPairsData = useCallback(async (pairsToUse: string[]) => {
+    const chunkedPairs = chunk(pairsToUse, PAIRS_TO_FETCH)
+    const bulkResults = await Promise.all(
+      chunkedPairs.map(chunk =>
+        client.query({
+          query: PAIRS_BULK,
+          variables: { allPairs: chunk },
+          fetchPolicy: 'network-only',
+        })
+      )
+    )
+    return bulkResults.flatMap(result => result.data.pairs)
+  }, [])
+
+  const fetchHistoricalData = useCallback(async (pairsToUse: string[]) => {
+    const [t1] = getTimestampsForChanges()
+    const [{ number: oneDay }] = await getBlocksFromTimestamps([t1])
+    
+    const chunkedPairs = chunk(pairsToUse, PAIRS_TO_FETCH)
+    const historicalResults = await Promise.all(
+      chunkedPairs.map(chunk =>
+        client.query({
+          query: PAIRS_HISTORICAL_BULK(oneDay, chunk),
+          fetchPolicy: 'cache-first',
+        })
+      )
+    )
+    
+    return historicalResults.flatMap(result => result.data.pairs)
+      .reduce((acc, cur) => ({ ...acc, [cur.id]: cur }), {})
+  }, [getTimestampsForChanges])
 
   const fetchPoolData = useCallback(async () => {
     if (isLoading || !shouldFetch) return
@@ -26,55 +79,38 @@ const useBulkPools = () => {
     setError(null)
 
     try {
-      let pairsToUse = allPairs
+      let pairsToUse = allPairs.length > 0 ? allPairs : await fetchPairList()
+      if (allPairs.length === 0) setAllPairs(pairsToUse)
 
-      // Fetch pair list if not already fetched
-      if (pairsToUse.length === 0) {
-        const pairsResult = await client.query({
-          query: ALL_PAIRS,
-          fetchPolicy: 'network-only',
-        })
-        pairsToUse = pairsResult.data.pairs.map((pair: any) => pair.id)
-        setAllPairs(pairsToUse)
-      }
+      const [bulkData, historicalData] = await Promise.all([
+        fetchBulkPairsData(pairsToUse),
+        fetchHistoricalData(pairsToUse)
+      ])
 
-      // Fetch bulk data for pairs
-      const chunkedPairs = chunk(pairsToUse, PAIRS_TO_FETCH)
-      const bulkResults = await Promise.all(
-        chunkedPairs.map(chunk =>
-          client.query({
-            query: PAIRS_BULK,
-            variables: { allPairs: chunk },
-            fetchPolicy: 'network-only',
-          })
-        )
-      )
-
-      const mergedBulkData = bulkResults.flatMap(result => result.data.pairs)
-      setBulkPairsData(mergedBulkData)
+      setBulkPairsData(bulkData)
+      setHistoricalData(historicalData)
       lastFetchTimestamp.current = Date.now()
     } catch (err) {
       setError(err instanceof Error ? err : new Error('An unknown error occurred'))
     } finally {
       setIsLoading(false)
     }
-  }, [allPairs, isLoading, shouldFetch])
+  }, [allPairs, isLoading, shouldFetch, fetchPairList, fetchBulkPairsData, fetchHistoricalData])
 
   useEffect(() => {
     fetchPoolData()
   }, [fetchPoolData, currentBlock])
 
-  // Memoize the return value to prevent unnecessary re-renders
   return useMemo(() => ({
     isLoading,
     error,
     allPairs,
     bulkPairsData,
+    historicalData,
     refetch: fetchPoolData
-  }), [isLoading, error, allPairs, bulkPairsData, fetchPoolData])
+  }), [isLoading, error, allPairs, bulkPairsData, historicalData, fetchPoolData])
 }
 
-// Utility function for chunking arrays
 const chunk = <T>(arr: T[], size: number): T[][] =>
   Array.from({ length: Math.ceil(arr.length / size) }, (_, i) =>
     arr.slice(i * size, i * size + size)

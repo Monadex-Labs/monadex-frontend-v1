@@ -14,6 +14,9 @@ import { ethers } from 'ethers'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useWeb3Onboard } from '@web3-onboard/react/dist/context'
 import { TokenAddressMap } from '@/state/list/hooks'
+import { GET_BLOCKS } from '@/apollo/queries'
+import { blockClient } from '@/apollo/client'
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 // import { TokenAddressMap } from '../state/lists/hooks'
 
 // shorten the checksummed version of the input address to have 0x + 4 characters at start and end
@@ -334,4 +337,63 @@ export function useSwitchNetwork (): {
   }, [provider, chainId, switchNetwork])
 
   return { switchNetwork }
+}
+
+
+
+export async function splitQuery( query: any , localClient:ApolloClient<NormalizedCacheObject>, vars:any, list:any, skipCount = 100) {
+  let fetchedData = {}
+  let allFound = false
+  let skip = 0
+
+  while (!allFound) {
+    let end = list.length
+    if (skip + skipCount < list.length) {
+      end = skip + skipCount
+    }
+    let sliced = list.slice(skip, end)
+    let result = await localClient.query({
+      query: query(...vars, sliced),
+      fetchPolicy: 'cache-first',
+    })
+    fetchedData = {
+      ...fetchedData,
+      ...result.data,
+    }
+    if (Object.keys(result.data).length < skipCount || skip + skipCount > list.length) {
+      allFound = true
+    } else {
+      skip += skipCount
+    }
+  }
+
+  return fetchedData
+}
+
+/**
+ * @notice Fetches block objects for an array of timestamps.
+ * @dev blocks are returned in chronological order (ASC) regardless of input.
+ * @dev blocks are returned at string representations of Int
+ * @dev timestamps are returns as they were provided; not the block time.
+ * @param {Array} timestamps
+ */
+export async function getBlocksFromTimestamps(timestamps :any, skipCount = 500) {
+  if (timestamps?.length === 0) {
+    return []
+  }
+
+  let fetchedData:any = await splitQuery(GET_BLOCKS, blockClient, [], timestamps, skipCount)
+
+  let blocks = []
+  if (fetchedData) {
+    for (var t in fetchedData) {
+      if (fetchedData[t].length > 0) {
+        blocks.push({
+          timestamp: t.split('t')[1],
+          number: fetchedData[t][0]['number'],
+        })
+      }
+    }
+  }
+  return blocks
 }

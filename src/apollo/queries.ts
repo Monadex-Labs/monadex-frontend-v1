@@ -74,6 +74,16 @@ const PairFields:string = `
     createdAtTimestamp
   }
 `
+// used for getting top tokens by daily volume
+export const TOKEN_TOP_DAY_DATAS = gql`
+  query tokenDayDatas($date: Int) {
+    tokenDayDatas(first: 50, orderBy: totalLiquidityUSD, orderDirection: desc, where: { date_gt: $date }) {
+      id
+      date
+    }
+  }
+`
+
 export const PAIR_DATA = (pairAddress:string, block:number) => {
     const queryString:any = `
       ${PairFields}
@@ -101,15 +111,27 @@ export const PAIRS_HISTORICAL_BULK = (block:number, pairs:string[]) => {
     })
     pairsString += ']'
     let queryString:any = `
+    ${PairFields}
     query pairs {
       pairs(first: 200, where: {id_in: ${pairsString}}, block: {number: ${block}}, orderBy: trackedReserveETH, orderDirection: desc) {
-        id
-        reserveUSD
-        trackedReserveETH
-        volumeUSD
-        untrackedVolumeUSD
+       ...PairFields
       }
     }
     `
      return gql(queryString)
-  }
+}
+
+/** PULL BLOCKS FROM BLOCKCHAIN **/
+
+export const GET_BLOCKS = (timestamps: any) => {
+  let queryString = 'query blocks {'
+  queryString += timestamps.map((timestamp : any) => {
+    return `t${timestamp}:blocks(first: 1, orderBy: timestamp, orderDirection: desc, where: { timestamp_gt: ${timestamp}, timestamp_lt: ${
+      timestamp + 600
+    } }) {
+      number
+    }`
+  })
+  queryString += '}'
+  return gql(queryString)
+}

@@ -10,7 +10,11 @@ export const client  = new ApolloClient({
     cache,
 })
 
-console.log('client', client)
+export const blockClient = new ApolloClient({
+    uri: `https://gateway.thegraph.com/api/${api_key}/subgraphs/id/9PGjvCHKxma2SKGpvpTr4WSrHTUVk7JzZLQVHXVJFjAE`,
+    cache
+})
+
 
 
 

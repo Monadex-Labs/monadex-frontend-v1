@@ -21,7 +21,7 @@ const config: Config = {
       },
       // add all colors vars used here and refactor the dapp style color
       colors: {
-        bgColor: '#160238',
+        bgColor: '#210158',
         primary: '#836EF9',
         error: '#FF1010',
         yellow: '#F3EC5D',

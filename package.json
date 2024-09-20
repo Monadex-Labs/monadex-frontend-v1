@@ -44,6 +44,7 @@
     "axios": "^1.7.2",
     "cids": "^1.1.9",
     "clsx": "^2.1.1",
+    "dayjs": "^1.11.13",
     "ethers": "^5.7.2",
     "graphql-request": "^7.1.0",
     "graphql-tag": "^2.12.6",
