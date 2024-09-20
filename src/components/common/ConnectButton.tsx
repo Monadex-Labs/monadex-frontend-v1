@@ -39,24 +39,16 @@ export const PrimaryButton: React.FC<any> = ({ children, classNames, onClick }: 
 
 export const ConnectButton: React.FC<any> = ({ classNames, children, ...rest }: ButtonProps) => {
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet()
-  const [openPopUp, setOpenPopUp] = useState<React.ReactElement | null>()
   const [isHovering, setIsHovering] = useState(false)
   const [buttonText, setButtonText] = useState<string>('Connect wallet')
-    const [dismiss, setDismiss] = useState(false)
+  const [dismiss, setDismiss] = useState(false)
   
-   // reset if they close warning without tokens in params
-   const handleDismiss = useCallback(() => {
-    setDismiss(true)
-  }, [])
+
   useEffect(() => {
     const checkWallet = wallet ? supportedChainId(Number(wallet.chains[0].id)) : null
     if (wallet && checkWallet === 'Unsupported chain') {
-      console.log('here fam!')
-      setOpenPopUp(<SwitchChainPopUp open={true} onClose={handleDismiss}/>)
-    } else {
-      setOpenPopUp(null)
+      setDismiss(true)
     }
-
     if (wallet) {
       const address = wallet.accounts[0]?.address
       setButtonText(address ? `${address.slice(0, 4)}...${address.slice(-4)}` : 'Connected')
@@ -74,8 +66,7 @@ export const ConnectButton: React.FC<any> = ({ classNames, children, ...rest }: 
   }
 
   return (
-   <>
-   {openPopUp != null ? ( openPopUp ) : (
+   <div>
     <button
     disabled={connecting}
     onMouseEnter={() => setIsHovering(true)}
@@ -86,8 +77,7 @@ export const ConnectButton: React.FC<any> = ({ classNames, children, ...rest }: 
     >
     {connecting ? 'Connecting' : (isHovering && wallet ? 'Disconnect' : buttonText)}
     </button>
-   ) }
-    
-   </>
+    {dismiss && <SwitchChainPopUp open={dismiss} onClose={() => setDismiss(false)}/>}
+   </div>
   )
 }

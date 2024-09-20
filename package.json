@@ -28,6 +28,7 @@
     "@mui/base": "^5.0.0-beta.40",
     "@mui/material": "^5.15.19",
     "@next/bundle-analyzer": "^14.2.5",
+    "@pythnetwork/pyth-evm-js": "^1.67.0",
     "@reduxjs/toolkit": "^2.2.5",
     "@tanstack/react-query": "^5.40.1",
     "@types/react-redux": "^7.1.33",
