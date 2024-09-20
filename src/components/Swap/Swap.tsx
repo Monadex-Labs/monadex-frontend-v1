@@ -49,6 +49,7 @@ import { usePathname } from 'next/navigation'
 import useSwapRedirects from '@/hooks/useSwapRedirect'
 import { updateUserBalance } from '@/state/balance/action'
 import { IoMdArrowDown, IoMdRepeat } from 'react-icons/io'
+import { RaffleWrapper } from './RaffleWrapper'
 const SwapButton = dynamic(() => import('./SwapButton'), { ssr: false })
 const Swap: React.FC<{
   currencyBgClass?: string
@@ -585,6 +586,7 @@ const Swap: React.FC<{
           )}
         </Box>
       )}
+      <RaffleWrapper />
       {!showWrap && fetchingBestRoute
         ? (
           <Box mt={2} className='flex justify-center gap-2 items-center flex-col'>
