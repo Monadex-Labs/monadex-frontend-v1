@@ -2,7 +2,6 @@
 import React, { useState, useMemo, useEffect } from 'react'
 import { Box, Divider } from '@mui/material'
 import { QuestionHelper, CustomModal, NumericalInput } from '@/components'
-import { useSwapActionHandlers } from '@/state/swap/hooks'
 import { useUserSlippageTolerance, useSlippageManuallySet, useUserTransactionTTL } from '@/state/user/hooks'
 import { IoMdClose, IoMdWarning } from 'react-icons/io'
 import { SLIPPAGE_AUTO } from '@/constants'
@@ -24,12 +23,11 @@ interface SettingsModalProps {
 }
 const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, defaultSlippage = 0 }) => {
   const [userSlippageTolerance, setUserSlippageTolerance] = useUserSlippageTolerance()
-  const [slippageManuallySet, setSlippageManuallySet] = useSlippageManuallySet()
+  const [, setSlippageManuallySet] = useSlippageManuallySet()
   const [ttl, setTtl] = useUserTransactionTTL()
-  const { onRecipientChange } = useSwapActionHandlers()
   const [slippageInput, setSlippageInput] = useState('')
   const [deadlineInput, setDeadlineInput] = useState('')
-  const userSlippageIsSet = !!userSlippageTolerance
+  const userSlippageIsSet = !isNaN(userSlippageTolerance) && userSlippageTolerance !== 0
   useEffect(() => {
     if (!userSlippageIsSet && defaultSlippage > 0) {
       setUserSlippageTolerance(defaultSlippage)
@@ -68,7 +66,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, defaultSli
       return undefined
     }
   }, [deadlineInput, deadlineInputIsValid])
-  const parseCustomSlippage = (value: string) => {
+  const parseCustomSlippage = (value: string): void => {
     setSlippageInput(value)
 
     try {
@@ -86,7 +84,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, defaultSli
       }
     } catch {}
   }
-  const parseCustomDeadline = (value: string) => {
+  const parseCustomDeadline = (value: string): void => {
     setDeadlineInput(value)
 
     try {
