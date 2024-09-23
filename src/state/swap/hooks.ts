@@ -1,6 +1,6 @@
 import { parseUnits } from '@ethersproject/units'
 import { ETH, ChainId, JSBI, Token, TokenAmount, Trade, CurrencyAmount, NativeCurrency, Percent } from '@monadex/sdk'
-import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput, SwapDelay, setSwapDelay } from './actions'
+import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput, SwapDelay, setSwapDelay, setMultiplier } from './actions'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { GlobalData, SLIPPAGE_AUTO } from '../../constants/index'
 import { useDispatch, useSelector } from 'react-redux'
@@ -31,7 +31,8 @@ export function useSwapActionHandlers (): {
   onRecipientChange: (recipient: string | null) => void
   // the swap delay state *
   onSwapDelay: (swapDelay: SwapDelay) => void
-
+  // the moment when user will set the multiplier
+  onMultiplierChange: (multiplier: number | null) => void
 } {
   const dispatch = useDispatch<AppDispatch>()
   const NATIVE = ETH // TODO: change the native if we do tests on eth sepolia
@@ -88,12 +89,19 @@ export function useSwapActionHandlers (): {
   )
 
   // the moment when user will purchase the tickets
+  const onMultiplierChange = useCallback(
+    (multiplier: number | null) => {
+      dispatch(setMultiplier({ multiplier }))
+    },
+    [dispatch]
+  )
   return {
     onCurrencySelection,
     onSwitchTokens,
     onUserInput,
     onRecipientChange,
-    onSwapDelay
+    onSwapDelay,
+    onMultiplierChange
   }
 }
 // try to parse a user entered amount for a given token
@@ -327,7 +335,8 @@ export function queryParametersToSwapState (parsedQs: ParsedQs): SwapState {
     typedValue: parseTokenAmountURLParameter(parsedQs.exactAmount),
     independentField: parseIndependentFieldURLParameter(parsedQs.exactField),
     recipient,
-    swapDelay: SwapDelay.INIT
+    swapDelay: SwapDelay.INIT,
+    multiplier: Number(parsedQs.multiplier)
   }
 }
 // updates the swap state to use the defaults for a given network
@@ -354,7 +363,8 @@ export function useDefaultsFromURLSearch ():
         inputCurrencyId: parsed[Field.INPUT].currencyId,
         outputCurrencyId: parsed[Field.OUTPUT].currencyId,
         recipient: parsed.recipient,
-        swapDelay: SwapDelay.INIT
+        swapDelay: SwapDelay.INIT,
+        multiplier: parsed.multiplier
       })
     )
     setResult({

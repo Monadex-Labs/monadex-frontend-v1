@@ -1,16 +1,20 @@
 import { Box, ToggleButtonGroup, ToggleButton } from '@mui/material'
 import { QuestionHelper } from '../common'
-import { useState } from 'react'
+import { useSwapActionHandlers, useSwapState } from '@/state/swap/hooks'
+import { RAFFLE_MULTIPLIERS } from '@/utils/getRafflePercentage'
 
 const MultiplierInput = (): JSX.Element => {
-  const [multiplier, setMultiplier] = useState<string | null>('2')
+  const { multiplier } = useSwapState()
+  const {
+    onMultiplierChange
+  } = useSwapActionHandlers()
 
   const handleMultiplierChange = (
     event: React.MouseEvent<HTMLElement>,
-    newAlignment: string | null
+    multiplier: number | null
   ): void => {
-    setMultiplier(newAlignment)
-  } // TODO: Dispatch an action (pending state for multiplier)
+    onMultiplierChange(multiplier)
+  }
 
   return (
     <Box className='flex justify-center text-white'>
@@ -21,9 +25,10 @@ const MultiplierInput = (): JSX.Element => {
         onChange={handleMultiplierChange}
         aria-label='multiplier'
       >
-        <ToggleButton className='bg-primary' value='1' aria-label='Multiplier 1'>0,1%</ToggleButton>
-        <ToggleButton className='bg-primary' value='2' aria-label='Multiplier 2'>0,5%</ToggleButton>
-        <ToggleButton className='bg-primary' value='3' aria-label='Multiplier 3'>0,8%</ToggleButton>
+        {/* TODO: Fetch percentages using getRafflePercentage.ts */}
+        <ToggleButton className='bg-primary' value={RAFFLE_MULTIPLIERS.MULTIPLIER1} aria-label='Multiplier 1'>0,1%</ToggleButton>
+        <ToggleButton className='bg-primary' value={RAFFLE_MULTIPLIERS.MULTIPLIER2} aria-label='Multiplier 2'>0,5%</ToggleButton>
+        <ToggleButton className='bg-primary' value={RAFFLE_MULTIPLIERS.MULTIPLIER3} aria-label='Multiplier 3'>0,8%</ToggleButton>
       </ToggleButtonGroup>
     </Box>
   )

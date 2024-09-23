@@ -105,7 +105,6 @@ const Swap: React.FC<{
     onCurrencySelection,
     onUserInput,
     onRecipientChange
-    // onPurchasedTickets // TODO: check if needed
   } = useSwapActionHandlers()
   let [allowedSlippage] = useUserSlippageTolerance()
   allowedSlippage =

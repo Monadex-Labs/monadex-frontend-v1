@@ -26,5 +26,7 @@ export const replaceSwapState = createAction<{
   outputCurrencyId?: string
   recipient: string | null
   swapDelay: SwapDelay
+  multiplier: number | null
 }>('swap/replaceSwapState')
 export const setRecipient = createAction<{ recipient: string | null }>('swap/setRecipient')
+export const setMultiplier = createAction<{ multiplier: number | null }>('swap/setMultiplier')
