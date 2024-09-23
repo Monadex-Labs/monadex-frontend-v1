@@ -47,7 +47,7 @@ const useBulkPools = () => {
         client.query({
           query: PAIRS_BULK,
           variables: { allPairs: chunk },
-          fetchPolicy: 'network-only',
+          fetchPolicy: 'network-only'
         })
       )
     )
@@ -63,7 +63,7 @@ const useBulkPools = () => {
       chunkedPairs.map(chunk =>
         client.query({
           query: PAIRS_HISTORICAL_BULK(oneDay, chunk),
-          fetchPolicy: 'cache-first',
+          fetchPolicy: 'cache-first'
         })
       )
     )
