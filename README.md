@@ -93,7 +93,7 @@ src/
 ## Running the Code Locally
 
 ### Prerequisites
-- Ensure Node.js and npm are installed on your machine.
+- Ensure Node.js and pnpm are installed on your machine.
 - Optionally, you may want a package manager like yarn installed.
 
 ### Steps
@@ -106,12 +106,12 @@ src/
 2. **Install Dependencies**:
    Using npm:
    ```shell
-   npm install
+   pnpm install
 
 3. **Start Development Server**:
    Using npm:
    ```shell
-   npm run dev
+   pnpm run dev
    ```
 
 
