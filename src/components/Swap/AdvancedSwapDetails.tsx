@@ -1,8 +1,7 @@
 'use client'
 /**
  * AdvancedSwapDetails is used to display the details of a trade using Monadex V1 router
- */
-import Image from 'next/image'
+*/
 import { Trade, TradeType, CurrencyAmount } from '@monadex/sdk'
 import React, { useState } from 'react'
 import { Box } from '@mui/material'
@@ -14,9 +13,7 @@ import { MdEdit } from 'react-icons/md'
 import { formatTokenAmount } from '@/utils'
 import { useDerivedSwapInfo } from '@/state/swap/hooks'
 import { SLIPPAGE_AUTO } from '@/constants'
-import Dash from '@/static/assets/dash.svg'
 import { IoIosArrowRoundForward } from 'react-icons/io'
-import { usePoolFee } from '@/utils/getPoolFee'
 
 interface TradeSummaryProps {
   trade: Trade
@@ -35,8 +32,7 @@ export const TradeSummary: React.FC<TradeSummaryProps> = ({
   )
 
   const tradeAmount = isExactIn ? trade.outputAmount : trade.inputAmount
-  const pairAddress:string | null = trade.route.pairs[0].liquidityToken.address ? trade.route.pairs[0].liquidityToken.address : '...'
-  const poolFee = usePoolFee(pairAddress)
+
   return (
     <Box mt={1.5} className='rounded-sm  flex flex-col p-3 text-textSecondary  mb-2 text-lg transition duration-150 ease-in-out'>
       {openSettingsModal && (
@@ -45,7 +41,7 @@ export const TradeSummary: React.FC<TradeSummaryProps> = ({
           onClose={() => setOpenSettingsModal(false)}
         />
       )}
-      <Box className='flex justify-between items-center font-semibold  text-primary underline underline-offset-3 decoration-dotted	'>
+      <Box className='flex justify-between items-center font-semibold  text-primary underline underline-offset-3 decoration-dotted'>
         <Box className='flex gap-2'>
           <QuestionHelper text='Your transaction will revert if the price changes unfavorably by more than this percentage.' />
           <small>Max Slippage:</small>
@@ -106,8 +102,8 @@ export const TradeSummary: React.FC<TradeSummaryProps> = ({
                   </Box>
                   {!isLastItem && (
                     <div className='flex items-center justify-center gap-2 flex-col'>
-                    {/* <small className='text-white '>{poolFee}</small> */}
-                    <IoIosArrowRoundForward className="text-primary" size={33} />
+                      {/* TODO: Check if poolFee is needed to display here */}
+                      <IoIosArrowRoundForward className='text-primary' size={33} />
                     </div>
                   )}
                 </React.Fragment>
