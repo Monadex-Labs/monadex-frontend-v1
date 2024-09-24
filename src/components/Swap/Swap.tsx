@@ -166,14 +166,6 @@ const Swap: React.FC<{
       if (isSwichRedirect) {
         redirectWithSwitch()
       } else {
-        if (
-          !(
-            inputCurrency instanceof Token &&
-            inputCurrency.address in defaultTokens
-          )
-        ) {
-          setDismissTokenWarning(false)
-        }
         redirectWithCurrency(inputCurrency, true)
       }
     },
