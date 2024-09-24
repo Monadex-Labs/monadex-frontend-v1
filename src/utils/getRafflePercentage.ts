@@ -1,4 +1,5 @@
 import { useRaffleContract } from '@/hooks/useContracts'
+import { Percent } from '@monadex/sdk'
 import { useEffect, useState } from 'react'
 
 export enum RAFFLE_MULTIPLIERS {
@@ -7,8 +8,8 @@ export enum RAFFLE_MULTIPLIERS {
   MULTIPLIER3 = 2
 }
 
-export function getRafflePercentage (multiplier: RAFFLE_MULTIPLIERS): number | null {
-  const [percentage, setPercentage] = useState<number | null>(null)
+export function getRafflePercentage (multiplier: RAFFLE_MULTIPLIERS): Percent | null {
+  const [percentage, setPercentage] = useState<Percent | null>(null)
   const raffleContract = useRaffleContract()
 
   useEffect(() => {

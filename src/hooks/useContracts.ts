@@ -98,5 +98,5 @@ export function useFactoryContract (): Contract | null | undefined {
 }
 export function useRaffleContract (): Contract | null | undefined {
   const { chainId } = useWalletData()
-  return useContract(chainId === ChainId.SEPOLIA ? RAFFLE_ADDRESS : undefined, RAFFLE_ABI, true)
+  return useContract(RAFFLE_ADDRESS, RAFFLE_ABI)
 }
