@@ -1,6 +1,5 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react'
 import {
-  useDefaultsFromURLSearch,
   useDerivedSwapInfo,
   useSwapActionHandlers,
   useSwapState
@@ -49,39 +48,18 @@ import { usePathname } from 'next/navigation'
 import useSwapRedirects from '@/hooks/useSwapRedirect'
 import { updateUserBalance } from '@/state/balance/action'
 import { IoMdArrowDown, IoMdRepeat } from 'react-icons/io'
-const SwapButton = dynamic(() => import('./SwapButton'), { ssr: false })
+const SwapButton = dynamic(async () => await import('./SwapButton'), { ssr: false })
 const Swap: React.FC<{
   currencyBgClass?: string
 }> = ({ currencyBgClass }) => {
-  const loadedUrlParams = useDefaultsFromURLSearch()
   const pathname = usePathname()
   const isSupportedNetwork = useIsSupportedNetwork()
-  // token warning stuff
-  // const [loadedInputCurrency, loadedOutputCurrency] = [
-  //   useCurrency(loadedUrlParams?.inputCurrencyId),
-  //   useCurrency(loadedUrlParams?.outputCurrencyId),
-  // ];
-  const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
-  // const urlLoadedTokens: Token[] = useMemo(
-  //   () =>
-  //     [loadedInputCurrency, loadedOutputCurrency]?.filter(
-  //       (c): c is Token => c instanceof Token,
-  //     ) ?? [],
-  //   [loadedInputCurrency, loadedOutputCurrency],
-  // );
-
-  // dismiss warning if all imported tokens are in active lists
   const defaultTokens = useAllTokens()
-  // const importTokensNotInDefault =
-  //   urlLoadedTokens &&
-  //   urlLoadedTokens.filter((token: Token) => {
-  //     return !Boolean(token.address in defaultTokens);
-  //   });
   const { account, chainId } = useWalletData()
   const dispatch = useAppDispatch()
   const { independentField, typedValue, recipient, swapDelay } = useSwapState()
   const {
-    v2Trade, // eeror potential here on input
+    v2Trade,
     currencyBalances,
     parsedAmount,
     currencies,
@@ -104,12 +82,11 @@ const Swap: React.FC<{
     onCurrencySelection,
     onUserInput,
     onRecipientChange
-    // onPurchasedTickets // TODO: check if needed
   } = useSwapActionHandlers()
   let [allowedSlippage] = useUserSlippageTolerance()
   allowedSlippage =
     allowedSlippage === SLIPPAGE_AUTO ? autoSlippage : allowedSlippage
-  const [approving, setApproving] = useState(false)
+  const [, setApproving] = useState(false)
   const [approval, approveCallback] = useApproveCallbackFromTrade(
     trade,
     allowedSlippage
@@ -153,9 +130,9 @@ const Swap: React.FC<{
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
   const [mainPrice, setMainPrice] = useState(true)
   const priceImpactSeverity = warningSeverity(priceImpactWithoutFee)
-  const isValid = !swapInputError
+  const isValid = swapInputError === undefined || swapInputError === ''
   const showApproveFlow =
-    !swapInputError &&
+    (swapInputError === undefined || swapInputError === '') &&
     (approval === ApprovalState.NOT_APPROVED ||
       approval === ApprovalState.PENDING ||
       (approvalSubmitted && approval === ApprovalState.APPROVED)) &&
@@ -208,22 +185,12 @@ const Swap: React.FC<{
       const isSwichRedirect = currencyEquals(outputCurrency, ETH)
         ? parsedCurrency0Id === 'ETH'
         : Boolean(parsedCurrency0Id) &&
-          outputCurrency &&
-          Boolean(outputCurrency instanceof Token && outputCurrency.address) &&
           outputCurrency instanceof Token &&
           outputCurrency.address.toLowerCase() ===
             parsedCurrency0Id.toLowerCase()
       if (isSwichRedirect) {
         redirectWithSwitch()
       } else {
-        if (
-          !(
-            outputCurrency instanceof Token &&
-            outputCurrency.address in defaultTokens
-          )
-        ) {
-          setDismissTokenWarning(false)
-        }
         redirectWithCurrency(outputCurrency, false)
       }
     },
@@ -255,18 +222,6 @@ const Swap: React.FC<{
     parsedCurrency0Fetched,
     parsedCurrency1Fetched
   ])
-
-  const selectedTokens: Token[] = useMemo(
-    () =>
-      [parsedCurrency0, parsedCurrency1]?.filter(
-        (c): c is Token => c instanceof Token
-      ) ?? [],
-    [parsedCurrency0, parsedCurrency1]
-  )
-  // TODO: check if needed
-  const selectedTokensNotInDefault = selectedTokens?.filter((token: Token) => {
-    return !(token.address in defaultTokens)
-  })
 
   const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(
     trade,
@@ -374,7 +329,7 @@ const Swap: React.FC<{
     })
     // if there was a tx hash, we want to clear the input
     // TODO: INTEGRATE MPX REWARDS WITH TXHASH AND ADDRESS CALL ROUTE ALLOCATE MXP ON BACKEND HERE
-    if (txHash) {
+    if (txHash !== undefined && txHash !== '') {
       onUserInput(Field.INPUT, '')
     }
   }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])

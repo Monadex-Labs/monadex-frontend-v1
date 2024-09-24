@@ -104,7 +104,7 @@ const ConfirmSwapModal: React.FC<ConfirmSwapModalProps> = ({
   const pendingText = `Swapping ${amount1} ${symbol1 ?? 'INVALID SYMBOL'} for ${amount2} ${symbol2 ?? 'INVALID SYMBOL'}`
   const confirmationContent = useCallback(
     () =>
-      swapErrorMessage
+      swapErrorMessage !== undefined
         ? (
           <TransactionErrorContent
             onDismiss={onDismiss}
@@ -129,7 +129,7 @@ const ConfirmSwapModal: React.FC<ConfirmSwapModalProps> = ({
       txPending={txPending}
       content={confirmationContent}
       pendingText={pendingText}
-      modalContent={txPending ? 'Submitted transaction to swap your tokens' : 'Successfully swapped your tokens'}
+      modalContent={txPending !== undefined && txPending ? 'Submitted transaction to swap your tokens' : 'Successfully swapped your tokens'}
     />
   )
 }
