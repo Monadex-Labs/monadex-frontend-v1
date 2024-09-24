@@ -97,6 +97,5 @@ export function useFactoryContract (): Contract | null | undefined {
   return useContract(FACTORY_ADDRESS, MONADEXV1_FACTORY_ABI)
 }
 export function useRaffleContract (): Contract | null | undefined {
-  const { chainId } = useWalletData()
   return useContract(RAFFLE_ADDRESS, RAFFLE_ABI)
 }
