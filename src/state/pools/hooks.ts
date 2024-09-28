@@ -1,6 +1,6 @@
-import { useEffect, useCallback, useState, useMemo, useRef, MutableRefObject } from 'react'
+import { useEffect, useCallback, useState, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setBlock, setPairList, setBulkPairsData, PairData, SetDailyPairData, setSearch, SearchState } from './actions'
+import { setBlock, setPairList, setBulkPairsData, PairData, SetDailyPairData, setSearch } from './actions'
 import { AppDispatch, AppState } from '../store'
 import useCurrentBlockTimestamp from '@/hooks/useCurrentBlockTimestamp'
 import { client } from '@/apollo/client'
@@ -54,12 +54,12 @@ export function useFetchPairList (): () => Promise<void> {
       query: ALL_PAIRS,
       fetchPolicy: 'network-only'
     })
-    console.log('pairRes', pairsResult)
     dispatch(setPairList(pairsResult.data.pairs.map((pair: PairData) => pair.id)))
   }, [dispatch])
 }
 
 export function useFetchBulkPairData (): () => Promise<void> {
+
   const dispatch = useDispatch<AppDispatch>()
   const { allPairs } = usePoolState()
 
@@ -76,6 +76,7 @@ export function useFetchBulkPairData (): () => Promise<void> {
         })
       )
     )
+    console.log('bulk', bulkResults)
     dispatch(setBulkPairsData(bulkResults.flatMap(result => result.data.pairs)))
   }, [dispatch, allPairs])
 }
@@ -109,31 +110,38 @@ export function useSetSearchValue (): (searchPool: string) => void {
   }, [dispatch])
 }
 
-// export function useDerivedPoolInfo() {
-//   const currentBlockTimestamp = useCurrentBlockTimestamp()
-//   const [current, setBlosks] = useState(false)
-//   const {
-//     allPairs,
-//     block,
-//     DailyPairData,
-//     bulkPairsData
-//   } = usePoolState()
+export function useDerivedPoolInfo () {
+  const currentBlockTimestamp = useCurrentBlockTimestamp()?.toNumber()
+  const [lastUpdatedBlock, setLastUpdatedBlock] = useState<number | null>(null)
 
-//   const fetchPairList = useFetchPairList()
-//   const bulk = useFetchBulkPairData()
-//   const dailyData = useFetchDailyPairData()
+  const {
+    allPairs,
+    block,
+    DailyPairData,
+    bulkPairsData
+  } = usePoolState()
+  const fetchPairList = useFetchPairList()
+  const fetchBulkPairData = useFetchBulkPairData()
+  const fetchDailyPairData = useFetchDailyPairData()
 
-//   useEffect(() => {
-//     fetchPairList()
-//     bulk()
-//     dailyData()
-    
-//   }, [block])
+  const updateData = useCallback(async () => {
+    await fetchPairList()
+    await fetchBulkPairData()
+    await fetchDailyPairData()
+  }, [fetchPairList, fetchBulkPairData, fetchDailyPairData])
 
-//   return {
-//     allPairs,
-//     block,
-//     DailyPairData,
-//     bulkPairsData
-//   }
-// }
+  useEffect(() => {
+    if (currentBlockTimestamp && (!lastUpdatedBlock || currentBlockTimestamp > lastUpdatedBlock)) {
+      updateData()
+      setLastUpdatedBlock(currentBlockTimestamp)
+    }
+  }, [currentBlockTimestamp, lastUpdatedBlock, updateData])
+
+  return {
+    allPairs,
+    block,
+    DailyPairData,
+    bulkPairsData,
+    updateData // Expose the updateData function in case you need to trigger an update manually
+  }
+}
