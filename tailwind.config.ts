@@ -39,6 +39,9 @@ const config: Config = {
         fira: ['var(--font-fira-code)'],
         clash: ['Clash', 'sans-serif'],
         regular: ['Clash-regular', 'sans-serif']
+      },
+      fontSize : {
+        normal : '16px'
       }
     }
   },

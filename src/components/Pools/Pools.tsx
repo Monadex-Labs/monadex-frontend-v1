@@ -1,29 +1,30 @@
 'use client'
-
 import React, { useMemo, useState } from 'react'
 import { Box, Typography, CircularProgress } from '@mui/material'
 import { useSelector } from 'react-redux'
 import { AppState } from '@/state/store'
-import PoolsRow from './PoolsRow'
 import useBulkPools from '@/hooks/usePools'
 import { Token, ChainId } from '@monadex/sdk'
 import { useRouter } from 'next/navigation'
 import PoolHeader from './PoolHeader'
 import Image from 'next/image'
 import Rejected from '@/static/assets/rejected.webp'
+import CustomTable from './CustomTable'
+import DoubleCurrencyLogo from '../DoubleCurrencyLogo'
+import { formatNumber } from '@/utils'
+
 const Pools: React.FC = () => {
   const router = useRouter()
   const { bulkPairsData, historicalData } = useBulkPools()
   const searchedValue = useSelector<AppState>((state) => state.pools.searchPool) as string
-  const [_tvl, setTvl] = useState<string>('')
+  const [tvl, setTvl] = useState<string>('')
 
   const processedPools = useMemo(() => {
     if (!bulkPairsData || !historicalData) return []
 
     return Object.entries(historicalData).map(([pairAddress, historicalPairData]) => {
-      bulkPairsData.map((d: any) => setTvl(d.reserveUSD))
-      
-      // create tokens Class
+      bulkPairsData.forEach((d: any) => setTvl(d.reserveUSD))
+
       const token0 = new Token(
         ChainId.SEPOLIA,
         historicalPairData.token0.id,
@@ -40,11 +41,10 @@ const Pools: React.FC = () => {
         historicalPairData.token1.name
       )
 
-      // get data needed
       const volume24h = historicalPairData.volumeUSD
       const fee24h = (parseFloat(volume24h) * 0.003).toString()
-      const apr24h = ((parseFloat(fee24h) * 365 * 100) / parseFloat(_tvl)).toString()
-      const poolFee = '0.3' // by default all the pools have 0.3% fee
+      const apr24h = ((parseFloat(fee24h) * 365 * 100) / parseFloat(tvl)).toString()
+      const poolFee = '0.3'
 
       return {
         pairAddress,
@@ -53,10 +53,11 @@ const Pools: React.FC = () => {
         volume24h,
         fee24h,
         apr24h,
-        poolFee
+        poolFee,
+        tvl
       }
     }).filter(Boolean)
-  }, [bulkPairsData, historicalData, _tvl])
+  }, [bulkPairsData, historicalData, tvl])
 
   const filteredPools = useMemo(() => {
     if (!searchedValue) return processedPools
@@ -75,36 +76,156 @@ const Pools: React.FC = () => {
     })
   }, [processedPools, searchedValue])
 
+  const headCells = [
+    {
+      id: 'pairName',
+      numeric: false,
+      label: 'Name',
+      sortKey: (pair: any) => pair.token0.symbol + ' ' + pair.token1.symbol
+    },
+    {
+      id: 'pairLiquidity',
+      numeric: true,
+      label: 'Liquidity',
+      sortKey: (pair: any) => parseFloat(pair.tvl)
+    },
+    {
+      id: 'pairdayVolume',
+      numeric: true,
+      label: '24h Volume',
+      sortKey: (pair: any) => parseFloat(pair.volume24h)
+    },
+    {
+      id: 'pairFee',
+      numeric: true,
+      label: '24h Fees',
+      sortKey: (pair: any) => parseFloat(pair.fee24h)
+    },
+    {
+      id: 'pairApr',
+      numeric: true,
+      label: 'APR',
+      sortKey: (pair: any) => parseFloat(pair.apr24h)
+    }
+  ]
+
+  const mobileHTML = (pair: any, index: number): React.JSX.Element => (
+    <Box mt={index === 0 ? 0 : 3}>
+      <Box className='flex items-center justify-between' mb={1}>
+        <Box className='flex items-center'>
+          <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} />
+          <Box ml='5px'>
+            <Typography variant='body2' className='text-gray25'>
+              {pair.token0.symbol} / {pair.token1.symbol}
+            </Typography>
+          </Box>
+        </Box>
+        <Box className='flex items-center'>
+          <Box
+            paddingY={0.5}
+            paddingX={1}
+            borderRadius={6}
+            className='text-primaryText bg-gray30'
+          >
+            {pair.poolFee}% Fee
+          </Box>
+        </Box>
+      </Box>
+      <Box className='mobileRow'>
+        <Typography variant='body2'>Liquidity</Typography>
+        <Typography variant='body2'>${formatNumber(parseFloat(pair.tvl))}</Typography>
+      </Box>
+      <Box className='mobileRow'>
+        <Typography variant='body2'>24h Vol</Typography>
+        <Typography variant='body2'>${formatNumber(parseFloat(pair.volume24h))}</Typography>
+      </Box>
+      <Box className='mobileRow'>
+        <Typography variant='body2'>24h Fees</Typography>
+        <Typography variant='body2'>${formatNumber(parseFloat(pair.fee24h))}</Typography>
+      </Box>
+      <Box className='mobileRow'>
+        <Typography variant='body2'>APR</Typography>
+        <Typography variant='body2' className='text-success'>
+          {formatNumber(parseFloat(pair.apr24h))}%
+        </Typography>
+      </Box>
+    </Box>
+  )
+
+  const desktopHTML = (pair: any): Array<{
+    html: React.JSX.Element
+  }> => [
+    {
+      html: (
+        <Box className='flex items-center'>
+          <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={28} />
+          <Box ml={1}>
+            <Typography variant='body2' className='text-white'>
+              {pair.token0.symbol} / {pair.token1.symbol}
+            </Typography>
+          </Box>
+          <Box
+            ml={2}
+            paddingY={0.5}
+            paddingX={1}
+            borderRadius={6}
+            className='text-bgColor bg-primary'
+          >
+            {pair.poolFee}% Fee
+          </Box>
+        </Box>
+      )
+    },
+    {
+      html: <Typography variant='body2' className='text-white  font-semibold text-lg'>${formatNumber(parseFloat(pair.tvl))}</Typography>
+    },
+    {
+      html: <Typography variant='body2' className='text-white font-semibold text-lg'>${formatNumber(parseFloat(pair.volume24h))}</Typography>
+    },
+    {
+      html: <Typography variant='body2' className='text-white font-semibold text-lg'>${formatNumber(parseFloat(pair.fee24h))}</Typography>
+    },
+    {
+      html: (
+        <Typography variant='body2' className='text-success'>
+          {formatNumber(parseFloat(pair.apr24h))}%
+        </Typography>
+      )
+    }
+  ]
+
   return (
     <Box>
       <PoolHeader />
-      <Box mt={6} className='text-center'>
-        {filteredPools.length === 0 ? (
-          searchedValue ? (
-            <Box className='flex items-center justify-center flex-col'>
-              <Typography>No pools found matching your search, try again in few minutes new pools may take a bit of time to be displayed here! .</Typography>
-              <Image src={Rejected} alt='no pool found' width={200} height={200}/>
-            </Box>
-          ) : (
-            <CircularProgress size={15} color='secondary' className='text-center' />
-          )
-        ) : (
-          filteredPools.map((pool) => (
-            <PoolsRow
-              key={pool.pairAddress}
-              poolFee={pool.poolFee}
-              token0={pool.token0}
-              token1={pool.token1}
-              volume24h={pool.volume24h}
-              tvl={_tvl}
-              fee24h={pool.fee24h}
-              apr24h={pool.apr24h}
-              onClick={() => {
-                router.push(`/pools/new?currency0=${pool.token0.address}&currency1=${pool.token1.address}`)
-              }}
+      <Box mt={6}>
+        {filteredPools.length === 0
+          ? (
+              searchedValue
+                ? (
+                  <Box className='flex items-center justify-center flex-col'>
+                    <Typography>No pools found matching your search. Try again in a few minutes; new pools may take some time to be displayed here.</Typography>
+                    <Image src={Rejected} alt='no pool found' width={200} height={200} />
+                  </Box>
+                  )
+                : (
+                  <Box className='flex justify-center'>
+                    <CircularProgress size={40} color='secondary' />
+                  </Box>
+                  )
+            )
+          : (
+            <CustomTable
+              rowsPerPage={10}
+              showPagination
+              emptyMessage='No pools found'
+              headCells={headCells}
+              data={filteredPools}
+              defaultOrderBy={headCells[1]}
+              defaultOrder='desc'
+              mobileHTML={mobileHTML}
+              desktopHTML={desktopHTML}
             />
-          ))
-        )}
+            )}
       </Box>
     </Box>
   )

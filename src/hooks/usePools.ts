@@ -13,7 +13,14 @@ interface PairData {
   [key: string]: any
 }
 
-const useBulkPools = () => {
+const useBulkPools = (): {
+  isLoading: boolean
+  error: Error | null
+  allPairs: string[]
+  bulkPairsData: PairData[]
+  historicalData: Record<string, PairData>
+  refetch: () => Promise<void>
+} => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
   const [allPairs, setAllPairs] = useState<string[]>([])

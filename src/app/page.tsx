@@ -12,7 +12,7 @@ import { ChartComponent } from '@/components/Chart/chart'
 import { SlippageWrapper } from '@/components/Swap/SlippageWrapper'
 import { IoMdSettings } from 'react-icons/io'
 import { AiOutlineLineChart } from 'react-icons/ai'
-import modalBgimage from '@/static/assets/bg.png'
+
 const SwapPage: React.FC = () => {
   const [openSettingsModal, setOpenSettingsModal] = useState(false)
   const [openChart, setOpenChart] = useState(false)
@@ -57,28 +57,8 @@ const SwapPage: React.FC = () => {
             </Box>
           </Box>
         </Box>
-        <Box 
-          className='flex flex-col max-w-[500px] justify-center items-center p-2 mx-auto rounded-md border border-primary bg-bgColor'
-          sx={{
-            position: 'relative',
-            overflow: 'hidden',
-            '&::before': {
-              content: '""',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundImage: `url(${modalBgimage.src})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
-              opacity: 0.35,
-              mixBlendMode: 'overlay',
-              zIndex: 0,
-            }
-          }}
-        >
+        <Box
+          className='flex flex-col max-w-[500px] justify-center items-center p-2 mx-auto rounded-md border border-primary bg-bgColor'>
           <Box sx={{ zIndex: 1, width: '100%' }} className='p-2'>
             <SwapDefaultMode
               token1={token1}
