@@ -1,13 +1,19 @@
+'use client'
 import { Box, ToggleButtonGroup, ToggleButton } from '@mui/material'
 import { QuestionHelper } from '../common'
 import { useSwapActionHandlers, useSwapState } from '@/state/swap/hooks'
-import { RAFFLE_MULTIPLIERS } from '@/utils/getRafflePercentage'
+import { useEffect, useState } from 'react'
+import { useRaffleContract } from '@/hooks/useContracts'
+import { Percent } from '@monadex/sdk'
 
 const MultiplierInput = (): JSX.Element => {
   const { multiplier } = useSwapState()
   const {
     onMultiplierChange
   } = useSwapActionHandlers()
+  const [percentages, setPercentages] = useState<Array<Percent | null>>([null, null, null])
+
+  const raffleContract = useRaffleContract()
 
   const handleMultiplierChange = (
     event: React.MouseEvent<HTMLElement>,
@@ -15,6 +21,30 @@ const MultiplierInput = (): JSX.Element => {
   ): void => {
     onMultiplierChange(multiplier)
   }
+
+  /* TODO: Use this instead of Effect and State method
+  const percentage: Percent = multiplier != null
+    ? useSingleCallResult(raffleContract, 'getMultiplierToPercentage', [multiplier])?.result?.[0]
+    : null
+  */
+
+  useEffect(() => {
+    const fetchPercentages = async (): Promise<void> => {
+      if (raffleContract == null) return
+      try {
+        const _percentages = []
+        for (let i = 0; i < 3; i++) { // TODO: Use RaffleMultipliers enum or from sdk or contract
+          const fetchedPercent = await raffleContract.getMultiplierToPercentage(i)
+          _percentages.push(fetchedPercent)
+        }
+        setPercentages(_percentages)
+      } catch (error) {
+        console.error('Error fetching raffle percentage', error)
+        setPercentages([null, null, null])
+      }
+    }
+    void fetchPercentages()
+  }, [multiplier])
 
   return (
     <Box className='flex justify-center text-white'>
@@ -26,9 +56,10 @@ const MultiplierInput = (): JSX.Element => {
         aria-label='multiplier'
       >
         {/* TODO: Fetch percentages using getRafflePercentage.ts */}
-        <ToggleButton className='bg-primary' value={RAFFLE_MULTIPLIERS.MULTIPLIER1} aria-label='Multiplier 1'>0,1%</ToggleButton>
-        <ToggleButton className='bg-primary' value={RAFFLE_MULTIPLIERS.MULTIPLIER2} aria-label='Multiplier 2'>0,5%</ToggleButton>
-        <ToggleButton className='bg-primary' value={RAFFLE_MULTIPLIERS.MULTIPLIER3} aria-label='Multiplier 3'>0,8%</ToggleButton>
+        {percentages.map((percentage, index) =>
+          <ToggleButton key={index} className='bg-primary' value={index} aria-label={`Multiplier ${index}`}>{percentage?.numerator.toString()}</ToggleButton>
+        )}
+
       </ToggleButtonGroup>
     </Box>
   )
