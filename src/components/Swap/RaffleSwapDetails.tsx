@@ -44,7 +44,7 @@ const MultiplierInput = (): JSX.Element => {
       }
     }
     void fetchPercentages()
-  }, [multiplier])
+  }, [multiplier, raffleContract])
 
   return (
     <Box className='flex justify-center text-white'>
