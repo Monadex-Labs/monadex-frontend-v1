@@ -6,13 +6,13 @@ import React, { useState } from 'react'
 import { Field } from '@/state/swap/actions'
 import { useDerivedSwapInfo } from '@/state/swap/hooks'
 import { wrappedCurrency } from '@/utils/wrappedCurrency'
-import SwapDefaultMode from '@/components/Swap/SwapDefaultMode'
 import { useUserSlippageTolerance } from '@/state/user/hooks'
 import { ChartComponent } from '@/components/Chart/chart'
 import { SlippageWrapper } from '@/components/Swap/SlippageWrapper'
 import { IoMdSettings } from 'react-icons/io'
 import { AiOutlineLineChart } from 'react-icons/ai'
 import modalBgimage from '@/static/assets/bg.png'
+import SwapMain from '@/components/Swap/SwapMain'
 const SwapPage: React.FC = () => {
   const [openSettingsModal, setOpenSettingsModal] = useState(false)
   const [openChart, setOpenChart] = useState(false)
@@ -79,11 +79,8 @@ const SwapPage: React.FC = () => {
             }
           }}
         >
-          <Box sx={{ zIndex: 1, width: '100%' }} className='p-2'>
-            <SwapDefaultMode
-              token1={token1}
-              token2={token2}
-            />
+          <Box sx={{ zIndex: 1, width: '100%' }} className='px-2 py-4'>
+            <SwapMain />
           </Box>
         </Box>
       </Box>
