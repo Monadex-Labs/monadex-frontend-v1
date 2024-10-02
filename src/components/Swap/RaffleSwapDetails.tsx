@@ -5,6 +5,7 @@ import { useSwapActionHandlers, useSwapState } from '@/state/swap/hooks'
 import { useEffect, useState } from 'react'
 import { useRaffleContract } from '@/hooks/useContracts'
 import { Percent } from '@monadex/sdk'
+import { RAFFLE_MULTIPLIERS } from '@/utils/getRafflePercentage'
 
 const MultiplierInput = (): JSX.Element => {
   const { multiplier } = useSwapState()
@@ -32,11 +33,9 @@ const MultiplierInput = (): JSX.Element => {
     const fetchPercentages = async (): Promise<void> => {
       if (raffleContract == null) return
       try {
-        const _percentages = []
-        for (let i = 0; i < 3; i++) { // TODO: Use RaffleMultipliers enum or from sdk or contract
-          const fetchedPercent = await raffleContract.getMultiplierToPercentage(i)
-          _percentages.push(fetchedPercent)
-        }
+        const _percentages: Array<Percent | null> = await Promise.all(Object.values(RAFFLE_MULTIPLIERS).filter(value => typeof value === 'number').map(async (multiplier) => {
+          return await raffleContract.getMultiplierToPercentage(multiplier) // eslint-disable-line @typescript-eslint/return-await
+        }))
         setPercentages(_percentages)
       } catch (error) {
         console.error('Error fetching raffle percentage', error)
@@ -55,9 +54,9 @@ const MultiplierInput = (): JSX.Element => {
         onChange={handleMultiplierChange}
         aria-label='multiplier'
       >
-        {/* TODO: Fetch percentages using getRafflePercentage.ts */}
+        {/* TODO: Fetch percentages using getRafflePercentage.ts (pending refactor on getRafflePercentage) */}
         {percentages.map((percentage, index) =>
-          <ToggleButton key={index} className='bg-primary' value={index} aria-label={`Multiplier ${index}`}>{percentage?.numerator.toString()}</ToggleButton>
+          <ToggleButton key={index} className='bg-primary' value={index} aria-label={`Multiplier ${index}`}>{percentage?.numerator.toString()}%</ToggleButton>
         )}
 
       </ToggleButtonGroup>
