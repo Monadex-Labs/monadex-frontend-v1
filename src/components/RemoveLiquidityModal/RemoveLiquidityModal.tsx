@@ -407,6 +407,7 @@ const RemoveLiquidityModal: React.FC<RemoveLiquidityModalProps> = ({
           </Box>
           <Box mt={2}>
             <NumericalInput
+              className='w-full relative outline-none border-none whitespace-nowrap text-ellipsis overflow-hidden text-left bg-transparent text-2xl'
               placeholder='0'
               value={formattedAmounts[Field.LIQUIDITY]}
               fontSize={28}

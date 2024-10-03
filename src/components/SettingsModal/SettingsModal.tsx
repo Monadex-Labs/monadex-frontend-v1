@@ -98,12 +98,11 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, defaultSli
   }
 
   return (
-    <CustomModal open={open} onClose={onClose} classname='p-6'>
+    <CustomModal open={open} onClose={onClose} classname='p-6 max-w-[500px]'>
       <Box mb={3} className='flex items-center justify-between'>
         <h5 className='font-semibold text-xl'>Settings</h5>
         <IoMdClose onClick={onClose} size={24} />
       </Box>
-      <Divider className='bg-secondary3' />
       <Box my={2.5} className='flex items-center'>
         <Box mr='6px'>
           <p className='text-textSecondary'>Slippage tolerance</p>
@@ -111,7 +110,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, defaultSli
         <QuestionHelper size={20} text='Your transaction will revert if the price changes unfavorably by more than this percentage' />
       </Box>
       <Box mb={2.5}>
-        <Box className='flex items-center p-2 gap-3 p7'>
+        <Box className='flex items-center p-2 gap-2'>
           <Box
             className={`w-[62px] h-10 rounded-md border border-secondary2 flex items-center justify-center cursor-pointer mr-4 ${
                 userSlippageTolerance === SLIPPAGE_AUTO
@@ -171,12 +170,13 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, defaultSli
             <small>1%</small>
           </Box>
           <Box
-            className={`flex h-10 rounded-md px-0 py-8 flex-1 items-center bg-bgColor${
-                slippageAlert ? 'border-primary' : 'border-secondary1'
+            className={`flex h-10 rounded-md px-0 py-8 flex-1 items-center bg-bgColor ${
+                slippageAlert ? 'border-yellow' : 'border-secondary1'
               }`}
           >
-            {slippageAlert && <IoMdWarning className='text-yellow-500' size={16} />}
+            {slippageAlert && <IoMdWarning className='text-yellow' size={25} />}
             <NumericalInput
+              className='w-full relative outline-none whitespace-nowrap text-ellipsis overflow-hidden text-left border-b border-primary bg-transparent mr-1'
               placeholder={(userSlippageTolerance / 100).toFixed(2)}
               value={slippageInput}
               fontSize={14}
@@ -192,7 +192,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, defaultSli
         </Box>
         {slippageError && (
           <Box mt={1.5}>
-            <small className='text-yellow-500'>
+            <small className='text-yellow'>
               {slippageError === SlippageError.InvalidInput
                 ? 'Enter a valid slippage percentage'
                 : slippageError === SlippageError.RiskyLow
@@ -202,16 +202,17 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, defaultSli
           </Box>
         )}
       </Box>
-      <Divider className='bg-secondary3' />
+      <Divider className='bg-primary' />
       <Box my={2.5} className='flex items-center'>
         <Box mr='6px'>
-          <p>Transaction Deadline</p>
+          <p className='text-textSecondary'>Transaction Deadline</p>
         </Box>
         <QuestionHelper size={20} text='Your transaction will revert if it is pending for more than this long.' />
       </Box>
-      <Box mb={2.5} className='flex items-center'>
+      <Box mb={2.5} className='flex items-center gap-3'>
         <Box className='flex h-10 rounded-md px-0 py-8 flex-1 items-center bg-bgColor' maxWidth={168}>
           <NumericalInput
+            className='w-full relative outline-none whitespace-nowrap rounded-md text-ellipsis overflow-hidden text-left bg-primary px-3 text-2xl'
             placeholder={(ttl / 60).toString()}
             value={deadlineInput}
             fontSize={14}
@@ -228,7 +229,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, defaultSli
       </Box>
       {deadlineError && (
         <Box mt={1.5}>
-          <small className='text-yellow-500'>Enter a valid deadline</small>
+          <small className='text-yellow'>Enter a valid deadline</small>
         </Box>
       )}
     </CustomModal>

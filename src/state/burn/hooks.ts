@@ -12,7 +12,7 @@ import { usePair } from '@/data/Reserves'
 import { useTotalSupply } from '@/data/TotalSupply'
 import { useWalletData } from '@/utils'
 import { AppDispatch, AppState } from '../store'
-// import { wrappedCurrency } from '@/utils/wrappedCurrency'
+import { wrappedCurrency } from '@/utils/wrappedCurrency'
 import { tryParseAmount } from '@/state/swap/hooks'
 import { useTokenBalances } from '@/state/wallet/hooks'
 import { Field, typeInput } from './actions'
@@ -34,7 +34,7 @@ export function useDerivedBurnInfo (
     }
     error?: string
   } {
-  const { account } = useWalletData()
+  const { account, chainId } = useWalletData()
   const { independentField, typedValue } = useBurnState()
 
   // pair + totalsupply
@@ -44,7 +44,11 @@ export function useDerivedBurnInfo (
     pair?.liquidityToken as Token
   ])
   const userLiquidity: undefined | TokenAmount = relevantTokenBalances?.[pair?.liquidityToken?.address ?? '']
-  const [tokenA, tokenB] = [currencyA as Token, currencyB as Token]
+  
+  const [tokenA, tokenB] = [
+    wrappedCurrency(currencyA, chainId),
+    wrappedCurrency(currencyB, chainId)
+  ]
   const tokens = {
     [Field.CURRENCY_A]: tokenA,
     [Field.CURRENCY_B]: tokenB,

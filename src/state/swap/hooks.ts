@@ -150,7 +150,8 @@ export function useDerivedSwapInfo (): {
   useAutoSlippage: number
 } {
 // grab the informations of the
-  const { account: address, chainId } = useWalletData()
+  const { account: address, chainId, networkName } = useWalletData()
+  console.log('networkName', networkName)
   const parsedQuery = useParsedQueryString()
   const CHAIN_ID: ChainId | undefined = chainId
   const chainIdToUse = CHAIN_ID ?? ChainId.SEPOLIA // TODO: change the chainId to Monad testnet

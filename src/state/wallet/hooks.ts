@@ -132,6 +132,7 @@ export function useCurrencyBalance (
   account?: string,
   currency?: NativeCurrency | Token
 ): CurrencyAmount | TokenAmount | undefined {
+  console.log('tokenBalances[address]', useCurrencyBalances(account, (currency != null) ? [currency] : [])?.[0])
   return useCurrencyBalances(account, (currency != null) ? [currency] : [])?.[0]
 }
 

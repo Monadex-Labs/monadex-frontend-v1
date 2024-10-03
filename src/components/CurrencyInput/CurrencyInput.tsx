@@ -43,6 +43,8 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
     account ?? undefined,
     currency
   )
+  console.log('BALANCE', formatTokenAmount(selectedCurrencyBalance))
+
   const usdPriceV2 = Number(useUSDCPrice(currency)?.toSignificant() ?? 0)
   const usdPrice = usdPriceV2
   return (
@@ -51,11 +53,16 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
       className={`${showPrice === true ? ' priceShowBox' : ''} ${'bg-bgColor/80 rounded-sm shadow-sm'} p-2 my-2`}
     >
       <div className='flex justify-between mb-2'>
-        <p className='text-textSecondary text-sm font-semibold p-1'>{title ?? 'you pay'}</p>
-        <div className='flex'>
+        <p className='text-textSecondary text-md font-semibold p-1'>{title ?? 'you pay'}</p>
+        <div className='flex gap-4'>
           {Boolean(account) && (currency != null) && showHalfButton === true && (
             <div className='text-primary font-lg' onClick={onHalf}>
               <small>50%</small>
+            </div>
+          )}
+          {Boolean(account) && (currency != null) && showMaxButton === true && (
+            <div className='' onClick={onMax}>
+              <small className='text-primary font-lg'>Max</small>
             </div>
           )}
         </div>
@@ -69,6 +76,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
         />
         <div className='flex relative pl-2'>
           <NumericalInput
+            className='w-full relative outline-none border-none whitespace-nowrap text-ellipsis overflow-hidden text-left bg-transparent text-2xl'
             value={amount}
             align='right'
             color={color}
@@ -84,11 +92,6 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
           <small className='text-textSecondary text-md'>
             {`Balance: ${formatTokenAmount(selectedCurrencyBalance)}`}
           </small>
-          {Boolean(account) && (currency != null) && showMaxButton === true && (
-            <div className='' onClick={onMax}>
-              <small className='text-primary] font-lg'>Max</small>
-            </div>
-          )}
         </div>
 
         <small className='text-textSecondary text-md p-1'>

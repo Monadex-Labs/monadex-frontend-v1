@@ -82,7 +82,7 @@ export const MNDX: { [chainid: number]: Token } = {
 export const USDC: { [chainid: number]: Token } = {
   [ChainId.SEPOLIA]: new Token(
     ChainId.SEPOLIA,
-    '0xbf5bec5a2711719b5A2c344d17fBC276726ab1b1',
+    '0x036CbD53842c5426634e7929541eC2318f3dCF7e',
     6,
     'USDC',
     'USD Coin'

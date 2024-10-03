@@ -2,7 +2,7 @@ import React from 'react'
 import { escapeRegExp } from '@/utils'
 
 const inputRegex = RegExp('^\\d*(?:\\\\[.])?\\d*$') // match escaped "." characters via in a non-capturing group
-
+// 'w-full relative outline-none border-none whitespace-nowrap text-ellipsis overflow-hidden text-left bg-transparent text-2xl'
 export const NumericalInput = React.memo(function InnerInput ({
   value,
   onUserInput,
@@ -11,6 +11,7 @@ export const NumericalInput = React.memo(function InnerInput ({
   color,
   fontWeight,
   align,
+  className,
   ...rest
 }: {
   value: string | number
@@ -18,6 +19,7 @@ export const NumericalInput = React.memo(function InnerInput ({
   error?: boolean
   fontSize?: number
   fontWeight?: string | number
+  className: string
   align?: 'right' | 'left' | 'center'
 } & Omit<React.HTMLProps<HTMLInputElement>, 'ref' | 'onChange' | 'as'>) {
   const enforcer = (nextUserInput: string): void => {
@@ -29,7 +31,7 @@ export const NumericalInput = React.memo(function InnerInput ({
   return (
     <input
       {...rest}
-      className='w-full relative outline-none border-none whitespace-nowrap text-ellipsis overflow-hidden text-left bg-transparent text-2xl'
+      className={className}
       value={value}
       style={{ textAlign: align, color, fontSize, fontWeight }}
       onChange={(event) => {

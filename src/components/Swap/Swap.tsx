@@ -49,7 +49,7 @@ import { usePathname } from 'next/navigation'
 import useSwapRedirects from '@/hooks/useSwapRedirect'
 import { updateUserBalance } from '@/state/balance/action'
 import { IoMdArrowDown, IoMdRepeat } from 'react-icons/io'
-const SwapButton = dynamic(() => import('./SwapButton'), { ssr: false })
+const SwapButton = dynamic(async () => await import('./SwapButton'), { ssr: false })
 const Swap: React.FC<{
   currencyBgClass?: string
 }> = ({ currencyBgClass }) => {
@@ -497,7 +497,7 @@ const Swap: React.FC<{
         />
       )}
       <CurrencyInput
-        title='From '
+        title='Pay'
         id='swap-currency-input'
         currency={currencies[Field.INPUT]}
         onHalf={handleHalfInput}
@@ -518,7 +518,7 @@ const Swap: React.FC<{
         />
       </Box>
       <CurrencyInput
-        title='To'
+        title='Receive'
         id='swap-currency-output'
         currency={currencies[Field.OUTPUT]}
         showPrice={Boolean(trade?.executionPrice)}
@@ -530,33 +530,6 @@ const Swap: React.FC<{
         color='secondary'
         bgClass={currencyBgClass}
       />
-      {trade?.executionPrice != null && (
-        <Box className='flex gap-2 opacity-80 mt-2 font-regular'>
-          <small>Price:</small>
-          <small className='flex gap-2'>
-            1{' '}
-            {
-              (mainPrice ? currencies[Field.INPUT] : currencies[Field.OUTPUT])
-                ?.symbol
-            }{' '}
-            ={' '}
-            {(mainPrice
-              ? trade.executionPrice
-              : trade.executionPrice.invert()
-            ).toSignificant(6)}{' '}
-            {
-              (mainPrice ? currencies[Field.OUTPUT] : currencies[Field.INPUT])
-                ?.symbol
-            }{' '}
-            <IoMdRepeat
-              className='text-lg cursor-pointer'
-              onClick={() => {
-                setMainPrice(!mainPrice)
-              }}
-            />
-          </small>
-        </Box>
-      )}
       {!showWrap && (
         <Box className=''>
           <Box className='flex space-between items-center p-3 gap-2 '>
@@ -583,6 +556,33 @@ const Swap: React.FC<{
               onChange={onRecipientChange}
             />
           )}
+        </Box>
+      )}
+      {trade?.executionPrice != null && (
+        <Box className='flex gap-2 opacity-80 mt-2 font-regular'>
+          <p>Price:</p>
+          <p className='flex gap-2'>
+            1{' '}
+             {
+              (mainPrice ? currencies[Field.INPUT] : currencies[Field.OUTPUT])
+                ?.symbol
+            }{' '}
+             ≈ {' '}
+             {(mainPrice
+              ? trade.executionPrice
+              : trade.executionPrice.invert()
+            ).toSignificant(6)}{' '}
+             {
+              (mainPrice ? currencies[Field.OUTPUT] : currencies[Field.INPUT])
+                ?.symbol
+            }{' '}
+             <IoMdRepeat
+              className='text-lg cursor-pointer'
+              onClick={() => {
+                setMainPrice(!mainPrice)
+              }}
+            />
+           </p>
         </Box>
       )}
       {!showWrap && fetchingBestRoute
