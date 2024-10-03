@@ -8,9 +8,15 @@ export const Mxpdisplay: React.FC = () => {
   const { data: session } = useSession()
   const { userXP } = useFetchUserXP(session)
   return (
-    <div className='flex border border-secondary1/50 px-3  rounded-full items-center bg-secondary1'>
-      <Image src={gem} width={50} height={50} alt='gem image' />
-      <p className='p-2 text-sm font-semibold italic'>{(userXP != null) ? userXP : <CircularProgress size={15} color='secondary' />} MXP</p>
-    </div>
+    <>
+      {(session != null)
+        ? (
+          <div className='flex border border-secondary1/50 px-3  rounded-full items-center bg-secondary1'>
+            <Image src={gem} width={50} height={50} alt='gem image' />
+            <p className='p-2 text-sm font-semibold italic flex gap-2'>{(userXP != null) ? userXP : <CircularProgress size={15} color='secondary' />} MXP</p>
+          </div>
+          )
+        : <></>}
+    </>
   )
 }

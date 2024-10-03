@@ -9,8 +9,10 @@ import useCurrentBlockTimestamp from './useCurrentBlockTimestamp'
 export default function useTransactionDeadline (): BigNumber | undefined {
   const ttl = useSelector<AppState, number>((state) => state.user.userDeadline)
   const blockTimestamp = useCurrentBlockTimestamp()
+  const autoDeadline = 5
   return useMemo(() => {
-    if ((blockTimestamp != null) && ttl) return blockTimestamp.add(ttl)
+    // cast number to auto deadline if user enter number bigger thnan 10**4 
+    if ((blockTimestamp != null) && ttl) return blockTimestamp.add(ttl > 10**4 ? autoDeadline : ttl)
     return undefined
   }, [blockTimestamp, ttl])
 }
