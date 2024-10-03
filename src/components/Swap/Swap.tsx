@@ -14,6 +14,7 @@ import { AdvancedSwapDetails } from './AdvancedSwapDetails'
 import CurrencyInput from '@/components/CurrencyInput/CurrencyInput'
 import ConfirmSwapModal from './ConfirmSwapModal'
 import { AddressInput } from '@/components'
+import { HiChevronDown, HiChevronUp  } from 'react-icons/hi2'
 import {
   useWalletData,
   useIsSupportedNetwork,
@@ -62,6 +63,7 @@ const Swap: React.FC<{
   //   useCurrency(loadedUrlParams?.outputCurrencyId),
   // ];
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
+  const [dropdownDetails, setDropDownDetails] = useState<boolean>(false)
   // const urlLoadedTokens: Token[] = useMemo(
   //   () =>
   //     [loadedInputCurrency, loadedOutputCurrency]?.filter(
@@ -559,42 +561,45 @@ const Swap: React.FC<{
         </Box>
       )}
       {trade?.executionPrice != null && (
-        <Box className='flex gap-2 opacity-80 mt-2 font-regular'>
-          <p>Price:</p>
-          <p className='flex gap-2'>
+        <Box
+          className='flex gap-2 opacity-80 mt-2 font-regular border py-2 border-primary/30 rounded-md p-2 justify-between items-center ease-out mb-5'
+          onClick={() => setDropDownDetails(!dropdownDetails)}
+        >
+          <p className='flex gap-2 items-center'>
             1{' '}
-             {
+            {
               (mainPrice ? currencies[Field.INPUT] : currencies[Field.OUTPUT])
                 ?.symbol
             }{' '}
-             ≈ {' '}
-             {(mainPrice
+            ≈ {' '}
+            {(mainPrice
               ? trade.executionPrice
               : trade.executionPrice.invert()
             ).toSignificant(6)}{' '}
-             {
+            {
               (mainPrice ? currencies[Field.OUTPUT] : currencies[Field.INPUT])
                 ?.symbol
             }{' '}
-             <IoMdRepeat
+            <IoMdRepeat
               className='text-lg cursor-pointer'
               onClick={() => {
                 setMainPrice(!mainPrice)
               }}
             />
-           </p>
+          </p>
+          {dropdownDetails ? <HiChevronUp size={20} /> : <HiChevronDown size={20} />}
         </Box>
       )}
-      {!showWrap && fetchingBestRoute
-        ? (
+      {dropdownDetails && (
+        !showWrap && fetchingBestRoute ? (
           <Box mt={2} className='flex justify-center gap-2 items-center flex-col'>
-            <CircularProgress size={16} />
+            <CircularProgress className='text-semibold' size={16} />
             <p className='text-xs mb-2'>Fetching Best Quote</p>
           </Box>
-          )
-        : (
+        ) : (
           <AdvancedSwapDetails trade={trade} />
-          )}
+        )
+      )}
       <Box>
         <Box>
           <SwapButton

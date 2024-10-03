@@ -160,34 +160,25 @@ const Pools: React.FC = () => {
         <Box className='flex items-center'>
           <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={28} />
           <Box ml={1}>
-            <Typography variant='body2' className='text-white'>
+            <Typography variant='body2' className='text-white font-regular text-lg'>
               {pair.token0.symbol} / {pair.token1.symbol}
             </Typography>
-          </Box>
-          <Box
-            ml={2}
-            paddingY={0.5}
-            paddingX={1}
-            borderRadius={6}
-            className='text-bgColor bg-primary'
-          >
-            {pair.poolFee}% Fee
           </Box>
         </Box>
       )
     },
     {
-      html: <Typography variant='body2' className='text-white  font-semibold text-lg'>${formatNumber(parseFloat(pair.tvl))}</Typography>
+      html: <Typography variant='body2' className='text-white  text-lg font-regular'>${formatNumber(parseFloat(pair.tvl))}</Typography>
     },
     {
-      html: <Typography variant='body2' className='text-white font-semibold text-lg'>${formatNumber(parseFloat(pair.volume24h))}</Typography>
+      html: <Typography variant='body2' className='text-white text-lg font-regular'>${formatNumber(parseFloat(pair.volume24h))}</Typography>
     },
     {
-      html: <Typography variant='body2' className='text-white font-semibold text-lg'>${formatNumber(parseFloat(pair.fee24h))}</Typography>
+      html: <Typography variant='body2' className='text-white  text-lg font-regular'>${formatNumber(parseFloat(pair.fee24h))}</Typography>
     },
     {
       html: (
-        <Typography variant='body2' className='text-success'>
+        <Typography variant='body2' className='text-success font-regular text-lg'>
           {formatNumber(parseFloat(pair.apr24h))}%
         </Typography>
       )

@@ -95,7 +95,7 @@ const DataTable: React.FC<DataTableProps<any>> = ({
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage)
   return (
-    <Box className='rounded-lg'>
+    <Box className='rounded-lg border border-primary/50'>
       {toolbar}
 
       <TableContainer>
@@ -106,10 +106,12 @@ const DataTable: React.FC<DataTableProps<any>> = ({
           aria-label='enhanced table'
         >
           <TableHead>
-            <TableRow>
+            <TableRow
+              className='bg-primary/40'
+            >
               {headCells.map((headCell, index) => (
                 <TableCell
-                  className={headCell.buttonCell ? 'border' : ''}
+                  className={headCell.buttonCell ? '' : ''}
                   key={`${headCell.id}_${index}`}
                   align={headCell.align}
                   padding='normal'
@@ -189,8 +191,8 @@ const DataTable: React.FC<DataTableProps<any>> = ({
             )}
 
             {stableSort(data, getComparator(order, orderBy))
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((item, index) => renderRow(item, index, page, rowsPerPage))
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((item:any, index:number) => renderRow(item, index, page, rowsPerPage))
             }
 
             {!loading && data.length < 1 && (

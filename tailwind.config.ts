@@ -40,8 +40,11 @@ const config: Config = {
         clash: ['Clash', 'sans-serif'],
         regular: ['Clash-regular', 'sans-serif']
       },
-      fontSize : {
-        normal : '16px'
+      fontSize: {
+        normal: '16px'
+      },
+      transitionProperty: {
+        height: 'height'
       }
     }
   },

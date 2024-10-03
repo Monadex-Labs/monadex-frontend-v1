@@ -43,7 +43,6 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
     account ?? undefined,
     currency
   )
-  console.log('BALANCE', formatTokenAmount(selectedCurrencyBalance))
 
   const usdPriceV2 = Number(useUSDCPrice(currency)?.toSignificant() ?? 0)
   const usdPrice = usdPriceV2
