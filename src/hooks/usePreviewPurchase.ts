@@ -1,21 +1,24 @@
 'use client'
-import { useState } from "react"
-import { useMemo } from "react"
-import { useRaffleContract } from "./useContracts"
+import { useState, useEffect } from 'react'
+import { useRaffleContract } from './useContracts'
+import { RAFFLE_MULTIPLIERS } from '@/utils/getRafflePercentage'
 
 interface RaffleData {
-    address : string
-    amount : number
-    multiplier : 1 | 2 | 3
+  tokenAddress: string
+  amount: number
+  multiplier: RAFFLE_MULTIPLIERS
 }
 
-export default function usePreviewPurchase({address, amount, multiplier}: RaffleData) : Number | undefined {
-    const [previewTickets, setPreviewTickets] = useState<number>(0)
-    const RaffleContract = useRaffleContract()
-    useMemo(async() => {
-        const preview = await RaffleContract?.previewPurchase(address, amount, multiplier)
-        setPreviewTickets(preview)
-    },[address, amount, multiplier])
-    
-    return previewTickets || 0
+export default function usePreviewPurchase ({ tokenAddress, amount, multiplier }: RaffleData): Number | undefined {
+  const [previewTickets, setPreviewTickets] = useState<number>(0)
+  const RaffleContract = useRaffleContract()
+  useEffect(() => {
+    const fetchPreview = async (): Promise<void> => {
+      const preview = await RaffleContract?.previewPurchase(tokenAddress, amount, multiplier)
+      setPreviewTickets(preview)
+    }
+    void fetchPreview()
+  }, [tokenAddress, amount, multiplier])
+
+  return previewTickets ?? 0
 }
