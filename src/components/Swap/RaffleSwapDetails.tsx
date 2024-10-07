@@ -1,20 +1,29 @@
 'use client'
 import { Box, ToggleButtonGroup, ToggleButton } from '@mui/material'
 import { QuestionHelper } from '../common'
-import { useSwapActionHandlers, useSwapState } from '@/state/swap/hooks'
+import { useDerivedSwapInfo, useSwapActionHandlers, useSwapState } from '@/state/swap/hooks'
 import { useEffect, useState } from 'react'
 import { useRaffleContract } from '@/hooks/useContracts'
 import { Percent } from '@monadex/sdk'
 import { RAFFLE_MULTIPLIERS } from '@/utils/getRafflePercentage'
+import usePreviewPurchase from '@/hooks/usePreviewPurchase'
 
 const MultiplierInput = (): JSX.Element => {
-  const { multiplier } = useSwapState()
+  const {
+    multiplier
+  } = useSwapState()
+
+  const {
+    parsedAmount
+  } = useDerivedSwapInfo()
+
   const {
     onMultiplierChange
   } = useSwapActionHandlers()
   const [percentages, setPercentages] = useState<Array<Percent | null>>([null, null, null])
 
   const raffleContract = useRaffleContract()
+  const previewTickets = usePreviewPurchase(parsedAmount?.token.address, parsedAmount?.raw.toString(), multiplier)
 
   const handleMultiplierChange = (
     event: React.MouseEvent<HTMLElement>,
@@ -46,20 +55,23 @@ const MultiplierInput = (): JSX.Element => {
   }, [multiplier, raffleContract])
 
   return (
-    <Box className='flex justify-center text-white'>
+    <Box className='flex flex-col justify-center items-center text-white'>
       <ToggleButtonGroup
         color='secondary'
         value={multiplier}
         exclusive
         onChange={handleMultiplierChange}
         aria-label='multiplier'
+        className='flex flex-row'
       >
         {/* TODO: Fetch percentages using getRafflePercentage.ts (pending refactor on getRafflePercentage) */}
         {percentages.map((percentage, index) =>
           <ToggleButton key={index} className='bg-primary' value={index} aria-label={`Multiplier ${index}`}>{percentage?.numerator.toString()}%</ToggleButton>
         )}
-
       </ToggleButtonGroup>
+      {previewTickets != null
+        ? <div className='flex flex-row'>Raffle tickets to receive: {previewTickets.toString()}</div>
+        : <></>}
     </Box>
   )
 }

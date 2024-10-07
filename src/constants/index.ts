@@ -212,7 +212,6 @@ export const CUSTOM_BASES: {
 
 export const RAFFLE_WL_TOKEN_ADDRESS = {
   [ChainId.SEPOLIA]: [
-    '0x3444O454', // add raffle wl tokens here
-    '0x3444O454'
+    '0x4200000000000000000000000000000000000006' // TODO: add raffle wl tokens here
   ]
 }

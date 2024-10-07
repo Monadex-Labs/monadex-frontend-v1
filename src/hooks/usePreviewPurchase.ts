@@ -1,19 +1,14 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { useRaffleContract } from './useContracts'
-import { RAFFLE_MULTIPLIERS } from '@/utils/getRafflePercentage'
 
-interface RaffleData {
-  tokenAddress: string
-  amount: number
-  multiplier: RAFFLE_MULTIPLIERS
-}
-
-export default function usePreviewPurchase ({ tokenAddress, amount, multiplier }: RaffleData): Number | undefined {
+export default function usePreviewPurchase (tokenAddress: string | undefined, amount: string | undefined, multiplier: number | null): Number | undefined {
   const [previewTickets, setPreviewTickets] = useState<number>(0)
   const RaffleContract = useRaffleContract()
+  // TODO: Add error handling (call reverts when token not whitelisted)
   useEffect(() => {
     const fetchPreview = async (): Promise<void> => {
+      if (tokenAddress === undefined || amount === undefined || multiplier == null) return
       const preview = await RaffleContract?.previewPurchase(tokenAddress, amount, multiplier)
       setPreviewTickets(preview)
     }
