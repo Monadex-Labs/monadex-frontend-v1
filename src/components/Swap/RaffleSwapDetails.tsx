@@ -7,6 +7,7 @@ import { useRaffleContract } from '@/hooks/useContracts'
 import { Percent } from '@monadex/sdk'
 import { RAFFLE_MULTIPLIERS } from '@/utils/getRafflePercentage'
 import usePreviewPurchase from '@/hooks/usePreviewPurchase'
+import { isTokenInRaffleWhitelist } from '@/utils/raffleTokens'
 
 const MultiplierInput = (): JSX.Element => {
   const {
@@ -24,6 +25,7 @@ const MultiplierInput = (): JSX.Element => {
 
   const raffleContract = useRaffleContract()
   const previewTickets = usePreviewPurchase(parsedAmount?.token.address, parsedAmount?.raw.toString(), multiplier)
+  const isRaffleSupported = isTokenInRaffleWhitelist(parsedAmount?.token.address)
 
   const handleMultiplierChange = (
     event: React.MouseEvent<HTMLElement>,
