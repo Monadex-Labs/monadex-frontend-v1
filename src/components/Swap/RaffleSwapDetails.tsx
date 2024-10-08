@@ -7,7 +7,6 @@ import { useRaffleContract } from '@/hooks/useContracts'
 import { Percent } from '@monadex/sdk'
 import { RAFFLE_MULTIPLIERS } from '@/utils/getRafflePercentage'
 import usePreviewPurchase from '@/hooks/usePreviewPurchase'
-import { isTokenInRaffleWhitelist } from '@/utils/raffleTokens'
 
 const MultiplierInput = (): JSX.Element => {
   const {
@@ -25,7 +24,6 @@ const MultiplierInput = (): JSX.Element => {
 
   const raffleContract = useRaffleContract()
   const previewTickets = usePreviewPurchase(parsedAmount?.token.address, parsedAmount?.raw.toString(), multiplier)
-  const isRaffleSupported = isTokenInRaffleWhitelist(parsedAmount?.token.address)
 
   const handleMultiplierChange = (
     event: React.MouseEvent<HTMLElement>,
@@ -71,9 +69,11 @@ const MultiplierInput = (): JSX.Element => {
           <ToggleButton key={index} className='bg-primary' value={index} aria-label={`Multiplier ${index}`}>{percentage?.numerator.toString()}%</ToggleButton>
         )}
       </ToggleButtonGroup>
-      {previewTickets != null
-        ? <div className='flex flex-row'>Raffle tickets to receive: {previewTickets.toString()}</div>
-        : <></>}
+      <div className='flex flex-row'>Raffle tickets to receive:
+        {previewTickets != null
+          ? previewTickets.toString()
+          : <>...loading</>}
+      </div>
     </Box>
   )
 }
