@@ -27,6 +27,8 @@ export const replaceSwapState = createAction<{
   recipient: string | null
   swapDelay: SwapDelay
   multiplier: number | null
+  minimumTickets?: number
 }>('swap/replaceSwapState')
 export const setRecipient = createAction<{ recipient: string | null }>('swap/setRecipient')
 export const setMultiplier = createAction<{ multiplier: number | null }>('swap/setMultiplier')
+export const setMinimumTickets = createAction<{ minimumTickets?: number }>('swap/setMinimumTickets')

@@ -8,7 +8,8 @@ import {
   switchCurrencies,
   setRecipient,
   SwapDelay,
-  setMultiplier
+  setMultiplier,
+  setMinimumTickets
 } from './actions'
 
 export interface SwapState {
@@ -24,6 +25,7 @@ export interface SwapState {
   // the typed recipient address or ENS name, or null if swap should go to sender
   readonly recipient: string | null
   readonly multiplier: number | null
+  readonly minimumTickets?: number
 }
 
 const initialState: SwapState = {
@@ -37,12 +39,13 @@ const initialState: SwapState = {
   },
   recipient: null,
   swapDelay: SwapDelay.INIT,
-  multiplier: null
+  multiplier: null,
+  minimumTickets: undefined
 }
 
 export default createReducer<SwapState>(initialState, (builder) => {
   builder
-    .addCase(replaceSwapState, (state, { payload: { typedValue, field, inputCurrencyId, outputCurrencyId, recipient, swapDelay, multiplier } }) => {
+    .addCase(replaceSwapState, (state, { payload: { typedValue, field, inputCurrencyId, outputCurrencyId, recipient, swapDelay, multiplier, minimumTickets } }) => {
       return {
         [Field.INPUT]: {
           currencyId: inputCurrencyId
@@ -54,7 +57,8 @@ export default createReducer<SwapState>(initialState, (builder) => {
         swapDelay,
         typedValue,
         recipient,
-        multiplier
+        multiplier,
+        minimumTickets
       }
     })
     .addCase(selectCurrency, (state, { payload: { field, currencyId } }) => {
@@ -95,5 +99,8 @@ export default createReducer<SwapState>(initialState, (builder) => {
     })
     .addCase(setMultiplier, (state, { payload: { multiplier } }) => {
       state.multiplier = multiplier
+    })
+    .addCase(setMinimumTickets, (state, { payload: { minimumTickets } }) => {
+      state.minimumTickets = minimumTickets
     })
 })

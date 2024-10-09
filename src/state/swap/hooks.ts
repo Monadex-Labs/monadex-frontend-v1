@@ -1,6 +1,6 @@
 import { parseUnits } from '@ethersproject/units'
 import { ETH, ChainId, JSBI, Token, TokenAmount, Trade, CurrencyAmount, NativeCurrency, Percent } from '@monadex/sdk'
-import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput, SwapDelay, setSwapDelay, setMultiplier } from './actions'
+import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput, SwapDelay, setSwapDelay, setMultiplier, setMinimumTickets } from './actions'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { GlobalData, SLIPPAGE_AUTO } from '../../constants/index'
 import { useDispatch, useSelector } from 'react-redux'
@@ -33,6 +33,8 @@ export function useSwapActionHandlers (): {
   onSwapDelay: (swapDelay: SwapDelay) => void
   // the moment when user will set the multiplier
   onMultiplierChange: (multiplier: number | null) => void
+  // the minimum raffle tokens to receive after multiplier and input amount
+  onMinimumTicketsChange: (minimumTickets?: number) => void
 } {
   const dispatch = useDispatch<AppDispatch>()
   const NATIVE = ETH // TODO: change the native if we do tests on eth sepolia
@@ -95,13 +97,22 @@ export function useSwapActionHandlers (): {
     },
     [dispatch]
   )
+
+  const onMinimumTicketsChange = useCallback(
+    (minimumTickets?: number) => {
+      dispatch(setMinimumTickets({ minimumTickets }))
+    },
+    [dispatch]
+  )
+
   return {
     onCurrencySelection,
     onSwitchTokens,
     onUserInput,
     onRecipientChange,
     onSwapDelay,
-    onMultiplierChange
+    onMultiplierChange,
+    onMinimumTicketsChange
   }
 }
 // try to parse a user entered amount for a given token
@@ -336,7 +347,8 @@ export function queryParametersToSwapState (parsedQs: ParsedQs): SwapState {
     independentField: parseIndependentFieldURLParameter(parsedQs.exactField),
     recipient,
     swapDelay: SwapDelay.INIT,
-    multiplier: Number(parsedQs.multiplier)
+    multiplier: Number(parsedQs.multiplier),
+    minimumTickets: Number(parsedQs.minimumTickets)
   }
 }
 // updates the swap state to use the defaults for a given network
@@ -364,7 +376,8 @@ export function useDefaultsFromURLSearch ():
         outputCurrencyId: parsed[Field.OUTPUT].currencyId,
         recipient: parsed.recipient,
         swapDelay: SwapDelay.INIT,
-        multiplier: parsed.multiplier
+        multiplier: parsed.multiplier,
+        minimumTickets: parsed.minimumTickets
       })
     )
     setResult({
