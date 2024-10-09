@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss'
+
 const config: Config = {
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
@@ -15,15 +16,25 @@ const config: Config = {
     },
     extend: {
 
+      backgroundImage : {
+        poolImage : "url('../../static')"
+      },
       animation: {
         'spin-fast': 'spin 0.5s linear infinite', // Faster spin
         'spin-slow': 'spin 2s linear infinite' // Slower spin
+      },
+      dropShadow: {
+        glow: [
+          '0 0px 20px rgba(255,255, 255, 0.35)',
+          '0 0px 65px rgba(255, 255,255, 0.2)'
+        ]
       },
       // add all colors vars used here and refactor the dapp style color
       colors: {
         bgColor: '#210158',
         primary: '#836EF9',
         error: '#FF1010',
+        darkPurple: '#1B0344',
         yellow: '#F3EC5D',
         blueviolet: '#5D6EF3',
         success: '#74DE1D',

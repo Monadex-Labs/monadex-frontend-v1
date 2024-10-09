@@ -1,6 +1,6 @@
 import gql from 'graphql-tag'
 
-export const PAIR_CHART:any = gql`
+export const PAIR_CHART: any = gql`
 query pairDayDatas($pairAddress: Bytes!, $skip: Int!) {
     pairDayDatas(first: 1000, skip: $skip, orderBy: date, orderDirection: asc, where: { pairAddress: $pairAddress }) {
       id
@@ -26,7 +26,7 @@ export const PAIR_DAY_DATA = gql`
   }
 `
 
-export const ALL_PAIRS:any = gql`
+export const ALL_PAIRS: any = gql`
   query pairs {
     pairs(first: 500, orderBy: trackedReserveETH, orderDirection: desc) {
       id
@@ -43,7 +43,7 @@ export const ALL_PAIRS:any = gql`
     }
   }
 `
-const PairFields:string = `
+const PairFields: string = `
   fragment PairFields on Pair {
     id
     txCount
@@ -84,15 +84,15 @@ export const TOKEN_TOP_DAY_DATAS = gql`
   }
 `
 
-export const PAIR_DATA = (pairAddress:string, block:number) => {
-    const queryString:any = `
+export const PAIR_DATA = (pairAddress: string, block: number) => {
+  const queryString: any = `
       ${PairFields}
       query pairs {
-        pairs(${block ? `block: {number: ${block}}` : ``} where: { id: "${pairAddress}"} ) {
+        pairs(${block ? `block: {number: ${block}}` : ''} where: { id: "${pairAddress}"} ) {
           ...PairFields
         }
       }`
-    return gql(queryString)
+  return gql(queryString)
 }
 
 export const PAIRS_BULK = gql`
@@ -104,13 +104,13 @@ export const PAIRS_BULK = gql`
   }
 `
 
-export const PAIRS_HISTORICAL_BULK = (block:number, pairs:string[]) => {
-    let pairsString = `[`
-    pairs.map((pair) => {
-      return (pairsString += `"${pair}"`)
-    })
-    pairsString += ']'
-    let queryString:any = `
+export const PAIRS_HISTORICAL_BULK = (block: number, pairs: string[]) => {
+  let pairsString = '['
+  pairs.map((pair) => {
+    return (pairsString += `"${pair}"`)
+  })
+  pairsString += ']'
+  const queryString: any = `
     ${PairFields}
     query pairs {
       pairs(first: 200, where: {id_in: ${pairsString}}, block: {number: ${block}}, orderBy: trackedReserveETH, orderDirection: desc) {
@@ -118,14 +118,14 @@ export const PAIRS_HISTORICAL_BULK = (block:number, pairs:string[]) => {
       }
     }
     `
-     return gql(queryString)
+  return gql(queryString)
 }
 
 /** PULL BLOCKS FROM BLOCKCHAIN **/
 
 export const GET_BLOCKS = (timestamps: any) => {
   let queryString = 'query blocks {'
-  queryString += timestamps.map((timestamp : any) => {
+  queryString += timestamps.map((timestamp: any) => {
     return `t${timestamp}:blocks(first: 1, orderBy: timestamp, orderDirection: desc, where: { timestamp_gt: ${timestamp}, timestamp_lt: ${
       timestamp + 600
     } }) {

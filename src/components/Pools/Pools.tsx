@@ -11,7 +11,9 @@ import Image from 'next/image'
 import Rejected from '@/static/assets/rejected.webp'
 import CustomTable from './CustomTable'
 import DoubleCurrencyLogo from '../DoubleCurrencyLogo'
+import TVLDataContainer from './TvlDataContainer'
 import { formatNumber } from '@/utils'
+import { PairData } from '@/state/pools/actions'
 
 const Pools: React.FC = () => {
   const router = useRouter()
@@ -65,10 +67,10 @@ const Pools: React.FC = () => {
     return processedPools.filter((pool) => {
       const searchLower = searchedValue.toLowerCase()
       return (
-        pool.token0.name.toLowerCase().includes(searchLower) ||
-        pool.token1.name.toLowerCase().includes(searchLower) ||
-        pool.token0.symbol.toLowerCase().includes(searchLower) ||
-        pool.token1.symbol.toLowerCase().includes(searchLower) ||
+        pool?.token0?.name?.toLowerCase().includes(searchLower) ||
+        pool?.token1?.name?.toLowerCase().includes(searchLower) ||
+        pool?.token0?.symbol?.toLowerCase().includes(searchLower) ||
+        pool?.token1?.symbol?.toLowerCase().includes(searchLower) ||
         pool.token0.address.toLowerCase().includes(searchLower) ||
         pool.token1.address.toLowerCase().includes(searchLower) ||
         pool.pairAddress.toLowerCase().includes(searchLower)
@@ -76,11 +78,19 @@ const Pools: React.FC = () => {
     })
   }, [processedPools, searchedValue])
 
+  const totalVolume = useMemo(() => {
+    return processedPools.reduce((sum: number, pool: any) => sum + parseFloat(pool.volume24h), 0)
+  }, [processedPools])
+
+  const totalTVL = useMemo(() => {
+    return processedPools.reduce((sum: number, pool) => sum + parseFloat(pool.tvl), 0)
+  }, [processedPools])
+
   const headCells = [
     {
       id: 'pairName',
       numeric: false,
-      label: 'Name',
+      label: 'Pool',
       sortKey: (pair: any) => pair.token0.symbol + ' ' + pair.token1.symbol
     },
     {
@@ -92,26 +102,27 @@ const Pools: React.FC = () => {
     {
       id: 'pairdayVolume',
       numeric: true,
-      label: '24h Volume',
+      label: 'Volume 24H',
       sortKey: (pair: any) => parseFloat(pair.volume24h)
     },
     {
       id: 'pairFee',
       numeric: true,
-      label: '24h Fees',
+      label: 'Fees 24H',
       sortKey: (pair: any) => parseFloat(pair.fee24h)
     },
     {
       id: 'pairApr',
       numeric: true,
-      label: 'APR',
+      label: 'APR 24H',
       sortKey: (pair: any) => parseFloat(pair.apr24h)
     }
   ]
 
   const mobileHTML = (pair: any, index: number): React.JSX.Element => (
     <Box mt={index === 0 ? 0 : 3}>
-      <Box className='flex items-center justify-between' mb={1}>
+
+      <Box className='flex items-center justify-between border' mb={1}>
         <Box className='flex items-center'>
           <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} />
           <Box ml='5px'>
@@ -159,8 +170,13 @@ const Pools: React.FC = () => {
       html: (
         <Box className='flex items-center'>
           <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={28} />
-          <Box ml={1}>
-            <Typography variant='body2' className='text-white font-regular text-lg'>
+          <Box
+            ml={1}
+            onClick={() => {
+              router.push(`/pools/new?currency0=${pair.token0.address}&currency1=${pair.token1.address}`)
+            }}
+          >
+            <Typography variant='body2' className='text-white font-regular text-lg cursor-pointer'>
               {pair.token0.symbol} / {pair.token1.symbol}
             </Typography>
           </Box>
@@ -168,7 +184,7 @@ const Pools: React.FC = () => {
       )
     },
     {
-      html: <Typography variant='body2' className='text-white  text-lg font-regular'>${formatNumber(parseFloat(pair.tvl))}</Typography>
+      html: <Typography variant='body2' className='text-white text-lg font-regular'>${formatNumber(parseFloat(pair.tvl))}</Typography>
     },
     {
       html: <Typography variant='body2' className='text-white text-lg font-regular'>${formatNumber(parseFloat(pair.volume24h))}</Typography>
@@ -187,6 +203,11 @@ const Pools: React.FC = () => {
 
   return (
     <Box>
+      <TVLDataContainer
+        Dvolume={totalVolume}
+        TVL={totalTVL}
+      />
+
       <PoolHeader />
       <Box mt={6}>
         {filteredPools.length === 0

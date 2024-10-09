@@ -4,7 +4,11 @@ import { useParams, useSearchParams, usePathname, useRouter } from 'next/navigat
 import useParsedQueryString from './useParseQueryString'
 import { useWalletData } from '@/utils'
 
-export default function usePoolsRedirects () {
+export default function usePoolsRedirects (): {
+  redirectWithCurrencySingleToken: (currency: any) => void
+  redirectWithCurrency: (currency: any, isInput: boolean, isV2?: boolean) => void
+  redirectWithSwitch: (currency: any, isInput: boolean, isV2?: boolean) => void
+} {
   const router = useRouter()
   const params = useParams()
   const _search = useSearchParams().toString()

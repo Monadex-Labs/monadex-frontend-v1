@@ -3,10 +3,10 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { IoEllipsisHorizontal } from 'react-icons/io5'
 import { SignIn, SignOut } from '@/discord/buttons-actions'
 import { useSession } from 'next-auth/react'
-export default function Example () {
+export default function DropDownMenu () {
   const { status } = useSession()
   return (
-    <Menu as='div' className='relative inline-block text-right'>
+    <Menu as='div' className='relative inline-block text-left'>
       <div>
         <MenuButton className='inline-flex w-full justify-center text-md'>
           <IoEllipsisHorizontal className='text-xl text-gray-500' />
@@ -15,7 +15,7 @@ export default function Example () {
 
       <MenuItems
         transition
-        className='absolute right-0 z-10 mt-2 w-56 origin-top-right transition focus:outline-none'
+        className='absolute right-0 z-10 mt-2 w-fit origin-top-right transition focus:outline-none bg-bgColor shadow-xl rounded-md p-2'
       >
         <div className='py-1 transition'>
 

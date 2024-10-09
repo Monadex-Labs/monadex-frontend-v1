@@ -49,7 +49,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
   return (
     <div
       id={id}
-      className={`${showPrice === true ? ' priceShowBox' : ''} ${'bg-bgColor/80 rounded-sm shadow-sm'} p-2 my-2`}
+      className={`${showPrice === true ? ' priceShowBox' : ''} ${'bg-darkPurple/50 rounded-md shadow-sm'} p-2 my-2`}
     >
       <div className='flex justify-between mb-2'>
         <p className='text-textSecondary text-md font-semibold p-1'>{title ?? 'you pay'}</p>

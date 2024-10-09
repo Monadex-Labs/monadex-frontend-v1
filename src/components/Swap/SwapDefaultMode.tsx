@@ -9,7 +9,7 @@ const SwapDefaultMode: React.FC<{
 }> = ({ token1, token2 }) => {
   return (
     <>
-      <Box className='py-4'>
+      <Box>
         <SwapMain />
       </Box>
     </>

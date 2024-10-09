@@ -22,6 +22,8 @@ import { useConnectWallet } from '@web3-onboard/react'
 import { useRouterContract } from '@/hooks/useContracts'
 import useTransactionDeadline from '@/hooks/useTransactionDeadline'
 import { ApprovalState, useApproveCallback } from '@/hooks/useApproveCallback'
+import { HiChevronDown, HiChevronUp  } from 'react-icons/hi2'
+
 import { Field } from '@/state/mint/actions'
 import { PairState } from '@/data/Reserves'
 import {
@@ -52,6 +54,7 @@ import { useParams } from 'next/navigation'
 import { V1_ROUTER_ADDRESS } from '@/constants/index'
 import usePoolsRedirects from '@/hooks/usePoolsRedirect'
 import { SLIPPAGE_AUTO } from '@/state/user/reducer'
+import LiquidityButton from './LiquidityButton'
 
 /* TODO: Check if this is the correct place for this */
 interface AddLiquidityParams {
@@ -89,6 +92,7 @@ const AddLiquidity: React.FC<{
   const [showConfirm, setShowConfirm] = useState(false)
   const [attemptingTxn, setAttemptingTxn] = useState(false)
   const [txPending, setTxPending] = useState(false)
+  const [show, setShowDetails] = useState(false)
   let [allowedSlippage] = useUserSlippageTolerance()
   allowedSlippage =
     allowedSlippage === SLIPPAGE_AUTO ? useAutoSlippage : allowedSlippage
@@ -505,95 +509,56 @@ const AddLiquidity: React.FC<{
         currencies[Field.CURRENCY_B] != null &&
         pairState !== PairState.INVALID &&
         price != null && (
-          <Box my={2} className='rounded-sm font-fira flex flex-col p-3 text-textSecondary transition duration-150 ease-in-out'>
-            <Box className='p-2 flex justify-between'>
+          <Box my={2} className='rounded-sm font-regular  flex flex-col p-3 text-white text-lg transition duration-150 ease-in-out'>
+          <Box className='flex gap-2 opacity-80 mt-2 font-regular border py-2 border-primary/30 rounded-md p-2 justify-between items-center ease-out text-lg mb-5'
+            onClick={() => setShowDetails(!show)}
+            >
               <small>
                 1 {currencies[Field.CURRENCY_A]?.symbol} ={' '}
                 {price.toSignificant(3)} {currencies[Field.CURRENCY_B]?.symbol}{' '}
               </small>
-              <small>
+              <small className='flex items-center gap-2'>
                 1 {currencies[Field.CURRENCY_B]?.symbol} ={' '}
                 {price.invert().toSignificant(3)}{' '}
                 {currencies[Field.CURRENCY_A]?.symbol}{' '}
+                {show ? <HiChevronUp size={20} /> : <HiChevronDown size={20} />}
               </small>
+             
             </Box>
+           {show ? (
+            <>
             <Box className='p-2 flex justify-between'>
-              <small>Your Pool Share</small>
-              <small>
-                {(poolTokenPercentage != null)
-                  ? poolTokenPercentage.toSignificant(6) + '%'
-                  : '-'}
-              </small>
-            </Box>
-            <Box className='p-2 flex justify-between'>
-              <small>LP Tokens Received</small>
-              <small>
-                {formatTokenAmount(liquidityMinted)} LP Tokens
-              </small>
-            </Box>
+            <small>Your Pool Share</small>
+            <small>
+              {(poolTokenPercentage != null)
+                ? poolTokenPercentage.toSignificant(6) + '%'
+                : '-'}
+            </small>
+          </Box>
+          <Box className='p-2 flex justify-between'>
+            <small>LP Tokens Received</small>
+            <small>
+              {formatTokenAmount(liquidityMinted)} LP Tokens
+            </small>
+          </Box>
+          </>
+           ) : <></>}
           </Box>
       )}
-      <Box className='flex-wrap'>
-        {(approvalA === ApprovalState.NOT_APPROVED ||
-          approvalA === ApprovalState.PENDING ||
-          approvalB === ApprovalState.NOT_APPROVED ||
-          approvalB === ApprovalState.PENDING) &&
-          error === undefined && (
-            <Box className='flex fullWidth justify-between mb-2'>
-              {approvalA !== ApprovalState.APPROVED && (
-                <Box
-                  className={`w-[${approvalB !== ApprovalState.APPROVED ? '48%' : '100%'}]`}
-                >
-                  <Button
-                    className='w-full py-4 px-4 bg-gradient-to-r from-[#23006A] to-[#23006A]/50'
-                    onClick={handleApproveA}
-                    disabled={approvingA || approvalA === ApprovalState.PENDING}
-                  >
-                    {approvalA === ApprovalState.PENDING
-                      ? `approving ${
-                          currencies[Field.CURRENCY_A]?.symbol ?? 'INVALID SYMBOL'
-                        }`
-                      : `approve ${
-                          currencies[Field.CURRENCY_A]?.symbol ?? 'INVALID SYMBOL'
-                        }`}
-                  </Button>
-                </Box>
-              )}
-              {approvalB !== ApprovalState.APPROVED && (
-                <Box
-                  className={`w-[${approvalA !== ApprovalState.APPROVED ? '48%' : '100%'}]`}
-                >
-                  <Button
-                    className='w-full py-4 px-4 bg-gradient-to-r from-[#23006A] to-[#23006A]/50'
-                    onClick={handleApproveB}
-                    disabled={approvingB || approvalB === ApprovalState.PENDING}
-                  >
-                    {approvalB === ApprovalState.PENDING
-                      ? `approving ${
-                          currencies[Field.CURRENCY_B]?.symbol ?? 'INVALID SYMBOL'
-                        }`
-                      : `approve ${
-                          currencies[Field.CURRENCY_B]?.symbol ?? 'INVALID SYMBOL'
-                        }`}
-                  </Button>
-                </Box>
-              )}
-            </Box>
-        )}
-        <Button
-          className='w-full bg-primary py-4 px-4 rounded-md disabled:bg-transparent disabled:text-textSecondary'
-          disabled={
-            Boolean(account) &&
-            isSupportedNetwork &&
-            (Boolean(error) ||
-              approvalA !== ApprovalState.APPROVED ||
-              approvalB !== ApprovalState.APPROVED)
-          }
-          onClick={account !== '' && isSupportedNetwork ? onAdd : async () => await connect()}
-        >
-          {buttonText}
-        </Button>
-      </Box>
+      <LiquidityButton
+        approvalA={approvalA}
+        approvalB={approvalB}
+        currencies={currencies}
+        error={error}
+        account={account}
+        isSupportedNetwork={isSupportedNetwork}
+        onAdd={onAdd}
+        connect={connect}
+        handleApproveA={handleApproveA}
+        handleApproveB={handleApproveB}
+        approvingA={approvingA}
+        approvingB={approvingB}
+      />
     </Box>
   )
 }

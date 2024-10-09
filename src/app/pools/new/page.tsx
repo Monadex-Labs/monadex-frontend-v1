@@ -29,15 +29,14 @@ const New = (): JSX.Element => {
           </Box>
         </Box>
       </Box>
-      <Box className='flex flex-col max-w-[500px] justify-center items-center p-4 mx-auto bg-bgColor border border-primary rounded-md'>
+      <Box className='flex flex-col max-w-[500px] justify-center h-fit items-center p-1 mx-auto bg-bgColor border border-primary border-opacity-25 rounded-xl'>
         {openSettingsModal && (
           <SettingsModal
             open={openSettingsModal}
             onClose={() => setOpenSettingsModal(false)}
           />
         )}
-        <Box className='border-md' />
-        <Box mt={2.5} className='w-full p-2'>
+        <Box mt={2.5} mb={2.5}>
           <AddLiquidity />
         </Box>
       </Box>

@@ -35,11 +35,11 @@ const CustomTable: React.FC<CustomTableProps<any>> = ({
 }) => {
   const theme = useTheme()
   const mobileWindowSize = useMediaQuery(theme.breakpoints.down('xs'))
-  const router = useRouter()
   return (
     <Box>
       {mobileWindowSize
         ? (
+          // @todo:style for mobile
           <CustomTableMobile data={data} mobileHTML={mobileHTML} />
           )
         : (
@@ -62,7 +62,7 @@ const CustomTable: React.FC<CustomTableProps<any>> = ({
                     (cellItem: any, ind: number) => (
                       <TableCell
                         key={ind}
-                        className={cellItem.button ? 'cursor-pointer' : ''}
+                        className={cellItem.button ? '' : 'border-primary border-opacity-20'}
                       >
                         {cellItem.html}
                       </TableCell>

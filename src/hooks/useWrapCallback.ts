@@ -48,6 +48,7 @@ export default function useWrapCallback (
     if (wethContract === null || inputCurrency === null || outputCurrency === null) return NOT_APPLICABLE
     const sufficientBalance = (inputAmount != null) && (balance != null) && !balance.lessThan(inputAmount as CurrencyAmount)
 
+    console.log('fff', WMND[ChainId.SEPOLIA])
     if (
       inputCurrency === nativeCurrency &&
         currencyEquals(WMND[ChainId.SEPOLIA], outputCurrency as NativeCurrency)
@@ -59,7 +60,7 @@ export default function useWrapCallback (
                 ? async () => {
                   setWrapping(true)
                   try {
-                    const txReceipt = await wethContract.deposit({
+                    const txReceipt = await wethContract?.deposit({
                       value: `0x${inputAmount.raw.toString(16)}`
                     })
                     addTransaction(txReceipt, {
@@ -85,7 +86,7 @@ export default function useWrapCallback (
                 ? async () => {
                   setUnWrapping(true)
                   try {
-                    const txReceipt = await wethContract.withdraw(`0x${inputAmount.raw.toString(16)}`)
+                    const txReceipt = await wethContract?.withdraw(`0x${inputAmount.raw.toString(16)}`)
                     addTransaction(txReceipt, {
                       summary: `Unwrap ${formatTokenAmount(inputAmount)} ${WMND[chainId].symbol as string} to ${ETH.symbol as string}`
                     })

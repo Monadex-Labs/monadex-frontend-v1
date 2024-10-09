@@ -31,7 +31,7 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({
       <Box
         className={
           bgClass === undefined
-            ? `flex items-center gap-3 cursor-pointer p-3 rounded-md border ${currency != null ? 'border-secondary2' : 'border-primary'}`
+            ? `flex items-center gap-3 cursor-pointer p-3 rounded-md border border-opacity-25 ${currency != null ? 'border-secondary2' : 'border-primary'}`
             : bgClass
         }
         onClick={handleOpenModal}

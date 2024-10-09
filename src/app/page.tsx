@@ -58,7 +58,7 @@ const SwapPage: React.FC = () => {
           </Box>
         </Box>
         <Box
-          className='flex flex-col max-w-[500px] justify-center items-center p-2 mx-auto rounded-md border border-primary bg-bgColor'>
+          className='flex flex-col max-w-[500px] justify-center items-center p-2 mx-auto rounded-2xl border border-primary border-opacity-25 bg-bgColor'>
           <Box sx={{ zIndex: 1, width: '100%' }} className='p-2'>
             <SwapDefaultMode
               token1={token1}

@@ -100,7 +100,6 @@ const DataTable: React.FC<DataTableProps<any>> = ({
 
       <TableContainer>
         <Table
-          className='text-md'
           aria-labelledby='tableTitle'
           size='medium'
           aria-label='enhanced table'
@@ -111,7 +110,7 @@ const DataTable: React.FC<DataTableProps<any>> = ({
             >
               {headCells.map((headCell, index) => (
                 <TableCell
-                  className={headCell.buttonCell ? '' : ''}
+                  className={headCell.buttonCell ? '' : 'border-none text-lg font-clash '}
                   key={`${headCell.id}_${index}`}
                   align={headCell.align}
                   padding='normal'
@@ -121,7 +120,7 @@ const DataTable: React.FC<DataTableProps<any>> = ({
                   {sortUpIcon && sortDownIcon
                     ? (
                       <Box
-                        className='flex items-center text-white font-clash'
+                        className='flex items-center text-white font-clash gap-2'
                         style={{
                           whiteSpace: isSinglelineHeader ? 'nowrap' : 'initial'
                         }}
@@ -138,13 +137,7 @@ const DataTable: React.FC<DataTableProps<any>> = ({
                           {headCell.label}
                         </Box>
                         {!headCell.sortDisabled && (
-                          <Box
-                            className={`sortIcon${
-                            orderBy.id === headCell.id
-                              ? ' sortRequestedIcon'
-                              : ''
-                          }`}
-                          >
+                          <Box>
                             {order === 'asc' && orderBy.id === headCell.id
                               ? sortUpIcon
                               : sortDownIcon}
@@ -223,7 +216,7 @@ const DataTable: React.FC<DataTableProps<any>> = ({
       {showPagination && (
         <TablePagination
           rowsPerPageOptions={[5, 10, 25, 50]}
-          className='text-white'
+          className='text-white/60'
           component='div'
           count={count}
           rowsPerPage={rowsPerPage}

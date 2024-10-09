@@ -14,7 +14,7 @@ import { AdvancedSwapDetails } from './AdvancedSwapDetails'
 import CurrencyInput from '@/components/CurrencyInput/CurrencyInput'
 import ConfirmSwapModal from './ConfirmSwapModal'
 import { AddressInput } from '@/components'
-import { HiChevronDown, HiChevronUp  } from 'react-icons/hi2'
+import { HiChevronDown, HiChevronUp } from 'react-icons/hi2'
 import {
   useWalletData,
   useIsSupportedNetwork,
@@ -101,6 +101,9 @@ const Swap: React.FC<{
     typedValue
   )
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
+  console.log('show', currencies[Field.INPUT],
+    currencies[Field.OUTPUT],
+    typedValue)
   const trade = showWrap ? undefined : v2Trade
   const {
     onCurrencySelection,

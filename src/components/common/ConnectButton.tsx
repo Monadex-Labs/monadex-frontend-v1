@@ -6,20 +6,19 @@ import { supportedChainId } from '@/utils/supportedChain'
 import { SwitchChainPopUp } from '../Popup/switchChainPopup'
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  className?: string;
-  children: React.ReactNode;
+  className?: string
+  children: React.ReactNode
 }
 
-
 /**
- *  @Base Buttton 
+ *  @Base Buttton
 */
 
-export const PrimaryButton: React.FC<ButtonProps> = memo(({ 
-  children, 
-  className, 
+export const PrimaryButton: React.FC<ButtonProps> = memo(({
+  children,
+  className,
   onClick,
-  ...rest 
+  ...rest
 }: ButtonProps) => {
   return (
     <button
@@ -35,7 +34,8 @@ export const PrimaryButton: React.FC<ButtonProps> = memo(({
 })
 
 /**
- *  @connection Buttton 
+ *  @connection Butttonp
+ *
 */
 
 export const ConnectButton: React.FC<ButtonProps> = ({ className, children, ...rest }: ButtonProps) => {
@@ -43,14 +43,13 @@ export const ConnectButton: React.FC<ButtonProps> = ({ className, children, ...r
   const [isHovering, setIsHovering] = useState(false)
   const [buttonText, setButtonText] = useState<string>('Connect wallet')
   const [dismiss, setDismiss] = useState(false)
-  
 
   useEffect(() => {
-    const checkWallet = wallet ? supportedChainId(Number(wallet.chains[0].id)) : null
-    if (wallet && checkWallet === 'Unsupported chain') {
+    const checkWallet = (wallet != null) ? supportedChainId(Number(wallet.chains[0].id)) : null
+    if ((wallet != null) && checkWallet === 'Unsupported chain') {
       setDismiss(true)
     }
-    if (wallet) {
+    if (wallet != null) {
       const address = wallet.accounts[0]?.address
       setButtonText(address ? `${address.slice(0, 4)}...${address.slice(-4)}` : 'Connected')
     } else {
@@ -59,7 +58,7 @@ export const ConnectButton: React.FC<ButtonProps> = ({ className, children, ...r
   }, [wallet])
 
   const handleClick = async () => {
-    if (wallet) {
+    if (wallet != null) {
       await disconnect(wallet)
     } else {
       await connect()
@@ -67,18 +66,18 @@ export const ConnectButton: React.FC<ButtonProps> = ({ className, children, ...r
   }
 
   return (
-   <div>
-    <button
-    disabled={connecting}
-    onMouseEnter={() => setIsHovering(true)}
-    onMouseLeave={() => setIsHovering(false)}
-    onClick={handleClick}
-    className={cn('flex p-2 items-center justify-center gap-4 text-white bg-primary hover:bg-primary/50 focus:outline-none focus:ring-4 focus:ring-primary/50 font-medium rounded-full text-sm px-5 py-2.5 text-center', className)}
-    {...rest}
-    >
-    {connecting ? 'Connecting' : (isHovering && wallet ? 'Disconnect' : buttonText)}
-    </button>
-    {dismiss && <SwitchChainPopUp open={dismiss} onClose={() => setDismiss(false)}/>}
-   </div>
+    <div>
+      <button
+        disabled={connecting}
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => setIsHovering(false)}
+        onClick={handleClick}
+        className={className}
+        {...rest}
+      >
+        {connecting ? 'Connecting' : (isHovering && (wallet != null) ? 'Disconnect' : buttonText)}
+      </button>
+      {dismiss && <SwitchChainPopUp open={dismiss} onClose={() => setDismiss(false)} />}
+    </div>
   )
 }
