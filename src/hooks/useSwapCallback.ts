@@ -9,7 +9,6 @@ import { calculateGasMargin, shortenAddress, isAddress } from '../utils'
 import isZero from '../utils/isZero'
 import useTransactionDeadline from './useTransactionDeadline'
 import { useRouterContract } from './useContracts'
-import { purchasedTicketsOnSwap } from '@/state/swap/actions'
 import { useSelector } from 'react-redux'
 import { useWalletData } from '../utils/index'
 import { checksumAddress } from 'viem'
@@ -50,13 +49,15 @@ type EstimatedSwapCall = SuccessfulCall | FailedCall
 export function useSwapCallArguments (
   trade: Trade | undefined, // trade to execute, required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
-  recipientAddressOrName: string | null // address of the recipient of the trade, or null if swap should be returned to sender
+  recipientAddressOrName: string | null, // address of the recipient of the trade, or null if swap should be returned to sender
+  raffleMultiplier: number | null // the multiplier selected to purchase raffle tickets
 ): SwapCall[] {
   const recipientAddress = isAddress(recipientAddressOrName)
   const { account: address, chainId, provider: wallet } = useWalletData()
   const checksumAddress = isAddress(address)
 
   const recipient = recipientAddressOrName === null ? checksumAddress : recipientAddress
+  const multiplier = raffleMultiplier == null ? undefined : raffleMultiplier
   const deadline = useTransactionDeadline()
   const contract = useRouterContract() as Contract
 
@@ -78,11 +79,10 @@ export function useSwapCallArguments (
               ? deadline.toNumber()
               : GlobalData.utils.DEFAULT_DEADLINE_FROM_NOW
           }, {
-            // fake data to test before creation of the raffle component
-            purchaseTickets: Boolean(false),
-            multiplier : 0,
-            minimumTicketsToReceive: 0
-        })
+            purchaseTickets: multiplier != null,
+            multiplier,
+            minimumTicketsToReceive: 0 // fake data to test before creation of the raffle component
+          })
         )
         if (trade.tradeType === TradeType.EXACT_INPUT) {
           swapMethods.push(
@@ -96,10 +96,9 @@ export function useSwapCallArguments (
                   ? deadline.toNumber()
                   : GlobalData.utils.DEFAULT_DEADLINE_FROM_NOW
               }, {
-              // fake data to test before creation of the raffle component
-              purchaseTickets: Boolean(false),
-              multiplier : 0,
-              minimumTicketsToReceive: 0
+                purchaseTickets: multiplier != null,
+                multiplier,
+                minimumTicketsToReceive: 0 // fake data to test before creation of the raffle component
               }
             )
           )
@@ -116,10 +115,11 @@ export function useSwapCallArguments (
 export function useSwapCallback (
   trade: Trade | undefined, // trade to execute, required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
-  recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+  recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+  raffleMultiplier: number | null // the multiplier selected for raffle ticket purchase
 ): { state: SwapCallbackState, callback: null | (() => Promise<{ response: TransactionResponse, summary: string }>), error: string | null } {
   const { account: address, chainId, provider: library } = useWalletData()
-  const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName)
+  const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName, raffleMultiplier)
   const addTransaction = useTransactionAdder()
   const recipient = recipientAddressOrName ?? address
   return useMemo(() => {

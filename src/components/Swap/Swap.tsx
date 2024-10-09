@@ -80,7 +80,7 @@ const Swap: React.FC<{
   //   });
   const { account, chainId } = useWalletData()
   const dispatch = useAppDispatch()
-  const { independentField, typedValue, recipient, swapDelay } = useSwapState()
+  const { independentField, typedValue, recipient, swapDelay, multiplier } = useSwapState()
   const {
     v2Trade, // eeror potential here on input
     currencyBalances,
@@ -271,7 +271,8 @@ const Swap: React.FC<{
   const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(
     trade,
     allowedSlippage,
-    recipient
+    recipient,
+    multiplier
   )
 
   const [
