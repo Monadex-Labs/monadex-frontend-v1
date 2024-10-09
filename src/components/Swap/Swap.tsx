@@ -80,7 +80,7 @@ const Swap: React.FC<{
   //   });
   const { account, chainId } = useWalletData()
   const dispatch = useAppDispatch()
-  const { independentField, typedValue, recipient, swapDelay, multiplier } = useSwapState()
+  const { independentField, typedValue, recipient, swapDelay, multiplier, minimumTickets } = useSwapState()
   const {
     v2Trade, // eeror potential here on input
     currencyBalances,
@@ -272,7 +272,8 @@ const Swap: React.FC<{
     trade,
     allowedSlippage,
     recipient,
-    multiplier
+    multiplier,
+    minimumTickets
   )
 
   const [

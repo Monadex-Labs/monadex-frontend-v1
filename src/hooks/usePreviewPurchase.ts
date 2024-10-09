@@ -2,10 +2,9 @@
 import { useState, useEffect } from 'react'
 import { useRaffleContract } from './useContracts'
 
-export default function usePreviewPurchase (tokenAddress: string | undefined, amount: string | undefined, multiplier: number | null): Number | null {
-  const [previewTickets, setPreviewTickets] = useState<number | null>(null)
+export default function usePreviewPurchase (tokenAddress: string | undefined, amount: string | undefined, multiplier: number | null): number | undefined {
+  const [previewTickets, setPreviewTickets] = useState<number | undefined>()
   const RaffleContract = useRaffleContract()
-  // TODO: Add error handling (call reverts when token not whitelisted)
   useEffect(() => {
     const fetchPreview = async (): Promise<void> => {
       if (tokenAddress === undefined || amount === undefined || multiplier == null) return
@@ -14,7 +13,7 @@ export default function usePreviewPurchase (tokenAddress: string | undefined, am
         setPreviewTickets(preview)
       } catch (error) {
         console.error('Error fetching raffle percentage', error)
-        setPreviewTickets(null)
+        setPreviewTickets(undefined)
       }
     }
     void fetchPreview()

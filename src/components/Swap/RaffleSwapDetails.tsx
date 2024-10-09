@@ -18,12 +18,14 @@ const MultiplierInput = (): JSX.Element => {
   } = useDerivedSwapInfo()
 
   const {
-    onMultiplierChange
+    onMultiplierChange,
+    onMinimumTicketsChange
   } = useSwapActionHandlers()
   const [percentages, setPercentages] = useState<Array<Percent | null>>([null, null, null])
 
   const raffleContract = useRaffleContract()
   const previewTickets = usePreviewPurchase(parsedAmount?.token.address, parsedAmount?.raw.toString(), multiplier)
+  onMinimumTicketsChange(previewTickets)
 
   const handleMultiplierChange = (
     event: React.MouseEvent<HTMLElement>,
