@@ -95,7 +95,7 @@ const DataTable: React.FC<DataTableProps<any>> = ({
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage)
   return (
-    <Box className='rounded-lg border border-primary/50'>
+    <Box className='rounded-lg border border-primary/50 bg-bgColor'>
       {toolbar}
 
       <TableContainer>

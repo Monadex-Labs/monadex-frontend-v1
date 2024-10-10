@@ -18,8 +18,8 @@ const TicketModal: React.FC = () => {
     <>
       {account
         ? (
-          <div className='flex px-3 rounded-full items-center dropShadow-glow'>
-            <p><IoTicketSharp /></p>
+          <div className='flex px-3 rounded-full items-center'>
+            <p className='text-lg'><IoTicketSharp /></p>
             <p className='p-2 text-sm font-semibold italic flex gap-2'>{formatTokenAmount(RaffleBalance)}</p>
           </div>
           )

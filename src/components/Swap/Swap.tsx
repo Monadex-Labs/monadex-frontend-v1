@@ -421,7 +421,6 @@ const Swap: React.FC<{
 
         try {
           const receipt = await response.wait()
-          console.log('HEHEH')
           finalizedTransaction(receipt, {
             summary
           })
@@ -435,7 +434,6 @@ const Swap: React.FC<{
             txHash: response.hash
           })
         } catch (error: any) {
-          console.log('SUR LE CATCH ZEBI')
           setSwapState({
             attemptingTxn: false,
             tradeToConfirm,
@@ -537,20 +535,14 @@ const Swap: React.FC<{
       />
       {!showWrap && (
         <Box className=''>
-          <Box className='flex space-between items-center p-3 gap-2 '>
-            {recipient !== null
-              ? (
-                <IoMdArrowDown className='text-sm opacity-40' />)
-              : (
-                <Box />
-                )}
+          <Box className='flex space-between items-center p-3 gap-2'>
             <Button
               onClick={() => onRecipientChange(recipient !== null ? null : '')}
-              className='w-full py-2 my-4 rounded-sm text-xs font-medium opacity-40 bg-gradient-to-b from-[#1E0349] border border-secondary3'
+              className='text-sm font-clash text-white/60'
             >
               {recipient !== null
-                ? 'Remove Recipient Address'
-                : 'Add Recipient Address'}
+                ? 'Remove Recipient -'
+                : 'Add Recipient +'}
             </Button>
           </Box>
           {recipient !== null && (

@@ -30,7 +30,7 @@ const SearchInput: React.FC = () => {
       placeholder='Search by name, Symbol or Address'
       value={searchQueryInput}
       onChange={(e) => setSearchQueryInput(e.target.value)}
-      className='bg-transparent focus:outline-none w-[30%] border p-2 rounded-lg'
+      className='bg-darkPurple focus:outline-none w-[30%] border border-primary p-2 rounded-lg placeholder-white/60 font-regular'
       autoFocus
     />
   )

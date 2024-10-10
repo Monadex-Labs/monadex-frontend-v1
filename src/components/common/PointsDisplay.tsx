@@ -8,9 +8,10 @@ import { CircularProgress } from '@mui/material'
 export const Mxpdisplay: React.FC = () => {
   const { data: session } = useSession()
   const { userXP } = useFetchUserXP(session)
+
   return (
     <>
-      {(session != null)
+      {(userXP !== undefined && session !== undefined)
         ? (
           <div className='flex border border-darkPurple px-3  rounded-full items-center bg-secondary1'>
             <Image src={gem} width={50} height={50} alt='gem image' className='hidden lg:block' />

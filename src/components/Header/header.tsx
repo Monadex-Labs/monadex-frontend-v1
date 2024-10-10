@@ -85,9 +85,8 @@ const Header: React.FC<any> = () => {
         <DropdownMenu />
         {!isTablet && <Mxpdisplay />}
         {!isTablet && <TicketModal />}
-        <ConnectButton 
+        <ConnectButton
           className='flex p-2 items-center justify-center gap-4 text-white bg-primary hover:bg-primary/50 focus:outline-none focus:ring-4 focus:ring-primary/50 font-regular rounded-full text-sm px-5 py-2.5 text-center' 
-          children={undefined}       
         />
       </Box>
     </Box>
