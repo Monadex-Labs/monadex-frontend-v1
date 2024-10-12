@@ -16,8 +16,8 @@ const config: Config = {
     },
     extend: {
 
-      backgroundImage : {
-        poolImage : "url('../../static')"
+      backgroundImage: {
+        poolImage: "url('../../static')"
       },
       animation: {
         'spin-fast': 'spin 0.5s linear infinite', // Faster spin
