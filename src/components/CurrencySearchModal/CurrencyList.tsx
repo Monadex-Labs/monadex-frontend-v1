@@ -68,7 +68,7 @@ const CurrencyList: React.FC<CurrencyListProps> = ({
       const key = index
       return (
         <CurrencyRow
-          // key={`token-item-${key}`}
+          key={`token-item-${key}`}
           style={style}
           currency={currency}
           isSelected={isSelected}

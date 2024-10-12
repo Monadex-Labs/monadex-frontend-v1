@@ -8,6 +8,7 @@ import { Eip1193Bridge } from '@ethersproject/experimental/lib/eip1193-bridge'
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { Wallet } from '@ethersproject/wallet'
 import { ChainId } from '@monadex/sdk'
+
 // const TEST_PRIVATE_KEY = Cypress.env('INTEGRATION_TEST_PRIVATE_KEY')
 const TEST_PRIVATE_KEY = '3f48580fd503b96aad8de9253fe7f3adab8ba88a98277a34fc213888a0649d18'
 // address of the above key
@@ -68,6 +69,7 @@ class CustomizedBridge extends Eip1193Bridge {
     }
   }
 }
+
 // sets up the injected provider to be a mock ethereum provider with the given mnemonic/index
 Cypress.Commands.overwrite('visit', (original, url, options) => {
   return original(
