@@ -101,9 +101,7 @@ const Swap: React.FC<{
     typedValue
   )
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
-  console.log('show', currencies[Field.INPUT],
-    currencies[Field.OUTPUT],
-    typedValue)
+
   const trade = showWrap ? undefined : v2Trade
   const {
     onCurrencySelection,
@@ -481,6 +479,7 @@ const Swap: React.FC<{
       setApproving(false)
     }
   }
+  console.log('val1', handleTypeOutput)
   return (
     <Box>
       {showConfirm && (
@@ -522,6 +521,7 @@ const Swap: React.FC<{
       </Box>
       <CurrencyInput
         title='Receive'
+        data-cy='token-amount-output'
         id='swap-currency-output'
         currency={currencies[Field.OUTPUT]}
         showPrice={Boolean(trade?.executionPrice)}
@@ -586,12 +586,14 @@ const Swap: React.FC<{
         </Box>
       )}
       {dropdownDetails && (
-        !showWrap && fetchingBestRoute ? (
+        !showWrap && fetchingBestRoute
+? (
           <Box mt={2} className='flex justify-center gap-2 items-center flex-col'>
             <CircularProgress className='text-semibold' size={16} />
             <p className='text-xs mb-2'>Fetching Best Quote</p>
           </Box>
-        ) : (
+        )
+: (
           <AdvancedSwapDetails trade={trade} />
         )
       )}

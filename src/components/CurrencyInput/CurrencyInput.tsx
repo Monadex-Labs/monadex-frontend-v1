@@ -33,6 +33,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
   showMaxButton,
   showHalfButton,
   title,
+
   showPrice,
   bgClass,
   color,
@@ -80,7 +81,8 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
             align='right'
             color={color}
             placeholder='0'
-            onUserInput={(val: any) => {
+            onUserInput={(val: string) => {
+              console.log('val', val)
               setAmount(val)
             }}
           />
@@ -94,7 +96,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
         </div>
 
         <small className='text-textSecondary text-md p-1'>
-         ~ ${(usdPrice * Number(amount)).toLocaleString('us')}
+          ~ ${(usdPrice * Number(amount)).toLocaleString('us')}
         </small>
       </div>
     </div>

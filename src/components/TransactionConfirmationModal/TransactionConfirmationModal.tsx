@@ -106,9 +106,11 @@ interface ConfirmationModalContentProps {
   title: string
   onDismiss: () => void
   content: () => React.ReactNode
+  id?: string
 }
 
 export const ConfirmationModalContent: React.FC<ConfirmationModalContentProps> = ({
+  id,
   title,
   onDismiss,
   content
@@ -116,7 +118,9 @@ export const ConfirmationModalContent: React.FC<ConfirmationModalContentProps> =
   return (
     <Box padding={4}>
       <Box className='flex items-center justify-end relative mb-5'>
-        <h5 className='absolute w-full text-center font-medium'>{title}</h5>
+        <h5 className='absolute w-full text-center font-medium'
+          id={id}
+        >{title}</h5>
         <IoMdClose className='cursor-pointer z-10' size={24} onClick={onDismiss} />
       </Box>
       {content()}

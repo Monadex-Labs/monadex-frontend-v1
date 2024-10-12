@@ -12,6 +12,7 @@ export const NumericalInput = React.memo(function InnerInput ({
   fontWeight,
   align,
   className,
+  id,
   ...rest
 }: {
   value: string | number
@@ -31,7 +32,6 @@ export const NumericalInput = React.memo(function InnerInput ({
   return (
     <input
       {...rest}
-      className={className}
       value={value}
       style={{ textAlign: align, color, fontSize, fontWeight }}
       onChange={(event) => {

@@ -71,6 +71,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.8",
+    "@ethersproject/experimental": "^5.7.0",
     "@jest/globals": "^29.7.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.5.0",

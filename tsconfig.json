@@ -11,7 +11,6 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "types": ["@testing-library/jest-dom/jest-globals"],
     "jsx": "preserve",
     "incremental": true,
     "plugins": [
@@ -23,6 +22,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "setupTests.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "setupTests.js", "cypress/support/commands.js", "cypress.config.js"],
   "exclude": ["node_modules"]
 }

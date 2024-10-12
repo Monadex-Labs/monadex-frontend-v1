@@ -94,8 +94,8 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
     tokenSymbol: string,
     tokenDecimals: number,
     tokenImage: any
-  ) => {
-    if (provider?.provider?.request) {
+  ): void => {
+    if ((provider?.provider?.request) != null) {
       try {
         provider.provider.request({
           method: 'wallet_watchAsset',
@@ -149,6 +149,7 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
         button
         style={style}
         key={key}
+        id={`token-item-${key}`}
         selected={otherSelected || isSelected}
         onClick={() => {
           if (!isSelected && !otherSelected) onSelect()
