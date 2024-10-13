@@ -203,8 +203,6 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
           balances={currencyBalances}
         />
       </Box>
-
-      <Box className='currencySearchFooter' />
     </Box>
   )
 }

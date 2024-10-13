@@ -1,9 +1,9 @@
-import { CurrencyAmount, ETH, Token } from '@monadex/sdk'
+import { ChainId, CurrencyAmount, ETH, Token } from '@monadex/sdk'
 import React, { useState, useCallback, useMemo } from 'react'
 import { Box, Tooltip, CircularProgress, ListItem } from '@mui/material'
 import { WrappedTokenInfo } from '@/state/list/hooks'
 import { useAddUserToken, useRemoveUserAddedToken } from '@/state/user/hooks'
-import { useIsUserAddedToken, useCurrency } from '@/hooks/Tokens'
+import { useIsUserAddedToken, useCurrency, _useCurrency } from '@/hooks/Tokens'
 import { CurrencyLogo, PlusHelper, TokenWarningModal } from '@/components'
 import { getTokenLogoURL } from '@/utils/getTokenLogoURL'
 import { formatNumber, formatTokenAmount } from '@/utils/index'
@@ -84,6 +84,7 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
   const key = currencyKey(currency)
   const customAdded = useIsUserAddedToken(currency)
   const nativeCurrency = ETH
+  const useChain = chainId ?? ChainId.SEPOLIA
 
   const removeToken = useRemoveUserAddedToken()
   const addToken = useAddUserToken()
@@ -117,14 +118,15 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
 
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(true)
 
-  const selectedToken = useCurrency(
-    wrappedCurrency(currency, chainId)?.address
+  const selectedToken = _useCurrency(
+    wrappedCurrency(currency, useChain)?.address
   )
 
   const selectedTokens: Token[] = useMemo(
     () => [selectedToken]?.filter((c): c is Token => c instanceof Token) ?? [],
     [selectedToken]
   )
+
   const selectedTokensNotInDefault = selectedTokens
 
   const handleConfirmTokenWarning = useCallback(() => {
@@ -160,7 +162,7 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
           <CurrencyLogo currency={currency} size='32px' />
           <Box ml={1} height={32}>
             <Box className='flex items-center'>
-              <small className='currencySymbol'>{currency.symbol}</small>
+              <small className='font-regular text-md'>{currency.symbol}</small>
               {isMetamask != null &&
                 currency !== nativeCurrency &&
                 !(currency.name === 'ETH') && (

@@ -39,7 +39,9 @@ const CurrencyList: React.FC<CurrencyListProps> = ({
     () => (showETH ? [nativeCurrency, ...currencies] : currencies),
     [currencies, nativeCurrency, showETH]
   )
+
   const selectedTokenList = useSelectedTokenList()
+
   const isOnSelectedList = useMemo(
     () => isTokensOnList(selectedTokenList, itemData, chainId),
     [selectedTokenList, itemData, chainId]

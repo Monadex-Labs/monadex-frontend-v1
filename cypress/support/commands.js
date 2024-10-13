@@ -17,7 +17,7 @@ export const TEST_ADDRESS_NEVER_USE_SHORTENED = `${TEST_ADDRESS_NEVER_USE.slice(
 
 class CustomizedBridge extends Eip1193Bridge {
   // monad chainId
-  chainId = ChainId.SEPOLIA
+  chainId = 84532
   async sendAsync (...args) {
     console.debug('sendAsync called', ...args)
     return await this.send(...args)
@@ -46,9 +46,9 @@ class CustomizedBridge extends Eip1193Bridge {
     }
     if (method === 'eth_chainId') {
       if (isCallbackForm) {
-        callback(null, { result: '0x4' })
+        callback(null, { result: '0x14a74' })
       } else {
-        return await Promise.resolve('0x4')
+        return await Promise.resolve('0x14a74')
       }
     }
 
@@ -83,10 +83,12 @@ Cypress.Commands.overwrite('visit', (original, url, options) => {
         win.localStorage.clear()
         const provider = new JsonRpcProvider(
           'https://base-sepolia-rpc.publicnode.com', // chain to monad RPC LATER ON
-          ChainId.SEPOLIA // chain to Monad chain later on
+          84532 // chain to Monad chain later on
         )
         const signer = new Wallet(TEST_PRIVATE_KEY, provider)
         win.ethereum = new CustomizedBridge(signer, provider)
+        // Debugging: check if window.ethereum is set correctly
+        console.log('window.ethereum', win.ethereum)
       }
     }
   )
