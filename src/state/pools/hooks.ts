@@ -76,7 +76,6 @@ export function useFetchBulkPairData (): () => Promise<void> {
         })
       )
     )
-    console.log('bulk', bulkResults)
     dispatch(setBulkPairsData(bulkResults.flatMap(result => result.data.pairs)))
   }, [dispatch, allPairs])
 }

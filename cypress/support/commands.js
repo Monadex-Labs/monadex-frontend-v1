@@ -1,3 +1,4 @@
+/* global Cypress */
 // ***********************************************
 // For more comprehensive examples of custom
 // commands please read more here:
@@ -7,7 +8,6 @@
 import { Eip1193Bridge } from '@ethersproject/experimental/lib/eip1193-bridge'
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { Wallet } from '@ethersproject/wallet'
-import { ChainId } from '@monadex/sdk'
 
 // const TEST_PRIVATE_KEY = Cypress.env('INTEGRATION_TEST_PRIVATE_KEY')
 const TEST_PRIVATE_KEY = '3f48580fd503b96aad8de9253fe7f3adab8ba88a98277a34fc213888a0649d18'
@@ -46,9 +46,9 @@ class CustomizedBridge extends Eip1193Bridge {
     }
     if (method === 'eth_chainId') {
       if (isCallbackForm) {
-        callback(null, { result: '0x14a74' })
+        callback(null, { result: '0x4' })
       } else {
-        return await Promise.resolve('0x14a74')
+        return await Promise.resolve('0x4')
       }
     }
 
@@ -71,25 +71,35 @@ class CustomizedBridge extends Eip1193Bridge {
 }
 
 // sets up the injected provider to be a mock ethereum provider with the given mnemonic/index
-Cypress.Commands.overwrite('visit', (original, url, options) => {
-  return original(
-    url.startsWith('/') && url.length > 2 && !url.startsWith('/#')
-      ? `/#${url}`
-      : url,
-    {
-      ...options,
-      onBeforeLoad (win) {
-        options && options.onBeforeLoad && options.onBeforeLoad(win)
-        win.localStorage.clear()
-        const provider = new JsonRpcProvider(
-          'https://base-sepolia-rpc.publicnode.com', // chain to monad RPC LATER ON
-          84532 // chain to Monad chain later on
-        )
-        const signer = new Wallet(TEST_PRIVATE_KEY, provider)
-        win.ethereum = new CustomizedBridge(signer, provider)
-        // Debugging: check if window.ethereum is set correctly
-        console.log('window.ethereum', win.ethereum)
+Cypress.Commands.overwrite('visit', (originalFn, url, options = {}) => {
+  const newUrl = url.startsWith('/') && url.length > 2 && !url.startsWith('/#')
+    ? `/#${url}`
+    : url
+
+  const newOptions = {
+    ...options,
+    onBeforeLoad: (win) => {
+      // Call the original onBeforeLoad if it exists
+      if (options.onBeforeLoad) {
+        options.onBeforeLoad(win)
       }
+
+      // Clear localStorage
+      win.localStorage.clear()
+
+      // Setup ethereum provider
+      const provider = new JsonRpcProvider(
+        'https://base-sepolia-rpc.publicnode.com', // chain to monad RPC LATER ON
+        84532 // chain to Monad chain later on
+      )
+      const signer = new Wallet(TEST_PRIVATE_KEY, provider)
+      win.ethereum = new CustomizedBridge(signer, provider)
+
+      // Debugging: check if window.ethereum is set correctly
+      console.log('window.ethereum', win.ethereum)
     }
-  )
+  }
+
+  // Call the original function with the new URL and options
+  return originalFn(newUrl, newOptions)
 })

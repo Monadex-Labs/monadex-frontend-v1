@@ -10,6 +10,7 @@ describe('Swap Integration', () => {
   beforeEach(() => {
     cy.visit('/')
   })
+
   it('can enter an amount into input', () => {
     // Wait for the swap interface to be visible
 
@@ -45,25 +46,27 @@ describe('Swap Integration', () => {
       cy.get('#token-item-0xD24291BF0037f0ae0482f6757b5dFf437419bF25').should(
         'be.visible'
       )
-    //     cy.get('#token-item-0xD24291BF0037f0ae0482f6757b5dFf437419bF25').click({
-    //       force: true
-    //     })
-    //     cy.get('#swap-currency-input [data-cy="token-amount-input"]').should('be.visible')
-    //     cy.get('#swap-currency-input [data-cy="token-amount-input"]').type('0.001', {
-    //       force: true,
-    //       delay: 200
-    //     })
-    //     // SELECT OUTPUT CURRENCY PEPE
-    //     cy.get('#swap-currency-output').click()
-    //     cy.get('#token-item-0x49D75Bb3ef83Bdd83bef36aEA14F9421e6b05603').should(
-    //       'be.visible'
-    //     )
-    //     cy.get('#token-item-0x49D75Bb3ef83Bdd83bef36aEA14F9421e6b05603').click({
-    //       force: true
-    //     })
-    //     cy.get('#swap-currency-output [data-cy="token-amount-input"]').should('not.equal', '')
-    //     cy.get('#swap-button').click()
-    //     cy.get('#confirm-swap-or-send').should('contain', 'Confirm Transaction')
+      cy.get('#token-item-0xD24291BF0037f0ae0482f6757b5dFf437419bF25').click({
+        force: true
+      })
+      cy.get('#swap-currency-input input').should('be.visible')
+      cy.get('#swap-currency-input input').type('0.001', {
+        force: true,
+        delay: 200
+      })
+      /* ***********************************************
+        SELECT OUTPUT CURRENCY PEPE
+    ************************************************/
+      cy.get('#swap-currency-output .flex.items-center.p-3.rounded-md').click()
+      cy.get('#token-item-0x49D75Bb3ef83Bdd83bef36aEA14F9421e6b05603').should(
+        'be.visible'
+      )
+      cy.get('#token-item-0x49D75Bb3ef83Bdd83bef36aEA14F9421e6b05603').click({
+        force: true
+      })
+      cy.get('#swap-currency-output .flex.items-center.p-3.rounded-md').should('not.equal', '')
+      cy.get('#swap-button').click()
+      cy.get('#confirm-swap-or-send').should('contain', 'Confirm Transaction')
     })
   })
 })

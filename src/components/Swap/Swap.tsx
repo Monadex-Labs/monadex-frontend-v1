@@ -479,7 +479,6 @@ const Swap: React.FC<{
       setApproving(false)
     }
   }
-  console.log('val1', handleTypeOutput)
   return (
     <Box>
       {showConfirm && (
@@ -587,19 +586,20 @@ const Swap: React.FC<{
       )}
       {dropdownDetails && (
         !showWrap && fetchingBestRoute
-? (
-          <Box mt={2} className='flex justify-center gap-2 items-center flex-col'>
-            <CircularProgress className='text-semibold' size={16} />
-            <p className='text-xs mb-2'>Fetching Best Quote</p>
-          </Box>
-        )
-: (
-          <AdvancedSwapDetails trade={trade} />
-        )
+          ? (
+            <Box mt={2} className='flex justify-center gap-2 items-center flex-col'>
+              <CircularProgress className='text-semibold' size={16} />
+              <p className='text-xs mb-2'>Fetching Best Quote</p>
+            </Box>
+            )
+          : (
+            <AdvancedSwapDetails trade={trade} />
+            )
       )}
       <Box>
         <Box>
           <SwapButton
+            id='swap-button'
             account={account}
             isSupportedNetwork={isSupportedNetwork}
             currencies={currencies}

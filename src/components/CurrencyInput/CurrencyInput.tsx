@@ -82,7 +82,6 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
             color={color}
             placeholder='0'
             onUserInput={(val: any) => {
-              console.log('val', val)
               setAmount(val)
             }}
           />

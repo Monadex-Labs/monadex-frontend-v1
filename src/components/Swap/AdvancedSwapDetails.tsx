@@ -119,7 +119,6 @@ export const TradeSummary: React.FC<TradeSummaryProps> = ({
           <Box className='flex flex-row justify-center items-center gap-1'>
             {trade.route.path.map((token, i, path) => {
               const isLastItem: boolean = i === path.length - 1
-              console.log('route lenght', path)
               return (
                 <React.Fragment key={token.address}>
                   <Box className='flex flex-col items-center gap-1'>

@@ -48,7 +48,6 @@ export default function useWrapCallback (
     if (wethContract === null || inputCurrency === null || outputCurrency === null) return NOT_APPLICABLE
     const sufficientBalance = (inputAmount != null) && (balance != null) && !balance.lessThan(inputAmount as CurrencyAmount)
 
-    console.log('fff', WMND[ChainId.SEPOLIA])
     if (
       inputCurrency === nativeCurrency &&
         currencyEquals(WMND[ChainId.SEPOLIA], outputCurrency as NativeCurrency)

@@ -47,7 +47,8 @@ function useTokensFromMap (
 }
 export function useAllTokens (): { [address: string]: Token } {
   const { chainId } = useWalletData()
-  const chainIdToUse = chainId ?? ChainId.SEPOLIA
+
+  const chainIdToUse = chainId || ChainId.SEPOLIA // don't change this structure
   const userAddedTokens = useUserAddedTokens()
   const allTokens = useSelectedTokenList()
 

@@ -13,6 +13,7 @@ import { Box, CircularProgress } from '@mui/material'
 import { useSwitchNetwork } from '@/utils'
 
 interface Props {
+  id: string
   account: string
   isSupportedNetwork: boolean
   currencies: {
@@ -40,6 +41,7 @@ interface Props {
 
 const SwapButton = (props: Props): JSX.Element => {
   const {
+    id,
     account,
     isSupportedNetwork,
     currencies,
@@ -136,6 +138,7 @@ const SwapButton = (props: Props): JSX.Element => {
 
   return (
     <Button
+      id={id}
       className='w-full bg-primary py-4 px-4 rounded-md disabled:opacity-40 bg-opacity-90 text-lg'
       disabled={buttonState.disabled}
       onClick={handleClick}
