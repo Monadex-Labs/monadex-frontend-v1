@@ -39,7 +39,7 @@ const CurrencySearchModal: React.FC<CurrencySearchModalProps> = ({
 
   return (
     <CustomModal
-      classname='max-w-[500px]'
+      classname='max-w-[450px] border border-none'
       open={isOpen}
       onClose={onDismiss}
       modalWrapper='searchModalWrapper'

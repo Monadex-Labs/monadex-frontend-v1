@@ -157,8 +157,7 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
           if (!isSelected && !otherSelected) onSelect()
         }}
       >
-        <Box className='w-full bg-transparent flex p-4 items-center gap-3'>
-          {(otherSelected || isSelected) && <FiCheck />}
+        <Box className='w-full flex p-4 items-center gap-3'>
           <CurrencyLogo currency={currency} size='32px' />
           <Box ml={1} height={32}>
             <Box className='flex items-center'>
