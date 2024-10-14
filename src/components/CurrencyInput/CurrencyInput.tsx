@@ -76,7 +76,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
         />
         <div className='flex relative pl-2'>
           <NumericalInput
-            className='w-full relative outline-none border-none whitespace-nowrap text-ellipsis overflow-hidden text-left bg-transparent text-2xl'
+            className='w-full relative outline-none border-none whitespace-nowrap text-ellipsis overflow-hidden text-left bg-transparent'
             value={amount}
             align='right'
             color={color}
@@ -89,12 +89,12 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
       </div>
       <div className='flex justify-between items-center'>
         <div className='flex items-center p-1 gap-3'>
-          <small className='text-textSecondary text-md'>
+          <small className='text-textSecondary text-normal font-regular'>
             {`Balance: ${formatTokenAmount(selectedCurrencyBalance)}`}
           </small>
         </div>
 
-        <small className='text-textSecondary text-md p-1'>
+        <small className='text-textSecondary text-normal font-regular p-1'>
           ~ ${(usdPrice * Number(amount)).toLocaleString('us')}
         </small>
       </div>
