@@ -1,9 +1,10 @@
 'use client'
-import { AddLiquidity, QuestionHelper, SettingsModal } from '@/components'
+import { QuestionHelper, SettingsModal } from '@/components'
 import { Box } from '@mui/material'
 import { IoMdSettings } from 'react-icons/io'
-import { useState } from 'react'
+import { useState, lazy } from 'react'
 import { useRouter } from 'next/navigation'
+const V2Liquidity = lazy(async () => await import('@/components/AddLiquidity/AddLiquidity').then(module => ({ default: module.default })))
 
 const New = (): JSX.Element => {
   const [openSettingsModal, setOpenSettingsModal] = useState(false)
@@ -38,7 +39,7 @@ const New = (): JSX.Element => {
             />
           )}
           <Box sx={{ zIndex: 1, width: '100%' }} className='p-2'>
-            <AddLiquidity />
+            <V2Liquidity />
           </Box>
         </Box>
       </Box>

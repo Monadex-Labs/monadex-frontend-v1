@@ -141,12 +141,10 @@ export function useTokenList (url: string | undefined): TokenAddressMap {
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(
     (state) => state.lists.byUrl
   )
-  console.log('token list', url)
   return useMemo(() => {
     if (!url) return EMPTY_LIST
     const current = lists[url]?.current
-     console.log('here', current) 
-
+    console.log('bruh', lists)
     if (current == null) return EMPTY_LIST
     try {
       return listToTokenMap(current)
