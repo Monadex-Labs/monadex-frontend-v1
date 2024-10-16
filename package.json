@@ -42,7 +42,7 @@
     "@web3-onboard/react": "^2.9.0",
     "@web3-onboard/taho": "^2.1.0",
     "@web3-onboard/web3auth": "^2.3.0",
-    "ajv": "^8.17.1",
+    "ajv": "^6.12.6",
     "apollo-cache-inmemory": "^1.6.6",
     "axios": "^1.7.2",
     "cids": "^1.1.9",

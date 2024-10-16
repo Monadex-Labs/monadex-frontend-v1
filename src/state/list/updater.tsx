@@ -1,6 +1,7 @@
 'use client'
 import {
   getVersionUpgrade,
+  TokenList,
   VersionUpgrade
 } from '@uniswap/token-lists'
 import { useCallback, useEffect } from 'react'
@@ -21,10 +22,11 @@ export default function Updater (): null {
   )
   const isWindowVisible = useIsWindowVisible()
   const fetchList = useFetchListCallback()
+
   const fetchAllListsCallback = useCallback(() => {
     if (!isWindowVisible) return
-    DEFAULT_TOKEN_LIST.forEach(async (url) =>
-      await fetchList(url, true).catch((error) =>
+    DEFAULT_TOKEN_LIST.forEach((url) =>
+      fetchList(url, true).catch((error) =>
         console.debug('interval list fetching error', error)
       )
     )

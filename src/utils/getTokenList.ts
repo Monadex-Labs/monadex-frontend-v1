@@ -18,6 +18,7 @@ export default async function getTokenList (
   for (let i = 0; i < urls.length; i++) {
     const url = urls[i]
     const isLast = i === urls.length - 1
+    console.log('*******url*****', url)
     let response
     try {
       response = await axios.get('api/TokenList', {

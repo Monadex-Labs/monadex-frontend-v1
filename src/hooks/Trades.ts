@@ -161,7 +161,7 @@ export function useTradeExactOut (
     if (swapDelay !== SwapDelay.SWAP_REFRESH && (onSetSwapDelay != null)) {
       onSetSwapDelay(SwapDelay.SWAP_COMPLETE)
     }
-    if ((currencyIn != undefined) && currencyAmountOut && allowedPairs.length > 0) {
+    if ((currencyIn !== undefined) && currencyAmountOut && allowedPairs.length > 0) {
       return (
         Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, {
           maxHops: 3,

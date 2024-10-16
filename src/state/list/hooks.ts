@@ -144,7 +144,6 @@ export function useTokenList (url: string | undefined): TokenAddressMap {
   return useMemo(() => {
     if (!url) return EMPTY_LIST
     const current = lists[url]?.current
-    console.log('bruh', lists)
     if (current == null) return EMPTY_LIST
     try {
       return listToTokenMap(current)

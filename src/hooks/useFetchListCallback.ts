@@ -8,15 +8,12 @@ import { fetchTokenList } from '@/state/list/actions'
 import { DEFAULT_TOKEN_LIST_URL } from '@/constants'
 
 export function useFetchListCallback (): (
-
   listUrl: string,
   skipValidation?: boolean,
 ) => Promise<TokenList> {
   const dispatch = useDispatch<AppDispatch>()
-
   return useCallback(
     async (listUrl: string = DEFAULT_TOKEN_LIST_URL, skipValidation?: boolean) => {
-      console.log('here')
       const requestId = nanoid()
       dispatch(fetchTokenList.pending({ requestId, url: listUrl }))
       return await getTokenList(listUrl, true)
