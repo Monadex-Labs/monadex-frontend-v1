@@ -13,7 +13,7 @@ export function useFetchListCallback (): (
 ) => Promise<TokenList> {
   const dispatch = useDispatch<AppDispatch>()
   return useCallback(
-    async (listUrl: string = DEFAULT_TOKEN_LIST_URL, skipValidation?: boolean) => {
+    async (listUrl: string, skipValidation?: boolean) => {
       const requestId = nanoid()
       dispatch(fetchTokenList.pending({ requestId, url: listUrl }))
       return await getTokenList(listUrl, true)
