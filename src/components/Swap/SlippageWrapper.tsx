@@ -28,7 +28,7 @@ export const SlippageWrapper: React.FC<{ click: () => void }> = ({click}) => {
 
   return (
     <small
-      className='text-xs font-medium px-3 py-2 rounded-full bg-bgColor text-highlight bg-opacity-50 font-semibold'
+      className='text-xs font-medium px-3 py-2 rounded-full bg-bgColor text-highlight bg-opacity-50 font-semibold cursor-pointer hover:bg-transparent transition-all'
       onClick={click}
     >
       {`${slippage === SLIPPAGE_AUTO ? 'Auto' : slippage / 100} %`}{' '}
