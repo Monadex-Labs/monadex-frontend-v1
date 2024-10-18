@@ -222,7 +222,7 @@ export function useSwapCallback (
                   }`
             addTransaction(response, {
               summary: withRecipient
-            
+
             })
 
             return { response, summary: withRecipient }

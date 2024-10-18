@@ -2,12 +2,12 @@
 import gem from '@/static/assets/gem.svg'
 import Image from 'next/image'
 import { useSession } from 'next-auth/react'
-import { useFetchUserXP } from '@/discord/hooks/useFetchUser'
+import { useFetchUser } from '@/discord/hooks/useFetchUser'
 import { CircularProgress } from '@mui/material'
 
 export const Mxpdisplay: React.FC = () => {
   const { data: session } = useSession()
-  const { userXP } = useFetchUserXP(session)
+  const { userXP } = useFetchUser(session)
 
   return (
     <>

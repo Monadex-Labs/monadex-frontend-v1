@@ -72,8 +72,8 @@ class CustomizedBridge extends Eip1193Bridge {
 
 // sets up the injected provider to be a mock ethereum provider with the given mnemonic/index
 Cypress.Commands.overwrite('visit', (originalFn, url, options = {}) => {
-  const newUrl = url.startsWith('/') && url.length > 2 && !url.startsWith('/#')
-    ? `/#${url}`
+  const newUrl = url.startsWith('/') && url.length > 2 
+    ? `/${url}`
     : url
 
   const newOptions = {

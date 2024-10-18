@@ -5,6 +5,7 @@ import {
   useSwapActionHandlers,
   useSwapState
 } from '@/state/swap/hooks'
+import { useSession } from 'next-auth/react'
 import dynamic from 'next/dynamic'
 import useGasPrice from '@/hooks/useGasPrice'
 import { useSwapCallback } from '@/hooks/useSwapCallback'
@@ -23,7 +24,7 @@ import {
   maxAmountSpend,
   halfAmountSpend
 } from '@/utils'
-
+import { useFetchUser } from '@/discord/hooks/useFetchUser'
 import {
   ApprovalState,
   useApproveCallbackFromTrade
@@ -51,6 +52,8 @@ import { usePathname } from 'next/navigation'
 import useSwapRedirects from '@/hooks/useSwapRedirect'
 import { updateUserBalance } from '@/state/balance/action'
 import { IoMdArrowDown, IoMdRepeat } from 'react-icons/io'
+import axios from 'axios'
+import { MethodType } from '@/app/api/swap/route'
 const SwapButton = dynamic(async () => await import('./SwapButton'), { ssr: false })
 const Swap: React.FC<{
   currencyBgClass?: string
@@ -83,6 +86,9 @@ const Swap: React.FC<{
   const { account, chainId } = useWalletData()
   const dispatch = useAppDispatch()
   const { independentField, typedValue, recipient, swapDelay } = useSwapState()
+  const { data: session } = useSession()
+  const { fetchUser } = useFetchUser(session)
+
   const {
     v2Trade, // eeror potential here on input
     currencyBalances,
@@ -423,7 +429,15 @@ const Swap: React.FC<{
           finalizedTransaction(receipt, {
             summary
           })
+          const user = await fetchUser()
           dispatch(updateUserBalance())
+          const SwapRewards = await axios.post('/api/swap', {
+            userId: user.id,
+            methodType: MethodType.SWAP,
+            swap: SwapDelay.SWAP_COMPLETE
+
+          })
+          // console.log('swapRewards', SwapRewards)
           setSwapState({
             attemptingTxn: false,
             txPending: false,

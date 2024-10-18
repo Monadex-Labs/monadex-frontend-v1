@@ -118,7 +118,7 @@ export function useTradeExactIn (
     ) {
       return bestTradeExactIn
     }
-    if (swapDelay !== SwapDelay.SWAP_REFRESH && (onSetSwapDelay != null)) {
+    if (swapDelay !== SwapDelay.SWAP_REFRESH && onSetSwapDelay) {
       onSetSwapDelay(SwapDelay.SWAP_COMPLETE)
     }
     if (currencyAmountIn && (currencyOut != null) && allowedPairs.length > 0) {
@@ -158,7 +158,8 @@ export function useTradeExactOut (
     ) {
       return bestTradeExactOut
     }
-    if (swapDelay !== SwapDelay.SWAP_REFRESH && (onSetSwapDelay != null)) {
+    if (swapDelay !== SwapDelay.SWAP_REFRESH && onSetSwapDelay) {
+
       onSetSwapDelay(SwapDelay.SWAP_COMPLETE)
     }
     if ((currencyIn !== undefined) && currencyAmountOut && allowedPairs.length > 0) {
