@@ -6,6 +6,7 @@ import {
   useSwapState
 } from '@/state/swap/hooks'
 import dynamic from 'next/dynamic'
+import useGasPrice from '@/hooks/useGasPrice'
 import { useSwapCallback } from '@/hooks/useSwapCallback'
 import { useAppDispatch } from '@/state/store'
 import { useUserSlippageTolerance } from '@/state/user/hooks'
@@ -101,7 +102,7 @@ const Swap: React.FC<{
     typedValue
   )
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
-
+  // const gasEstimation = useGasPrice()
   const trade = showWrap ? undefined : v2Trade
   const {
     onCurrencySelection,
