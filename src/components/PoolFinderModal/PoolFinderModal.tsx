@@ -77,7 +77,7 @@ const PoolFinderModal: React.FC<PoolFinderModalProps> = ({ open, onClose }) => {
   }, [setShowSearch])
 
   return (
-    <CustomModal open={open} onClose={onClose}>
+    <CustomModal open={open} onClose={onClose} classname='max-w-[400px]'>
       <Box paddingX={3} paddingY={4}>
         <Box className='flex items-center justify-between'>
           <IoIosArrowBack

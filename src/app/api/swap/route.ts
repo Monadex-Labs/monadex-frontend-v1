@@ -10,22 +10,19 @@ export enum MethodType {
 }
 
 export async function POST (req: NextRequest) {
-  
-
   if (req.method !== 'POST') {
     return NextResponse.json({ message: 'Only POST requests allowed' }, { status: 405 })
   }
-  
+
   await dbConnect()
 
-  const { userId:id, methodType, swap }: { userId: string, methodType: MethodType, swap: SwapDelay } = await req.json()
+  const { userId: id, methodType, swap }: { userId: string, methodType: MethodType, swap: SwapDelay } = await req.json()
 
   if (!id) return NextResponse.json({ message: 'User ID not provided' }, { status: 400 })
 
-
   try {
-  const user = await Xp.findOne({ user: `<@${id}>`})
-  if (!user) return NextResponse.json({ message: 'user not found' })
+    const user = await Xp.findOne({ user: `<@${id}>` })
+    if (!user) return NextResponse.json({ message: 'user not found' })
 
     const currentDate = new Date()
     const lastTransactionDate = new Date(user.lastTransactionTimestamp)

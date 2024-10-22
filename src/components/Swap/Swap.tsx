@@ -17,6 +17,7 @@ import CurrencyInput from '@/components/CurrencyInput/CurrencyInput'
 import ConfirmSwapModal from './ConfirmSwapModal'
 import { AddressInput } from '@/components'
 import { HiChevronDown, HiChevronUp } from 'react-icons/hi2'
+import { MdOutlineSwapCalls } from 'react-icons/md'
 import {
   useWalletData,
   useIsSupportedNetwork,
@@ -495,7 +496,7 @@ const Swap: React.FC<{
     }
   }
   return (
-    <Box>
+    <Box className='relative'>
       {showConfirm && (
         <ConfirmSwapModal
           isOpen={showConfirm}
@@ -527,10 +528,10 @@ const Swap: React.FC<{
         color='secondary'
         bgClass={currencyBgClass}
       />
-      <Box className='cursor-pointer flex justify-center items-center relative'>
-        <IoMdRepeat
+      <Box className='cursor-pointer flex justify-center items-center absolute border border-bgColor border-4 bg-darkPurple/50 rounded-lg fixed top-0.6 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-1'>
+        <MdOutlineSwapCalls
           onClick={redirectWithSwitch}
-          className='text-xl opacity-40'
+          size={26}
         />
       </Box>
       <CurrencyInput

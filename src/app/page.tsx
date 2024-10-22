@@ -22,7 +22,7 @@ const SwapPage: React.FC = () => {
   const [userSlippageTolerance] = useUserSlippageTolerance()
 
   return (
-    <div className='container mx-auto mt-10 flex p-2'>
+    <div className='container mx-auto mt-10 flex flex-col-reverse p-2 2xl:flex-row items-center'>
       {openChart && (token1 != null) && (token2 != null)
         ? (
           <ChartComponent token1={token1} token2={token2} />

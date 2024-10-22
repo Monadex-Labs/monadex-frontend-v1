@@ -16,9 +16,9 @@ const Portfolio: React.FC = () => {
 
   return (
     <div className='container mx-auto mt-10'>
-      <Box className='flex justify-between w-full p-3 items-center max-w-[500px] mx-auto'>
+      <Box className='flex justify-between w-full mb-10 items-center container mx-auto'>
         <div>
-          <p className='font-medium text-xl'>Portfolio</p>
+          <p className='font-medium text-xl'>My Portfolio</p>
         </div>
 
         <Box className='flex items-center gap-3 '>
@@ -31,24 +31,23 @@ const Portfolio: React.FC = () => {
           </Box>
         </Box>
       </Box>
-      <Box className='max-w-[500px] justify-center items-center p-4 mx-auto bg-bgColor border border-primary rounded-md'>
+      <Box className='mb-4'>
+        <p className='font-medium text-xl'>Your Liquidity Pools</p>
+        <small className='text-textSecondary'>
+          Don't see a pool you joined? <span className='text-primary cursor-pointer' onClick={() => setOpenPoolFinder(true)}>Import it</span>
+        </small>
+      </Box>
+      <Box className='container justify-center items-center p-4 mx-auto bg-bgColor border border-primary border-opacity-20 rounded-md'>
         {openPoolFinder && (
           <PoolFinderModal
             open={openPoolFinder}
             onClose={() => setOpenPoolFinder(false)}
           />
         )}
-        <Box className='flex w-100 mb-2 justify-center'>
-          <p className='font-medium text-xl'>Your Liquidity Pools</p>
-        </Box>
-
         <Box mt={3} className='text-center'>
           {allV2PairsWithLiquidity.length > 0
             ? (
               <Box>
-                <small className='text-textSecondary'>
-                  Don't see a pool you joined? <span className='text-primary cursor-pointer' onClick={() => setOpenPoolFinder(true)}>Import it</span>.
-                </small>
                 {allV2PairsWithLiquidity.map((pair, index) => (
                   <Box key={index} mt={2}>
                     <PoolPositionCard
