@@ -46,7 +46,7 @@ const Pools: React.FC = () => {
       const volume24h = historicalPairData.volumeUSD
       const fee24h = (parseFloat(volume24h) * 0.003).toString()
       const apr24h = ((parseFloat(fee24h) * 365 * 100) / parseFloat(tvl)).toString()
-      const poolFee = '0.3'
+      const V2poolFee = '0.3'
 
       return {
         pairAddress,
@@ -55,7 +55,7 @@ const Pools: React.FC = () => {
         volume24h,
         fee24h,
         apr24h,
-        poolFee,
+        V2poolFee,
         tvl
       }
     }).filter(Boolean)
@@ -171,7 +171,7 @@ const Pools: React.FC = () => {
         <Box className='flex items-center'>
           <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={28} />
           <Box
-            ml={1}
+            ml={3}
             onClick={() => {
               router.push(`/pools/new?currency0=${pair.token0.address}&currency1=${pair.token1.address}`)
             }}
@@ -179,6 +179,9 @@ const Pools: React.FC = () => {
             <Typography variant='body2' className='text-white font-regular text-lg cursor-pointer'>
               {pair.token0.symbol} / {pair.token1.symbol}
             </Typography>
+            <div>
+              <p className='font-clash text-primary'>0.3%</p>
+            </div>
           </Box>
         </Box>
       )
@@ -186,6 +189,7 @@ const Pools: React.FC = () => {
     {
       html: <Typography variant='body2' className='text-white text-lg font-regular'>${formatNumber(parseFloat(pair.tvl))}</Typography>
     },
+
     {
       html: <Typography variant='body2' className='text-white text-lg font-regular'>${formatNumber(parseFloat(pair.volume24h))}</Typography>
     },

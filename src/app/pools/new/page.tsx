@@ -4,6 +4,8 @@ import { Box } from '@mui/material'
 import { IoMdSettings } from 'react-icons/io'
 import { useState, lazy } from 'react'
 import { useRouter } from 'next/navigation'
+import { useV2LiquidityPool } from '@/hooks'
+
 const V2Liquidity = lazy(async () => await import('@/components/AddLiquidity/AddLiquidity').then(module => ({ default: module.default })))
 
 const New = (): JSX.Element => {
@@ -14,7 +16,7 @@ const New = (): JSX.Element => {
       <Box width='100%' mb={3} id='V2pool-page'>
         <Box className='flex justify-between w-full p-3 items-center max-w-[500px] mx-auto'>
           <div>
-            <small onClick={() => router.push('/pools')} className='mb-3 opacity-40 hover:opacity-none transition-all cursor-pointer'>go to pools</small>
+            <small onClick={() => router.push('/pools')} className='mb-3 opacity-40 font-regular hover:opacity-none transition-all cursor-pointer'>go to pools</small>
             <p className='font-medium text-xl'>Add Liquidity</p>
           </div>
 

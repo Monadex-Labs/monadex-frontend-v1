@@ -483,7 +483,7 @@ const AddLiquidity: React.FC<{
       )}
       <CurrencyInput
         id='add-liquidity-input-tokens'
-        title='Token 1'
+        title='Base token'
         currency={currencies[Field.CURRENCY_A]}
         showHalfButton={Boolean(maxAmounts[Field.CURRENCY_A])}
         showMaxButton={atMaxAmounts[Field.CURRENCY_A] == null}
@@ -502,7 +502,7 @@ const AddLiquidity: React.FC<{
       />
       <CurrencyInput
         id='add-liquidity-input-tokenb'
-        title='Token 2'
+        title='Quote token'
         showHalfButton={Boolean(maxAmounts[Field.CURRENCY_B])}
         currency={currencies[Field.CURRENCY_B]}
         showMaxButton={atMaxAmounts[Field.CURRENCY_B] == null}
