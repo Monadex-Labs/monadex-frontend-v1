@@ -10,7 +10,6 @@ import SwapDefaultMode from '@/components/Swap/SwapDefaultMode'
 import { useUserSlippageTolerance } from '@/state/user/hooks'
 import { ChartComponent } from '@/components/Chart/chart'
 import { SlippageWrapper } from '@/components/Swap/SlippageWrapper'
-import { IoMdSettings } from 'react-icons/io'
 import { AiOutlineLineChart } from 'react-icons/ai'
 
 const SwapPage: React.FC = () => {
@@ -23,7 +22,7 @@ const SwapPage: React.FC = () => {
   const [userSlippageTolerance] = useUserSlippageTolerance()
 
   return (
-    <div className='container mx-auto mt-10 flex p-2'>
+    <div className='container mx-auto mt-10 flex flex-col-reverse p-2 2xl:flex-row items-center'>
       {openChart && (token1 != null) && (token2 != null)
         ? (
           <ChartComponent token1={token1} token2={token2} />
@@ -43,12 +42,8 @@ const SwapPage: React.FC = () => {
           </div>
           <Box className='flex items-center' ml='auto'>
             <Box className='flex items-center gap-3 p-1'>
-              <SlippageWrapper />
-              <IoMdSettings
-                className='cursor-pointer'
-                onClick={() => setOpenSettingsModal(true)}
-                size={24}
-              />
+              <SlippageWrapper
+                click={() => setOpenSettingsModal(true)} />
               <AiOutlineLineChart
                 className='cursor-pointer'
                 onClick={() => setOpenChart(!openChart)}
@@ -58,7 +53,7 @@ const SwapPage: React.FC = () => {
           </Box>
         </Box>
         <Box
-          className='flex flex-col max-w-[500px] justify-center items-center p-2 mx-auto rounded-2xl border border-primary border-opacity-25 bg-bgColor'>
+          className='flex flex-col max-w-[500px] justify-center items-center p-2 mx-auto rounded-2xl border border-primary border-opacity-25 bg-bgColor' >
           <Box sx={{ zIndex: 1, width: '100%' }} className='p-2'>
             <SwapDefaultMode
               token1={token1}

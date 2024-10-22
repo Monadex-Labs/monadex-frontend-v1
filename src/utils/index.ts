@@ -92,7 +92,7 @@ export function escapeRegExp (string: string): string {
 //   return Boolean(currency instanceof Token && defaultTokens[currency.chainId]?.[currency.address])
 // }
 
-interface WalletData {
+export interface WalletData {
   account: string
   chainId: ChainId
   findProvider: Web3Provider | undefined

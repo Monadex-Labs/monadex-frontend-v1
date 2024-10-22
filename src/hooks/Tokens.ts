@@ -5,11 +5,10 @@ import { useBytes32TokenContract, useTokenContract } from './useContracts'
 import { NEVER_RELOAD, useSingleCallResult } from '@/state/multicall/hooks'
 import { TokenAddressMap, useSelectedTokenList, useInactiveListUrls } from '@/state/list/hooks'
 import { useUserAddedTokens } from '@/state/user/hooks'
-import { isAddress, getAddress } from 'viem'
+import { getAddress } from 'viem'
 import { arrayify } from 'ethers/lib/utils'
-import { useWalletData } from '@/utils'
+import { useWalletData, isAddress } from '@/utils'
 import { FaRegTired } from 'react-icons/fa'
-
 function useTokensFromMap (
   tokenMap: TokenAddressMap,
   includeUserAdded: boolean,
@@ -48,11 +47,13 @@ function useTokensFromMap (
 }
 export function useAllTokens (): { [address: string]: Token } {
   const { chainId } = useWalletData()
+
+  const chainIdToUse = chainId || ChainId.SEPOLIA // don't change this structure
   const userAddedTokens = useUserAddedTokens()
   const allTokens = useSelectedTokenList()
 
   return useMemo(() => {
-    if (!chainId) return {}
+    if (!chainIdToUse) return {}
     return (
       userAddedTokens.reduce<{ [address: string]: Token }>(
         (tokenMap, token) => {
@@ -61,10 +62,10 @@ export function useAllTokens (): { [address: string]: Token } {
         },
         // must make a copy because reduce modifies the map, and we do not
         // want to make a copy in every iteration
-        { ...allTokens[chainId] }
+        { ...allTokens[chainIdToUse] }
       )
     )
-  }, [chainId, userAddedTokens, allTokens])
+  }, [chainIdToUse, userAddedTokens, allTokens])
 }
 // export function useDefaultTokens (): { [address: string]: Token } {
 //   const defaultList = useDefaultTokenList()
@@ -109,12 +110,11 @@ export function parseStringOrBytes32 (
 // otherwise returns the token
 export function useToken (tokenAddress?: string): Token | undefined | null {
   const { chainId } = useWalletData()
-  const tokens = useAllTokens()
-  const _isAddress: boolean = isAddress(tokenAddress as string)
-  const address = _isAddress ? tokenAddress : undefined
 
-  const tokenContract = useTokenContract(_isAddress ? address : undefined, false)
-  const tokenContractBytes32 = useBytes32TokenContract(_isAddress ? address : undefined, false)
+  const tokens = useAllTokens()
+  const address = isAddress(tokenAddress)
+  const tokenContract = useTokenContract(address ? address : undefined, false)
+  const tokenContractBytes32 = useBytes32TokenContract(address ? address : undefined, false)
   const token: Token | undefined = address
     ? Object.values(tokens).find(
       (token) => token.address.toLowerCase() === address.toLowerCase()
@@ -160,6 +160,7 @@ export function useToken (tokenAddress?: string): Token | undefined | null {
     tokenNameBytes32.result
   ])
 }
+
 export function useCurrency (currencyId: string | undefined): Token | null | undefined {
   const token = useToken(currencyId)
   return token

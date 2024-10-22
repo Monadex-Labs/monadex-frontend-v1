@@ -39,7 +39,9 @@ const CurrencyList: React.FC<CurrencyListProps> = ({
     () => (showETH ? [nativeCurrency, ...currencies] : currencies),
     [currencies, nativeCurrency, showETH]
   )
+
   const selectedTokenList = useSelectedTokenList()
+
   const isOnSelectedList = useMemo(
     () => isTokensOnList(selectedTokenList, itemData, chainId),
     [selectedTokenList, itemData, chainId]
@@ -59,14 +61,11 @@ const CurrencyList: React.FC<CurrencyListProps> = ({
           currencyEquals(currency, ETH) || currency.name === 'ether'
             ? WMND[chainId]
             : currency
-      const usdPrice = usdPrices != null
-        ? usdPrices.find(
-          (item) =>
-            item.address.toLowerCase() === token?.address.toLowerCase()
-        )
-        : undefined
+
+      const key = index
       return (
         <CurrencyRow
+          key={`token-item-${key}`}
           style={style}
           currency={currency}
           isSelected={isSelected}

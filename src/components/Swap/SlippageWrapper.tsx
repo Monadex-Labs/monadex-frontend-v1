@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { useUserSlippageTolerance } from '@/state/user/hooks'
 import { SLIPPAGE_AUTO } from '@/state/user/reducer'
 
-export const SlippageWrapper: React.FC = () => {
+export const SlippageWrapper: React.FC<{ click: () => void }> = ({click}) => {
   const parsedQs = useParsedQueryString()
   const swapSlippage = parsedQs.slippage !== undefined && parsedQs.slippage !== ''
     ? (parsedQs.slippage as string)
@@ -27,7 +27,10 @@ export const SlippageWrapper: React.FC = () => {
   }, [allowedSlippage])
 
   return (
-    <small className='text-xs font-medium px-3 py-2 rounded-full bg-bgColor text-highlight bg-opacity-50 font-semibold'>
+    <small
+      className='text-xs font-medium px-3 py-2 rounded-full bg-bgColor text-highlight bg-opacity-50 font-semibold cursor-pointer hover:bg-transparent transition-all'
+      onClick={click}
+    >
       {`${slippage === SLIPPAGE_AUTO ? 'Auto' : slippage / 100} %`}{' '}
       slippage
     </small>

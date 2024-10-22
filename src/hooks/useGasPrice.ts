@@ -1,19 +1,21 @@
-import JSBI from 'jsbi'
-import { ethers } from 'ethers'
-import { getConfig } from 'config/index'
+import { JSBI } from '@monadex/sdk'
+import { providers } from 'ethers'
 import { useQuery } from '@tanstack/react-query'
+import { useWalletData } from '@/utils'
 
 export default function useGasPrice (): JSBI | undefined {
-  const { chainId } = useActiveWeb3React()
-  const config = getConfig(chainId)
-  const rpc = config['rpc']
+const rpc = 'https://sepolia.base.org'
   const { data } = useQuery({
-    queryKey: ['gasPrice', rpc]
+    queryKey: ['gasPrice', rpc],
     queryFn: async () => {
-      const web3 = new Web3(rpc)
-      const gasPrice = await web3.eth.getGasPrice()
-      return JSBI.BigInt(gasPrice)
+      // Initialize ethers provider using the RPC URL
+      const provider = new providers.JsonRpcProvider(rpc)
+      // Fetch gas price using ethers
+      const gasPrice = await provider.getGasPrice()
+      // Convert to JSBI BigInt
+      return JSBI.BigInt(gasPrice.toString())
     }
   })
+
   return data
 }

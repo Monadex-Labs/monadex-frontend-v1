@@ -5,7 +5,6 @@ import { SignIn, SignOut } from '@/discord/buttons-actions'
 import { useSession } from 'next-auth/react'
 export default function DropDownMenu ():JSX.Element {
   const { status } = useSession()
-  console.log('status', status)
   return (
     <Menu as='div' className='relative inline-block text-left' translate='yes'>
       <div>

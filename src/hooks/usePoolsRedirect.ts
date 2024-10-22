@@ -1,8 +1,7 @@
-import { ETH, ChainId, currencyEquals, NativeCurrency, Token } from '@monadex/sdk'
+import { ETH, currencyEquals } from '@monadex/sdk'
 import { useCallback } from 'react'
 import { useParams, useSearchParams, usePathname, useRouter } from 'next/navigation'
 import useParsedQueryString from './useParseQueryString'
-import { useWalletData } from '@/utils'
 
 export default function usePoolsRedirects (): {
   redirectWithCurrencySingleToken: (currency: any) => void
@@ -36,15 +35,22 @@ export default function usePoolsRedirects (): {
 
   const redirectWithCurrency = useCallback((currency: any, isInput: boolean, isV2 = true) => {
     const currencyId = getCurrencyId(currency, isV2)
-  
+
     const currencyParamA = params?.currencyIdA ?? parsedQs.currency0
     const currencyParamB = params?.currencyIdB ?? parsedQs.currency1
-  
+
     let redirectPath = currentPath
-    if (path.includes('/add')) {
+    if (path.includes('/pools/new')) {
+      // Create query params with `currency0` and `currency1`
       const paramA = isInput ? currencyId : currencyParamA || ''
       const paramB = isInput ? currencyParamB || '' : currencyId
-      redirectPath = `/add/${paramA}/${paramB}${params?.version ? `/${params.version}` : ''}`
+
+      const newParams = new URLSearchParams()
+      newParams.set('currency0', paramA)
+      newParams.set('currency1', paramB)
+
+      // Update the redirect path for `/pools/new`
+      redirectPath = `/pools/new?${newParams.toString()}`
     } else {
       const newParams = new URLSearchParams(search)
       newParams.set(isInput ? 'currency0' : 'currency1', currencyId)
@@ -52,7 +58,7 @@ export default function usePoolsRedirects (): {
       if (isInput && !newParams.has('currency1')) newParams.set('currency1', currencyParamB as string || '')
       redirectPath = `${path}?${newParams.toString()}`
     }
-  
+
     router.push(redirectPath)
   }, [currentPath, parsedQs, router, search, path, params, getCurrencyId])
 
@@ -62,10 +68,14 @@ export default function usePoolsRedirects (): {
     const currentParamB = parsedQs.currency1 || params?.currencyIdB
 
     let redirectPath
-    if (path.includes('/add')) {
-      redirectPath = `/add/${isInput ? currencyId : currentParamA}/${isInput ? currentParamB : currencyId}${
-        params?.version ? `/${params.version}` : ''
-      }`
+    if (path.includes('/pools/new')) {
+      // Swap logic for `/pools/new`
+      const newParams = new URLSearchParams()
+      newParams.set('currency0', isInput ? currencyId : currentParamA)
+      newParams.set('currency1', isInput ? currentParamB : currencyId)
+
+      // Update the redirect path for `/pools/new`
+      redirectPath = `/pools/new?${newParams.toString()}`
     } else {
       redirectPath = `${path}?currency0=${isInput ? currencyId : currentParamB}&currency1=${
         isInput ? currentParamA : currencyId

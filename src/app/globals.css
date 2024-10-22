@@ -11,18 +11,28 @@
 
 
 body {
-    /* background-image: radial-gradient(circle farthest-side at center, hsl(263, 89%, 26%) 0%, hsl(262, 83%, 14%) 100%); */
-
   background-color: hsl(263, 89%, 26%);
-  background-image: url('../static/assets/background.png');
   color: white;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  background-image: url('../static/assets/background.png');
   background-repeat: no-repeat;
   background-position: bottom center;
   background-attachment: fixed;
   background-size: 100% auto;
-  min-height: 100vh;
-  margin: 0;
-  padding: 0;
+  opacity: 0.4;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
 }
 
 @keyframes gradient-animation {

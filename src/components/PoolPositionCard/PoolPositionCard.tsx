@@ -15,7 +15,7 @@ const PoolPositionCard: React.FC<{ pair: Pair }> = ({ pair }) => {
   return (
     <Box
       className={`w-100 border border-secondary2 rounded-md overflow-hidden ${
-        showMore ? 'bg-secondary2' : 'bg-transparent'
+        showMore ? 'bg-secondary2' : 'bg-secondary2'
       }`}
     >
       <Box className='flex items-center justify-between px-4 py-3 md:p-7'>

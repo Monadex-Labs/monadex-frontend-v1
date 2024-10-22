@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux'
 import { AppDispatch } from '@/state/store'
 import getTokenList from '@/utils/getTokenList'
 import { fetchTokenList } from '@/state/list/actions'
+import { DEFAULT_TOKEN_LIST_URL } from '@/constants'
 
 export function useFetchListCallback (): (
   listUrl: string,

@@ -22,7 +22,7 @@ import { useConnectWallet } from '@web3-onboard/react'
 import { useRouterContract } from '@/hooks/useContracts'
 import useTransactionDeadline from '@/hooks/useTransactionDeadline'
 import { ApprovalState, useApproveCallback } from '@/hooks/useApproveCallback'
-import { HiChevronDown, HiChevronUp  } from 'react-icons/hi2'
+import { HiChevronDown, HiChevronUp } from 'react-icons/hi2'
 
 import { Field } from '@/state/mint/actions'
 import { PairState } from '@/data/Reserves'
@@ -48,14 +48,13 @@ import {
 } from '@/utils'
 import { wrappedCurrency } from '@/utils/wrappedCurrency'
 import useParsedQueryString from '@/hooks/useParseQueryString'
-import { _useCurrency } from '@/hooks/Tokens'
+import { _useCurrency, useCurrency } from '@/hooks/Tokens'
 import { useDerivedSwapInfo } from '@/state/swap/hooks'
-import { useParams } from 'next/navigation'
+import { useParams, usePathname } from 'next/navigation'
 import { V1_ROUTER_ADDRESS } from '@/constants/index'
 import usePoolsRedirects from '@/hooks/usePoolsRedirect'
 import { SLIPPAGE_AUTO } from '@/state/user/reducer'
 import LiquidityButton from './LiquidityButton'
-
 /* TODO: Check if this is the correct place for this */
 interface AddLiquidityParams {
   tokenA: string
@@ -85,7 +84,7 @@ const AddLiquidity: React.FC<{
   >(null)
   const isSupportedNetwork = useIsSupportedNetwork()
   const { account, chainId, provider } = useWalletData()
-  const chainIdToUse = chainId ?? ChainId.SEPOLIA
+  const chainIdToUse = ChainId.SEPOLIA
   const nativeCurrency = ETH
   const { useAutoSlippage } = useDerivedSwapInfo()
 
@@ -100,7 +99,7 @@ const AddLiquidity: React.FC<{
   const [txHash, setTxHash] = useState('')
   const addTransaction = useTransactionAdder()
   const finalizedTransaction = useTransactionFinalizer()
-
+  const pathname = usePathname()
   // queried currency
   const params: any = useParams()
   const parsedQuery = useParsedQueryString()
@@ -120,8 +119,6 @@ const AddLiquidity: React.FC<{
       : parsedQuery?.currency1 != null
         ? (parsedQuery.currency1 as string)
         : undefined
-  const currency0 = _useCurrency(currency0Id)
-  const currency1 = _useCurrency(currency1Id)
 
   const { independentField, typedValue, otherTypedValue } = useMintState()
   const {
@@ -177,8 +174,10 @@ const AddLiquidity: React.FC<{
       : parsedAmounts[dependentField]?.toExact() ?? ''
   }
 
+  // ************ APPROUVALS *************************
   const [approvingA, setApprovingA] = useState(false)
   const [approvingB, setApprovingB] = useState(false)
+
   const [approvalA, approveACallback] = useApproveCallback(
     parsedAmounts[Field.CURRENCY_A],
     chainId ? V1_ROUTER_ADDRESS[chainId] : undefined
@@ -187,6 +186,7 @@ const AddLiquidity: React.FC<{
     parsedAmounts[Field.CURRENCY_B],
     chainId ? V1_ROUTER_ADDRESS[chainId] : undefined
   )
+  // ****************************************************
 
   const atMaxAmounts: { [field in Field]?: TokenAmount } = [
     Field.CURRENCY_A,
@@ -199,26 +199,49 @@ const AddLiquidity: React.FC<{
   }, {})
 
   const { redirectWithCurrency, redirectWithSwitch } = usePoolsRedirects()
-  
+
+  const currency0 = useCurrency(currency0Id)
+  const currency1 = useCurrency(currency1Id)
+  const parsedCurrency0Fetched = !(currency0 == null)
+  const parsedCurrency1Fetched = !(currency1 == null)
+
+  useEffect(() => {
+    if (
+      pathname !== '/' &&
+      currency0Id === '' &&
+      currency1Id === ''
+    ) {
+      redirectWithCurrency(ETH, true)
+    } else {
+      if (currency0 != null) {
+        onCurrencySelection(Field.CURRENCY_A, currency0)
+      }
+      if (currency1 != null) {
+        onCurrencySelection(Field.CURRENCY_B, currency1)
+      }
+    }
+  }, [
+    currency0Id,
+    currency1Id,
+    parsedCurrency0Fetched,
+    parsedCurrency1Fetched
+  ])
+
   const handleCurrencyASelect = useCallback(
     (currencyA: any) => {
       const isSwichRedirect = currencyEquals(currencyA, ETH)
         ? currency1Id === 'ETH'
         : currencyA?.address?.toLowerCase() === currency1Id?.toLowerCase()
       if (isSwichRedirect) {
+        console.log('or here')
         redirectWithSwitch(currencyA, true)
       } else {
+        console.log('here')
         redirectWithCurrency(currencyA, true)
       }
     },
     [redirectWithCurrency, currency1Id, redirectWithSwitch]
   )
-
-  useEffect(() => {
-    if (currency0 != null) {
-      onCurrencySelection(Field.CURRENCY_A, currency0)
-    }
-  }, [currency0Id])
 
   const handleCurrencyBSelect = useCallback(
     (currencyB: any) => {
@@ -228,17 +251,11 @@ const AddLiquidity: React.FC<{
       if (isSwichRedirect) {
         redirectWithSwitch(currencyB, false)
       } else {
-        redirectWithCurrency(currencyB, false)  // here we get correctly currencyB
+        redirectWithCurrency(currencyB, false)// here we get correctly currencyB
       }
     },
     [redirectWithCurrency, currency0Id, redirectWithSwitch]
   )
-
-  useEffect(() => {
-    if (currency1 != null) {
-      onCurrencySelection(Field.CURRENCY_B, currency1)
-    }
-  }, [currency1Id])
 
   const onAdd = (): void => {
     setAddLiquidityErrorMessage(null)
@@ -249,7 +266,7 @@ const AddLiquidity: React.FC<{
 
   const router = useRouterContract()
   const onAddLiquidity = async (): Promise<void> => {
-    if (!chainId || !provider || !account || (router == null)) return
+    if (!chainId || (provider == null) || !account || (router == null)) return
     const {
       [Field.CURRENCY_A]: parsedAmountA,
       [Field.CURRENCY_B]: parsedAmountB
@@ -510,8 +527,9 @@ const AddLiquidity: React.FC<{
         pairState !== PairState.INVALID &&
         price != null && (
           <Box my={2} className='rounded-sm font-regular  flex flex-col p-3 text-white text-lg transition duration-150 ease-in-out'>
-          <Box className='flex gap-2 opacity-80 mt-2 font-regular border py-2 border-primary/30 rounded-md p-2 justify-between items-center ease-out text-lg mb-5'
-            onClick={() => setShowDetails(!show)}
+            <Box
+              className='flex gap-2 opacity-80 mt-2 font-regular border py-2 border-primary/30 rounded-md p-2 justify-between items-center ease-out text-lg mb-5'
+              onClick={() => setShowDetails(!show)}
             >
               <small>
                 1 {currencies[Field.CURRENCY_A]?.symbol} ={' '}
@@ -523,26 +541,28 @@ const AddLiquidity: React.FC<{
                 {currencies[Field.CURRENCY_A]?.symbol}{' '}
                 {show ? <HiChevronUp size={20} /> : <HiChevronDown size={20} />}
               </small>
-             
+
             </Box>
-           {show ? (
-            <>
-            <Box className='p-2 flex justify-between'>
-            <small>Your Pool Share</small>
-            <small>
-              {(poolTokenPercentage != null)
-                ? poolTokenPercentage.toSignificant(6) + '%'
-                : '-'}
-            </small>
-          </Box>
-          <Box className='p-2 flex justify-between'>
-            <small>LP Tokens Received</small>
-            <small>
-              {formatTokenAmount(liquidityMinted)} LP Tokens
-            </small>
-          </Box>
-          </>
-           ) : <></>}
+            {show
+              ? (
+                <>
+                  <Box className='p-2 flex justify-between'>
+                    <small>Your Pool Share</small>
+                    <small>
+                      {(poolTokenPercentage != null)
+                        ? poolTokenPercentage.toSignificant(6) + '%'
+                        : '-'}
+                    </small>
+                  </Box>
+                  <Box className='p-2 flex justify-between'>
+                    <small>LP Tokens Received</small>
+                    <small>
+                      {formatTokenAmount(liquidityMinted)} LP Tokens
+                    </small>
+                  </Box>
+                </>
+                )
+              : <></>}
           </Box>
       )}
       <LiquidityButton

@@ -4,6 +4,7 @@ import { TokenList } from '@uniswap/token-lists/dist/types'
 import { updateVersion } from '../global/actions'
 import { DEFAULT_TOKEN_LIST_URL } from '@/constants/index'
 import { acceptListUpdate, addList, fetchTokenList, removeList, selectList } from './actions'
+
 export interface ListsState {
   readonly byUrl: {
     readonly [url: string]: {

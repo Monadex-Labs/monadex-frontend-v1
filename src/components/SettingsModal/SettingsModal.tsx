@@ -103,14 +103,14 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, defaultSli
         <h5 className='font-semibold text-xl'>Settings</h5>
         <IoMdClose onClick={onClose} size={24} />
       </Box>
-      <Box my={2.5} className='flex items-center'>
+      <Box my={1} className='flex items-center'>
         <Box mr='6px'>
           <p className='text-textSecondary'>Slippage tolerance</p>
         </Box>
         <QuestionHelper size={20} text='Your transaction will revert if the price changes unfavorably by more than this percentage' />
       </Box>
       <Box mb={2.5}>
-        <Box className='flex items-center p-2 gap-2'>
+        <Box className='flex items-center p-2 gap-2 font-regular'>
           <Box
             className={`w-[62px] h-10 rounded-md border border-secondary2 flex items-center justify-center cursor-pointer mr-4 ${
                 userSlippageTolerance === SLIPPAGE_AUTO
@@ -139,7 +139,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, defaultSli
               }
             }}
           >
-            <small>0.1%</small>
+            <small>0.1 %</small>
           </Box>
           <Box
             className={`w-[62px] h-10 rounded-md border border-secondary2 flex items-center justify-center cursor-pointer mr-4 ${
@@ -153,7 +153,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, defaultSli
               }
             }}
           >
-            <small>0.5%</small>
+            <small>0.5 %</small>
           </Box>
           <Box
             className={`w-[62px] h-10 rounded-md border border-secondary2 flex items-center justify-center cursor-pointer mr-4 ${
@@ -167,7 +167,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, defaultSli
               }
             }}
           >
-            <small>1%</small>
+            <small>1 %</small>
           </Box>
           <Box
             className={`flex h-10 rounded-md px-0 py-8 flex-1 items-center bg-bgColor ${
@@ -176,7 +176,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ open, onClose, defaultSli
           >
             {slippageAlert && <IoMdWarning className='text-yellow' size={25} />}
             <NumericalInput
-              className='w-full relative outline-none whitespace-nowrap text-ellipsis overflow-hidden text-left border-b border-primary bg-transparent mr-1'
+              className='w-full relative outline-none whitespace-nowrap text-ellipsis overflow-hidden text-left border-b border-primary bg-transparent mr-1 placeholder:text-lg'
               placeholder={(userSlippageTolerance / 100).toFixed(2)}
               value={slippageInput}
               fontSize={14}

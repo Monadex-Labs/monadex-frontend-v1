@@ -5,7 +5,9 @@ import {
   useSwapActionHandlers,
   useSwapState
 } from '@/state/swap/hooks'
+import { useSession } from 'next-auth/react'
 import dynamic from 'next/dynamic'
+import useGasPrice from '@/hooks/useGasPrice'
 import { useSwapCallback } from '@/hooks/useSwapCallback'
 import { useAppDispatch } from '@/state/store'
 import { useUserSlippageTolerance } from '@/state/user/hooks'
@@ -15,6 +17,7 @@ import CurrencyInput from '@/components/CurrencyInput/CurrencyInput'
 import ConfirmSwapModal from './ConfirmSwapModal'
 import { AddressInput } from '@/components'
 import { HiChevronDown, HiChevronUp } from 'react-icons/hi2'
+import { MdOutlineSwapCalls } from 'react-icons/md'
 import {
   useWalletData,
   useIsSupportedNetwork,
@@ -22,7 +25,7 @@ import {
   maxAmountSpend,
   halfAmountSpend
 } from '@/utils'
-
+import { useFetchUser } from '@/discord/hooks/useFetchUser'
 import {
   ApprovalState,
   useApproveCallbackFromTrade
@@ -50,6 +53,8 @@ import { usePathname } from 'next/navigation'
 import useSwapRedirects from '@/hooks/useSwapRedirect'
 import { updateUserBalance } from '@/state/balance/action'
 import { IoMdArrowDown, IoMdRepeat } from 'react-icons/io'
+import axios from 'axios'
+import { MethodType } from '@/app/api/swap/route'
 const SwapButton = dynamic(async () => await import('./SwapButton'), { ssr: false })
 const Swap: React.FC<{
   currencyBgClass?: string
@@ -82,6 +87,9 @@ const Swap: React.FC<{
   const { account, chainId } = useWalletData()
   const dispatch = useAppDispatch()
   const { independentField, typedValue, recipient, swapDelay } = useSwapState()
+  const { data: session } = useSession()
+  const { fetchUser } = useFetchUser(session)
+
   const {
     v2Trade, // eeror potential here on input
     currencyBalances,
@@ -101,9 +109,7 @@ const Swap: React.FC<{
     typedValue
   )
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
-  console.log('show', currencies[Field.INPUT],
-    currencies[Field.OUTPUT],
-    typedValue)
+  // const gasEstimation = useGasPrice()
   const trade = showWrap ? undefined : v2Trade
   const {
     onCurrencySelection,
@@ -424,7 +430,15 @@ const Swap: React.FC<{
           finalizedTransaction(receipt, {
             summary
           })
+          const user = await fetchUser()
           dispatch(updateUserBalance())
+          const SwapRewards = await axios.post('/api/swap', {
+            userId: user.id,
+            methodType: MethodType.SWAP,
+            swap: SwapDelay.SWAP_COMPLETE
+
+          })
+          // console.log('swapRewards', SwapRewards)
           setSwapState({
             attemptingTxn: false,
             txPending: false,
@@ -482,7 +496,7 @@ const Swap: React.FC<{
     }
   }
   return (
-    <Box>
+    <Box className='relative'>
       {showConfirm && (
         <ConfirmSwapModal
           isOpen={showConfirm}
@@ -514,14 +528,15 @@ const Swap: React.FC<{
         color='secondary'
         bgClass={currencyBgClass}
       />
-      <Box className='cursor-pointer flex justify-center items-center relative'>
-        <IoMdRepeat
+      <Box className='cursor-pointer flex justify-center items-center absolute border border-bgColor border-4 bg-darkPurple/50 rounded-lg fixed top-0.6 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-1'>
+        <MdOutlineSwapCalls
           onClick={redirectWithSwitch}
-          className='text-xl opacity-40'
+          size={26}
         />
       </Box>
       <CurrencyInput
         title='Receive'
+        data-cy='token-amount-output'
         id='swap-currency-output'
         currency={currencies[Field.OUTPUT]}
         showPrice={Boolean(trade?.executionPrice)}
@@ -586,18 +601,21 @@ const Swap: React.FC<{
         </Box>
       )}
       {dropdownDetails && (
-        !showWrap && fetchingBestRoute ? (
-          <Box mt={2} className='flex justify-center gap-2 items-center flex-col'>
-            <CircularProgress className='text-semibold' size={16} />
-            <p className='text-xs mb-2'>Fetching Best Quote</p>
-          </Box>
-        ) : (
-          <AdvancedSwapDetails trade={trade} />
-        )
+        !showWrap && fetchingBestRoute
+          ? (
+            <Box mt={2} className='flex justify-center gap-2 items-center flex-col'>
+              <CircularProgress className='text-semibold' size={16} />
+              <p className='text-xs mb-2'>Fetching Best Quote</p>
+            </Box>
+            )
+          : (
+            <AdvancedSwapDetails trade={trade} />
+            )
       )}
       <Box>
         <Box>
           <SwapButton
+            id='swap-button'
             account={account}
             isSupportedNetwork={isSupportedNetwork}
             currencies={currencies}

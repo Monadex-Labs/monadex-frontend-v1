@@ -27,11 +27,11 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({
   }, [])
 
   return (
-    <Box className='rounded-md flex justify-between items-center gap-3'>
+    <Box className='rounded-lg flex justify-between items-center gap-3'>
       <Box
         className={
           bgClass === undefined
-            ? `flex items-center gap-3 cursor-pointer p-3 rounded-md border border-opacity-25 ${currency != null ? 'border-secondary2' : 'border-primary'}`
+            ? `flex items-center gap-3 cursor-pointer p-3 rounded-lg border ${currency ? 'border-secondary2' : 'border-primary'}`
             : bgClass
         }
         onClick={handleOpenModal}
@@ -47,7 +47,7 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({
             <p>Select token</p>
             )}
         {children}
-        <IoIosArrowDown />
+        {/* <IoIosArrowDown /> */}
       </Box>
       {modalOpen && (
         <CurrencySearchModal

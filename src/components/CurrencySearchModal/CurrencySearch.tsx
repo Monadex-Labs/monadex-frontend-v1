@@ -164,12 +164,12 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
 
   selectedListInfo = useSelectedListInfo()
   return (
-    <Box className='pt-5 px-6 h-[80vh] flex flex-col'>
+    <Box className='pt-5 px-6 h-[60vh] flex flex-col'>
       <Box className='flex justify-between items-center m-[6px]'>
         <h6 className='text-lg'>Select a token</h6>
-        <IoMdClose onClick={onDismiss} />
+        <IoMdClose onClick={onDismiss} size={20} />
       </Box>
-      <Box className='w-full h-12 gap-3 flex items-center px-3 my-3 rounded-lg outline-none border border-primary bg-transparent'>
+      <Box className='w-full h-12 gap-3 flex items-center px-3 my-3 rounded-lg outline-none border border-primary border-opacity-20 bg-transparent'>
         <IoMdSearch className='text-neutral-200' />
         <input
           type='text'
@@ -178,7 +178,7 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
           ref={inputRef as RefObject<HTMLInputElement>}
           onChange={(e) => setSearchQueryInput(e.target.value)}
           onKeyDown={handleEnter}
-          className='bg-transparent focus:outline-none w-full'
+          className='bg-transparent focus:outline-none w-full placeholder:font-regular'
           autoFocus
         />
       </Box>
@@ -192,7 +192,7 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
 
       <Divider />
 
-      <Box flex={1} className='w-full rounded-tl-lg rounded-tr-lg bg-secondary2 '>
+      <Box flex={1} className='w-full rounded-tl-lg rounded-tr-lg'>
         <CurrencyList
           chainId={chainIdToUse}
           showETH={showETH}
@@ -203,8 +203,6 @@ const CurrencySearch: React.FC<CurrencySearchProps> = ({
           balances={currencyBalances}
         />
       </Box>
-
-      <Box className='currencySearchFooter' />
     </Box>
   )
 }

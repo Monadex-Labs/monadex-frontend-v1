@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { DEFAULT_TOKEN_LIST_URL } from '@/constants/index'
 import { AppState } from '@/state/store'
-import getTokenList from '@/utils/getTokenList'
 
 type TagDetails = Tags[keyof Tags]
 export interface TagInfo extends TagDetails {
@@ -142,7 +141,6 @@ export function useTokenList (url: string | undefined): TokenAddressMap {
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(
     (state) => state.lists.byUrl
   )
-
   return useMemo(() => {
     if (!url) return EMPTY_LIST
     const current = lists[url]?.current

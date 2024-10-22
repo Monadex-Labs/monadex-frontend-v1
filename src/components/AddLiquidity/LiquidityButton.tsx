@@ -79,7 +79,7 @@ const LiquidityButton = ({
 
   return (
     <button
-      className='w-full bg-primary py-4 px-4 rounded-md disabled:opacity-40 bg-opacity-90 text-lg'
+      className='w-full bg-primary py-4 px-4 rounded-md disabled:opacity-40 bg-opacity-90 text-lg mt-5'
       disabled={isDisabled}
       onClick={handleClick}
     >

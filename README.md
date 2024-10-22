@@ -77,7 +77,7 @@ src/
    - `CurrencySelect`, `CurrencyInput` and `Swap` contain presentational components used throughout the application. They interact with hooks and state management to update and display data.
 
 2. **Hooks**:
-   - `useAutoSlippageTolerance.ts`, `useApprouveCallback.ts`, and `Updaters.tsx` contain custom React hooks used to encapsulate reusable logic. Hooks interact heavily with the state management layer to read from and dispatch updates.
+   - `useApprouveCallback.ts`, and `Updaters.tsx` contain custom React hooks used to encapsulate reusable logic. Hooks interact heavily with the state management layer to read from and dispatch updates.
 
 3. **State Management**:
    - The `state/` directory contains subdirectories pertaining to different slices of the whole application state. Each slice manages a piece of the global state, following the Redux style.

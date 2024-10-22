@@ -113,6 +113,7 @@ const ConfirmSwapModal: React.FC<ConfirmSwapModalProps> = ({
           )
         : (
           <ConfirmationModalContent
+            id='confirm-swap-or-send'
             title='Confirm Transaction'
             onDismiss={onDismiss}
             content={modalHeader}
