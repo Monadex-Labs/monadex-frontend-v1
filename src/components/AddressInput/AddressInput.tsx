@@ -19,7 +19,7 @@ const AddressInput: React.FC<AddressInputProps> = ({
   const error = (value.length > 0 && address === false)
   return (
     <>
-      {error && <small className='flex items-center gap-2 text-yellow font-regular'>The address entered is incorrect <IoWarning/> </small>}
+      {error && <small className='flex items-center gap-2 text-yellow font-regular'>The address entered is incorrect <IoWarning /> </small>}
       <Box
         className={`rounded-md text-left p-2 border w-full text-lg flex items-center my-3 ${
         error ? 'border-2 border-red-400' : 'border border-primary'

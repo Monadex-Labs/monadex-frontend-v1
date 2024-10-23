@@ -3,14 +3,15 @@ import React, { useState, useCallback, useMemo } from 'react'
 import { Box, Tooltip, CircularProgress, ListItem } from '@mui/material'
 import { WrappedTokenInfo } from '@/state/list/hooks'
 import { useAddUserToken, useRemoveUserAddedToken } from '@/state/user/hooks'
-import { useIsUserAddedToken, useCurrency, _useCurrency } from '@/hooks/Tokens'
+import { useIsUserAddedToken, _useCurrency } from '@/hooks/Tokens'
 import { CurrencyLogo, PlusHelper, TokenWarningModal } from '@/components'
 import { getTokenLogoURL } from '@/utils/getTokenLogoURL'
-import { formatNumber, formatTokenAmount } from '@/utils/index'
+import { formatNumber, formatTokenAmount, shortAddr } from '@/utils/index'
 import { getIsMetaMaskWallet } from '@/utils/connectors'
 import { wrappedCurrency } from '@/utils/wrappedCurrency'
 import { useWalletData } from '@/utils'
-import { FiCheck } from 'react-icons/fi'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
+import { IoCopyOutline } from 'react-icons/io5'
 
 // TODO Investigate: shouldnt this key return 'ETH' not 'MONAD'
 function currencyKey (currency: Token): string {
@@ -183,7 +184,14 @@ const CurrencyRow: React.FC<CurrenyRowProps> = ({
             </Box>
             {isOnSelectedList != null && isOnSelectedList
               ? (
-                <span className='text-textSecondary'>{currency.name}</span>
+                <Box className='flex items-center gap-2'>
+                  <span className='text-textSecondary'>{shortAddr(currency.address)}</span>
+                  {currency.address != null && (
+                    <CopyToClipboard text={currency.address}>
+                      <IoCopyOutline />
+                    </CopyToClipboard>
+                  )}
+                </Box>
                 )
               : (
                 <Box className='flex items-center'>
