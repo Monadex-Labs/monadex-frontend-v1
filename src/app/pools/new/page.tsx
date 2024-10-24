@@ -5,7 +5,7 @@ import { IoMdSettings } from 'react-icons/io'
 import { useState, lazy } from 'react'
 import { useRouter } from 'next/navigation'
 import { useV2LiquidityPool } from '@/hooks'
-
+import PoolData from '@/components/AddLiquidity/PoolData'
 const V2Liquidity = lazy(async () => await import('@/components/AddLiquidity/AddLiquidity').then(module => ({ default: module.default })))
 
 const New = (): JSX.Element => {
@@ -44,6 +44,7 @@ const New = (): JSX.Element => {
             <V2Liquidity />
           </Box>
         </Box>
+        <PoolData />
       </Box>
     </div>
   )
