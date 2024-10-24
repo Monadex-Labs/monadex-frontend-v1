@@ -400,3 +400,17 @@ export function shortAddr (address?: string): string {
   if (!address) return ''
   return `${address.slice(0, 4)}...${address.slice(-4)}`
 }
+
+export function extractTokenAddresses (searchParams) {
+  // Create URLSearchParams object if string is passed
+  const params = typeof searchParams === 'string'
+    ? new URLSearchParams(searchParams)
+    : searchParams
+
+  // Extract both currency addresses
+  const currency0 = params.get('currency0')
+  const currency1 = params.get('currency1')
+
+  // Return as array, maintaining order
+  return [currency0, currency1].filter(Boolean)
+}

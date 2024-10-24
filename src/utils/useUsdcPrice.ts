@@ -17,7 +17,7 @@ export default function useUSDCPrice (currency?: Token | NativeCurrency): Price 
     : undefined
 
   const allowedPairs = useAllCommonPairs(currency, USDC[chainId])
-
+  console.log('pair', allowedPairs)
   return useMemo(() => {
     if ((currency == null) || (amountOut == null) || (allowedPairs.length === 0)) {
       return undefined
