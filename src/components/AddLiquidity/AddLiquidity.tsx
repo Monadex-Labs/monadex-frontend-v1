@@ -528,7 +528,7 @@ const AddLiquidity: React.FC<{
         price != null && (
           <Box my={2} className='rounded-sm font-regular  flex flex-col p-3 text-white text-lg transition duration-150 ease-in-out'>
             <Box
-              className='flex gap-2 opacity-80 mt-2 font-regular border py-2 border-primary/30 rounded-md p-2 justify-between items-center ease-out text-lg mb-5'
+              className='flex gap-2 opacity-80 mt-2 font-regular border py-2 border-primary/30 rounded-md p-2 justify-between items-center ease-out text-lg mb-2'
               onClick={() => setShowDetails(!show)}
             >
               <small>
