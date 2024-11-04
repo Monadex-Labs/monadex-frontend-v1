@@ -8,6 +8,7 @@ export default function usePoolsRedirects (): {
   redirectWithCurrency: (currency: any, isInput: boolean, isV2?: boolean) => void
   redirectWithSwitch: (currency: any, isInput: boolean, isV2?: boolean) => void
 } {
+  // /http://localhost:3000/pools/new?currency0=0x49D75Bb3ef83Bdd83bef36aEA14F9421e6b05603&currency1=
   const router = useRouter()
   const params = useParams()
   const _search = useSearchParams().toString()
@@ -41,16 +42,22 @@ export default function usePoolsRedirects (): {
 
     let redirectPath = currentPath
     if (path.includes('/pools/new')) {
-      // Create query params with `currency0` and `currency1`
-      const paramA = isInput ? currencyId : currencyParamA || ''
-      const paramB = isInput ? currencyParamB || '' : currencyId
-
       const newParams = new URLSearchParams()
-      newParams.set('currency0', paramA)
-      newParams.set('currency1', paramB)
-
-      // Update the redirect path for `/pools/new`
-      redirectPath = `/pools/new?${newParams.toString()}`
+      if (isInput) {
+        newParams.set('currency0', currencyId)
+        // Only set currency1 if it has a value
+        if (currencyParamB) {
+          newParams.set('currency1', currencyParamB as string)
+        }
+      } else {
+        // Only set currency0 if it has a value
+        if (currencyParamA) {
+          newParams.set('currency0', currencyParamA as string)
+        }
+        newParams.set('currency1', currencyId)
+      }
+      // Only add the query string if there are parameters
+      redirectPath = `/pools/new${newParams.toString() ? `?${newParams.toString()}` : ''}`
     } else {
       const newParams = new URLSearchParams(search)
       newParams.set(isInput ? 'currency0' : 'currency1', currencyId)

@@ -233,10 +233,8 @@ const AddLiquidity: React.FC<{
         ? currency1Id === 'ETH'
         : currencyA?.address?.toLowerCase() === currency1Id?.toLowerCase()
       if (isSwichRedirect) {
-        console.log('or here')
         redirectWithSwitch(currencyA, true)
       } else {
-        console.log('here')
         redirectWithCurrency(currencyA, true)
       }
     },

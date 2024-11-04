@@ -57,36 +57,36 @@ const PoolPositionCardDetails: React.FC<{ pair: Pair }> = ({ pair }) => {
     <>
       <Box className='p-3 md:p-6 mb-3'>
         <Box className='flex items-center justify-between mb-4'>
-          <small>Your Pool Tokens:</small>
-          <small>{formatTokenAmount(userPoolBalance)}</small>
+          <p>Your Pool Tokens:</p>
+          <p>{formatTokenAmount(userPoolBalance)}</p>
         </Box>
         <Box className='flex items-center justify-between mb-4'>
-          <small>
+          <p>
             Pooled {currency0.symbol}:
-          </small>
+          </p>
           <Box className='flex items-center'>
-            <small className='mr-2'>{formatTokenAmount(token0Deposited)}</small>
+            <p className='mr-2'>{formatTokenAmount(token0Deposited)}</p>
             <CurrencyLogo size='20px' currency={currency0} />
           </Box>
         </Box>
 
         <Box className='flex items-center justify-between mb-4'>
-          <small>
+          <p>
             Pooled {currency1.symbol}:
-          </small>
+          </p>
           <Box className='flex items-center'>
-            <small className='mr-2'>{formatTokenAmount(token1Deposited)}</small>
+            <p className='mr-2'>{formatTokenAmount(token1Deposited)}</p>
             <CurrencyLogo size='20px' currency={currency1} />
           </Box>
         </Box>
 
         <Box className='flex items-center justify-between mb-4'>
-          <small>Your Pool Share:</small>
-          <small>
+          <p>Your Pool Share:</p>
+          <p>
             {(poolTokenPercentage != null)
               ? poolTokenPercentage.toSignificant() + '%'
               : '-'}
-          </small>
+          </p>
         </Box>
 
         <Box className='flex items-center justify-between gap-3'>
@@ -94,7 +94,7 @@ const PoolPositionCardDetails: React.FC<{ pair: Pair }> = ({ pair }) => {
             className='h-9 flex items-center justify-center rounded-md border border-primary text-primary hover:border-primary2 hover:text-primary2 p-4 bg-transparent w-1/2'
             onClick={() => console.log('Not implemented yet')} // TODO: redirect to info analtytics dashboard for the given currency (pending analytics)
           >
-            <small>View Analytics</small>
+            <p>View Analytics</p>
           </Button>
           <Button
             className='h-9 flex items-center justify-center rounded-md bg-primary hover:bg-primary2 transition w-1/4'
@@ -108,15 +108,15 @@ const PoolPositionCardDetails: React.FC<{ pair: Pair }> = ({ pair }) => {
               )
             }}
           >
-            <small>Add</small>
+            <p>Add</p>
           </Button>
           <Button
-            className='h-9 flex items-center justify-center rounded-md bg-primary hover:bg-primary2 transition w-1/4'
+            className='h-9 flex items-center justify-center rounded-md bg-primary hover:bg-primary2 transition w-1/4 '
             onClick={() => {
               setOpenRemoveModal(true)
             }}
           >
-            <small>Remove</small>
+            Remove
           </Button>
         </Box>
       </Box>

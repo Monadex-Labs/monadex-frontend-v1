@@ -106,25 +106,24 @@ export function useWalletData (): WalletData {
   const walletData = useWallets()[0]
   const chainId = Number(walletData?.chains[0]?.id) as ChainId
   const account = walletData?.accounts[0]?.address
-
   const [provider, setProvider] = useState<Web3Provider>()
   const [signer, setSigner] = useState<JsonRpcSigner>()
-  const [networkName, setNetwork] = useState<string>()
-
+  const [networkName, setNetworkName] = useState<string>('')
   useEffect(() => {
-    if (walletData == null) return
     if (walletData?.provider == null) return
     const ethersProvider = new ethers.providers.Web3Provider(walletData.provider, 'any')
+    const fetchNetworkName = async (): Promise<void> => {
+      try {
+        const network = await ethersProvider.getNetwork()
+        setNetworkName(network.name)
+      } catch (error) {
+        console.error('Failed to get network name:', error)
+      }
+    }
+    void fetchNetworkName()
     setSigner(ethersProvider.getSigner())
     setProvider(ethersProvider)
   }, [chainId, walletData])
-
-  useCallback(async (): Promise<void> => {
-    const network = await provider?.getNetwork()
-    if (network != null) {
-      setNetwork(network.name || 'UNKNOWN NETWORK')
-    }
-  }, [chainId, provider, walletData])
 
   const isConnected = walletData?.accounts.length > 0
   return {

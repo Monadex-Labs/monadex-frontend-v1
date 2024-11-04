@@ -135,13 +135,13 @@ const Swap: React.FC<{
         }
       : {
           [Field.INPUT]:
-            independentField === Field.INPUT
-              ? parsedAmount
-              : trade?.inputAmount,
+          independentField === Field.INPUT
+            ? parsedAmount
+            : trade?.inputAmount,
           [Field.OUTPUT]:
-            independentField === Field.OUTPUT
-              ? parsedAmount
-              : trade?.outputAmount
+          independentField === Field.OUTPUT
+            ? parsedAmount
+            : trade?.outputAmount
         }
   }, [parsedAmount, independentField, trade, showWrap])
 
@@ -156,8 +156,8 @@ const Swap: React.FC<{
   const route = trade?.route
   const userHasSpecifiedInputOutput = Boolean(
     currencies[Field.INPUT] != null &&
-      currencies[Field.OUTPUT] != null &&
-      parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0))
+    currencies[Field.OUTPUT] != null &&
+    parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0))
   )
   const noRoute = route == null
   const { priceImpactWithoutFee } = computeTradePriceBreakdown(trade)
@@ -192,11 +192,11 @@ const Swap: React.FC<{
       const isSwichRedirect = currencyEquals(inputCurrency, ETH)
         ? parsedCurrency1Id === 'ETH'
         : Boolean(parsedCurrency1Id) &&
-          inputCurrency !== undefined &&
-          Boolean(inputCurrency instanceof Token && inputCurrency.address) &&
-          inputCurrency instanceof Token &&
-          inputCurrency.address.toLowerCase() ===
-            parsedCurrency1Id.toLowerCase()
+        inputCurrency !== undefined &&
+        Boolean(inputCurrency instanceof Token && inputCurrency.address) &&
+        inputCurrency instanceof Token &&
+        inputCurrency.address.toLowerCase() ===
+        parsedCurrency1Id.toLowerCase()
       if (isSwichRedirect) {
         redirectWithSwitch()
       } else {
@@ -219,11 +219,11 @@ const Swap: React.FC<{
       const isSwichRedirect = currencyEquals(outputCurrency, ETH)
         ? parsedCurrency0Id === 'ETH'
         : Boolean(parsedCurrency0Id) &&
-          outputCurrency &&
-          Boolean(outputCurrency instanceof Token && outputCurrency.address) &&
-          outputCurrency instanceof Token &&
-          outputCurrency.address.toLowerCase() ===
-            parsedCurrency0Id.toLowerCase()
+        outputCurrency &&
+        Boolean(outputCurrency instanceof Token && outputCurrency.address) &&
+        outputCurrency instanceof Token &&
+        outputCurrency.address.toLowerCase() ===
+        parsedCurrency0Id.toLowerCase()
       if (isSwichRedirect) {
         redirectWithSwitch()
       } else {
@@ -348,7 +348,7 @@ const Swap: React.FC<{
 
   const atMaxAmountInput = Boolean(
     maxAmountInput != null &&
-      parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput)
+    parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput)
   )
 
   const onSwap = (): void => {
@@ -430,15 +430,17 @@ const Swap: React.FC<{
           finalizedTransaction(receipt, {
             summary
           })
-          const user = await fetchUser()
-          dispatch(updateUserBalance())
-          const SwapRewards = await axios.post('/api/swap', {
-            userId: user.id,
-            methodType: MethodType.SWAP,
-            swap: SwapDelay.SWAP_COMPLETE
 
-          })
-          // console.log('swapRewards', SwapRewards)
+          dispatch(updateUserBalance())
+          const user = await fetchUser()
+          if (session != null) {
+            await axios.post('/api/swap', {
+              userId: user.id,
+              methodType: MethodType.SWAP,
+              swap: SwapDelay.SWAP_COMPLETE
+
+            })
+          }
           setSwapState({
             attemptingTxn: false,
             txPending: false,

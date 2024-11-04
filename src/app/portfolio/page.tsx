@@ -6,7 +6,8 @@ import { useV2LiquidityPools } from '@/hooks'
 import Image from 'next/image'
 import { useWalletData } from '@/utils'
 import { PoolFinderModal, PoolPositionCard, QuestionHelper } from '@/components'
-
+import { usePoolUSDCPositions } from '@/utils/useUsdcPrice'
+import { PoolPositionData } from '@/components/PoolPositionCard/PoolPositionData'
 const Portfolio: React.FC = () => {
   const { account } = useWalletData()
   const [openPoolFinder, setOpenPoolFinder] = useState(false)
@@ -18,7 +19,14 @@ const Portfolio: React.FC = () => {
     <div className='container mx-auto mt-10'>
       <Box className='flex justify-between w-full mb-10 items-center container mx-auto'>
         <div>
-          <p className='font-medium text-xl'>My Portfolio</p>
+          {/* <p className='font-medium text-xl'>My Portfolio</p>
+          {allV2PairsWithLiquidity.map((pair, index) => (
+            <PoolPositionData
+              key={index}
+              pool={allV2PairsWithLiquidity} // Pass the individual pair as an array
+              index={index}
+            />
+          ))} */}
         </div>
 
         <Box className='flex items-center gap-3 '>
@@ -37,7 +45,7 @@ const Portfolio: React.FC = () => {
           Don't see a pool you joined? <span className='text-primary cursor-pointer' onClick={() => setOpenPoolFinder(true)}>Import it</span>
         </small>
       </Box>
-      <Box className='container justify-center items-center p-4 mx-auto bg-bgColor border border-primary border-opacity-20 rounded-md'>
+      <Box className='container justify-center items-center p-4 mx-auto bg-bgColor/80 border border-primary border-opacity-20 rounded-md'>
         {openPoolFinder && (
           <PoolFinderModal
             open={openPoolFinder}

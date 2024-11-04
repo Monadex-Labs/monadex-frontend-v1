@@ -37,10 +37,8 @@ export const TradeSummary: React.FC<TradeSummaryProps> = ({
   const usdPriceV2 = Number(useUSDCPrice(currency)?.toSignificant() ?? 0)
   const usdPrice = usdPriceV2
 
-  const price = usdPrice * Number(formatTokenAmount(
-    slippageAdjustedAmounts[isExactIn ? Field.OUTPUT : Field.INPUT]
-  ))
-
+  const price = usdPrice * Number(formatTokenAmount(realizedLPFee as CurrencyAmount))
+  console.log('price', usdPriceV2, formatTokenAmount(realizedLPFee as CurrencyAmount))
   const tradeAmount = isExactIn ? trade.outputAmount : trade.inputAmount
   const pairAddress: string | null = trade.route.pairs[0].liquidityToken.address ? trade.route.pairs[0].liquidityToken.address : '...'
 
@@ -66,7 +64,7 @@ export const TradeSummary: React.FC<TradeSummaryProps> = ({
               ? (
                   '<$0.1'
                 )
-              : price.toLocaleString('us')}
+              : '$ '+ price.toLocaleString('us')}
           </p>
           <small>
             {formatTokenAmount(realizedLPFee as CurrencyAmount)} {trade.inputAmount.currency.symbol}
