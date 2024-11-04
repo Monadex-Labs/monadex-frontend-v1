@@ -1,14 +1,15 @@
 'use client'
 import React, { useState } from 'react'
-import { Box } from '@mui/material'
+import { Box, Divider } from '@mui/material'
 import Molandak from '@/static/assets/hedgehog.png'
 import { useV2LiquidityPools } from '@/hooks'
 import Image from 'next/image'
 import { useWalletData } from '@/utils'
-import { PoolFinderModal, PoolPositionCard, QuestionHelper } from '@/components'
-import { usePoolUSDCPositions } from '@/utils/useUsdcPrice'
+import { PoolFinderModal, PoolPositionCard, QuestionHelper, ConnectButton } from '@/components'
 import { PoolPositionData } from '@/components/PoolPositionCard/PoolPositionData'
+import { useRouter } from 'next/navigation'
 const Portfolio: React.FC = () => {
+  const router = useRouter()
   const { account } = useWalletData()
   const [openPoolFinder, setOpenPoolFinder] = useState(false)
   const {
@@ -19,17 +20,9 @@ const Portfolio: React.FC = () => {
     <div className='container mx-auto mt-10'>
       <Box className='flex justify-between w-full mb-10 items-center container mx-auto'>
         <div>
-          {/* <p className='font-medium text-xl'>My Portfolio</p>
-          {allV2PairsWithLiquidity.map((pair, index) => (
-            <PoolPositionData
-              key={index}
-              pool={allV2PairsWithLiquidity} // Pass the individual pair as an array
-              index={index}
-            />
-          ))} */}
-        </div>
-
-        <Box className='flex items-center gap-3 '>
+          <div className='w-full flex justify-between'>
+          <p className='font-medium text-xl'>My Portfolio</p>
+          <Box className='flex items-center gap-3'>
           <Box>
             <QuestionHelper
               size={23}
@@ -37,15 +30,31 @@ const Portfolio: React.FC = () => {
               text='If you have previously added liquidity to any pool you will find them or import them here'
             />
           </Box>
-        </Box>
+          </Box>
+          </div>
+          
+          <PoolPositionData pool={allV2PairsWithLiquidity} />
+        </div>
       </Box>
       <Box className='mb-4'>
-        <p className='font-medium text-xl'>Your Liquidity Pools</p>
+        <p className='font-medium text-xl'>Your Liquidity Pools ({allV2PairsWithLiquidity.length})</p>
         <small className='text-textSecondary'>
           Don't see a pool you joined? <span className='text-primary cursor-pointer' onClick={() => setOpenPoolFinder(true)}>Import it</span>
         </small>
       </Box>
-      <Box className='container justify-center items-center p-4 mx-auto bg-bgColor/80 border border-primary border-opacity-20 rounded-md'>
+      <Box className='container justify-center items-center p-4 mx-auto min-h-[50vh] bg-bgColor/80 border border-primary border-opacity-20 rounded-md'>
+        <div className='flex justify-between items-center'>
+          <p className='text-lg font-clash'>Liquidity positions</p>
+          <div className='flex items-center gap-4'>
+            <button
+              className='px-4 py-2 text-white bg-primary rounded-md'
+              onClick={() => router.push('/pools/new')}
+            >
+              create new position
+            </button>
+          </div>
+        </div>
+        <Divider className='bg-primary mt-5' />
         {openPoolFinder && (
           <PoolFinderModal
             open={openPoolFinder}
@@ -66,22 +75,31 @@ const Portfolio: React.FC = () => {
                 ))}
               </Box>
               )
-            : (
-              <Box>
-                <div className='flex flex-col items-center'>
-                  <Image
-                    src={Molandak}
-                    alt='No Liquidity'
-                    width={100}
-                    height={100}
-                    className='w-auto'
-                  />
-                </div>
-                <p className='text-secondary'>
-                  Don't see a pool you joined? <small className='text-primary cursor-pointer' onClick={() => setOpenPoolFinder(true)}>Import it</small>.
-                </p>
-              </Box>
-              )}
+            : !account
+                ? (
+                  <Box className='flex flex-col gap-4 justify-center items-center h-[35vh]'>
+                    <p className='text-white/60 font-regular'>connect wallet to see your liquidity positions information.</p>
+                    <ConnectButton
+                      className='px-4 py-2 text-white bg-primary rounded-md'
+                    />
+                  </Box>
+                  )
+                : (
+                  <Box className='flex flex-col justify-center items-center h-[35vh]'>
+                    <div>
+                      <Image
+                        src={Molandak}
+                        alt='No Liquidity'
+                        width={100}
+                        height={100}
+                        className='animate-bounce'
+                      />
+                    </div>
+                    <p className='text-textSecondary'>
+                      Don't see a pool you joined? <small className='text-primary cursor-pointer' onClick={() => setOpenPoolFinder(true)}>Import it</small>.
+                    </p>
+                  </Box>
+                  )}
         </Box>
       </Box>
     </div>

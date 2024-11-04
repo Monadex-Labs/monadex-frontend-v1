@@ -5,7 +5,6 @@ import { Pair } from '@monadex/sdk'
 import { unwrappedToken } from '@/utils/wrappedCurrency'
 import { DoubleCurrencyLogo } from '@/components'
 import PoolPositionCardDetails from './PoolPositionCardDetails'
-
 const PoolPositionCard: React.FC<{ pair: Pair }> = ({ pair }) => {
   const currency0 = unwrappedToken(pair.token0)
   const currency1 = unwrappedToken(pair.token1)

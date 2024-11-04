@@ -8,6 +8,7 @@ import { useTotalSupply } from '@/data/TotalSupply'
 import { CurrencyLogo, RemoveLiquidityModal } from '@/components'
 import { useWalletData, currencyId, formatTokenAmount } from '@/utils'
 import { useRouter } from 'next/navigation'
+import { BsStars } from 'react-icons/bs'
 
 const PoolPositionCardDetails: React.FC<{ pair: Pair }> = ({ pair }) => {
   const router = useRouter()
@@ -117,6 +118,12 @@ const PoolPositionCardDetails: React.FC<{ pair: Pair }> = ({ pair }) => {
             }}
           >
             Remove
+          </Button>
+          <Button
+            className='h-9 flex items-center justify-center rounded-md bg-primary hover:bg-primary2 transition w-1/4 disabled:bg-primary/50'
+            disabled
+          >
+            Farm  <span className='ml-2'> <BsStars /></span>
           </Button>
         </Box>
       </Box>
