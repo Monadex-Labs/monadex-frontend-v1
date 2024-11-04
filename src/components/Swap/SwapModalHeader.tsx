@@ -131,7 +131,7 @@ const SwapModalHeader: React.FC<SwapModalHeaderProps> = ({
             : (
               <></>
               )}
-        <Button onClick={onConfirm} className='mt-4 w-full bg-gradient-to-r from-[#23006A] to-[#23006A]/50 py-4 px-4 rounded-md disabled:opacity-40'>
+        <Button onClick={onConfirm} className='mt-4 w-full bg-primary py-4 px-4 rounded-md disabled:opacity-40 text-lg'>
           Confirm Swap
         </Button>
       </Box>
