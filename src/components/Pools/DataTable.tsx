@@ -95,7 +95,7 @@ const DataTable: React.FC<DataTableProps<any>> = ({
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage)
   return (
-    <Box className='rounded-lg border border-primary/50 bg-bgColor'>
+    <Box className='rounded-lg border border-primary/50 bg-bgColor max-w-[1400px] mx-auto'>
       {toolbar}
 
       <TableContainer>
@@ -106,7 +106,7 @@ const DataTable: React.FC<DataTableProps<any>> = ({
         >
           <TableHead>
             <TableRow
-              className='bg-primary/40'
+              className='bg-transparent'
             >
               {headCells.map((headCell, index) => (
                 <TableCell

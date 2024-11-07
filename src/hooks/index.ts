@@ -3,7 +3,10 @@ import { Pair } from '@monadex/sdk'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '@/state/user/hooks'
 import { useTokenBalancesWithLoadingIndicator } from '@/state/wallet/hooks'
 import { usePairs } from '@/data/Reserves'
-
+import { erc20Abi } from 'viem'
+import { useContracts } from './useContracts'
+import { useSingleContractMultipleData } from '@/state/multicall/hooks'
+import { Contract } from 'ethers'
 export function useV2LiquidityPools (account?: string): { loading: boolean, pairs: Pair[] } {
   const trackedTokenPairs = useTrackedTokenPairs()
   const tokenPairsWithLiquidityTokens = useMemo(

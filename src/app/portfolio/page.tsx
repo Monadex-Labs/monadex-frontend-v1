@@ -6,7 +6,6 @@ import { useV2LiquidityPools } from '@/hooks'
 import Image from 'next/image'
 import { useWalletData } from '@/utils'
 import { PoolFinderModal, PoolPositionCard, QuestionHelper, ConnectButton } from '@/components'
-import { PoolPositionData } from '@/components/PoolPositionCard/PoolPositionData'
 import { useRouter } from 'next/navigation'
 const Portfolio: React.FC = () => {
   const router = useRouter()
@@ -17,32 +16,24 @@ const Portfolio: React.FC = () => {
   } = useV2LiquidityPools(account ?? undefined)
 
   return (
-    <div className='container mx-auto mt-10'>
-      <Box className='flex justify-between w-full mb-10 items-center container mx-auto'>
-        <div>
-          <div className='w-full flex justify-between'>
-          <p className='font-medium text-xl'>My Portfolio</p>
-          <Box className='flex items-center gap-3'>
-          <Box>
-            <QuestionHelper
-              size={23}
-              className='text-white'
-              text='If you have previously added liquidity to any pool you will find them or import them here'
-            />
-          </Box>
-          </Box>
-          </div>
-          
-          <PoolPositionData pool={allV2PairsWithLiquidity} />
-        </div>
+    <div className='max-w-[95%] mx-auto md:max-w-[1400px] mt-10'>
+
+      <Box className='mb-4 flex justify-between items-center'>
+        <Box>
+          <p className='font-medium text-xl'>Your Liquidity Pools ({allV2PairsWithLiquidity.length})</p>
+          <small className='text-textSecondary'>
+            Don't see a pool you joined? <span className='text-primary cursor-pointer' onClick={() => setOpenPoolFinder(true)}>Import it</span>
+          </small>
+        </Box>
+        <Box>
+          <QuestionHelper
+            size={23}
+            className='text-white'
+            text='If you have previously added liquidity to any pool you will find them or import them here'
+          />
+        </Box>
       </Box>
-      <Box className='mb-4'>
-        <p className='font-medium text-xl'>Your Liquidity Pools ({allV2PairsWithLiquidity.length})</p>
-        <small className='text-textSecondary'>
-          Don't see a pool you joined? <span className='text-primary cursor-pointer' onClick={() => setOpenPoolFinder(true)}>Import it</span>
-        </small>
-      </Box>
-      <Box className='container justify-center items-center p-4 mx-auto min-h-[50vh] bg-bgColor/80 border border-primary border-opacity-20 rounded-md'>
+      <Box className='max-w-[95%] mx-auto md:max-w-[1400px] justify-center items-center p-4 mx-auto min-h-[50vh] bg-bgColor/80 border border-primary border-opacity-20 rounded-md'>
         <div className='flex justify-between items-center'>
           <p className='text-lg font-clash'>Liquidity positions</p>
           <div className='flex items-center gap-4'>

@@ -117,6 +117,7 @@ const RemoveLiquidityModal: React.FC<RemoveLiquidityModalProps> = ({
     account ?? undefined,
     pair?.liquidityToken
   )
+  console.log('balances', formatTokenAmount(userPoolBalance))
   const totalPoolTokens = useTotalSupply(pair?.liquidityToken)
   const poolTokenPercentage =
     !(userPoolBalance == null) &&

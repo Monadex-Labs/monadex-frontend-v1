@@ -34,7 +34,7 @@ const CustomTable: React.FC<CustomTableProps<any>> = ({
   desktopHTML
 }) => {
   const theme = useTheme()
-  const mobileWindowSize = useMediaQuery(theme.breakpoints.down('xs'))
+  const mobileWindowSize = useMediaQuery(theme.breakpoints.down('sm'))
   return (
     <Box>
       {mobileWindowSize

@@ -74,9 +74,9 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
           otherCurrency={otherCurrency}
           handleCurrencySelect={handleCurrencySelect}
         />
-        <div className='flex relative pl-2'>
+        <div className='flex pl-2'>
           <NumericalInput
-            className='w-full relative outline-none border-none whitespace-nowrap text-ellipsis overflow-hidden text-left bg-transparent'
+            className='w-full  outline-none border-none whitespace-nowrap text-ellipsis overflow-hidden text-left bg-transparent'
             value={amount}
             align='right'
             color={color}

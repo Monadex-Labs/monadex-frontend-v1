@@ -56,7 +56,7 @@ const PoolPositionCardDetails: React.FC<{ pair: Pair }> = ({ pair }) => {
 
   return (
     <>
-      <Box className='p-3 md:p-6 mb-3'>
+      <Box className='p-3 md:p-6 mb-3 bg-bgColor/50 max-w-[98%] mx-auto rounded-md'>
         <Box className='flex items-center justify-between mb-4'>
           <p>Your Pool Tokens:</p>
           <p>{formatTokenAmount(userPoolBalance)}</p>

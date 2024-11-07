@@ -32,7 +32,7 @@ export const NumericalInput = React.memo(function InnerInput ({
     <input
       {...rest}
       value={value}
-      className='bg-transparent text-2xl focus:outline-none  placeholder:text-3xl placeholder:text-white/40 py-2'
+      className='bg-transparent text-lg md:text-xl focus:outline-none  placeholder:text-3xl placeholder:text-white/40 py-2'
       style={{ textAlign: align, color, fontSize, fontWeight }}
       onChange={(event) => {
         // replace commas with periods, because uniswap exclusively uses period as the decimal separator
@@ -45,7 +45,7 @@ export const NumericalInput = React.memo(function InnerInput ({
       // text-specific options
       type='text'
       pattern='^[0-9]*[.,]?[0-9]*$'
-      placeholder={placeholder || '0.0'}
+      placeholder={placeholder || '0'}
       minLength={1}
       maxLength={79}
       spellCheck='false'

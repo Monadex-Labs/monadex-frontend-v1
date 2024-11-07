@@ -5,7 +5,7 @@ import { getAddress } from '@ethersproject/address'
 
 import { Contract } from '@ethersproject/contracts'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
-import { ChainId, CurrencyAmount, JSBI, ETH, Percent, TokenAmount, Token, NativeCurrency } from '@monadex/sdk'
+import { ChainId, CurrencyAmount, JSBI, ETH, Percent, TokenAmount, Token, NativeCurrency, Pair } from '@monadex/sdk'
 import { isAddress as isViemAddress } from 'viem'
 import truncateEthAddress from 'truncate-eth-address'
 import { useWallets } from '@web3-onboard/react'
@@ -412,4 +412,30 @@ export function extractTokenAddresses (searchParams) {
 
   // Return as array, maintaining order
   return [currency0, currency1].filter(Boolean)
+}
+
+export function userTokenDeposited (userBalance: TokenAmount, totalBalance: TokenAmount, token0: Token, token1: Token, pair: Pair): [TokenAmount, TokenAmount] {
+  console.log('jist', token0)
+  const [token0Deposited, token1Deposited] =
+    !(totalBalance == null) &&
+    !(userBalance == null) &&
+    JSBI.greaterThanOrEqual(totalBalance.raw, userBalance.raw)
+      ? [
+          pair.getLiquidityValue(
+            token0.address === pair.token0.address ? pair.token0 : pair.token1,
+            totalBalance,
+            userBalance,
+            false
+          ),
+          pair.getLiquidityValue(
+            token0.address === pair.token0.address ? pair.token1 : pair.token0,
+            totalBalance,
+            userBalance,
+            false
+          )
+      ]
+      : [undefined, undefined]
+
+  if ((token0Deposited != null) || token1Deposited) undefined
+  return [token0Deposited as TokenAmount, token1Deposited as TokenAmount]
 }

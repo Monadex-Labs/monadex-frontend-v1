@@ -14,7 +14,8 @@ import DoubleCurrencyLogo from '../DoubleCurrencyLogo'
 import TVLDataContainer from './TvlDataContainer'
 import { formatNumber } from '@/utils'
 import { PairData } from '@/state/pools/actions'
-
+import { BsStars } from 'react-icons/bs'
+import { MdOutlineSwapCalls, MdOutlinePool } from 'react-icons/md'
 const Pools: React.FC = () => {
   const router = useRouter()
   const { bulkPairsData, historicalData } = useBulkPools()
@@ -116,13 +117,18 @@ const Pools: React.FC = () => {
       numeric: true,
       label: 'APR 24H',
       sortKey: (pair: any) => parseFloat(pair.apr24h)
+    },
+    {
+      id: 'actions',
+      numeric: true,
+      label: 'Actions'
     }
   ]
 
   const mobileHTML = (pair: any, index: number): React.JSX.Element => (
-    <Box mt={index === 0 ? 0 : 3}>
+    <Box mt={index === 0 ? 0 : 3} className='font-clash bg-bgColor max-w-[96%] mx-auto rounded-md p-3'>
 
-      <Box className='flex items-center justify-between border' mb={1}>
+      <Box className='flex items-center justify-between'  mb={1}>
         <Box className='flex items-center'>
           <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} />
           <Box ml='5px'>
@@ -142,24 +148,36 @@ const Pools: React.FC = () => {
           </Box>
         </Box>
       </Box>
-      <Box className='mobileRow'>
-        <Typography variant='body2'>Liquidity</Typography>
-        <Typography variant='body2'>${formatNumber(parseFloat(pair.tvl))}</Typography>
+      <Box className='flex items-center justify-between'>
+        <Typography className='text-white text-md font-regular'>Liquidity</Typography>
+        <Typography className='text-white text-md font-regular'>${formatNumber(parseFloat(pair.tvl))}</Typography>
       </Box>
-      <Box className='mobileRow'>
-        <Typography variant='body2'>24h Vol</Typography>
-        <Typography variant='body2'>${formatNumber(parseFloat(pair.volume24h))}</Typography>
+      <Box className='flex items-center justify-between'>
+        <Typography className='text-white text-md font-regular'>24h Vol</Typography>
+        <Typography className='text-white text-md font-regular'>${formatNumber(parseFloat(pair.volume24h))}</Typography>
       </Box>
-      <Box className='mobileRow'>
-        <Typography variant='body2'>24h Fees</Typography>
-        <Typography variant='body2'>${formatNumber(parseFloat(pair.fee24h))}</Typography>
+      <Box className='flex items-center justify-between'>
+        <Typography className='text-white text-md font-regular'>24h Fees</Typography>
+        <Typography className='text-white text-md font-regular'>${formatNumber(parseFloat(pair.fee24h))}</Typography>
       </Box>
-      <Box className='mobileRow'>
-        <Typography variant='body2'>APR</Typography>
-        <Typography variant='body2' className='text-success'>
+      <Box className='flex items-center justify-between'>
+        <Typography className='text-white text-md font-regular'>APR</Typography>
+        <Typography className='text-success text-md font-regular'>
           {formatNumber(parseFloat(pair.apr24h))}%
         </Typography>
       </Box>
+      <div className='flex gap-4 items-center justify-between mt-4'>
+        <button
+          onClick={() => router.push(`/pools/new?currency0=${pair.token0.address}&currency1=${pair.token1.address}`)}
+        > <MdOutlinePool size={26} className='text-primary hover:text-primary/40 transition-all'/>
+
+        </button>
+        <button
+          onClick={() => router.push(`/?currency0=${pair.token0.address}&currency1=${pair.token1.address}`)}
+        >
+          <MdOutlineSwapCalls size={26} className='text-primary hover:text-primary/40 transition-all' />
+        </button>
+      </div>
     </Box>
   )
 
@@ -194,7 +212,7 @@ const Pools: React.FC = () => {
       html: <Typography variant='body2' className='text-white text-lg font-regular'>${formatNumber(parseFloat(pair.volume24h))}</Typography>
     },
     {
-      html: <Typography variant='body2' className='text-white  text-lg font-regular'>${formatNumber(parseFloat(pair.fee24h))}</Typography>
+      html: <Typography variant='body2' className='text-white  text-xl font-regular'>${formatNumber(parseFloat(pair.fee24h))}</Typography>
     },
     {
       html: (
@@ -202,11 +220,26 @@ const Pools: React.FC = () => {
           {formatNumber(parseFloat(pair.apr24h))}%
         </Typography>
       )
+    },
+    {
+      html:
+  <div className='flex gap-4'>
+    <button
+      onClick={() => router.push(`/pools/new?currency0=${pair.token0.address}&currency1=${pair.token1.address}`)}
+    > <MdOutlinePool size={26} className='text-primary hover:text-primary/40 transition-all'/>
+
+    </button>
+    <button
+      onClick={() => router.push(`/?currency0=${pair.token0.address}&currency1=${pair.token1.address}`)}
+    >
+      <MdOutlineSwapCalls size={26} className='text-primary hover:text-primary/40 transition-all' />
+    </button>
+  </div>
     }
   ]
 
   return (
-    <Box>
+    <Box className='max-w-[1400px] mx-auto'>
       <TVLDataContainer
         Dvolume={totalVolume}
         TVL={totalTVL}
