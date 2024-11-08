@@ -13,9 +13,9 @@ import CustomTable from './CustomTable'
 import DoubleCurrencyLogo from '../DoubleCurrencyLogo'
 import TVLDataContainer from './TvlDataContainer'
 import { formatNumber } from '@/utils'
-import { PairData } from '@/state/pools/actions'
-import { BsStars } from 'react-icons/bs'
+
 import { MdOutlineSwapCalls, MdOutlinePool } from 'react-icons/md'
+
 const Pools: React.FC = () => {
   const router = useRouter()
   const { bulkPairsData, historicalData } = useBulkPools()

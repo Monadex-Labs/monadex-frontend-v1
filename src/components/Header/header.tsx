@@ -43,8 +43,15 @@ const Header: React.FC<any> = () => {
       name: 'Portfolio',
       path: '/portfolio',
       logo: <HiFolder />
+    },
+    {
+      id: 'Analytics-page',
+      name: 'Analytics',
+      path: '/',
+      logo: <HiFolder />
     }
   ]
+  console.log('pathname', pathname)
   return (
     <Box className='flex justify-between w-[95%] mx-auto items-center'>
       <div className='flex flex-col sm:flex-row items-center justify-between p-2 sm:p-4 gap-8'>
@@ -66,9 +73,9 @@ const Header: React.FC<any> = () => {
                 {/* <p className='mr-3 text-lg text-white/60'>{k.logo}</p> */}
                 <Link
                   className={`
-                  text-gray-500 font-medium text-lg md:text-xl transition-all
-                  hover:text-primary focus:text-primary
-                  ${pathname === k.path ? 'text-primary' : ''}
+                  text-white/60 font-regular text-lg md:text-xl transition-all
+                  hover:text-primary
+                  ${pathname == k.path && 'text-primary'}
                   ${k.id === 'Docs' ? 'underline underline-offset-2 decoration-dotted' : ''}
                 `}
                   key={v}
@@ -86,7 +93,7 @@ const Header: React.FC<any> = () => {
         {!isTablet && <Mxpdisplay />}
         {!isTablet && <TicketModal />}
         <ConnectButton
-          className='flex p-2 items-center justify-center gap-4 text-white bg-primary hover:bg-primary/50 focus:outline-none focus:ring-4 focus:ring-primary/50 font-regular rounded-full text-sm px-5 py-2.5 text-center' 
+          className='flex p-2 items-center justify-center gap-4 text-white bg-primary hover:bg-primary/50 focus:outline-none focus:ring-4 focus:ring-primary/50 font-regular rounded-full text-sm px-5 py-2.5 text-center'
         />
       </Box>
     </Box>

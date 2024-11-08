@@ -7,7 +7,7 @@ import { SwitchChainPopUp } from '../Popup/switchChainPopup'
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string
-  children: React.ReactNode
+  children?: React.ReactNode
 }
 
 /**
